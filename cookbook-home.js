@@ -232,6 +232,8 @@
 
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
+    // Render the shared bottom bar in shell mode (buttons drive in-page setTab).
+    if (window.MCNav) MCNav.render({ mode: "shell", active: (location.hash || "#home").slice(1) });
     renderHome();
     renderRecipes();
     renderFavorites();

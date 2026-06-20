@@ -11,6 +11,7 @@ const CACHE_URLS = [
   './collection.html',
   './collection.js',
   './cookbook-home.js',
+  './cookbook-nav.js',
   './cookbook.css',
   './cookbook.js',
   './icon.svg',

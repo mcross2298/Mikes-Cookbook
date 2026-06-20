@@ -13,27 +13,18 @@
   <link rel="stylesheet" href="cookbook.css" />
 </head>
 <body>
-  <main class="app shell">
+  <main class="app shell" data-tabbar="shell">
     <!-- Screens swap like 4WTO's dashboard; only .active is shown. -->
     <section class="screen active" id="screen-home"></section>
     <section class="screen" id="screen-recipes"></section>
     <section class="screen" id="screen-favorites"></section>
 
-    <!-- Fixed bottom tab bar -->
-    <nav class="tab-bar">
-      <button type="button" class="tab active" id="tab-home" data-tab="home">
-        <span class="tab-icon">🏠</span>Home
-      </button>
-      <button type="button" class="tab" id="tab-recipes" data-tab="recipes">
-        <span class="tab-icon">📖</span>Recipes
-      </button>
-      <button type="button" class="tab" id="tab-favorites" data-tab="favorites">
-        <span class="tab-icon">❤️</span>Favorites
-      </button>
-    </nav>
+    <!-- Bottom tab bar is rendered by cookbook-nav.js (one shared bar
+         across index / recipe / collection). -->
   </main>
 
   <script src="recipes-data.js"></script>
+  <script src="cookbook-nav.js"></script>
   <script src="cookbook-home.js"></script>
   <script>
     if ("serviceWorker" in navigator) {
