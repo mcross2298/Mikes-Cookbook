@@ -1640,6 +1640,406 @@ const RECIPES = [
           "Divide the mixture between the lettuce cups and top with the cilantro and chopped nuts."
       }
     ]
+  },
+
+  {
+    recipe_id: "italian-stuffed-bell-peppers",
+    title: "Italian Stuffed Bell Peppers",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🫑",
+    tags: ["Italian", "Stuffed", "High-Protein"],
+    description:
+      "Stuffed bell peppers are typically filled with rice, but you can do better with ground beef and Italian sausage. Top with Parmesan and broil, and you have yourself the most convenient of gourmet meals. Try it tonight!",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#C0392B",
+
+    macro_profiles: {
+      serving_2: { calories: 955, protein_g: 61, fat_g: 67, carbs_g: 27 },
+      serving_4: { calories: 1910, protein_g: 122, fat_g: 134, carbs_g: 54 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground beef", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Bulk Italian sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery stalks", prep: "sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh tomatoes", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Red or green bell peppers", prep: "cored, seeded, and halved lengthwise", quantity: "2", unit: "", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Ground beef", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Bulk Italian sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery stalks", prep: "sliced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "12", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh tomatoes", prep: "diced", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red or green bell peppers", prep: "cored, seeded, and halved lengthwise", quantity: "4", unit: "", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the meat",
+        detail:
+          "In a large skillet over medium-high heat, cook the ground beef and sausage, breaking up the meat into bite-size pieces. When the meat is cooked through, transfer to a plate and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Build the filling",
+        detail:
+          "Heat the olive oil in the same skillet, then add the onion and celery, cooking until softened, about 3 minutes. Add the garlic, Italian seasoning, and diced tomatoes. Cook 5 minutes, then return the cooked meat to the skillet. Add the fresh parsley and toss to combine. Remove from the heat."
+      },
+      {
+        step_number: 3,
+        title: "Fill & broil",
+        detail:
+          "Preheat the broiler to its highest setting. Line a baking sheet with parchment paper, then arrange the peppers on the sheet, cut side up. Using your hands, fill the pepper \"boats\" with the meat mixture, rounding the tops. Top with the Parmesan cheese and place on the middle shelf of the oven. Broil for 2 to 3 minutes, until the cheese is bubbly and golden. Serve hot."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mediterranean-stuffed-bell-peppers",
+    title: "Mediterranean Stuffed Bell Peppers",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🫑",
+    tags: ["Mediterranean", "Stuffed", "Lamb"],
+    description:
+      "Mediterranean flavors, such as olives, lemon, artichoke, and feta, always make for an intense and satisfying meal. Naturally salty, these peppers will be most delicious after you have ditched processed foods and your body is craving a healthy dose of sodium.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#7B5EA7",
+
+    macro_profiles: {
+      serving_2: { calories: 875, protein_g: 54, fat_g: 63, carbs_g: 23 },
+      serving_4: { calories: 1750, protein_g: 108, fat_g: 126, carbs_g: 46 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground lamb", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Avocado oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Bulk Italian sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Kalamata olives", prep: "chopped", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Marinated artichoke hearts", prep: "drained and chopped", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Fresh tomatoes", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lemon", prep: "zest of 1", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red or green bell peppers", prep: "cored, seeded, and halved lengthwise", quantity: "2", unit: "", category: "Produce" },
+        { item: "Feta cheese", prep: "crumbled", quantity: "1/4", unit: "cup", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Ground lamb", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Avocado oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Bulk Italian sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Kalamata olives", prep: "chopped", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Marinated artichoke hearts", prep: "drained and chopped", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Fresh tomatoes", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Lemon", prep: "zest of 2", quantity: "2", unit: "", category: "Produce" },
+        { item: "Red or green bell peppers", prep: "cored, seeded, and halved lengthwise", quantity: "4", unit: "", category: "Produce" },
+        { item: "Feta cheese", prep: "crumbled", quantity: "1/2", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the meat",
+        detail:
+          "In a large skillet over medium-high heat, cook the lamb and sausage in 1 tablespoon of butter, breaking the meat into bite-size pieces. Sauté until cooked through, then transfer to a plate with a slotted spoon."
+      },
+      {
+        step_number: 2,
+        title: "Build the filling",
+        detail:
+          "To the fat remaining in the skillet, add 1 tablespoon of avocado oil and the onion and cook until translucent, about 3 minutes. Add the garlic, Italian seasoning, oregano, olives, artichoke hearts, and diced tomatoes. Cook 5 minutes more, then return the cooked meat to the skillet. Add the parsley and lemon zest and toss to combine. Remove from the heat."
+      },
+      {
+        step_number: 3,
+        title: "Fill & broil",
+        detail:
+          "Preheat the broiler to its highest setting. Line a baking sheet with parchment paper, then arrange the peppers on the sheet, cut side up. Using your hands, fill the pepper \"boats\" with the meat mixture, rounding the tops. Top with the feta cheese and place on the middle shelf of the oven. Broil for 2 to 3 minutes, until the cheese is bubbly and golden. Serve hot."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "spiced-fish-taco-bowl-avocado-lime-crema",
+    title: "Spiced Fish Taco Bowl with Avocado-Lime Crema",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🐟",
+    tags: ["Seafood", "Taco-Bowl", "Fresh"],
+    description:
+      "Any meal featuring this exotic creation is sure to be a hit. The macadamia nut topping will make you the star of any potluck gathering.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#2E8B8B",
+
+    macro_profiles: {
+      serving_2: { calories: 1866, protein_g: 160, fat_g: 106, carbs_g: 68 },
+      serving_4: { calories: 3732, protein_g: 320, fat_g: 212, carbs_g: 136 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Halibut or cod fillets", prep: "chopped into bite-size pieces", quantity: "2", unit: "large (about 14 oz each)", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Extra-virgin olive oil or avocado oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh or frozen cauliflower rice", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Shredded green cabbage or coleslaw mix", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Radishes", prep: "thinly sliced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Macadamia nuts", prep: "chopped", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "", quantity: "1", unit: "bunch", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise", prep: "such as Primal Kitchen Mayo", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Limes", prep: "zest and juice", quantity: "2", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "for the dressing", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Halibut or cod fillets", prep: "chopped into bite-size pieces", quantity: "4", unit: "large (about 14 oz each)", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Extra-virgin olive oil or avocado oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Fresh or frozen cauliflower rice", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Shredded green cabbage or coleslaw mix", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Radishes", prep: "thinly sliced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Macadamia nuts", prep: "chopped", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "", quantity: "2", unit: "bunches", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise", prep: "such as Primal Kitchen Mayo", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Limes", prep: "zest and juice", quantity: "4", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "", quantity: "2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "for the dressing", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the fish",
+        detail:
+          "Pat the fish dry with paper towels and season with the salt, pepper, cumin, and chili powder."
+      },
+      {
+        step_number: 2,
+        title: "Cook the fish & rice",
+        detail:
+          "Heat the oil in a large skillet over medium-high heat. Cook the fish until fork-tender, 6 to 8 minutes total, turning halfway through. Add the cauliflower rice, toss, and remove from the heat."
+      },
+      {
+        step_number: 3,
+        title: "Make the avocado-lime crema",
+        detail:
+          "To make the dressing, combine the avocado, cilantro, mayonnaise, lime zest and juice, garlic, and salt in a blender. Blend until smooth."
+      },
+      {
+        step_number: 4,
+        title: "Assemble the bowls",
+        detail:
+          "Spread the cabbage at the bottom of a large bowl, then layer the fish mixture over it. Top with the dressing, radishes, and macadamia nuts."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dill-pickle-super-burgers",
+    title: "Dill Pickle Super-Burgers",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍔",
+    tags: ["Burgers", "Low-Carb", "Tangy"],
+    description:
+      "Classic dill pickle is paired with pepperoncini, cream cheese, and fresh dill and finished with a healthy scoop of gut-healing sauerkraut. The buttery score is off the charts. Are you salivating yet?",
+    prep_time_mins: 10,
+    cook_time_mins: 12,
+    native_serving: 2,
+    accent: "#6B8E23",
+
+    macro_profiles: {
+      serving_2: { calories: 857, protein_g: 74, fat_g: 57, carbs_g: 12 },
+      serving_4: { calories: 1714, protein_g: 148, fat_g: 114, carbs_g: 24 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground bison or beef", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "divided", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lard or beef tallow", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Uncured bacon", prep: "diced", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Full-fat cream cheese", prep: "softened", quantity: "4", unit: "oz", category: "Dairy" },
+        { item: "Dill pickles", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Dill pickle juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pepperoncini", prep: "diced", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Fresh dill", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Romaine or Bibb lettuce leaves", prep: "large", quantity: "2", unit: "", category: "Produce" },
+        { item: "Sauerkraut", prep: "drained", quantity: "1/2", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Ground bison or beef", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "divided", quantity: "3", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lard or beef tallow", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Uncured bacon", prep: "diced", quantity: "16", unit: "slices", category: "Meat" },
+        { item: "Full-fat cream cheese", prep: "softened", quantity: "8", unit: "oz", category: "Dairy" },
+        { item: "Dill pickles", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Dill pickle juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Pepperoncini", prep: "diced", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Fresh dill", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Romaine or Bibb lettuce leaves", prep: "large", quantity: "4", unit: "", category: "Produce" },
+        { item: "Sauerkraut", prep: "drained", quantity: "1", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the meat",
+        detail:
+          "In a medium bowl, combine the ground meat with the salt, pepper, 1 teaspoon garlic powder, and onion powder."
+      },
+      {
+        step_number: 2,
+        title: "Fry the bacon",
+        detail:
+          "In a large skillet, heat the lard over medium-high heat. Fry the bacon pieces until just crisp. Remove with a slotted spoon, reserving the fat in the pan."
+      },
+      {
+        step_number: 3,
+        title: "Cook the patties",
+        detail:
+          "Shape the meat mixture into two oval patties. Sauté in the remaining fat over medium-high heat for 3 minutes per side."
+      },
+      {
+        step_number: 4,
+        title: "Make the spread & assemble",
+        detail:
+          "In a small bowl, combine the cream cheese, dill pickles, pickle juice, pepperoncini, remaining garlic powder, dill, and scallions. Arrange each meat patty on a lettuce leaf and top with a generous dollop of the cream cheese mixture and the sauerkraut."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemony-tuna-casserole",
+    title: "Lemony Tuna Casserole",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🐟",
+    tags: ["Seafood", "One-Skillet", "Comfort"],
+    description:
+      "Put a creative spin on an all-American classic by using cabbage or spaghetti squash instead of pasta.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#E0A526",
+
+    macro_profiles: {
+      serving_2: { calories: 1052, protein_g: 70, fat_g: 64, carbs_g: 49 },
+      serving_4: { calories: 2104, protein_g: 140, fat_g: 128, carbs_g: 98 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "", quantity: "1", unit: "stick", category: "Dairy" },
+        { item: "Onion", prep: "diced small", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Celery stalks", prep: "diced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Green cabbage", prep: "cut into 1/2-inch strips (or 4 cups cooked spaghetti squash)", quantity: "1", unit: "small head", category: "Produce" },
+        { item: "Canned tuna in water", prep: "drained", quantity: "12-15", unit: "oz", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest of 1, juice of ½", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Frozen green peas", prep: "thawed (optional)", quantity: "1/2", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "", quantity: "2", unit: "sticks", category: "Dairy" },
+        { item: "Onion", prep: "diced small", quantity: "2", unit: "large", category: "Produce" },
+        { item: "Celery stalks", prep: "diced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Green cabbage", prep: "cut into 1/2-inch strips (or 8 cups cooked spaghetti squash)", quantity: "2", unit: "small heads", category: "Produce" },
+        { item: "Canned tuna in water", prep: "drained", quantity: "24-30", unit: "oz", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "12", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest of 2, juice of 1", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Frozen green peas", prep: "thawed (optional)", quantity: "1", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Soften the vegetables",
+        detail:
+          "In a large skillet, melt the butter over medium heat. Sauté the onion and celery until translucent, about three minutes. Add the cabbage, then increase the heat to medium-high. Toss frequently and cook until softened."
+      },
+      {
+        step_number: 2,
+        title: "Add tuna & seasonings",
+        detail:
+          "Add the tuna, garlic, lemon zest and juice, parsley, salt, pepper, red pepper flakes, and peas if desired. Remove from the heat and toss to coat. Adjust seasoning, then serve hot."
+      },
+      {
+        step_number: 3,
+        title: "Spaghetti squash option",
+        detail:
+          "To use spaghetti squash instead of cabbage, preheat the oven to 450°F and line a baking sheet with parchment paper. Cut a small spaghetti squash in half lengthwise, scoop out the seeds, and season generously with olive oil, salt, and pepper. Place the halves cut side down on the prepared baking sheet and roast until fork-tender and slightly golden, about 25 minutes."
+      }
+    ]
   }
 ];
 
