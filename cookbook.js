@@ -74,6 +74,20 @@
     return String(Math.round(v * 100) / 100);
   }
 
+  /* ── Favorites (shared store with the home/Favorites tab) ─────────── */
+  var FAV_KEY = "mc-cookbook:favorites";
+  function loadFavs() {
+    try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function isFav(id) { return loadFavs().has(id); }
+  function toggleFav(id) {
+    var set = loadFavs();
+    if (set.has(id)) set.delete(id); else set.add(id);
+    try { localStorage.setItem(FAV_KEY, JSON.stringify([].slice.call(set))); } catch (e) {}
+    return set.has(id);
+  }
+
   /* ── Persistence ──────────────────────────────────────────────────── */
   function storeKey(recipeId, serving, kind) {
     return "mc-cookbook:" + recipeId + ":s" + serving + ":" + kind;
@@ -102,6 +116,24 @@
   function renderHeader(r) {
     var h = $("#header");
     h.innerHTML = "";
+
+    // Back link + favorite toggle row.
+    var nav = el("div", "r-nav");
+    var back = el("a", "r-back", "‹ Back");
+    back.href = document.referrer && /collection\.html|index\.html/.test(document.referrer)
+      ? "javascript:history.back()" : "index.html#recipes";
+    nav.appendChild(back);
+    var heart = el("button", "fav-toggle r-fav" + (isFav(r.recipe_id) ? " on" : ""),
+      isFav(r.recipe_id) ? "❤" : "♡");
+    heart.type = "button";
+    heart.setAttribute("aria-label", "Toggle favorite");
+    heart.addEventListener("click", function () {
+      var on = toggleFav(r.recipe_id);
+      heart.classList.toggle("on", on);
+      heart.textContent = on ? "❤" : "♡";
+    });
+    nav.appendChild(heart);
+    h.appendChild(nav);
 
     var eyebrow = el("div", "r-eyebrow");
     eyebrow.appendChild(el("span", "r-tag", esc(r.category)));
