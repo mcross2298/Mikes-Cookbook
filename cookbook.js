@@ -284,6 +284,10 @@
     // Method: the numbered, checkable stepper.
     var method = el("div", "card");
     method.appendChild(el("p", "card-label", "Method"));
+    var wakeInd = el("div", "wake-indicator", '<span class="wake-dot"></span>Screen staying on while you cook');
+    wakeInd.id = "wake-indicator";
+    wakeInd.setAttribute("aria-hidden", "true");
+    method.appendChild(wakeInd);
     method.appendChild(el("p", "step-progress",
       stepDone.size + " of " + steps.length + " steps complete"));
     var wrap = el("div", "steps");
@@ -332,6 +336,47 @@
     return row;
   }
 
+  /* ── Screen Wake Lock — keep the screen awake on the Method tab ─────── */
+  // Greasy hands shouldn't have to wake a sleeping screen mid-cook. We hold a
+  // wake lock only while the Recipe (Method) tab is active, release it on every
+  // other tab, and re-acquire when the user returns to the tab (browsers drop
+  // the lock whenever the page is hidden). Silently no-op where unsupported.
+  var wake = (function () {
+    var supported = "wakeLock" in navigator;
+    var sentinel = null;
+    var want = false; // whether we currently want the lock held
+
+    function indicator(on) {
+      var ind = $("#wake-indicator");
+      if (!ind) return;
+      ind.classList.toggle("on", !!on);
+      ind.setAttribute("aria-hidden", on ? "false" : "true");
+    }
+    function acquire() {
+      if (!supported || sentinel) return;
+      navigator.wakeLock.request("screen").then(function (s) {
+        sentinel = s;
+        indicator(true);
+        s.addEventListener("release", function () {
+          sentinel = null;
+          indicator(false);
+        });
+      }).catch(function () { indicator(false); }); // denied / low battery → no-op
+    }
+    function release() {
+      indicator(false);
+      if (sentinel) { sentinel.release().catch(function () {}); sentinel = null; }
+    }
+    function set(on) {
+      want = !!on;
+      if (want) acquire(); else release();
+    }
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible" && want) acquire();
+    });
+    return { set: set };
+  })();
+
   /* ── Sub-tab switching (+ swipe) ──────────────────────────────────── */
   var TABS = ["overview", "grocery", "recipe"];
   function setTab(name) {
@@ -340,6 +385,7 @@
       $("#tab-" + t).classList.toggle("active", t === name);
       $("#pane-" + t).classList.toggle("active", t === name);
     });
+    wake.set(name === "recipe"); // hold the screen awake only while cooking
   }
   function wireTabs() {
     TABS.forEach(function (t) {
