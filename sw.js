@@ -12,6 +12,7 @@ const CACHE_URLS = [
   './collection.js',
   './cookbook-home.js',
   './cookbook-nav.js',
+  './cookbook-sw.js',
   './cookbook.css',
   './cookbook.js',
   './icon.svg',
@@ -22,11 +23,17 @@ const CACHE_URLS = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Note: we deliberately do NOT skipWaiting() here. A new version installs and
+  // waits, so the page can surface an "update available" toast and activate it
+  // only when the user taps Refresh (see the SKIP_WAITING message below).
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(CACHE_URLS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CACHE_URLS))
   );
+});
+
+// The page asks the waiting worker to take over (user tapped Refresh).
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

@@ -21,12 +21,6 @@
   <script src="recipes-data.js"></script>
   <script src="cookbook-nav.js"></script>
   <script src="collection.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").catch(function () {});
-      });
-    }
-  </script>
+  <script src="cookbook-sw.js"></script>
 </body>
 </html>
