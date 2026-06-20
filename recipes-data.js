@@ -414,6 +414,413 @@ const RECIPES = [
           "Transfer the skillet to the middle rack of the oven and broil until the cheese is bubbly and golden, about 5 minutes. Remove from the oven, garnish with the basil, and serve hot."
       }
     ]
+  },
+
+  {
+    recipe_id: "dry-rubbed-chicken-thighs-zucchini",
+    title: "Dry-Rubbed Chicken Thighs with Broiled Zucchini",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍗",
+    tags: ["Sheet-Pan", "High-Protein", "Summer"],
+    description:
+      "Summer, when zucchini is at its best, is the perfect time to put this recipe on repeat. A little Parmesan cheese goes a long way, heightening this dish's naturally sweet and salty flavors.",
+    prep_time_mins: 5,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#B86B3D",
+
+    macro_profiles: {
+      serving_2: { calories: 756, protein_g: 88, fat_g: 36, carbs_g: 20 },
+      serving_4: { calories: 1512, protein_g: 176, fat_g: 72, carbs_g: 40 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Boneless, skinless chicken thighs", prep: "", quantity: "4", unit: "", category: "Meat" },
+        { item: "Zucchini", prep: "cut in half lengthwise", quantity: "4", unit: "small", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Italian seasoning", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Extra-virgin olive oil or avocado oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Boneless, skinless chicken thighs", prep: "", quantity: "8", unit: "", category: "Meat" },
+        { item: "Zucchini", prep: "cut in half lengthwise", quantity: "8", unit: "small", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Extra-virgin olive oil or avocado oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat & prep the pans",
+        detail:
+          "Preheat the oven to 425°F. Line two baking sheets with parchment paper. Arrange the chicken thighs on one and the zucchini halves on the other."
+      },
+      {
+        step_number: 2,
+        title: "Season & bake the chicken",
+        detail:
+          "In a small bowl, combine the salt, garlic powder, onion powder, paprika, Italian seasoning, and ½ teaspoon of the pepper. Rub the seasoning mixture into the chicken thighs with your fingers. Put the chicken in the oven and bake for 20 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Dress the zucchini",
+        detail:
+          "Meanwhile, drizzle the zucchini halves with the olive oil and sprinkle with the Parmesan and the remaining ½ teaspoon pepper."
+      },
+      {
+        step_number: 4,
+        title: "Broil the zucchini",
+        detail:
+          "Turn the oven to its lowest broiler setting and move the chicken to the bottom rack. Place the zucchini pan in the top third of the oven and broil for about 5 minutes, or until the zucchini is fork-tender and the cheese is bubbly."
+      },
+      {
+        step_number: 5,
+        title: "Check & serve",
+        detail:
+          "Once the chicken thighs reach an internal temperature of 160°F, remove them from the oven and serve with the zucchini immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "broiled-salmon-asparagus",
+    title: "Broiled Salmon and Asparagus",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🐟",
+    tags: ["Sheet-Pan", "Quick", "High-Protein"],
+    description:
+      "Freshly broiled salmon served with seasonal vegetables is one of the greatest culinary pairings known to humankind. Keep a supply of frozen wild-caught salmon fillets in your freezer so you can whip up this dish anytime, along with the freshest vegetables of the season.",
+    prep_time_mins: 5,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#D27E5E",
+
+    macro_profiles: {
+      serving_2: { calories: 1009, protein_g: 121, fat_g: 53, carbs_g: 12 },
+      serving_4: { calories: 2018, protein_g: 242, fat_g: 106, carbs_g: 24 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh rosemary", prep: "minced", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Fresh thyme", prep: "minced", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Prepared whole grain mustard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Extra-virgin olive oil", prep: "divided", quantity: "1/4 cup + 1 tbsp", unit: "", category: "Pantry" },
+        { item: "Salt", prep: "plus more to taste", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "plus more to taste", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon", prep: "zest of 1, juice of ½", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salmon fillets (about 8 oz each)", prep: "", quantity: "2", unit: "", category: "Meat" },
+        { item: "Fresh asparagus", prep: "ends trimmed", quantity: "1", unit: "bunch", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Fresh rosemary", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Fresh thyme", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Prepared whole grain mustard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Extra-virgin olive oil", prep: "divided", quantity: "1/2 cup + 2 tbsp", unit: "", category: "Pantry" },
+        { item: "Salt", prep: "plus more to taste", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "plus more to taste", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon", prep: "zest of 2, juice of 1", quantity: "2", unit: "", category: "Produce" },
+        { item: "Salmon fillets (about 8 oz each)", prep: "", quantity: "4", unit: "", category: "Meat" },
+        { item: "Fresh asparagus", prep: "ends trimmed", quantity: "2", unit: "bunches", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the broiler",
+        detail:
+          "Preheat the broiler to its highest setting. Line a sheet pan with parchment paper."
+      },
+      {
+        step_number: 2,
+        title: "Make the mustard-herb sauce",
+        detail:
+          "In a small bowl, combine the garlic, rosemary, thyme, mustard, ¼ cup of the olive oil, 1 teaspoon salt, ½ teaspoon pepper, and the lemon zest and juice."
+      },
+      {
+        step_number: 3,
+        title: "Arrange & broil",
+        detail:
+          "Arrange the salmon fillets and asparagus on the prepared sheet pan. Drizzle the asparagus with the remaining 1 tablespoon olive oil and season with salt and pepper. Broil on the middle rack of the oven for 2 minutes, then cover the salmon fillets with the mustard-herb sauce and broil until flaky and just cooked through, about 5 minutes. Remove from the oven and serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "asian-turkey-meatballs-spaghetti-squash",
+    title: "Asian Turkey Meatballs with Roasted Spaghetti Squash",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🧆",
+    tags: ["Asian-Inspired", "Sheet-Pan", "High-Protein"],
+    description:
+      "Anyone who takes the leap and replaces grain-based pasta with spaghetti squash knows the truth: not only is spaghetti squash much more healthful, it also tastes much better! If you have an Instant Pot, your squash cooking time will be reduced dramatically, giving you more time to play outside.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#C7913F",
+
+    macro_profiles: {
+      serving_2: { calories: 746, protein_g: 63, fat_g: 46, carbs_g: 20 },
+      serving_4: { calories: 1492, protein_g: 126, fat_g: 92, carbs_g: 40 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Spaghetti squash", prep: "", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Ground turkey", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Fresh cilantro leaves", prep: "chopped, divided", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "chopped, divided", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Yai's Thai Chili Garlic Hot Sauce", prep: "plus more for serving if desired", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Large egg", prep: "", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds (raw or roasted)", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Spaghetti squash", prep: "", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Ground turkey", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Fresh cilantro leaves", prep: "chopped, divided", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Scallions", prep: "chopped, divided", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Yai's Thai Chili Garlic Hot Sauce", prep: "plus more for serving if desired", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Large egg", prep: "", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds (raw or roasted)", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat & prep the pans",
+        detail:
+          "Preheat the oven to 450°F. Line two baking sheets with parchment paper."
+      },
+      {
+        step_number: 2,
+        title: "Roast the spaghetti squash",
+        detail:
+          "Cut the spaghetti squash in half lengthwise. Scoop out the seeds, then season the inside of both halves with the olive oil, salt, and pepper. Place the halves cut side down on one of the sheet pans and bake for 25 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Mix & roll the meatballs",
+        detail:
+          "Meanwhile, combine the turkey, ½ cup of the cilantro, ½ cup of the scallions, 1 tablespoon chili garlic sauce, the coconut aminos, garlic, ginger, egg, and sesame oil in a medium bowl. Roll into balls about 2 inches in diameter and arrange them on the second sheet pan."
+      },
+      {
+        step_number: 4,
+        title: "Broil the meatballs",
+        detail:
+          "When the squash is done, set it aside to cool, then preheat the broiler to its highest setting. Place the meatballs in the bottom third of the oven and broil for 13 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Assemble & serve",
+        detail:
+          "While the meatballs cook, scoop out the spaghetti squash flesh with a large fork and divide it between two serving plates. Serve the hot meatballs over the spaghetti squash and garnish with the remaining cilantro and scallions, the sesame seeds, and additional chili sauce if desired."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cilantro-lime-flank-steak-green-beans",
+    title: "Grilled Cilantro-Lime Flank Steak with Spiced Sesame Green Beans",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥩",
+    tags: ["Grilled", "Make-Ahead", "High-Fat"],
+    description:
+      "The fresh flavor of lime pairs with the warm and grounding flavors of coconut aminos and sesame oil for a delicious and memorable combination. Flank steak marinates in just thirty minutes, making this recipe a great choice when you're pressed for time.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#A05A45",
+
+    macro_profiles: {
+      serving_2: { calories: 588, protein_g: 38, fat_g: 42, carbs_g: 15 },
+      serving_4: { calories: 1176, protein_g: 75, fat_g: 84, carbs_g: 30 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Fresh cilantro leaves", prep: "", quantity: "1", unit: "bunch", category: "Produce" },
+        { item: "Scallions (white and tender green parts only)", prep: "", quantity: "1", unit: "bunch", category: "Produce" },
+        { item: "Garlic cloves", prep: "", quantity: "4", unit: "", category: "Produce" },
+        { item: "Limes", prep: "zest and juice", quantity: "3", unit: "", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Flank steak", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Sesame oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yai's Thai Chili Garlic Hot Sauce", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh green beans", prep: "", quantity: "1", unit: "lb", category: "Produce" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Fresh cilantro leaves", prep: "", quantity: "2", unit: "bunches", category: "Produce" },
+        { item: "Scallions (white and tender green parts only)", prep: "", quantity: "2", unit: "bunches", category: "Produce" },
+        { item: "Garlic cloves", prep: "", quantity: "8", unit: "", category: "Produce" },
+        { item: "Limes", prep: "zest and juice", quantity: "6", unit: "", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Flank steak", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Yai's Thai Chili Garlic Hot Sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh green beans", prep: "", quantity: "2", unit: "lb", category: "Produce" },
+        { item: "Water", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the marinade",
+        detail:
+          "In a blender, combine the olive oil, cilantro, scallions, garlic, lime zest and juice, salt, and pepper. Blend until smooth. Pour half the sauce into a large nonreactive baking dish or a resealable plastic bag. Add the flank steak and massage to coat. Marinate at least 30 minutes or overnight."
+      },
+      {
+        step_number: 2,
+        title: "Grill the steak",
+        detail:
+          "Heat a grill to medium-high. Place the marinated flank steak on the grill and cook for about 5 minutes per side. Remove when the internal temperature reaches 125°F. Place the meat on a cutting board and tent with foil to finish the cooking process."
+      },
+      {
+        step_number: 3,
+        title: "Cook the green beans",
+        detail:
+          "In a large pan, melt the butter over medium-high heat. Add the sesame oil, coconut aminos, and chili garlic sauce. Stir together, then add the green beans, tossing to coat. Cook, stirring occasionally, for 5 minutes. Add the water and continue to cook, stirring, until the liquid evaporates and the beans are tender."
+      },
+      {
+        step_number: 4,
+        title: "Slice & serve",
+        detail:
+          "Slice the steak against the grain and serve it alongside the green beans, drizzled with the remaining herb sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-divan",
+    title: "Chicken Divan",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🧀",
+    tags: ["Casserole", "Comfort", "High-Fat"],
+    description:
+      "Creamy chicken with broccoli and mushrooms gets even more comforting and pleasurable with the addition of shredded Cheddar cheese.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#C99A4E",
+
+    macro_profiles: {
+      serving_2: { calories: 357, protein_g: 23, fat_g: 27, carbs_g: 6 },
+      serving_4: { calories: 714, protein_g: 45, fat_g: 54, carbs_g: 12 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "divided", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
+        { item: "Salt", prep: "divided", quantity: "1 3/4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "7/8", unit: "tsp", category: "Pantry" },
+        { item: "Broccoli florets", prep: "cut into bite-size pieces", quantity: "1 1/2", unit: "cups", category: "Produce" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Shredded Cheddar cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "divided", quantity: "1", unit: "stick", category: "Dairy" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
+        { item: "Salt", prep: "divided", quantity: "3 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "1 3/4", unit: "tsp", category: "Pantry" },
+        { item: "Broccoli florets", prep: "cut into bite-size pieces", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Shredded Cheddar cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the oven",
+        detail: "Preheat the oven to 425°F."
+      },
+      {
+        step_number: 2,
+        title: "Brown the chicken",
+        detail:
+          "In a large skillet over medium heat, melt 4 tablespoons butter. Add the chicken pieces, season with 1 teaspoon salt and ½ teaspoon pepper, and sauté until cooked through, about 5 minutes. Transfer to the bottom of a 9- × 13-inch casserole dish and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the broccoli",
+        detail:
+          "Increase the heat under the skillet to medium-high and melt the remaining butter. Add the broccoli, season with ½ teaspoon salt and ¼ teaspoon pepper, and cook until crisp-tender, about 5 minutes. Layer the broccoli over the chicken."
+      },
+      {
+        step_number: 4,
+        title: "Make the cream sauce",
+        detail:
+          "Add the mushrooms, onion, and garlic to the skillet and sauté for 5 minutes. Add the heavy cream, parsley, 2 teaspoons salt, and 1 teaspoon pepper and stir to combine. Pour the cream mixture over the chicken and broccoli, then top with the shredded cheese."
+      },
+      {
+        step_number: 5,
+        title: "Bake & serve",
+        detail:
+          "Bake on the middle rack of the oven until the cheese is bubbly and golden, about 15 minutes. Serve immediately."
+      }
+    ]
   }
 ];
 
