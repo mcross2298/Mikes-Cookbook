@@ -821,6 +821,441 @@ const RECIPES = [
           "Bake on the middle rack of the oven until the cheese is bubbly and golden, about 15 minutes. Serve immediately."
       }
     ]
+  },
+
+  {
+    recipe_id: "skillet-reuben",
+    title: "Skillet Reuben",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥪",
+    tags: ["Skillet", "Comfort", "High-Fat"],
+    description:
+      "Salty corned beef broiled with sweet Swiss cheese captures the heart's every single time, so make this when you need a little extra self-love or when you're wanting to share that love with a friend.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#B5654D",
+
+    macro_profiles: {
+      serving_2: { calories: 1245, protein_g: 88, fat_g: 77, carbs_g: 50 },
+      serving_4: { calories: 2490, protein_g: 176, fat_g: 154, carbs_g: 100 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Corned beef", prep: "coarsely chopped", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Coleslaw mix", prep: "about 4 cups total", quantity: "1", unit: "(11-oz) bag", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "bunch", category: "Produce" },
+        { item: "Swiss cheese", prep: "", quantity: "4", unit: "slices", category: "Dairy" },
+        { item: "Sauerkraut", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Prepared horseradish", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "", quantity: "6", unit: "tbsp", category: "Dairy" },
+        { item: "Corned beef", prep: "coarsely chopped", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Coleslaw mix", prep: "about 8 cups total", quantity: "2", unit: "(11-oz) bags", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "bunches", category: "Produce" },
+        { item: "Swiss cheese", prep: "", quantity: "8", unit: "slices", category: "Dairy" },
+        { item: "Sauerkraut", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Prepared horseradish", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the broiler",
+        detail: "Preheat the broiler to its highest setting."
+      },
+      {
+        step_number: 2,
+        title: "Sauté & broil",
+        detail:
+          "In a large ovenproof skillet over medium-high heat, melt the butter. Add the corned beef and sauté for 3 minutes. Add the coleslaw mix and sauté for 5 minutes, stirring occasionally. Top with scallions, then the cheese slices, and place under the broiler for 2 to 3 minutes, or until the cheese is bubbly and golden."
+      },
+      {
+        step_number: 3,
+        title: "Whisk the dressing",
+        detail:
+          "In a small bowl, whisk together the mayonnaise, tomato paste, horseradish, vinegar, salt, and pepper."
+      },
+      {
+        step_number: 4,
+        title: "Serve",
+        detail:
+          "Remove the skillet from the broiler and serve with the sauce drizzled over the top and the sauerkraut on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-herb-pork-tenderloins-broccoli",
+    title: "Lemon and Herb Pork Tenderloins with Broiled Broccoli",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍋",
+    tags: ["Grilled", "Make-Ahead", "High-Protein"],
+    description:
+      "Adding lemon zest to a warm recipe like this gives it a special burst of flavor, so try to keep fresh lemons in your kitchen at all times. Get comfortable using your broiler by watching the pan carefully and pulling it out when the meat and vegetables are perfectly bronze and crispy but not burned. Adjust the cooking times based on your experience, because ovens can vary a bit.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B7A23F",
+
+    macro_profiles: {
+      serving_2: { calories: 533, protein_g: 35, fat_g: 41, carbs_g: 8 },
+      serving_4: { calories: 1065, protein_g: 69, fat_g: 81, carbs_g: 15 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lemons", prep: "zest and juice", quantity: "2", unit: "", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "French whole grain old-fashioned mustard", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh rosemary", prep: "chopped", quantity: "1 1/2", unit: "tsp", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1 1/2", unit: "tsp", category: "Produce" },
+        { item: "Fresh thyme", prep: "chopped", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Salt", prep: "or more or less to taste", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pork tenderloins (about 1 lb each)", prep: "", quantity: "1", unit: "", category: "Meat" },
+        { item: "Fresh broccoli florets", prep: "", quantity: "2 1/2", unit: "cups", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "for the broccoli", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "for the broccoli", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "for the broccoli", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lemons", prep: "zest and juice", quantity: "4", unit: "", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "French whole grain old-fashioned mustard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh rosemary", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Fresh thyme", prep: "chopped", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Salt", prep: "or more or less to taste", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pork tenderloins (about 1 lb each)", prep: "", quantity: "2", unit: "", category: "Meat" },
+        { item: "Fresh broccoli florets", prep: "", quantity: "5", unit: "cups", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "for the broccoli", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "for the broccoli", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pepper", prep: "for the broccoli", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the pork",
+        detail:
+          "Combine the lemon zest and juice, olive oil, garlic, mustard, rosemary, parsley, thyme, salt, and pepper in a large nonreactive bowl, glass baking dish, or gallon-size resealable plastic bag. Add the pork tenderloins and marinate at least 30 minutes or overnight."
+      },
+      {
+        step_number: 2,
+        title: "Preheat & prep the broccoli",
+        detail:
+          "Preheat the broiler to its highest setting and heat a grill to medium-high. Line a baking sheet with parchment paper and arrange the broccoli on it in a single layer. Season with the olive oil, salt, and pepper and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Grill the tenderloins",
+        detail:
+          "Place the tenderloins on the grill, reserving the marinade. Cook for 6 to 8 minutes on each side, until the internal temperature reaches 140°F. Remove from the heat and let rest for 10 minutes before cutting."
+      },
+      {
+        step_number: 4,
+        title: "Broil the broccoli",
+        detail:
+          "Meanwhile, place the broccoli pan in the top third of the oven and broil for about 6 minutes, or until the florets are crisp-tender and beginning to char."
+      },
+      {
+        step_number: 5,
+        title: "Boil the marinade",
+        detail:
+          "Transfer the remaining meat marinade to a small saucepan. Bring to a boil, then boil for 3 minutes. Remove from the heat."
+      },
+      {
+        step_number: 6,
+        title: "Slice & serve",
+        detail:
+          "Slice the tenderloins into one-inch rounds and serve with the broccoli and warm marinade drizzled over the top."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "instant-pot-pulled-pork-coleslaw",
+    title: "Instant Pot Pulled Pork and Coleslaw",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍖",
+    tags: ["Instant-Pot", "Make-Ahead", "High-Protein"],
+    description:
+      "Have you tried cooking pork in the Instant Pot electric pressure cooker? Every tender and juicy bite will taste just as if it's been slow-cooking all day. After you make it this way, you won't want to cook it any other way. Enjoy this throughout the week over a big pile of leafy greens, in a bowl with cauliflower rice, or just by itself—it's that good!",
+    prep_time_mins: 8,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#9C6B43",
+
+    macro_profiles: {
+      serving_2: { calories: 643, protein_g: 43, fat_g: 43, carbs_g: 23 },
+      serving_4: { calories: 1285, protein_g: 85, fat_g: 85, carbs_g: 45 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "cut into large dice", quantity: "1/2", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Oregano", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Powdered mustard", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "divided", quantity: "3/4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "3/4", unit: "tsp", category: "Pantry" },
+        { item: "Pork shoulder or sirloin roast", prep: "cut into 2-inch cubes", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Bone broth", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coleslaw mix", prep: "about 4 cups total", quantity: "1", unit: "(11-oz) bag", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Lard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "cut into large dice", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Oregano", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Powdered mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "divided", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pork shoulder or sirloin roast", prep: "cut into 2-inch cubes", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Bone broth", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Coleslaw mix", prep: "about 8 cups total", quantity: "2", unit: "(11-oz) bags", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sauté & pressure-cook the pork",
+        detail:
+          "Combine the lard and onion in the bottom of an Instant Pot and cook on the sauté setting for 2 minutes. Then add the garlic, cumin, coriander, paprika, oregano, mustard, coconut aminos, 1 teaspoon salt, 1 teaspoon pepper, and pork. Stir to coat, then add the bone broth. Cover and cook on the meat setting for 20 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Dress the coleslaw",
+        detail:
+          "Meanwhile, combine the mayonnaise, vinegar, remaining ½ teaspoon salt, and remaining ½ teaspoon pepper in a large bowl. Add the coleslaw mix and toss thoroughly to combine."
+      },
+      {
+        step_number: 3,
+        title: "Shred the pork",
+        detail:
+          "When the pork is done, remove it from the pot, shred or chop it, then return it to the pot so it can soak up the juices."
+      },
+      {
+        step_number: 4,
+        title: "Serve",
+        detail:
+          "Serve hot, spooning the pork over the coleslaw mixture or serving the coleslaw on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chaffle-blts-avocado-lemon-garlic-aioli",
+    title: "Chaffle BLTs with Avocado and Lemon-Garlic Aioli",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🧇",
+    tags: ["Quick", "Sandwich", "High-Fat"],
+    description:
+      "Remember my brilliant suggestion to make chaffles (page 226)? Well, now's the time to haul those chaffles out of the freezer and whip up these open-faced sammies with mouthwatering lemon-garlic aioli. The savory taste will make them a favorite as soon as you take your first bite!",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#CD9A55",
+
+    macro_profiles: {
+      serving_2: { calories: 763, protein_g: 33, fat_g: 59, carbs_g: 25 },
+      serving_4: { calories: 1526, protein_g: 66, fat_g: 118, carbs_g: 50 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Large pastured eggs", prep: "", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Shredded cheese, such as Cheddar or a mixture of half Parmesan and half mozzarella", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Scallion", prep: "thinly sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Romaine or Bibb lettuce leaves", prep: "", quantity: "4", unit: "large", category: "Produce" },
+        { item: "Uncured bacon", prep: "cooked", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Avocado", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Large fresh tomato", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "for the aioli", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Garlic clove", prep: "minced", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice of 1/2", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Pepper", prep: "for the aioli", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Large pastured eggs", prep: "", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Shredded cheese, such as Cheddar or a mixture of half Parmesan and half mozzarella", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Scallion", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Romaine or Bibb lettuce leaves", prep: "", quantity: "8", unit: "large", category: "Produce" },
+        { item: "Uncured bacon", prep: "cooked", quantity: "16", unit: "slices", category: "Meat" },
+        { item: "Avocado", prep: "sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Large fresh tomato", prep: "sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "for the aioli", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Garlic clove", prep: "minced", quantity: "2", unit: "large", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice of 1", quantity: "1", unit: "", category: "Produce" },
+        { item: "Pepper", prep: "for the aioli", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chaffles",
+        detail:
+          "In a medium bowl, combine the eggs, shredded cheese, pepper, and scallion. Pour the batter into a waffle maker and cook according to the manufacturer's directions—in two batches if necessary—until golden brown. Transfer to a wire rack."
+      },
+      {
+        step_number: 2,
+        title: "Make the aioli",
+        detail:
+          "While the chaffles are cooking, make the aioli: in a small bowl, whisk together the mayonnaise, garlic, lemon zest and juice, and pepper."
+      },
+      {
+        step_number: 3,
+        title: "Assemble & serve",
+        detail:
+          "Onto each chaffle, layer a lettuce leaf followed by two slices of bacon, some avocado slices, and some tomato slices. Drizzle the sandwiches with aioli and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "quick-butter-chicken-cauliflower-rice",
+    title: "Quick Butter Chicken and Cauliflower Rice",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍛",
+    tags: ["Quick", "One-Pot", "Comfort"],
+    description:
+      "If you're tired of plain old chicken, reinvigorate your taste buds with this preparation of cubed meat simmered in butter with diced tomatoes and fresh herbs and spices.",
+    prep_time_mins: 10,
+    cook_time_mins: 30,
+    native_serving: 2,
+    accent: "#D08B3E",
+
+    macro_profiles: {
+      serving_2: { calories: 1311, protein_g: 54, fat_g: 99, carbs_g: 51 },
+      serving_4: { calories: 2622, protein_g: 108, fat_g: 198, carbs_g: 102 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter or ghee", prep: "divided", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
+        { item: "Onion", prep: "minced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Turmeric", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garam masala", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "divided", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "3/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Diced tomatoes", prep: "", quantity: "1", unit: "(14-oz) can", category: "Pantry" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh or frozen cauliflower rice", prep: "", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "Freshly squeezed lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter or ghee", prep: "divided", quantity: "8", unit: "tbsp", category: "Dairy" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
+        { item: "Onion", prep: "minced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Turmeric", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garam masala", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "divided", quantity: "3", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Diced tomatoes", prep: "", quantity: "2", unit: "(14-oz) cans", category: "Pantry" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh or frozen cauliflower rice", prep: "", quantity: "6", unit: "cups", category: "Produce" },
+        { item: "Freshly squeezed lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the chicken",
+        detail:
+          "In a large pot or Dutch oven, melt 2 tablespoons butter over medium-high heat. Add the chicken and sauté until almost cooked through, about 8 minutes. Transfer to a plate and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Bloom the spices & simmer",
+        detail:
+          "Add the onion to the pot and cook until translucent, about 3 minutes, stirring occasionally to scrape up brown bits from the bottom. Add the garlic, ginger, turmeric, garam masala, 1 teaspoon salt, ½ teaspoon pepper, paprika, cumin, coriander, and cayenne. Stir and cook until fragrant, about 30 seconds. Add the diced tomatoes and simmer for 10 minutes. Using an immersion blender, blend the mixture until smooth. (Alternatively, transfer the mixture to a blender, blend until smooth, then return to the pot.)"
+      },
+      {
+        step_number: 3,
+        title: "Finish the sauce",
+        detail:
+          "Add the cream and stir to combine. Return the chicken and its juices to the pot. Bring to a simmer, then simmer for 5 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Cook the cauliflower rice",
+        detail:
+          "Meanwhile, melt the remaining 2 tablespoons butter in a medium saucepan over medium-high heat. Add the cauliflower rice and the remaining ½ teaspoon salt and ¼ teaspoon pepper. Cook until the rice is heated through and begins to brown slightly."
+      },
+      {
+        step_number: 5,
+        title: "Plate & serve",
+        detail:
+          "Divide the cauliflower rice between two serving plates. Top with the chicken and garnish with the lemon juice and cilantro."
+      }
+    ]
   }
 ];
 
