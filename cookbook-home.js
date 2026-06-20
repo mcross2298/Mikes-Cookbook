@@ -106,6 +106,8 @@
     card.style.setProperty("--rc-accent", accent);
     card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
 
+    // macro_profiles are stored as TOTALS for the tier; show per-serving macros
+    // on the card (serving_2 total ÷ 2 gives one individual serving).
     var m = (r.macro_profiles && r.macro_profiles.serving_2) || {};
     var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
 
@@ -114,8 +116,8 @@
     if (totalTime) meta.push(totalTime + " min");
 
     var macro = [];
-    if (m.calories != null) macro.push(m.calories + " cal");
-    if (m.protein_g != null) macro.push(m.protein_g + "g protein");
+    if (m.calories != null) macro.push(Math.round(m.calories / 2) + " cal");
+    if (m.protein_g != null) macro.push(Math.round(m.protein_g / 2) + "g protein");
 
     card.innerHTML =
       '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
