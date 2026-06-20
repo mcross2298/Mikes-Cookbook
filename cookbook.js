@@ -353,6 +353,12 @@
     method.appendChild(wakeInd);
     method.appendChild(el("p", "step-progress",
       stepDone.size + " of " + steps.length + " steps complete"));
+    if (steps.length) {
+      var startBtn = el("button", "cook-start", "▸ Start Cooking");
+      startBtn.type = "button";
+      startBtn.addEventListener("click", function () { enterCook(r); });
+      method.appendChild(startBtn);
+    }
     var wrap = el("div", "steps");
     steps.forEach(function (st) { wrap.appendChild(stepRow(r, st, stepDone)); });
     method.appendChild(wrap);
@@ -439,6 +445,149 @@
     });
     return { set: set };
   })();
+
+  /* ── Cooking Mode (full-screen, one big step at a time) ────────────── */
+  // The sanctioned exception to the persistent bottom bar: a distraction-free
+  // stepper for hands-busy cooking. Wake lock is on; the bar is hidden; type is
+  // large and user-scalable (persisted). Step done-state is the SAME store as
+  // the checklist, so progress stays in sync when you exit.
+  var COOK_FONT_KEY = "mc-cookbook:cookfont";
+  var cook = { active: false, index: 0, recipe: null };
+
+  function cookFont() {
+    var v = parseFloat(localStorage.getItem(COOK_FONT_KEY));
+    return isNaN(v) ? 1 : Math.max(0.8, Math.min(1.6, v));
+  }
+  function setCookFont(v) {
+    v = Math.max(0.8, Math.min(1.6, Math.round(v * 10) / 10));
+    try { localStorage.setItem(COOK_FONT_KEY, String(v)); } catch (e) {}
+    var o = $("#cook");
+    if (o) o.style.setProperty("--cook-font", v);
+    return v;
+  }
+  function stepsDone(r) { return loadSet(r.recipe_id, state.serving, "steps"); }
+  function markStep(r, num, on) {
+    var set = stepsDone(r);
+    if (on) set.add(num); else set.delete(num);
+    saveSet(r.recipe_id, state.serving, "steps", set);
+  }
+
+  function enterCook(r) {
+    var steps = r.instructions || [];
+    if (!steps.length) return;
+    cook.active = true; cook.recipe = r;
+    // Resume at the first not-yet-done step.
+    var done = stepsDone(r), start = 0;
+    for (var i = 0; i < steps.length; i++) {
+      if (!done.has(steps[i].step_number)) { start = i; break; }
+    }
+    cook.index = start;
+    document.body.classList.add("cooking");
+    wake.set(true);
+    renderCook();
+  }
+  function exitCook() {
+    cook.active = false;
+    document.body.classList.remove("cooking");
+    var o = $("#cook");
+    if (o) o.parentNode.removeChild(o);
+    wake.set(state.tab === "recipe");
+    if (cook.recipe) renderRecipe(cook.recipe); // refresh checklist marks + count
+  }
+  function cookGo(delta) {
+    var steps = cook.recipe.instructions || [];
+    var n = cook.index + delta;
+    if (n < 0) return;
+    if (n >= steps.length) { exitCook(); return; } // past the last step → finish
+    cook.index = n;
+    renderCook();
+  }
+
+  function renderCook() {
+    var r = cook.recipe, steps = r.instructions || [];
+    var st = steps[cook.index];
+    var isDone = stepsDone(r).has(st.step_number);
+    var last = cook.index === steps.length - 1;
+
+    var o = $("#cook");
+    if (!o) {
+      o = el("div", "cook");
+      o.id = "cook";
+      o.style.setProperty("--cook-font", cookFont());
+      $("main.app").appendChild(o);
+      wireCookSwipe(o);
+    }
+    o.innerHTML = "";
+
+    // Top: exit · counter · font scale
+    var top = el("div", "cook-top");
+    var exit = el("button", "cook-exit", "✕ Exit");
+    exit.type = "button";
+    exit.addEventListener("click", exitCook);
+    top.appendChild(exit);
+    top.appendChild(el("div", "cook-count", "Step " + (cook.index + 1) + " of " + steps.length));
+    var fonts = el("div", "cook-fonts");
+    var aMinus = el("button", "cook-font-btn", "A−");
+    aMinus.type = "button"; aMinus.setAttribute("aria-label", "Smaller text");
+    aMinus.addEventListener("click", function () { setCookFont(cookFont() - 0.1); });
+    var aPlus = el("button", "cook-font-btn", "A+");
+    aPlus.type = "button"; aPlus.setAttribute("aria-label", "Larger text");
+    aPlus.addEventListener("click", function () { setCookFont(cookFont() + 0.1); });
+    fonts.appendChild(aMinus); fonts.appendChild(aPlus);
+    top.appendChild(fonts);
+    o.appendChild(top);
+
+    // Progress
+    var prog = el("div", "cook-progress");
+    var bar = el("div", "cook-progress-bar");
+    bar.style.width = ((cook.index + 1) / steps.length * 100) + "%";
+    prog.appendChild(bar);
+    o.appendChild(prog);
+
+    // Body — the big step (tap to toggle done, like the checklist)
+    var body = el("div", "cook-body" + (isDone ? " done" : ""));
+    body.appendChild(el("div", "cook-step-num", isDone ? "✓" : String(st.step_number)));
+    body.appendChild(el("h2", "cook-step-title", esc(st.title)));
+    body.appendChild(el("p", "cook-step-detail", esc(st.detail)));
+    body.appendChild(el("p", "cook-tap-hint", isDone ? "Done · tap to undo" : "Tap to mark this step done"));
+    body.addEventListener("click", function () {
+      markStep(r, st.step_number, !stepsDone(r).has(st.step_number));
+      renderCook();
+    });
+    o.appendChild(body);
+
+    // Controls — prev · primary (done & next / finish)
+    var ctl = el("div", "cook-controls");
+    var prev = el("button", "cook-nav", "‹ Prev");
+    prev.type = "button"; prev.disabled = cook.index === 0;
+    prev.addEventListener("click", function () { cookGo(-1); });
+    var next = el("button", "cook-nav primary", last ? "Finish ✓" : "Done & Next ›");
+    next.type = "button";
+    next.addEventListener("click", function () {
+      markStep(r, st.step_number, true); // advancing completes the current step
+      cookGo(1);
+    });
+    ctl.appendChild(prev);
+    ctl.appendChild(next);
+    o.appendChild(ctl);
+  }
+
+  // Horizontal swipe inside cooking mode: left → next, right → prev (no marking).
+  function wireCookSwipe(o) {
+    var x0 = null, y0 = null;
+    o.addEventListener("touchstart", function (e) {
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, { passive: true });
+    o.addEventListener("touchend", function (e) {
+      if (x0 == null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      var dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+        if (dx < 0) cookGo(1); else cookGo(-1);
+      }
+      x0 = y0 = null;
+    }, { passive: true });
+  }
 
   /* ── Sub-tab switching (+ swipe) ──────────────────────────────────── */
   var TABS = ["overview", "grocery", "recipe"];
