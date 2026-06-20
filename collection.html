@@ -8,31 +8,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon.svg" />
-  <title>Recipe · Mike's Cookbook</title>
+  <title>Collection · Mike's Cookbook</title>
   <link rel="stylesheet" href="cookbook.css" />
 </head>
 <body>
   <main class="app">
-    <!-- Fixed header summary: title, tags, times, serving-size ladder -->
-    <header class="r-header" id="header"></header>
-
-    <!-- Sticky, swipeable sub-tab bar -->
-    <nav class="subtabs">
-      <button type="button" class="subtab active" id="tab-overview">Overview &amp; Macros</button>
-      <button type="button" class="subtab" id="tab-grocery">Grocery</button>
-      <button type="button" class="subtab" id="tab-recipe">Recipe</button>
-    </nav>
-
-    <!-- Tab content -->
-    <section class="panes" id="panes">
-      <div class="pane active" id="pane-overview"></div>
-      <div class="pane" id="pane-grocery"></div>
-      <div class="pane" id="pane-recipe"></div>
-    </section>
+    <header class="col-top" id="top"></header>
+    <div class="search-wrap" id="searchWrap"></div>
+    <section class="col-grid" id="grid"></section>
   </main>
 
   <script src="recipes-data.js"></script>
-  <script src="cookbook.js"></script>
+  <script src="collection.js"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {

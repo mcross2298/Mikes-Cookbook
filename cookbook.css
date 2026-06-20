@@ -546,6 +546,215 @@ body {
   margin: 0;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   TABBED SHELL  —  Home · Recipes · Favorites (mirrors 4WTO dashboard)
+   ═══════════════════════════════════════════════════════════════════ */
+:root { --tab-h: 64px; }
+
+/* Give the shell room for the fixed bottom bar. */
+.app.shell { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); }
+
+/* Screens swap like 4WTO: only .active is shown. */
+.screen { display: none; min-height: calc(100vh - var(--tab-h)); }
+.screen.active { display: block; }
+
+/* ── Shell top bar ─────────────────────────────────────────────────── */
+.shell-top {
+  position: sticky; top: 0; z-index: 20;
+  padding: 22px 20px 12px;
+  background: linear-gradient(to bottom, var(--bg) 82%, transparent);
+}
+.shell-eyebrow {
+  font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 2px;
+}
+.shell-title { font-family: var(--serif); font-size: 27px; font-weight: 700; margin: 0; color: var(--on-dark); }
+.shell-sub  { font-size: 13px; color: var(--on-dark-dim); margin: 3px 0 0; }
+
+/* ── BOTTOM TAB BAR (4WTO style) ──────────────────────────────────── */
+.tab-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--tab-h);
+  background: rgba(30,32,34,0.96);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line-dark);
+  display: flex; z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer; border: none; background: none; font-family: inherit;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--on-dark-dim); transition: color 0.15s;
+}
+.tab.active { color: var(--accent); }
+.tab-icon { font-size: 20px; line-height: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FLAGSHIP COLLECTION CARDS  —  faithful port of 4WTO .cat-card
+   Per-card accent is injected inline (--cc): border-top, glow, tag, footer.
+   ═══════════════════════════════════════════════════════════════════ */
+.cards-wrap { padding: 4px 18px 24px; }
+.tier-label {
+  display: flex; align-items: center; gap: 10px; margin: 6px 0 14px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+}
+.tier-label::after { content: ''; flex: 1; height: 1px; background: var(--line-dark); }
+
+.cat-card {
+  display: block; text-decoration: none; color: inherit; position: relative; overflow: hidden;
+  border-radius: 18px; padding: 16px 18px; margin-bottom: 13px;
+  background: linear-gradient(135deg, rgba(var(--cc-rgb),0.16), rgba(0,0,0,0.25)), var(--bg-elev);
+  border: 1px solid rgba(var(--cc-rgb), 0.3);
+  border-top: 3px solid var(--cc);
+  box-shadow: 0 4px 22px rgba(var(--cc-rgb), 0.16);
+  transition: box-shadow 0.15s, transform 0.12s;
+  animation: ccEdge 4.4s ease-in-out infinite;
+}
+.cat-card:active { transform: scale(0.99); opacity: 0.94; }
+@keyframes ccEdge {
+  0%,100% { box-shadow: 0 4px 22px rgba(var(--cc-rgb),0.16); }
+  50%     { box-shadow: 0 6px 32px rgba(var(--cc-rgb),0.34), 0 0 0 1px rgba(var(--cc-rgb),0.2); }
+}
+/* breathing ambient glow behind the content */
+.cc-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 18% 0%, rgba(var(--cc-rgb),0.26) 0%, transparent 60%);
+  animation: ccGlow 4.6s ease-in-out infinite;
+}
+@keyframes ccGlow { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+/* diagonal sheen sweep */
+.cc-sheen {
+  position: absolute; top: 0; left: -65%; width: 48%; height: 100%; pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(var(--cc-rgb),0.14), transparent);
+  transform: skewX(-18deg); animation: ccSheen 6.4s ease-in-out infinite;
+}
+@keyframes ccSheen { 0% { left: -65%; } 60%,100% { left: 150%; } }
+
+.cat-icon { position: absolute; right: 18px; top: 15px; font-size: 32px; opacity: 0.2; }
+.cat-card .cat-icon { animation: ccPulse 3.6s ease-in-out infinite; }
+@keyframes ccPulse { 0%,100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.07) translateY(-1px); } }
+
+.cat-tag {
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 6px; margin-bottom: 9px;
+  background: rgba(var(--cc-rgb),0.2); color: var(--cc); border: 1px solid rgba(var(--cc-rgb),0.4);
+  box-shadow: 0 0 14px rgba(var(--cc-rgb),0.18);
+}
+.cat-name {
+  font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--on-dark);
+  margin: 0 0 5px; letter-spacing: -0.01em; padding-right: 46px;
+}
+.cat-meta {
+  font-size: 13.5px; color: var(--on-dark-dim); line-height: 1.5; padding-right: 44px; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cat-count {
+  margin-top: 9px; display: inline-block; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--cc);
+}
+.cat-designer {
+  margin-top: 7px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+  color: var(--on-dark-dim); display: flex; align-items: center; gap: 5px;
+}
+/* Coming-soon: same glow, dimmed + a corner badge. */
+.cat-card.soon { filter: saturate(0.85); }
+.cat-card.soon .cat-name, .cat-card.soon .cat-meta { opacity: 0.82; }
+.soon-badge {
+  position: absolute; right: 0; top: 0;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #0c0c0c; background: var(--cc); padding: 4px 12px; border-bottom-left-radius: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-card, .cc-glow, .cc-sheen, .cat-card .cat-icon { animation: none; }
+  .cc-sheen { display: none; } .cc-glow { opacity: 0.7; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HOME screen — standalone landing
+   ═══════════════════════════════════════════════════════════════════ */
+.home-hero { padding: 8px 20px 18px; }
+.home-hero-card {
+  position: relative; overflow: hidden; border-radius: 18px; padding: 22px 20px;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb),0.18), rgba(0,0,0,0.25)), var(--bg-elev);
+  border: 1px solid rgba(var(--accent-rgb),0.28);
+}
+.home-hero-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+.home-hero-title { font-family: var(--serif); font-size: 24px; font-weight: 700; margin: 0 0 8px; color: var(--on-dark); }
+.home-hero-text { font-size: 14px; color: var(--on-dark-dim); margin: 0 0 16px; line-height: 1.55; }
+.home-cta {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  background: var(--accent); color: #1a1208; font-weight: 800; font-size: 14px;
+  padding: 11px 18px; border-radius: 12px; letter-spacing: 0.02em;
+}
+.home-cta:active { opacity: 0.88; }
+
+.home-stats { display: flex; gap: 11px; padding: 0 20px 8px; }
+.home-stat {
+  flex: 1; text-align: center; background: var(--bg-elev); border: 1px solid var(--line-dark);
+  border-radius: 14px; padding: 14px 8px;
+}
+.home-stat-num { font-size: 22px; font-weight: 900; color: var(--on-dark); }
+.home-stat-key { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-dark-dim); margin-top: 2px; }
+
+.home-section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 20px 20px 10px;
+}
+.home-section-head h2 { font-family: var(--serif); font-size: 18px; font-weight: 700; margin: 0; color: var(--on-dark); }
+.home-section-link { font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; cursor: pointer; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FAVORITES screen + ❤️ toggle
+   ═══════════════════════════════════════════════════════════════════ */
+.fav-toggle {
+  position: absolute; right: 12px; top: 12px; z-index: 3;
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-dark);
+  background: rgba(0,0,0,0.35); color: #fff; font-size: 16px; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); transition: transform 0.12s;
+}
+.fav-toggle:active { transform: scale(0.88); }
+.fav-toggle.on { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
+
+.empty {
+  text-align: center; color: var(--on-dark-dim); font-size: 14px;
+  padding: 60px 30px; line-height: 1.6;
+}
+.empty .empty-emoji { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.8; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   COLLECTION page (collection.html) — list + search / coming-soon
+   ═══════════════════════════════════════════════════════════════════ */
+.col-top { position: sticky; top: 0; z-index: 20; padding: 18px 20px 10px;
+  background: linear-gradient(to bottom, var(--bg) 82%, transparent); }
+.col-back { display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  color: var(--on-dark-dim); font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+.col-back:active { color: var(--on-dark); }
+.col-title { font-family: var(--serif); font-size: 25px; font-weight: 700; margin: 0; color: var(--on-dark); }
+.col-sub { font-size: 13px; color: var(--on-dark-dim); margin: 3px 0 0; }
+.search-wrap { padding: 6px 20px 14px; }
+.search-box {
+  width: 100%; font-family: inherit; font-size: 15px; color: var(--on-dark);
+  background: var(--bg-elev); border: 1px solid var(--line-dark); border-radius: 12px;
+  padding: 12px 14px; outline: none;
+}
+.search-box::placeholder { color: var(--on-dark-dim); }
+.search-box:focus { border-color: rgba(var(--accent-rgb),0.5); }
+.col-grid { display: grid; grid-template-columns: 1fr; gap: 13px; padding: 0 20px 24px; }
+@media (min-width: 560px) { .col-grid { grid-template-columns: 1fr 1fr; } }
+
+/* ── Recipe detail: back + favorite row ───────────────────────────── */
+.r-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.r-back { text-decoration: none; color: var(--on-dark-dim); font-size: 14px; font-weight: 700; }
+.r-back:active { color: var(--on-dark); }
+.r-fav {
+  position: static; width: 38px; height: 38px; font-size: 17px;
+  background: var(--bg-elev); border: 1px solid var(--line-dark);
+}
+
 /* ── Reduced motion ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

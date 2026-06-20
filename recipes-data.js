@@ -824,5 +824,69 @@ const RECIPES = [
   }
 ];
 
+/* ==========================================================================
+   COLLECTIONS  —  the Recipes tab (mirrors 4WTO's Programs page)
+   --------------------------------------------------------------------------
+   Each collection is a "flagship card" on the Recipes screen. A LIVE
+   collection links to collection.html?c=<id> and lists every recipe whose
+   `source` matches `source_match`. A COMING-SOON collection renders the same
+   glowing card (tappable) but opens a Coming-Soon state instead of a list.
+
+   Card fields mirror 4WTO's program cards:
+     tag      — eyebrow line (e.g. "★ Collection · Primal Diet")
+     title    — card headline
+     blurb    — 2-line description
+     count    — meta line ("10 Recipes →" / "Coming Soon →")
+     designer — attribution footer
+     accent   — per-card glow color (drives border-top + ambient glow)
+     icon     — faint watermark emoji, top-right
+     status   — "live" | "coming-soon"
+   Add a future collection by appending here — no rendering changes needed.
+   ========================================================================== */
+const COLLECTIONS = [
+  {
+    id: "two-meals-a-day",
+    title: "Two Meals a Day",
+    tag: "★ Collection · Primal Diet",
+    blurb:
+      "Primal, high-protein plates built for two-meal eating windows — " +
+      "heavy on meat, eggs and vegetables, light on the clock.",
+    designer: "📖 From Two Meals a Day",
+    accent: "#C87A53",          // terracotta
+    icon: "🍖",
+    status: "live",
+    source_match: "Two Meals a Day"
+  },
+  {
+    id: "kelli-cross",
+    title: "Kelli Cross' Recipes",
+    tag: "★ Collection · Heritage",
+    blurb:
+      "Cherished heirloom hand-me-downs from Kelli's kitchen — the family " +
+      "recipes worth passing on. Coming soon.",
+    designer: "✍️ Curated by Mike Cross",
+    accent: "#B08D57",          // heritage gold
+    icon: "🥧",
+    status: "coming-soon",
+    source_match: null
+  },
+  {
+    id: "carnivore",
+    title: "Carnivore",
+    tag: "★ Collection · Carnivore Diet",
+    blurb:
+      "Zero-carb, meat-forward performance plates — beef, organs, eggs and " +
+      "fat for full carnivore eating. Coming soon.",
+    designer: "✍️ Curated by Mike Cross",
+    accent: "#B23A48",          // crimson
+    icon: "🥩",
+    status: "coming-soon",
+    source_match: null
+  }
+];
+
 /* Expose for both classic <script> include and any future module bundling. */
-if (typeof window !== "undefined") window.RECIPES = RECIPES;
+if (typeof window !== "undefined") {
+  window.RECIPES = RECIPES;
+  window.COLLECTIONS = COLLECTIONS;
+}
