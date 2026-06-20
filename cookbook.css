@@ -397,6 +397,32 @@ body {
   margin: 0 0 16px;
 }
 
+/* Wake-lock indicator — only shown (.on) while the screen is held awake. */
+.wake-indicator {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sage);
+}
+.wake-indicator.on { display: flex; }
+.wake-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--sage);
+  box-shadow: 0 0 0 0 rgba(var(--sage-rgb), 0.6);
+  animation: wakePulse 2s ease-out infinite;
+}
+@keyframes wakePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--sage-rgb), 0.6); }
+  70%  { box-shadow: 0 0 0 7px rgba(var(--sage-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--sage-rgb), 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wake-dot { animation: none; }
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    PHASE 2 — HOME / BROWSE SCREEN (index.html)
    ═══════════════════════════════════════════════════════════════════ */
