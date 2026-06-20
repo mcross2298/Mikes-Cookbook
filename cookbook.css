@@ -152,6 +152,58 @@ body {
   color: #fff;
 }
 
+/* ── SERVING STEPPER (arbitrary counts) ───────────────────────────── */
+.serving-stepper {
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.serving-step {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  appearance: none;
+  border: 1px solid var(--line-dark);
+  background: transparent;
+  color: var(--on-dark);
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+}
+.serving-step:hover:not(:disabled) { background: rgba(var(--accent-rgb), 0.18); color: var(--accent); }
+.serving-step:active:not(:disabled) { transform: scale(0.94); }
+.serving-step:disabled { opacity: 0.3; cursor: default; }
+.serving-count {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+.serving-num {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.serving-word {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-dark-dim);
+}
+.serving-note {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  text-align: center;
+  color: var(--on-dark-dim);
+}
+
 /* ── STICKY SUB-TAB BAR ───────────────────────────────────────────── */
 .subtabs {
   position: sticky;
