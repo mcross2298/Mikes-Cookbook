@@ -864,7 +864,7 @@ const COLLECTIONS = [
     blurb:
       "Cherished heirloom hand-me-downs from Kelli's kitchen — the family " +
       "recipes worth passing on. Coming soon.",
-    designer: "✍️ Kelli Cross, with love",
+    designer: "✍️ Kelli Cross, with Love",
     accent: "#B08D57",          // heritage gold
     icon: "🥧",
     status: "coming-soon",
