@@ -5,15 +5,16 @@
    Consumes RECIPES from recipes-data.js. No framework, no build step.
 
    State:
-     • serving  — active ladder tier (2 | 4). Re-renders macros + ingredients.
+     • serving  — chosen serving count (1..12 via the stepper). Authored tiers
+                  (e.g. 2 / 4) are exact; other counts are scaled live from the
+                  native tier. Re-renders macros + ingredients.
      • tab      — active sub-tab ('overview' | 'grocery' | 'steps').
    Check-off state (groceries + steps) persists in localStorage, keyed by
-   recipe + serving tier so the two tiers keep independent lists.
+   recipe + serving count so each count keeps an independent list.
 
-   scaleQuantity() is included for FUTURE single-tier recipes (spec §1.2): if a
-   recipe only authors one tier, the missing tier can be generated on the fly.
-   Phase 1 recipes author both tiers explicitly, so it is unused here but kept
-   ready and tested-by-shape.
+   scaleQuantity() powers arbitrary serving counts: when a count has no authored
+   tier, ingredientsFor() scales the native tier by (target / native). Macros
+   are per single serving and constant, so they never scale.
    ========================================================================== */
 (function () {
   "use strict";
@@ -112,7 +113,39 @@
     return list.filter(function (r) { return r.recipe_id === id; })[0] || list[0] || null;
   }
 
-  /* ── Header (title, tags, times, servings ladder) ─────────────────── */
+  /* ── Serving scaling (arbitrary counts) ───────────────────────────── */
+  // Authored tiers (e.g. serving_2 / serving_4) are used verbatim. Any other
+  // serving count is generated on the fly by scaling the recipe's native tier,
+  // which is exactly what scaleQuantity() was written (and tested-by-shape) for.
+  // Macros are per single serving and constant, so they never scale.
+  var SERVING_MIN = 1, SERVING_MAX = 12;
+
+  function nativeServing(r) {
+    return r.native_serving || (r.scaling_options && r.scaling_options[0]) || 2;
+  }
+  function ingredientsFor(r, serving) {
+    var by = r.ingredients_by_serving || {};
+    var authored = by["serving_" + serving];
+    if (authored) return authored;                 // hand-rounded tier — use as-is
+    var base = nativeServing(r);
+    var baseList = by["serving_" + base] || by[Object.keys(by)[0]] || [];
+    var factor = serving / base;
+    return baseList.map(function (ing) {
+      return {
+        item: ing.item,
+        prep: ing.prep,
+        quantity: scaleQuantity(ing.quantity, factor),
+        unit: ing.unit,
+        category: ing.category
+      };
+    });
+  }
+  function macrosFor(r, serving) {
+    var mp = r.macro_profiles || {};
+    return mp["serving_" + serving] || mp["serving_" + nativeServing(r)] || {};
+  }
+
+  /* ── Header (title, tags, times, servings stepper) ────────────────── */
   function renderHeader(r) {
     var h = $("#header");
     h.innerHTML = "";
@@ -151,23 +184,46 @@
       "<span>Total <b>" + (r.prep_time_mins + r.cook_time_mins) + " min</b></span>";
     h.appendChild(meta);
 
-    // Serving-size ladder
-    var ladder = el("div", "servings");
-    (r.scaling_options || [2, 4]).forEach(function (n) {
-      var b = el("button", "serving-opt" + (n === state.serving ? " active" : ""),
-        n + " Serving" + (n === 1 ? "" : "s"));
-      b.setAttribute("type", "button");
-      b.addEventListener("click", function () {
-        if (state.serving === n) return;
-        state.serving = n;
-        renderHeader(r);          // refresh active pill
-        renderMacros(r);
-        renderGrocery(r);
-        renderRecipe(r);
-      });
-      ladder.appendChild(b);
-    });
+    // Serving-size stepper — any count from SERVING_MIN..SERVING_MAX. Authored
+    // tiers are exact; in-between counts are scaled live from the native tier.
+    function changeServing(n) {
+      n = Math.max(SERVING_MIN, Math.min(SERVING_MAX, n));
+      if (n === state.serving) return;
+      state.serving = n;
+      renderHeader(r);          // refresh count + disabled states + note
+      renderMacros(r);
+      renderGrocery(r);
+      renderRecipe(r);
+    }
+
+    var ladder = el("div", "servings serving-stepper");
+
+    var minus = el("button", "serving-step", "−");
+    minus.type = "button";
+    minus.setAttribute("aria-label", "Fewer servings");
+    minus.disabled = state.serving <= SERVING_MIN;
+    minus.addEventListener("click", function () { changeServing(state.serving - 1); });
+
+    var count = el("div", "serving-count",
+      '<span class="serving-num">' + state.serving + "</span>" +
+      '<span class="serving-word">Serving' + (state.serving === 1 ? "" : "s") + "</span>");
+
+    var plus = el("button", "serving-step", "+");
+    plus.type = "button";
+    plus.setAttribute("aria-label", "More servings");
+    plus.disabled = state.serving >= SERVING_MAX;
+    plus.addEventListener("click", function () { changeServing(state.serving + 1); });
+
+    ladder.appendChild(minus);
+    ladder.appendChild(count);
+    ladder.appendChild(plus);
     h.appendChild(ladder);
+
+    // Transparency: say whether the amounts are exact or scaled.
+    var authored = (r.ingredients_by_serving || {})["serving_" + state.serving];
+    h.appendChild(el("p", "serving-note",
+      authored ? "Exact amounts from the recipe"
+               : "Scaled live from " + nativeServing(r) + " servings"));
   }
 
   /* ── Tab 1: Overview & Macros ─────────────────────────────────────── */
@@ -188,7 +244,7 @@
     // macro_profiles are stored PER SINGLE SERVING and are identical across
     // both tiers — the book's printed macros describe one portion, and the
     // serving size only changes how much the recipe makes, not the macros.
-    var m = r.macro_profiles["serving_" + state.serving] || {};
+    var m = macrosFor(r, state.serving);
     var card = el("div", "card");
     card.appendChild(el("p", "card-label", "Macro Profile · Per Serving"));
     var grid = el("div", "macro-grid");
@@ -218,7 +274,7 @@
     var pane = $("#pane-grocery");
     pane.innerHTML = "";
 
-    var list = r.ingredients_by_serving["serving_" + state.serving] || [];
+    var list = ingredientsFor(r, state.serving);
     var done = loadSet(r.recipe_id, state.serving, "grocery");
 
     // Group by category, preserving CAT_ORDER then any extras.
@@ -267,7 +323,7 @@
     var pane = $("#pane-recipe");
     pane.innerHTML = "";
 
-    var list = r.ingredients_by_serving["serving_" + state.serving] || [];
+    var list = ingredientsFor(r, state.serving);
     var miseDone = loadSet(r.recipe_id, state.serving, "mise");
     var stepDone = loadSet(r.recipe_id, state.serving, "steps");
     var steps = r.instructions || [];
