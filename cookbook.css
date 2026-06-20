@@ -551,8 +551,10 @@ body {
    ═══════════════════════════════════════════════════════════════════ */
 :root { --tab-h: 64px; }
 
-/* Give the shell room for the fixed bottom bar. */
-.app.shell { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); }
+/* Give every page with the bottom bar room so content clears it
+   (shell + standalone recipe / collection pages opt in via data-tabbar). */
+.app.shell,
+.app[data-tabbar] { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); }
 
 /* Screens swap like 4WTO: only .active is shown. */
 .screen { display: none; min-height: calc(100vh - var(--tab-h)); }
