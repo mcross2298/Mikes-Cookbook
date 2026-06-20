@@ -42,6 +42,105 @@
     '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" ' +
     'stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
+  /* ── Inline step timers ───────────────────────────────────────────── */
+  // Cooks reach for a separate timer app for "simmer 20 minutes". Parse real
+  // durations out of step text and offer a tappable countdown chip that pings
+  // and vibrates on completion. A time UNIT is required, so quantities like
+  // "20g" or "425°F" never become timers. Everything works offline.
+  var DUR_RE = /(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)\b/gi;
+
+  function durToSeconds(numStr, unit) {
+    var n, m = numStr.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+    if (m) n = parseInt(m[1], 10) + parseInt(m[2], 10) / parseInt(m[3], 10);
+    else if ((m = numStr.match(/^(\d+)\/(\d+)$/))) n = parseInt(m[1], 10) / parseInt(m[2], 10);
+    else n = parseFloat(numStr);
+    unit = unit.toLowerCase();
+    if (unit.charAt(0) === "h") return Math.round(n * 3600);
+    if (unit.charAt(0) === "m") return Math.round(n * 60);
+    return Math.round(n);
+  }
+  function parseDurations(text) {
+    var out = [], seen = {}, m;
+    DUR_RE.lastIndex = 0;
+    while ((m = DUR_RE.exec(text || ""))) {
+      var secs = durToSeconds(m[1], m[2]);
+      if (secs <= 0 || secs > 86400 || seen[secs]) continue; // sane bounds, dedupe
+      seen[secs] = 1;
+      out.push({ label: m[0].replace(/\s+/g, " ").trim(), seconds: secs });
+    }
+    return out;
+  }
+  function fmtClock(s) {
+    var m = Math.floor(s / 60), sec = s % 60;
+    return m + ":" + (sec < 10 ? "0" : "") + sec;
+  }
+
+  // Lazy, gesture-primed alert tone (Web Audio) — no asset, works offline.
+  var audioCtx = null;
+  function primeAudio() {
+    try {
+      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    } catch (e) {}
+  }
+  function ping() {
+    try {
+      if (!audioCtx) return;
+      var t = audioCtx.currentTime;
+      [0, 0.3, 0.6].forEach(function (off) {
+        var osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+        osc.type = "sine"; osc.frequency.value = 880;
+        g.gain.setValueAtTime(0.0001, t + off);
+        g.gain.exponentialRampToValueAtTime(0.3, t + off + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + off + 0.22);
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.start(t + off); osc.stop(t + off + 0.24);
+      });
+    } catch (e) {}
+  }
+  function buzz() { try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {} }
+
+  // A self-contained countdown chip. Tap to start; tap again to cancel/reset.
+  function timerChip(seconds, label) {
+    var chip = el("button", "timer-chip", "⏱ " + label);
+    chip.type = "button";
+    var remaining = seconds, intId = null;
+    function clear() { if (intId) { clearInterval(intId); intId = null; } }
+    function reset() {
+      clear(); remaining = seconds;
+      chip.className = "timer-chip"; chip.textContent = "⏱ " + label;
+    }
+    chip.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();        // never toggle the step itself
+      if (intId || chip.classList.contains("ringing")) { reset(); return; }
+      primeAudio();
+      chip.classList.add("running");
+      chip.textContent = "⏱ " + fmtClock(remaining);
+      intId = setInterval(function () {
+        remaining -= 1;
+        if (remaining <= 0) {
+          clear();
+          chip.classList.remove("running");
+          chip.classList.add("ringing");
+          chip.textContent = "⏰ Time! · tap to reset";
+          ping(); buzz();
+          return;
+        }
+        chip.textContent = "⏱ " + fmtClock(remaining);
+      }, 1000);
+    });
+    return chip;
+  }
+  function appendTimers(parent, text) {
+    var times = parseDurations(text);
+    if (!times.length) return;
+    var wrap = el("div", "timer-wrap");
+    times.forEach(function (t) { wrap.appendChild(timerChip(t.seconds, t.label)); });
+    parent.appendChild(wrap);
+  }
+
   /* ── Quantity scaling (future single-tier recipes) ────────────────── */
   // Parses common fraction/decimal quantities, scales by a factor, and returns
   // a tidy string ("1/2", "1 1/2", "3", "0.75"). Non-numeric quantities (e.g.
@@ -395,6 +494,7 @@
         '<p class="step-title">' + esc(st.title) + "</p>" +
         '<p class="step-detail">' + esc(st.detail) + "</p>" +
       "</div>";
+    appendTimers(row.querySelector(".step-body"), st.detail);
     row.addEventListener("click", function () {
       var set = loadSet(r.recipe_id, state.serving, "steps");
       if (set.has(st.step_number)) { set.delete(st.step_number); }
@@ -549,6 +649,7 @@
     body.appendChild(el("div", "cook-step-num", isDone ? "✓" : String(st.step_number)));
     body.appendChild(el("h2", "cook-step-title", esc(st.title)));
     body.appendChild(el("p", "cook-step-detail", esc(st.detail)));
+    appendTimers(body, st.detail);
     body.appendChild(el("p", "cook-tap-hint", isDone ? "Done · tap to undo" : "Tap to mark this step done"));
     body.addEventListener("click", function () {
       markStep(r, st.step_number, !stepsDone(r).has(st.step_number));
