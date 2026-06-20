@@ -131,7 +131,7 @@
         renderHeader(r);          // refresh active pill
         renderMacros(r);
         renderGrocery(r);
-        renderSteps(r);
+        renderRecipe(r);
       });
       ladder.appendChild(b);
     });
@@ -175,7 +175,9 @@
     return c;
   }
 
-  /* ── Tab 2: Grocery / Ingredients ─────────────────────────────────── */
+  /* ── Tab 2: Grocery — a pure shopping list ────────────────────────── */
+  // Shows only what you BUY (quantity + item), grouped by aisle. Prep details
+  // (e.g. "cooked and chopped") deliberately live on the Recipe tab, not here.
   var CAT_ORDER = ["Meat", "Dairy", "Produce", "Pantry"];
   function renderGrocery(r) {
     var pane = $("#pane-grocery");
@@ -192,13 +194,15 @@
     var cats = CAT_ORDER.filter(function (c) { return groups[c]; })
       .concat(Object.keys(groups).filter(function (c) { return CAT_ORDER.indexOf(c) < 0; }));
 
-    var card = el("div", "card");
+    var card = el("div", "card grocery-card");
     card.appendChild(el("p", "card-label",
-      list.length + " ingredients · " + state.serving + " servings"));
+      "Shopping list · " + list.length + " items · " + state.serving + " servings"));
 
     cats.forEach(function (cat) {
       var sec = el("div", "grocery-cat");
-      sec.appendChild(el("div", "grocery-cat-head", '<span class="dot"></span>' + esc(cat)));
+      sec.appendChild(el("div", "grocery-cat-head",
+        '<span class="dot"></span>' + esc(cat) +
+        '<span class="grocery-cat-count">' + groups[cat].length + "</span>"));
       groups[cat].forEach(function (entry) {
         sec.appendChild(groceryRow(r, entry.ing, entry.idx, done));
       });
@@ -208,14 +212,12 @@
   }
   function groceryRow(r, ing, idx, done) {
     var isDone = done.has(idx);
-    var row = el("div", "check-row" + (isDone ? " done" : ""));
+    var row = el("div", "check-row grocery-row" + (isDone ? " done" : ""));
     var qty = [ing.quantity, ing.unit].filter(Boolean).join(" ");
     row.innerHTML =
       '<span class="check-box">' + CHECK_SVG + "</span>" +
-      '<span class="check-text">' +
-        (qty ? '<span class="check-qty">' + esc(qty) + "</span> " : "") +
-        esc(ing.item) +
-      "</span>";
+      '<span class="grocery-qty">' + (qty ? esc(qty) : "") + "</span>" +
+      '<span class="check-text">' + esc(ing.item) + "</span>";
     row.addEventListener("click", function () {
       var set = loadSet(r.recipe_id, state.serving, "grocery");
       if (set.has(idx)) { set.delete(idx); row.classList.remove("done"); }
@@ -225,22 +227,53 @@
     return row;
   }
 
-  /* ── Tab 3: Instruction Guide (stepper) ───────────────────────────── */
-  function renderSteps(r) {
-    var pane = $("#pane-steps");
+  /* ── Tab 3: Recipe — mise en place (ingredients + prep) then method ── */
+  function renderRecipe(r) {
+    var pane = $("#pane-recipe");
     pane.innerHTML = "";
 
-    var done = loadSet(r.recipe_id, state.serving, "steps");
+    var list = r.ingredients_by_serving["serving_" + state.serving] || [];
+    var miseDone = loadSet(r.recipe_id, state.serving, "mise");
+    var stepDone = loadSet(r.recipe_id, state.serving, "steps");
     var steps = r.instructions || [];
 
-    pane.appendChild(el("p", "step-progress",
-      done.size + " of " + steps.length + " steps complete"));
-
-    var wrap = el("div", "steps");
-    steps.forEach(function (st) {
-      wrap.appendChild(stepRow(r, st, done));
+    // Mise en place: full ingredient line WITH prep detail.
+    var ing = el("div", "card");
+    ing.appendChild(el("p", "card-label",
+      "Ingredients · " + state.serving + " servings"));
+    list.forEach(function (it, i) {
+      ing.appendChild(miseRow(r, it, i, miseDone));
     });
-    pane.appendChild(wrap);
+    pane.appendChild(ing);
+
+    // Method: the numbered, checkable stepper.
+    var method = el("div", "card");
+    method.appendChild(el("p", "card-label", "Method"));
+    method.appendChild(el("p", "step-progress",
+      stepDone.size + " of " + steps.length + " steps complete"));
+    var wrap = el("div", "steps");
+    steps.forEach(function (st) { wrap.appendChild(stepRow(r, st, stepDone)); });
+    method.appendChild(wrap);
+    pane.appendChild(method);
+  }
+  function miseRow(r, ing, idx, done) {
+    var isDone = done.has(idx);
+    var row = el("div", "check-row" + (isDone ? " done" : ""));
+    var qty = [ing.quantity, ing.unit].filter(Boolean).join(" ");
+    var label =
+      (qty ? '<span class="check-qty">' + esc(qty) + "</span> " : "") +
+      esc(ing.item) +
+      (ing.prep ? '<span class="check-prep">, ' + esc(ing.prep) + "</span>" : "");
+    row.innerHTML =
+      '<span class="check-box">' + CHECK_SVG + "</span>" +
+      '<span class="check-text">' + label + "</span>";
+    row.addEventListener("click", function () {
+      var set = loadSet(r.recipe_id, state.serving, "mise");
+      if (set.has(idx)) { set.delete(idx); row.classList.remove("done"); }
+      else { set.add(idx); row.classList.add("done"); }
+      saveSet(r.recipe_id, state.serving, "mise", set);
+    });
+    return row;
   }
   function stepRow(r, st, done) {
     var isDone = done.has(st.step_number);
@@ -259,13 +292,13 @@
       if (set.has(st.step_number)) { set.delete(st.step_number); }
       else { set.add(st.step_number); }
       saveSet(r.recipe_id, state.serving, "steps", set);
-      renderSteps(r); // refresh progress count + completed marks
+      renderRecipe(r); // refresh progress count + completed marks
     });
     return row;
   }
 
   /* ── Sub-tab switching (+ swipe) ──────────────────────────────────── */
-  var TABS = ["overview", "grocery", "steps"];
+  var TABS = ["overview", "grocery", "recipe"];
   function setTab(name) {
     state.tab = name;
     TABS.forEach(function (t) {
@@ -320,7 +353,7 @@
     renderHeader(r);
     renderMacros(r);
     renderGrocery(r);
-    renderSteps(r);
+    renderRecipe(r);
     wireTabs();
     setTab("overview");
   }

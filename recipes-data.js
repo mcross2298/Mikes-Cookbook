@@ -15,6 +15,17 @@
 
    Ingredient categories drive the grouped grocery list:
      Meat · Dairy · Produce · Pantry
+
+   Each ingredient separates WHAT YOU BUY from WHAT YOU DO WITH IT:
+     • item  — the clean shopping-list name (drives the Grocery tab)
+     • prep  — the prep instruction, e.g. "cooked and chopped" (shown only on
+               the Recipe tab's mise en place list, never on the grocery list)
+   This keeps the grocery list a pure shopping list while preserving prep
+   detail where it matters — alongside the cooking steps.
+
+   source — origin cookbook / collection, used by the Phase 2 home screen to
+            group recipes (e.g. "Two Meals a Day").
+
    Add future recipes by appending to RECIPES — no rendering changes required.
    ========================================================================== */
 const RECIPES = [
@@ -22,6 +33,7 @@ const RECIPES = [
     recipe_id: "jalapeno-chicken-bake",
     title: "Jalapeño Chicken Bake",
     category: "Primal",
+    source: "Two Meals a Day",
     tags: ["Spicy", "One-Dish", "High-Protein"],
     description:
       "This adds a new dimension of flavor to an old favorite with the creative combination of chicken thighs, bacon, vegetables, and cream cheese. If you want the poppers to be less spicy, simply use jarred pickled jalapeños instead of fresh.",
@@ -39,32 +51,32 @@ const RECIPES = [
 
     ingredients_by_serving: {
       serving_2: [
-        { item: "Fresh spinach leaves", quantity: "2", unit: "cups", category: "Produce" },
-        { item: "Boneless, skinless chicken thighs, cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
-        { item: "Fresh mushrooms, diced", quantity: "4", unit: "oz", category: "Produce" },
-        { item: "Zucchini, diced", quantity: "1", unit: "small", category: "Produce" },
-        { item: "Uncured bacon, cooked and chopped", quantity: "8", unit: "oz", category: "Meat" },
-        { item: "Salt", quantity: "1", unit: "tsp", category: "Pantry" },
-        { item: "Pepper", quantity: "1/2", unit: "tsp", category: "Pantry" },
-        { item: "Full-fat cream cheese, softened", quantity: "4", unit: "oz", category: "Dairy" },
-        { item: "Goat cheese, crumbled", quantity: "4", unit: "oz", category: "Dairy" },
-        { item: "Jalapeño peppers, seeded and minced", quantity: "2", unit: "", category: "Produce" },
-        { item: "Minced garlic", quantity: "1", unit: "tsp", category: "Produce" },
-        { item: "Scallions, thinly sliced", quantity: "2", unit: "", category: "Produce" }
+        { item: "Fresh spinach leaves", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Zucchini", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Uncured bacon", prep: "cooked and chopped", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Full-fat cream cheese", prep: "softened", quantity: "4", unit: "oz", category: "Dairy" },
+        { item: "Goat cheese", prep: "crumbled", quantity: "4", unit: "oz", category: "Dairy" },
+        { item: "Jalapeño peppers", prep: "seeded and minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Minced garlic", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" }
       ],
       serving_4: [
-        { item: "Fresh spinach leaves", quantity: "4", unit: "cups", category: "Produce" },
-        { item: "Boneless, skinless chicken thighs, cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
-        { item: "Fresh mushrooms, diced", quantity: "8", unit: "oz", category: "Produce" },
-        { item: "Zucchini, diced", quantity: "2", unit: "small", category: "Produce" },
-        { item: "Uncured bacon, cooked and chopped", quantity: "1", unit: "lb", category: "Meat" },
-        { item: "Salt", quantity: "2", unit: "tsp", category: "Pantry" },
-        { item: "Pepper", quantity: "1", unit: "tsp", category: "Pantry" },
-        { item: "Full-fat cream cheese, softened", quantity: "8", unit: "oz", category: "Dairy" },
-        { item: "Goat cheese, crumbled", quantity: "8", unit: "oz", category: "Dairy" },
-        { item: "Jalapeño peppers, seeded and minced", quantity: "4", unit: "", category: "Produce" },
-        { item: "Minced garlic", quantity: "2", unit: "tsp", category: "Produce" },
-        { item: "Scallions, thinly sliced", quantity: "4", unit: "", category: "Produce" }
+        { item: "Fresh spinach leaves", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Zucchini", prep: "diced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Uncured bacon", prep: "cooked and chopped", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Full-fat cream cheese", prep: "softened", quantity: "8", unit: "oz", category: "Dairy" },
+        { item: "Goat cheese", prep: "crumbled", quantity: "8", unit: "oz", category: "Dairy" },
+        { item: "Jalapeño peppers", prep: "seeded and minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Minced garlic", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "4", unit: "", category: "Produce" }
       ]
     },
 
