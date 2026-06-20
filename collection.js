@@ -23,6 +23,12 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   };
+  // Retrigger a one-shot animation by removing the class, forcing reflow, re-adding.
+  var pop = function (node) {
+    node.classList.remove("pop");
+    void node.offsetWidth;
+    node.classList.add("pop");
+  };
   function rgbFromHex(hex) {
     var h = (hex || "").replace("#", "");
     if (h.length !== 6) return "200,122,83";
@@ -99,6 +105,7 @@
       var nowOn = toggleFav(r.recipe_id);
       heart.classList.toggle("on", nowOn);
       heart.textContent = nowOn ? "❤" : "♡";
+      pop(heart);
     });
     card.appendChild(heart);
     return card;

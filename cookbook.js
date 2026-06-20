@@ -32,6 +32,12 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   };
+  // Retrigger a one-shot animation by removing the class, forcing reflow, re-adding.
+  var pop = function (node) {
+    node.classList.remove("pop");
+    void node.offsetWidth; // eslint-disable-line no-unused-expressions
+    node.classList.add("pop");
+  };
   var CHECK_SVG =
     '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" ' +
     'stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
@@ -164,6 +170,7 @@
       var on = toggleFav(r.recipe_id);
       heart.classList.toggle("on", on);
       heart.textContent = on ? "❤" : "♡";
+      pop(heart);
     });
     nav.appendChild(heart);
     h.appendChild(nav);
