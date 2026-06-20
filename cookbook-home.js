@@ -152,16 +152,104 @@
     }
   }
 
-  /* ══ RECIPES screen — flagship collection cards ═════════════════════ */
+  /* ══ RECIPES screen — collections + app-wide search & filtering ══════ */
+  // Default view = flagship collection cards (unchanged). Once a search query
+  // or a facet (diet / tag) is active, the screen switches to a flat grid of
+  // matching recipe cards drawn from ALL recipes — not just one collection.
+  var DIET_ORDER = ["Primal", "Carnivore", "Heritage"];
+
+  function recipesMatch(r, q) {
+    if (!q) return true;
+    q = q.toLowerCase();
+    if ((r.title || "").toLowerCase().indexOf(q) >= 0) return true;
+    if ((r.category || "").toLowerCase().indexOf(q) >= 0) return true;
+    if ((r.tags || []).join(" ").toLowerCase().indexOf(q) >= 0) return true;
+    var ing = r.ingredients_by_serving &&
+      r.ingredients_by_serving["serving_" + (r.native_serving || 2)];
+    if (ing && ing.some(function (i) { return (i.item || "").toLowerCase().indexOf(q) >= 0; })) return true;
+    return false;
+  }
+  function facetList() {
+    var diets = DIET_ORDER.filter(function (d) {
+      return recipes().some(function (r) { return r.category === d; });
+    });
+    var tags = [];
+    recipes().forEach(function (r) {
+      (r.tags || []).forEach(function (t) { if (tags.indexOf(t) < 0) tags.push(t); });
+    });
+    tags.sort();
+    return ["All"].concat(diets).concat(tags);
+  }
+  function inFacet(r, f) {
+    if (f === "All") return true;
+    if (r.category === f) return true;
+    return (r.tags || []).indexOf(f) >= 0;
+  }
+
   function renderRecipes() {
     var s = $("#screen-recipes");
     s.innerHTML = "";
-    s.appendChild(topBar(null, "Recipes", collections().length + " collections"));
+    s.appendChild(topBar(null, "Recipes",
+      collections().length + " collections · " + recipes().length + " recipes"));
 
-    var wrap = el("div", "cards-wrap");
-    wrap.appendChild(el("div", "tier-label", "★ Collections"));
-    collections().forEach(function (c) { wrap.appendChild(collectionCard(c)); });
-    s.appendChild(wrap);
+    var browse = { facet: "All" };
+
+    // Search box
+    var searchWrap = el("div", "search-wrap");
+    var box = el("input", "search-box");
+    box.type = "search";
+    box.placeholder = "Search all recipes…";
+    box.setAttribute("aria-label", "Search all recipes");
+    searchWrap.appendChild(box);
+    s.appendChild(searchWrap);
+
+    // Facet chips (diet + tags), single-select, stacking with the search text.
+    var chips = el("nav", "browse-chips");
+    function renderChips() {
+      chips.innerHTML = "";
+      facetList().forEach(function (f) {
+        var chip = el("button", "chip" + (browse.facet === f ? " active" : ""), esc(f));
+        chip.type = "button";
+        chip.addEventListener("click", function () { browse.facet = f; renderChips(); paint(); });
+        chips.appendChild(chip);
+      });
+    }
+    renderChips();
+    s.appendChild(chips);
+
+    var results = el("div", "browse-results");
+    s.appendChild(results);
+
+    function paint() {
+      var q = box.value.trim();
+      var filtering = q || browse.facet !== "All";
+      results.innerHTML = "";
+
+      if (!filtering) {                               // default: collection cards
+        var wrap = el("div", "cards-wrap");
+        wrap.appendChild(el("div", "tier-label", "★ Collections"));
+        collections().forEach(function (c) { wrap.appendChild(collectionCard(c)); });
+        results.appendChild(wrap);
+        return;
+      }
+
+      var list = recipes().filter(function (r) {
+        return inFacet(r, browse.facet) && recipesMatch(r, q);
+      });
+      if (!list.length) {
+        results.appendChild(el("div", "empty",
+          '<span class="empty-emoji">🔍</span>No recipes match your search.'));
+        return;
+      }
+      results.appendChild(el("div", "browse-count",
+        list.length + (list.length === 1 ? " recipe" : " recipes")));
+      var grid = el("div", "col-grid");
+      list.forEach(function (r) { grid.appendChild(recipeCard(r)); });
+      results.appendChild(grid);
+    }
+
+    box.addEventListener("input", paint);
+    paint();
   }
 
   function collectionCard(c) {
