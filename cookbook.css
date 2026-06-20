@@ -309,6 +309,35 @@ body {
 
 .check-text { font-size: 15px; color: var(--ink); line-height: 1.4; }
 .check-qty { font-weight: 700; color: var(--ink); }
+/* Prep detail on the Recipe-tab mise en place list (muted, italic). */
+.check-prep { color: var(--ink-dim); font-style: italic; }
+
+/* ── GROCERY — independent shopping-list look ─────────────────────── */
+.grocery-cat-count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  min-width: 20px;
+  text-align: center;
+  padding: 1px 7px;
+}
+/* Fixed quantity column so amounts line up cleanly for store scanning. */
+.grocery-row { align-items: center; }
+.grocery-qty {
+  flex: 0 0 auto;
+  min-width: 62px;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+}
+.grocery-row.done .grocery-qty { color: var(--ink-dim); }
+.grocery-row .check-text { flex: 1; }
 
 /* ── INSTRUCTION GUIDE (stepper) ──────────────────────────────────── */
 .steps { position: relative; }
