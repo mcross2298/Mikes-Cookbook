@@ -249,11 +249,6 @@ const RECIPES = [
     ]
   },
 
-  /* ---------------------------------------------------------------------------
-     NOTE: Some ingredient lines below were partly obscured in the source
-     photos. Lines marked  // VERIFY  are best-effort transcriptions to confirm
-     against the book during review.
-     ------------------------------------------------------------------------- */
   {
     recipe_id: "cauliflower-fried-rice-eggs",
     title: "Cauliflower Fried Rice with Eggs",
@@ -262,53 +257,53 @@ const RECIPES = [
     icon: "🍳",
     tags: ["Quick", "One-Pan", "Meatless"],
     description:
-      "As you experience the bold flavors of fresh ginger, coconut aminos, and cilantro, you won't miss the tropical white rice (and its blood sugar spike). This veggie-packed cauliflower fried rice comes together in a single skillet.",
+      "As you experience the bold flavors of fresh ginger, sesame oil, coconut aminos, and cilantro, you won't be missing regular old rice (and its blood-sugar spike!) for one second.",
     prep_time_mins: 10,
     cook_time_mins: 15,
-    native_serving: 4,
+    native_serving: 2,
     accent: "#9AA06B",
 
     macro_profiles: {
-      serving_4: { calories: 540, protein_g: 17, fat_g: 40, carbs_g: 26 },
-      serving_2: { calories: 270, protein_g: 9, fat_g: 20, carbs_g: 13 }
+      serving_2: { calories: 540, protein_g: 19, fat_g: 40, carbs_g: 26 },
+      serving_4: { calories: 1080, protein_g: 38, fat_g: 80, carbs_g: 52 }
     },
 
     scaling_options: [2, 4],
 
     ingredients_by_serving: {
-      serving_4: [
+      serving_2: [
         { item: "Butter", prep: "divided", quantity: "4", unit: "tbsp", category: "Dairy" },
-        { item: "Fresh mushrooms", prep: "sliced", quantity: "2", unit: "oz", category: "Produce" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "2", unit: "oz", category: "Produce" },
         { item: "Onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
         { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
-        { item: "Frozen riced cauliflower", prep: "", quantity: "1", unit: "(12-oz) bag", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
         { item: "Carrot", prep: "diced", quantity: "1", unit: "", category: "Produce" },
         { item: "Fresh broccoli florets", prep: "cut into small pieces", quantity: "1", unit: "cup", category: "Produce" },
         { item: "Large pastured eggs", prep: "beaten", quantity: "4", unit: "", category: "Dairy" },
-        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tbsp", category: "Produce" }, // VERIFY
+        { item: "Frozen cauliflower rice", prep: "", quantity: "1", unit: "(16-oz) bag", category: "Produce" },
+        { item: "Toasted sesame oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
         { item: "Coconut aminos", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
-        { item: "Toasted sesame oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }, // VERIFY
-        { item: "Everything bagel seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }, // VERIFY
-        { item: "Fresh cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" }, // VERIFY
-        { item: "Scallions", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" }, // VERIFY
+        { item: "Everything bagel seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/4", unit: "cup", category: "Produce" },
         { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
         { item: "Chili garlic sauce", prep: "for serving", quantity: "", unit: "", category: "Pantry" }
       ],
-      serving_2: [
-        { item: "Butter", prep: "divided", quantity: "2", unit: "tbsp", category: "Dairy" },
-        { item: "Fresh mushrooms", prep: "sliced", quantity: "1", unit: "oz", category: "Produce" },
-        { item: "Onion", prep: "diced", quantity: "1/2", unit: "small", category: "Produce" },
-        { item: "Garlic cloves", prep: "minced", quantity: "1", unit: "", category: "Produce" },
-        { item: "Frozen riced cauliflower", prep: "", quantity: "1/2", unit: "(12-oz) bag", category: "Produce" },
-        { item: "Carrot", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
-        { item: "Fresh broccoli florets", prep: "cut into small pieces", quantity: "1/2", unit: "cup", category: "Produce" },
-        { item: "Large pastured eggs", prep: "beaten", quantity: "2", unit: "", category: "Dairy" },
-        { item: "Grated fresh ginger", prep: "", quantity: "1 1/2", unit: "tsp", category: "Produce" }, // VERIFY
-        { item: "Coconut aminos", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
-        { item: "Toasted sesame oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }, // VERIFY
-        { item: "Everything bagel seasoning", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }, // VERIFY
-        { item: "Fresh cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }, // VERIFY
-        { item: "Scallions", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }, // VERIFY
+      serving_4: [
+        { item: "Butter", prep: "divided", quantity: "8", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Carrot", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "cut into small pieces", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Large pastured eggs", prep: "beaten", quantity: "8", unit: "", category: "Dairy" },
+        { item: "Frozen cauliflower rice", prep: "", quantity: "2", unit: "(16-oz) bags", category: "Produce" },
+        { item: "Toasted sesame oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coconut aminos", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Everything bagel seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" },
         { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
         { item: "Chili garlic sauce", prep: "for serving", quantity: "", unit: "", category: "Pantry" }
       ]
@@ -317,24 +312,18 @@ const RECIPES = [
     instructions: [
       {
         step_number: 1,
-        title: "Brown the mushrooms",
+        title: "Brown the mushrooms & vegetables",
         detail:
-          "In a large skillet, melt 2 tablespoons of the butter over medium heat until golden brown. Add the mushrooms and cook over medium-high heat until golden brown."
+          "In a large skillet, melt 2 tablespoons of the butter over medium heat until golden brown. Add the mushrooms and cook over medium heat until golden brown. Add the onion, garlic, ginger, carrot, and broccoli. Increase the heat to medium-high and sauté until the vegetables are crisp-tender, about 4 minutes."
       },
       {
         step_number: 2,
-        title: "Sauté the vegetables",
+        title: "Scramble the eggs",
         detail:
-          "Add the onion, garlic, ginger, carrot, and broccoli. Increase the heat to medium-high and sauté until the vegetables are crisp-tender, about 4 minutes."
+          "Make a well in the middle of the vegetables and add the remaining 2 tablespoons butter. Pour the eggs into the well, season with salt and pepper, and cook until the eggs are scrambled, stirring occasionally."
       },
       {
         step_number: 3,
-        title: "Scramble the eggs",
-        detail:
-          "Make a well in the middle of the vegetables and add the remaining 2 tablespoons butter. Pour the eggs into the well, season with salt and pepper, and cook until scrambled, stirring occasionally."
-      },
-      {
-        step_number: 4,
         title: "Add cauliflower rice & finish",
         detail:
           "Add the cauliflower rice, sesame oil, coconut aminos, and bagel seasoning. Toss to combine. Taste and adjust seasoning, then garnish with the cilantro and scallions and serve with chili garlic sauce."
@@ -343,58 +332,60 @@ const RECIPES = [
   },
 
   {
-    recipe_id: "sausage-pepperoni-pizza-bake",
-    title: "Sausage and Pepperoni Pizza Bake", // VERIFY title (banner obscured in photo)
+    recipe_id: "meat-lovers-pizza-skillet",
+    title: "Meat Lover's Pizza Skillet",
     category: "Primal",
     source: "Two Meals a Day",
     icon: "🍕",
     tags: ["Pizza-Inspired", "Comfort", "High-Fat"],
     description:
-      "The bold flavors of Italian sausage and pepperoni are topped with sweet, creamy mozzarella and vegetables — the distinct flavor of your favorite veggie pizza, just without the bloat.",
-    prep_time_mins: 20,
+      "The big, bold flavors of Italian sausage and pepperoni are topped with sweet and creamy mozzarella cheese and vegetables. Enjoy the distinct flavors of your favorite veggie pizza, but without the bloating and sugar crash!",
+    prep_time_mins: 8,
     cook_time_mins: 20,
-    native_serving: 4,
+    native_serving: 2,
     accent: "#B5503F",
 
     macro_profiles: {
-      serving_4: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 },
-      serving_2: { calories: 684, protein_g: 31, fat_g: 56, carbs_g: 15 }
+      serving_2: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 },
+      serving_4: { calories: 2734, protein_g: 124, fat_g: 222, carbs_g: 60 }
     },
 
     scaling_options: [2, 4],
 
     ingredients_by_serving: {
-      serving_4: [
+      serving_2: [
         { item: "Bulk Italian sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
-        { item: "Avocado oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
         { item: "Fresh cauliflower florets", prep: "", quantity: "2", unit: "cups", category: "Produce" },
-        { item: "Green bell pepper", prep: "seeded and cut into 1-inch pieces", quantity: "1", unit: "", category: "Produce" }, // VERIFY
+        { item: "Green bell pepper", prep: "seeded and cut into large dice", quantity: "1", unit: "", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "8", unit: "tbsp", category: "Pantry" },
         { item: "Fresh mushrooms", prep: "sliced", quantity: "4", unit: "oz", category: "Produce" },
         { item: "Red onion", prep: "thinly sliced", quantity: "1/2", unit: "small", category: "Produce" },
         { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
-        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }, // VERIFY
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
         { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
         { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
-        { item: "Pepperoni", prep: "", quantity: "1/2", unit: "cup", category: "Meat" }, // VERIFY
+        { item: "Uncured pepperoni", prep: "", quantity: "4", unit: "oz", category: "Meat" },
         { item: "Shredded mozzarella cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
         { item: "Grated Parmesan cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
-        { item: "Fresh basil", prep: "for garnish", quantity: "1/4", unit: "cup", category: "Produce" } // VERIFY
+        { item: "Fresh basil", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" }
       ],
-      serving_2: [
-        { item: "Bulk Italian sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
-        { item: "Avocado oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }, // VERIFY
-        { item: "Fresh cauliflower florets", prep: "", quantity: "1", unit: "cup", category: "Produce" },
-        { item: "Green bell pepper", prep: "seeded and cut into 1-inch pieces", quantity: "1/2", unit: "", category: "Produce" }, // VERIFY
-        { item: "Fresh mushrooms", prep: "sliced", quantity: "2", unit: "oz", category: "Produce" },
-        { item: "Red onion", prep: "thinly sliced", quantity: "1/4", unit: "small", category: "Produce" },
-        { item: "Garlic cloves", prep: "minced", quantity: "1", unit: "", category: "Produce" },
-        { item: "Italian seasoning", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }, // VERIFY
-        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
-        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
-        { item: "Pepperoni", prep: "", quantity: "1/4", unit: "cup", category: "Meat" }, // VERIFY
-        { item: "Shredded mozzarella cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
-        { item: "Grated Parmesan cheese", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
-        { item: "Fresh basil", prep: "for garnish", quantity: "2", unit: "tbsp", category: "Produce" } // VERIFY
+      serving_4: [
+        { item: "Bulk Italian sausage", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Fresh cauliflower florets", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and cut into large dice", quantity: "2", unit: "", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Fresh mushrooms", prep: "sliced", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Uncured pepperoni", prep: "", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Shredded mozzarella cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" }
       ]
     },
 
@@ -408,13 +399,13 @@ const RECIPES = [
         step_number: 2,
         title: "Brown the sausage",
         detail:
-          "In a large ovenproof skillet over medium-high heat, cook the sausage until browned through, then transfer to a bowl."
+          "In a large ovenproof skillet over medium-high heat, sauté the sausage until cooked through, then transfer to a bowl."
       },
       {
         step_number: 3,
         title: "Cook the vegetables",
         detail:
-          "In the same skillet, heat the oil over medium-high heat, then add the cauliflower, bell pepper, mushrooms, red onion, garlic, Italian seasoning, salt, and pepper. Cook for 6 minutes, then return the cooked sausage and add the pepperoni. Top with the mozzarella and Parmesan."
+          "In the same skillet, heat the olive oil over medium-high heat, then add the cauliflower, bell pepper, tomato paste, mushrooms, red onion, garlic, Italian seasoning, salt, and pepper. Cook for 6 minutes, then add the cooked sausage and pepperoni. Top with the mozzarella and Parmesan."
       },
       {
         step_number: 4,
