@@ -1256,6 +1256,418 @@ const RECIPES = [
           "Divide the cauliflower rice between two serving plates. Top with the chicken and garnish with the lemon juice and cilantro."
       }
     ]
+  },
+
+  {
+    recipe_id: "caribbean-seafood-stew",
+    title: "Caribbean Seafood Stew",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🦐",
+    tags: ["Quick", "Seafood", "One-Pot"],
+    description:
+      "Not only is this dish poppin' with exotic flavors, it's also super quick to prepare, thanks to fast-cooking red snapper.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#2E8B8B",
+
+    macro_profiles: {
+      serving_2: { calories: 829, protein_g: 91, fat_g: 41, carbs_g: 24 },
+      serving_4: { calories: 1658, protein_g: 182, fat_g: 82, carbs_g: 48 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Freshly squeezed lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Skinless wild-caught salmon, tilapia, or mahi-mahi fillets", prep: "cut into 1-inch cubes", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Uncooked medium shrimp", prep: "peeled and deveined", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Butter or ghee", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery", prep: "diced", quantity: "2", unit: "stalks", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Unsweetened coconut milk or heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Freshly squeezed lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Skinless wild-caught salmon, tilapia, or mahi-mahi fillets", prep: "cut into 1-inch cubes", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Uncooked medium shrimp", prep: "peeled and deveined", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Butter or ghee", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "12", unit: "", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery", prep: "diced", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Unsweetened coconut milk or heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the seafood",
+        detail:
+          "In a medium bowl, combine the olive oil, lime juice, salt, pepper, fish, and shrimp and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the aromatics",
+        detail:
+          "In a medium pan, heat the butter over medium-high heat. Add the onion, garlic, bell pepper, celery, and red pepper flakes. Cook about 4 minutes, or until the onion is translucent."
+      },
+      {
+        step_number: 3,
+        title: "Simmer & finish",
+        detail:
+          "Add the diced tomatoes and coconut milk. Bring to a boil, reduce to a simmer, and cook, uncovered, for 5 minutes. Stir in the fish mixture. Return to a simmer and cook 5 more minutes, or until the shrimp is opaque. Serve hot, with cilantro and avocado on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "moroccan-lamb-stew",
+    title: "Moroccan Lamb Stew",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍲",
+    tags: ["Stew", "Spiced", "Special-Occasion"],
+    description:
+      "The Moroccan spice combinations in this dish will make you feel like you're on a vacation adventure in North Africa. This dish is best eaten with lots of loved ones and candles—so make it for an extra-special occasion and enjoy!",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#B5651D",
+
+    macro_profiles: {
+      serving_2: { calories: 1105, protein_g: 59, fat_g: 81, carbs_g: 35 },
+      serving_4: { calories: 2210, protein_g: 118, fat_g: 162, carbs_g: 70 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter or ghee", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Ground lamb", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Turmeric", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cauliflower florets", prep: "cut into bite-size pieces", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Unsweetened coconut milk", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Beef or chicken bone broth", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Plain full-fat Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter or ghee", prep: "", quantity: "8", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "12", unit: "", category: "Produce" },
+        { item: "Ground lamb", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Smoked paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Turmeric", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cauliflower florets", prep: "cut into bite-size pieces", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Unsweetened coconut milk", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Beef or chicken bone broth", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Plain full-fat Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the lamb & spices",
+        detail:
+          "In a medium Dutch oven over medium-high heat, melt the butter. Add the onion, ginger, and garlic. Sauté 3 minutes, then add the ground lamb, paprika, cumin, turmeric, cinnamon, salt, and pepper. Continue to sauté until the lamb is cooked through, about 5 minutes, stirring occasionally."
+      },
+      {
+        step_number: 2,
+        title: "Simmer the stew",
+        detail:
+          "Add the cauliflower, tomato paste, coconut milk, and bone broth and stir to combine. Bring to a boil, then reduce to a simmer. Simmer, uncovered, for 5 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Make the lemon-yogurt sauce",
+        detail:
+          "In a small bowl, whisk the yogurt with the lemon zest and juice."
+      },
+      {
+        step_number: 4,
+        title: "Serve",
+        detail:
+          "To serve, top individual servings of stew with cilantro, avocado, and lemon-yogurt sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "beef-taco-casserole",
+    title: "Beef Taco Casserole",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌮",
+    tags: ["Casserole", "Family-Size", "Low-Carb"],
+    description:
+      "This casserole eschews the traditional base of white rice in favor of lighter, low-carb cauliflower rice. The cauliflower takes on the delicious flavors of all the many warm and mouthwatering spices in the sauce, so go ahead and keep a supply of cauliflower rice in your fridge or freezer so you can whip up meals like this anytime you like.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#C0492B",
+
+    macro_profiles: {
+      serving_2: { calories: 545, protein_g: 38, fat_g: 35, carbs_g: 20 },
+      serving_4: { calories: 1090, protein_g: 76, fat_g: 70, carbs_g: 39 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lard", prep: "divided", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Frozen cauliflower rice", prep: "or 8 oz chopped cauliflower riced in a food processor", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Red or green bell pepper", prep: "seeded and diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Ground beef", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Cumin", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Shredded Cheddar or Colby cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Shredded greens, such as romaine or cabbage", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Diced black olives", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Jalapeño pepper", prep: "seeded and thinly sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Prepared salsa", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lard", prep: "divided", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Frozen cauliflower rice", prep: "or 16 oz chopped cauliflower riced in a food processor", quantity: "1", unit: "(16-oz) bag", category: "Produce" },
+        { item: "Red or green bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Ground beef", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Shredded Cheddar or Colby cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Shredded greens, such as romaine or cabbage", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Diced black olives", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Jalapeño pepper", prep: "seeded and thinly sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Prepared salsa", prep: "", quantity: "1", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat & brown the cauliflower rice",
+        detail:
+          "Preheat the oven to 425°F. In a large skillet, heat 1 tablespoon of the lard over medium-high heat. Add the cauliflower rice and sauté until brown. Transfer to a 9 × 13-inch casserole dish and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail:
+          "In the same skillet over medium-high heat, melt the remaining lard. Add the bell pepper and onion. Cook until just softened, then add the ground beef. Add the cumin, coriander, salt, pepper, chili powder, and garlic powder and toss to coat, breaking up the meat as it cooks."
+      },
+      {
+        step_number: 3,
+        title: "Assemble & bake",
+        detail:
+          "Just before the meat is cooked through, stir in the tomato paste and mix thoroughly. Layer the beef mixture on top of the cauliflower rice, top with shredded cheese, and bake for 12 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Add toppings & serve",
+        detail:
+          "Remove the casserole from the oven. Spread sour cream over the top, then follow with the remaining toppings, sprinkling them over the sour cream in layers."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "beef-and-broccoli",
+    title: "Beef and Broccoli",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥦",
+    tags: ["Quick", "Stir-Fry", "High-Protein"],
+    description:
+      "This popular ancestral staple meal is better than ever, thanks to the addition of freshly grated ginger and chopped nuts. Your mouth is going to water just thinking about it. Note: Coconut aminos is a liquid condiment similar to soy sauce, but instead of being fermented from soybeans, it's fermented from the sap of coconut palm trees and sea salt. It's gluten- and grain-free and used often in Asian cuisine. It's a great replacement in recipes calling for soy sauce or tamari.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#5B7A3A",
+
+    macro_profiles: {
+      serving_2: { calories: 1550, protein_g: 115, fat_g: 106, carbs_g: 34 },
+      serving_4: { calories: 3100, protein_g: 230, fat_g: 212, carbs_g: 68 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil or avocado oil", prep: "divided", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Sirloin steak", prep: "sliced against the grain", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Broccoli florets", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Chopped nuts, such as Brazil nuts, macadamia nuts, almonds, or pecans", prep: "chopped", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Beef bone broth", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil or avocado oil", prep: "divided", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Sirloin steak", prep: "sliced against the grain", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Broccoli florets", prep: "", quantity: "8", unit: "cups", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Chopped nuts, such as Brazil nuts, macadamia nuts, almonds, or pecans", prep: "chopped", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Beef bone broth", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the steak",
+        detail:
+          "Heat 2 tablespoons of the oil in a large skillet over high heat. Add the steak and brown quickly, then transfer to a plate and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Cook the broccoli & combine",
+        detail:
+          "Reduce the heat to medium-high, then add the remaining oil. Add the broccoli and cook 5 minutes, stirring occasionally. Return the steak to the pan, then add the coconut aminos, garlic, red pepper flakes, ginger, nuts, scallions, and bone broth. Stir to combine and cook 2 minutes to thicken slightly. Serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-thighs-chard-mushroom-cream-sauce",
+    title: "Chicken Thighs with Chard in Mushroom Cream Sauce",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍗",
+    tags: ["One-Pan", "Creamy", "Comfort"],
+    description:
+      "Never underestimate how indulgent chicken thighs can taste when you roast them and smother them in a rich cream and mushroom sauce. Instead of using cans of condensed mushroom soup, opt for the real deal, with fresh mushrooms and organic heavy cream (or coconut cream if you prefer).",
+    prep_time_mins: 5,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#8A6D3B",
+
+    macro_profiles: {
+      serving_2: { calories: 903, protein_g: 53, fat_g: 71, carbs_g: 13 },
+      serving_4: { calories: 1806, protein_g: 106, fat_g: 142, carbs_g: 26 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Bone-in chicken thighs", prep: "", quantity: "4", unit: "", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Uncured bacon", prep: "chopped", quantity: "4", unit: "slices", category: "Meat" },
+        { item: "Fresh mushrooms", prep: "chopped", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Swiss chard", prep: "chopped", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh thyme", prep: "chopped", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Italian seasoning", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Bone-in chicken thighs", prep: "", quantity: "8", unit: "", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Uncured bacon", prep: "chopped", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Fresh mushrooms", prep: "chopped", quantity: "1", unit: "lb", category: "Produce" },
+        { item: "Swiss chard", prep: "chopped", quantity: "6", unit: "cups", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Fresh thyme", prep: "chopped", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season & roast the chicken",
+        detail:
+          "Preheat the oven to 375°F. Line a baking sheet with parchment paper. In a small bowl, combine the Italian seasoning, salt, and pepper. Arrange the chicken thighs on the prepared baking sheet and cover evenly with the seasoning mixture. Bake for 20 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Cook the bacon & mushrooms",
+        detail:
+          "In a large skillet, heat the olive oil over medium heat. Add the chopped bacon and sauté until fully cooked. Using a slotted spoon, transfer to a bowl, reserving the fat in the skillet. Increase the heat to medium-high and add the mushrooms. Cook until golden brown, about 3 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Build the cream sauce & finish",
+        detail:
+          "Add the chopped chard, garlic, cream, and thyme. Cook to wilt the chard, about 3 minutes. Add the cooked chicken thighs and bacon and simmer for 3 minutes. Taste and adjust seasoning, then serve hot."
+      }
+    ]
   }
 ];
 
