@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1E2022" />
+  <title>Recipe · Mike's Cookbook</title>
+  <link rel="stylesheet" href="cookbook.css" />
+</head>
+<body>
+  <main class="app">
+    <!-- Fixed header summary: title, tags, times, serving-size ladder -->
+    <header class="r-header" id="header"></header>
+
+    <!-- Sticky, swipeable sub-tab bar -->
+    <nav class="subtabs">
+      <button type="button" class="subtab active" id="tab-overview">Overview &amp; Macros</button>
+      <button type="button" class="subtab" id="tab-grocery">Grocery</button>
+      <button type="button" class="subtab" id="tab-steps">Instructions</button>
+    </nav>
+
+    <!-- Tab content -->
+    <section class="panes" id="panes">
+      <div class="pane active" id="pane-overview"></div>
+      <div class="pane" id="pane-grocery"></div>
+      <div class="pane" id="pane-steps"></div>
+    </section>
+  </main>
+
+  <script src="recipes-data.js"></script>
+  <script src="cookbook.js"></script>
+</body>
+</html>

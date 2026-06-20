@@ -1,0 +1,374 @@
+/* ═══════════════════════════════════════════════════════════════════
+   cookbook.css — Mike's Cookbook · Global Foundation (Phase 1)
+   --------------------------------------------------------------------
+   Premium, tactile, mobile-first cookbook UI. Design system per the App
+   Specification §1.1: desaturated high-contrast dark tones, warm cream
+   surface cards, terracotta / sage accents, soft 8–12px corners, clean
+   borders rather than heavy shadows. Bottom-heavy controls for one-handed
+   use; legible on an iPad kitchen stand.
+
+   Each recipe may override --accent only (set inline by cookbook.js).
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── DESIGN TOKENS ────────────────────────────────────────────────── */
+:root {
+  /* Core palette */
+  --bg:            #1E2022;   /* deep slate / charcoal page background      */
+  --bg-elev:       #26292B;   /* slightly elevated dark surface             */
+  --surface:       #F9F8F6;   /* warm cream card                           */
+  --surface-2:     #F1EFEA;   /* secondary cream (zebra / nested)          */
+
+  /* Accents */
+  --accent:        #C87A53;   /* terracotta (per-recipe overridable)       */
+  --accent-rgb:    200,122,83;
+  --sage:          #7D8C77;   /* muted sage                                */
+  --sage-rgb:      125,140,119;
+
+  /* Text */
+  --on-dark:       #ECEAE6;   /* primary text on dark bg                   */
+  --on-dark-dim:   #9CA0A2;   /* muted text on dark bg                     */
+  --ink:           #2A2C2E;   /* primary text on cream card                */
+  --ink-dim:       #6B6F72;   /* muted text on cream card                  */
+
+  /* Lines & radii */
+  --line:          rgba(0,0,0,0.10);
+  --line-dark:     rgba(255,255,255,0.09);
+  --r-sm:          8px;
+  --r-md:          12px;
+  --r-lg:          16px;
+
+  /* Type */
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--on-dark);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* App shell — comfortable max width for iPad stand, centered. */
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ── FIXED HEADER SUMMARY ─────────────────────────────────────────── */
+.r-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background:
+    linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, rgba(30,32,34,0.96) 100%);
+  border-bottom: 1px solid var(--line-dark);
+  padding: 18px 20px 14px;
+}
+
+.r-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.r-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--accent-rgb), 0.55);
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.r-tag.sage {
+  border-color: rgba(var(--sage-rgb), 0.5);
+  color: var(--sage);
+  background: rgba(var(--sage-rgb), 0.08);
+}
+
+.r-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 29px;
+  line-height: 1.12;
+  letter-spacing: 0.2px;
+  margin: 2px 0 10px;
+  color: var(--on-dark);
+}
+
+.r-meta {
+  display: flex;
+  gap: 18px;
+  font-size: 13.5px;
+  color: var(--on-dark-dim);
+}
+.r-meta b { color: var(--on-dark); font-weight: 600; }
+
+/* ── SERVING-SIZE LADDER (segmented toggle) ───────────────────────── */
+.servings {
+  display: flex;
+  margin-top: 14px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-dark);
+  border-radius: var(--r-md);
+  padding: 4px;
+  gap: 4px;
+}
+.serving-opt {
+  flex: 1;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--on-dark-dim);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 11px 8px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.serving-opt.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── STICKY SUB-TAB BAR ───────────────────────────────────────────── */
+.subtabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line-dark);
+}
+.subtab {
+  flex: 1;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--on-dark-dim);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 15px 6px 13px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.18s ease;
+}
+.subtab.active { color: var(--on-dark); }
+.subtab.active::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: -1px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* ── TAB CONTENT SURFACE ──────────────────────────────────────────── */
+.panes { padding: 18px 16px 40px; }
+.pane { display: none; animation: fade 0.22s ease; }
+.pane.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* Cream surface card — the tactile core surface */
+.card {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.card-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 10px;
+}
+
+/* ── OVERVIEW & MACROS ────────────────────────────────────────────── */
+.desc { font-size: 15.5px; line-height: 1.6; color: var(--ink); margin: 0; }
+
+.culinary-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.culinary-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 520px) { .macro-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.macro {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 16px 14px;
+  text-align: center;
+}
+.macro.cals { border-color: rgba(var(--accent-rgb), 0.45); }
+.macro-num {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink);
+}
+.macro.cals .macro-num { color: var(--accent); }
+.macro-unit { font-size: 12px; color: var(--ink-dim); font-weight: 600; }
+.macro-key {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 7px;
+}
+.macro-foot {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--on-dark-dim);
+  margin: 12px 2px 0;
+}
+
+/* ── GROCERY / INGREDIENTS ────────────────────────────────────────── */
+.grocery-cat { margin-bottom: 16px; }
+.grocery-cat:last-child { margin-bottom: 0; }
+.grocery-cat-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 8px;
+}
+.grocery-cat-head .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 4px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.check-row:last-child { border-bottom: 0; }
+.check-box {
+  flex: 0 0 auto;
+  width: 22px; height: 22px;
+  margin-top: 1px;
+  border: 2px solid var(--ink-dim);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.check-box svg { width: 13px; height: 13px; opacity: 0; transition: opacity 0.15s ease; }
+.check-row.done .check-box { background: var(--sage); border-color: var(--sage); }
+.check-row.done .check-box svg { opacity: 1; }
+.check-row.done .check-text { color: var(--ink-dim); text-decoration: line-through; }
+
+.check-text { font-size: 15px; color: var(--ink); line-height: 1.4; }
+.check-qty { font-weight: 700; color: var(--ink); }
+
+/* ── INSTRUCTION GUIDE (stepper) ──────────────────────────────────── */
+.steps { position: relative; }
+.step {
+  display: flex;
+  gap: 14px;
+  padding-bottom: 18px;
+  cursor: pointer;
+}
+.step:last-child { padding-bottom: 0; }
+
+.step-rail { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; }
+.step-num {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink-dim);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  transition: all 0.18s ease;
+}
+.step-line {
+  flex: 1;
+  width: 2px;
+  background: var(--line);
+  margin: 4px 0 -4px;
+  min-height: 14px;
+}
+.step:last-child .step-line { display: none; }
+
+.step.done .step-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.step.done .step-line { background: rgba(var(--accent-rgb), 0.5); }
+
+.step-body { flex: 1; padding-top: 3px; }
+.step-title {
+  font-family: var(--sans);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.step.done .step-title { color: var(--ink-dim); }
+.step-detail { font-size: 14.5px; line-height: 1.55; color: var(--ink); margin: 0; }
+.step.done .step-detail { color: var(--ink-dim); }
+
+.step-progress {
+  font-size: 12.5px;
+  color: var(--on-dark-dim);
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
