@@ -155,7 +155,7 @@
 
     var m = r.macro_profiles["serving_" + state.serving] || {};
     var card = el("div", "card");
-    card.appendChild(el("p", "card-label", "Macro Profile · " + state.serving + " servings"));
+    card.appendChild(el("p", "card-label", "Macro Profile · per serving"));
     var grid = el("div", "macro-grid");
     grid.appendChild(macroCell("cals", m.calories, "kcal", "Calories"));
     grid.appendChild(macroCell("", m.protein_g, "g", "Protein"));
@@ -163,7 +163,7 @@
     grid.appendChild(macroCell("", m.carbs_g, "g", "Carbs"));
     card.appendChild(grid);
     card.appendChild(el("p", "macro-foot",
-      "Totals for the full " + state.serving + "-serving recipe."));
+      "Per single serving. The serving size changes how much the recipe makes, not the macros."));
     pane.appendChild(card);
   }
   function macroCell(extra, num, unit, key) {

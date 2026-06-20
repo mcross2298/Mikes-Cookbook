@@ -10,8 +10,10 @@
      • the tier native to the source recipe is transcribed verbatim,
      • the other tier is pre-computed (here: 2-serving native → 4-serving = 2×)
        with sensible ingredient rounding (whole eggs, teaspoons, etc.).
-   macro_profiles are TOTALS for the selected tier (matching the book's
-   "Total calories" listing and the schema), not per single serving.
+   macro_profiles are PER SINGLE SERVING and identical across both tiers:
+   the book's printed macro set describes one portion, and the serving size
+   only changes how much the recipe makes — not the macros. (serving_2 and
+   serving_4 are kept as equal copies so the schema/rendering stays intact.)
 
    Ingredient categories drive the grouped grocery list:
      Meat · Dairy · Produce · Pantry
@@ -48,7 +50,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 643, protein_g: 70, fat_g: 35, carbs_g: 12 },
-      serving_4: { calories: 1286, protein_g: 140, fat_g: 70, carbs_g: 24 }
+      serving_4: { calories: 643, protein_g: 70, fat_g: 35, carbs_g: 12 }
     },
 
     scaling_options: [2, 4],
@@ -121,7 +123,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1270, protein_g: 24, fat_g: 122, carbs_g: 19 },
-      serving_4: { calories: 2540, protein_g: 48, fat_g: 244, carbs_g: 38 }
+      serving_4: { calories: 1270, protein_g: 24, fat_g: 122, carbs_g: 19 }
     },
 
     scaling_options: [2, 4],
@@ -183,7 +185,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 682, protein_g: 44, fat_g: 42, carbs_g: 32 },
-      serving_4: { calories: 1364, protein_g: 88, fat_g: 84, carbs_g: 64 }
+      serving_4: { calories: 682, protein_g: 44, fat_g: 42, carbs_g: 32 }
     },
 
     scaling_options: [2, 4],
@@ -265,7 +267,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 540, protein_g: 19, fat_g: 40, carbs_g: 26 },
-      serving_4: { calories: 1080, protein_g: 38, fat_g: 80, carbs_g: 52 }
+      serving_4: { calories: 540, protein_g: 19, fat_g: 40, carbs_g: 26 }
     },
 
     scaling_options: [2, 4],
@@ -347,7 +349,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 },
-      serving_4: { calories: 2734, protein_g: 124, fat_g: 222, carbs_g: 60 }
+      serving_4: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 }
     },
 
     scaling_options: [2, 4],
@@ -432,7 +434,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 756, protein_g: 88, fat_g: 36, carbs_g: 20 },
-      serving_4: { calories: 1512, protein_g: 176, fat_g: 72, carbs_g: 40 }
+      serving_4: { calories: 756, protein_g: 88, fat_g: 36, carbs_g: 20 }
     },
 
     scaling_options: [2, 4],
@@ -514,7 +516,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1009, protein_g: 121, fat_g: 53, carbs_g: 12 },
-      serving_4: { calories: 2018, protein_g: 242, fat_g: 106, carbs_g: 24 }
+      serving_4: { calories: 1009, protein_g: 121, fat_g: 53, carbs_g: 12 }
     },
 
     scaling_options: [2, 4],
@@ -584,7 +586,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 746, protein_g: 63, fat_g: 46, carbs_g: 20 },
-      serving_4: { calories: 1492, protein_g: 126, fat_g: 92, carbs_g: 40 }
+      serving_4: { calories: 746, protein_g: 63, fat_g: 46, carbs_g: 20 }
     },
 
     scaling_options: [2, 4],
@@ -671,7 +673,7 @@ const RECIPES = [
     accent: "#A05A45",
 
     macro_profiles: {
-      serving_2: { calories: 588, protein_g: 38, fat_g: 42, carbs_g: 15 },
+      serving_2: { calories: 1176, protein_g: 75, fat_g: 84, carbs_g: 30 },
       serving_4: { calories: 1176, protein_g: 75, fat_g: 84, carbs_g: 30 }
     },
 
@@ -755,7 +757,7 @@ const RECIPES = [
     accent: "#C99A4E",
 
     macro_profiles: {
-      serving_2: { calories: 357, protein_g: 23, fat_g: 27, carbs_g: 6 },
+      serving_2: { calories: 714, protein_g: 45, fat_g: 54, carbs_g: 12 },
       serving_4: { calories: 714, protein_g: 45, fat_g: 54, carbs_g: 12 }
     },
 
@@ -839,7 +841,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1245, protein_g: 88, fat_g: 77, carbs_g: 50 },
-      serving_4: { calories: 2490, protein_g: 176, fat_g: 154, carbs_g: 100 }
+      serving_4: { calories: 1245, protein_g: 88, fat_g: 77, carbs_g: 50 }
     },
 
     scaling_options: [2, 4],
@@ -917,7 +919,7 @@ const RECIPES = [
     accent: "#B7A23F",
 
     macro_profiles: {
-      serving_2: { calories: 533, protein_g: 35, fat_g: 41, carbs_g: 8 },
+      serving_2: { calories: 1065, protein_g: 69, fat_g: 81, carbs_g: 15 },
       serving_4: { calories: 1065, protein_g: 69, fat_g: 81, carbs_g: 15 }
     },
 
@@ -1013,7 +1015,7 @@ const RECIPES = [
     accent: "#9C6B43",
 
     macro_profiles: {
-      serving_2: { calories: 643, protein_g: 43, fat_g: 43, carbs_g: 23 },
+      serving_2: { calories: 1285, protein_g: 85, fat_g: 85, carbs_g: 45 },
       serving_4: { calories: 1285, protein_g: 85, fat_g: 85, carbs_g: 45 }
     },
 
@@ -1102,7 +1104,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 763, protein_g: 33, fat_g: 59, carbs_g: 25 },
-      serving_4: { calories: 1526, protein_g: 66, fat_g: 118, carbs_g: 50 }
+      serving_4: { calories: 763, protein_g: 33, fat_g: 59, carbs_g: 25 }
     },
 
     scaling_options: [2, 4],
@@ -1176,7 +1178,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1311, protein_g: 54, fat_g: 99, carbs_g: 51 },
-      serving_4: { calories: 2622, protein_g: 108, fat_g: 198, carbs_g: 102 }
+      serving_4: { calories: 1311, protein_g: 54, fat_g: 99, carbs_g: 51 }
     },
 
     scaling_options: [2, 4],
@@ -1274,7 +1276,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 829, protein_g: 91, fat_g: 41, carbs_g: 24 },
-      serving_4: { calories: 1658, protein_g: 182, fat_g: 82, carbs_g: 48 }
+      serving_4: { calories: 829, protein_g: 91, fat_g: 41, carbs_g: 24 }
     },
 
     scaling_options: [2, 4],
@@ -1356,7 +1358,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1105, protein_g: 59, fat_g: 81, carbs_g: 35 },
-      serving_4: { calories: 2210, protein_g: 118, fat_g: 162, carbs_g: 70 }
+      serving_4: { calories: 1105, protein_g: 59, fat_g: 81, carbs_g: 35 }
     },
 
     scaling_options: [2, 4],
@@ -1449,7 +1451,7 @@ const RECIPES = [
     accent: "#C0492B",
 
     macro_profiles: {
-      serving_2: { calories: 545, protein_g: 38, fat_g: 35, carbs_g: 20 },
+      serving_2: { calories: 1090, protein_g: 76, fat_g: 70, carbs_g: 39 },
       serving_4: { calories: 1090, protein_g: 76, fat_g: 70, carbs_g: 39 }
     },
 
@@ -1548,7 +1550,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1550, protein_g: 115, fat_g: 106, carbs_g: 34 },
-      serving_4: { calories: 3100, protein_g: 230, fat_g: 212, carbs_g: 68 }
+      serving_4: { calories: 1550, protein_g: 115, fat_g: 106, carbs_g: 34 }
     },
 
     scaling_options: [2, 4],
@@ -1612,7 +1614,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 903, protein_g: 53, fat_g: 71, carbs_g: 13 },
-      serving_4: { calories: 1806, protein_g: 106, fat_g: 142, carbs_g: 26 }
+      serving_4: { calories: 903, protein_g: 53, fat_g: 71, carbs_g: 13 }
     },
 
     scaling_options: [2, 4],
@@ -1686,7 +1688,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 879, protein_g: 54, fat_g: 63, carbs_g: 24 },
-      serving_4: { calories: 1758, protein_g: 108, fat_g: 126, carbs_g: 48 }
+      serving_4: { calories: 879, protein_g: 54, fat_g: 63, carbs_g: 24 }
     },
 
     scaling_options: [2, 4],
@@ -1744,7 +1746,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1193, protein_g: 76, fat_g: 89, carbs_g: 22 },
-      serving_4: { calories: 2386, protein_g: 152, fat_g: 178, carbs_g: 44 }
+      serving_4: { calories: 1193, protein_g: 76, fat_g: 89, carbs_g: 22 }
     },
 
     scaling_options: [2, 4],
@@ -1836,7 +1838,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 735, protein_g: 42, fat_g: 59, carbs_g: 9 },
-      serving_4: { calories: 1470, protein_g: 84, fat_g: 118, carbs_g: 18 }
+      serving_4: { calories: 735, protein_g: 42, fat_g: 59, carbs_g: 9 }
     },
 
     scaling_options: [2, 4],
@@ -1892,7 +1894,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1453, protein_g: 108, fat_g: 97, carbs_g: 37 },
-      serving_4: { calories: 2906, protein_g: 216, fat_g: 194, carbs_g: 74 }
+      serving_4: { calories: 1453, protein_g: 108, fat_g: 97, carbs_g: 37 }
     },
 
     scaling_options: [2, 4],
@@ -1979,7 +1981,7 @@ const RECIPES = [
     accent: "#6B8E3D",
 
     macro_profiles: {
-      serving_2: { calories: 497, protein_g: 44, fat_g: 31, carbs_g: 12 },
+      serving_2: { calories: 993, protein_g: 88, fat_g: 61, carbs_g: 23 },
       serving_4: { calories: 993, protein_g: 88, fat_g: 61, carbs_g: 23 }
     },
 
@@ -2063,7 +2065,7 @@ const RECIPES = [
     accent: "#C9A86A",
 
     macro_profiles: {
-      serving_2: { calories: 166, protein_g: 6, fat_g: 12, carbs_g: 10 },
+      serving_2: { calories: 331, protein_g: 11, fat_g: 23, carbs_g: 20 },
       serving_4: { calories: 331, protein_g: 11, fat_g: 23, carbs_g: 20 }
     },
 
@@ -2114,7 +2116,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 2408, protein_g: 134, fat_g: 180, carbs_g: 63 },
-      serving_4: { calories: 4816, protein_g: 268, fat_g: 360, carbs_g: 126 }
+      serving_4: { calories: 2408, protein_g: 134, fat_g: 180, carbs_g: 63 }
     },
 
     scaling_options: [2, 4],
@@ -2186,7 +2188,7 @@ const RECIPES = [
     accent: "#B5894E",
 
     macro_profiles: {
-      serving_2: { calories: 383, protein_g: 21, fat_g: 31, carbs_g: 7 },
+      serving_2: { calories: 765, protein_g: 41, fat_g: 61, carbs_g: 13 },
       serving_4: { calories: 765, protein_g: 41, fat_g: 61, carbs_g: 13 }
     },
 
@@ -2262,7 +2264,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 520, protein_g: 26, fat_g: 40, carbs_g: 14 },
-      serving_4: { calories: 1040, protein_g: 52, fat_g: 80, carbs_g: 28 }
+      serving_4: { calories: 520, protein_g: 26, fat_g: 40, carbs_g: 14 }
     },
 
     scaling_options: [2, 4],
@@ -2339,7 +2341,7 @@ const RECIPES = [
     accent: "#C2622E",
 
     macro_profiles: {
-      serving_2: { calories: 312, protein_g: 26, fat_g: 16, carbs_g: 17 },
+      serving_2: { calories: 623, protein_g: 52, fat_g: 31, carbs_g: 34 },
       serving_4: { calories: 623, protein_g: 52, fat_g: 31, carbs_g: 34 }
     },
 
@@ -2439,7 +2441,7 @@ const RECIPES = [
     accent: "#8C5A3C",
 
     macro_profiles: {
-      serving_2: { calories: 307, protein_g: 17, fat_g: 23, carbs_g: 9 },
+      serving_2: { calories: 613, protein_g: 34, fat_g: 45, carbs_g: 18 },
       serving_4: { calories: 613, protein_g: 34, fat_g: 45, carbs_g: 18 }
     },
 
