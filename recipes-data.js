@@ -23,8 +23,11 @@
    This keeps the grocery list a pure shopping list while preserving prep
    detail where it matters — alongside the cooking steps.
 
-   source — origin cookbook / collection, used by the Phase 2 home screen to
-            group recipes (e.g. "Two Meals a Day").
+   Home-screen (Phase 2) recipe-card fields:
+     • source — origin cookbook / collection, used to group recipes on the
+                home screen (e.g. "Two Meals a Day").
+     • icon   — emoji shown on the card's accent band.
+     • accent — per-recipe accent color (also themes the detail screen).
 
    Add future recipes by appending to RECIPES — no rendering changes required.
    ========================================================================== */
@@ -34,6 +37,7 @@ const RECIPES = [
     title: "Jalapeño Chicken Bake",
     category: "Primal",
     source: "Two Meals a Day",
+    icon: "🌶️",
     tags: ["Spicy", "One-Dish", "High-Protein"],
     description:
       "This adds a new dimension of flavor to an old favorite with the creative combination of chicken thighs, bacon, vegetables, and cream cheese. If you want the poppers to be less spicy, simply use jarred pickled jalapeños instead of fresh.",
