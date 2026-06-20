@@ -1256,6 +1256,390 @@ const RECIPES = [
           "Divide the cauliflower rice between two serving plates. Top with the chicken and garnish with the lemon juice and cilantro."
       }
     ]
+  },
+
+  {
+    recipe_id: "spring-vegetable-chicken-carbonara-skillet",
+    title: "Spring Vegetable and Chicken Carbonara Skillet",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍝",
+    tags: ["Seasonal", "One-Skillet", "High-Fat"],
+    description:
+      "Use asparagus in the spring, brussels sprouts in the fall, and cabbage in the winter—or choose from among other fresh seasonal options at your local farmer's market.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#8FAE6B",
+
+    macro_profiles: {
+      serving_2: { calories: 1150, protein_g: 61, fat_g: 94, carbs_g: 15 },
+      serving_4: { calories: 2300, protein_g: 122, fat_g: 188, carbs_g: 30 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Uncured bacon", prep: "diced", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Onion", prep: "diced small", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Asparagus", prep: "trimmed and cut into bite-size chunks", quantity: "1", unit: "small bunch", category: "Produce" },
+        { item: "Frozen green peas", prep: "thawed (optional)", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest of 1, juice of ½", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh basil", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Butter", prep: "", quantity: "1", unit: "stick", category: "Dairy" },
+        { item: "Heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Uncured bacon", prep: "diced", quantity: "16", unit: "slices", category: "Meat" },
+        { item: "Onion", prep: "diced small", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Asparagus", prep: "trimmed and cut into bite-size chunks", quantity: "2", unit: "small bunches", category: "Produce" },
+        { item: "Frozen green peas", prep: "thawed (optional)", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest of 2, juice of 1", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh basil", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Butter", prep: "", quantity: "2", unit: "sticks", category: "Dairy" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Crisp the bacon",
+        detail:
+          "In a large skillet, cook the bacon pieces over medium-high heat until crisp. Using a slotted spoon, transfer the pieces to a plate and set aside, reserving the fat in the skillet."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken & vegetables",
+        detail:
+          "Add the onion to the skillet and cook until translucent, about 5 minutes. Add the chicken thighs, salt, and pepper. Just before the meat is cooked through, add the asparagus, peas (if desired), garlic, and lemon zest and juice. Sauté for 2 minutes, then add the basil, parsley, butter, cream, and Parmesan."
+      },
+      {
+        step_number: 3,
+        title: "Simmer & serve",
+        detail:
+          "Stir to combine. Bring to a boil, then reduce the heat and simmer for 3 minutes. Adjust seasoning, then serve hot."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "roasted-crowns-casserole",
+    title: "Roasted Crowns Casserole",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥦",
+    tags: ["One-Skillet", "High-Fat", "Cheesy"],
+    description:
+      "Cruciferous vegetables such as cauliflower and broccoli pair beautifully with healthful mayonnaise and melted cheese. Italian sausage rounds out this dish with a big dose of protein and nutritious fat. Once you've made this a couple of times, you'll have it committed to memory and be able to whip it up in no time.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#5E8C61",
+
+    macro_profiles: {
+      serving_2: { calories: 1692, protein_g: 75, fat_g: 140, carbs_g: 33 },
+      serving_4: { calories: 3384, protein_g: 150, fat_g: 280, carbs_g: 66 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Fresh cauliflower florets", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Bulk Italian pork sausage", prep: "", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest of 1, plus 1 tbsp juice", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise", prep: "such as Primal Kitchen Mayo", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Sharp Cheddar cheese", prep: "shredded", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Scallions", prep: "thinly sliced, divided", quantity: "1", unit: "bunch", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Fresh cauliflower florets", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "divided", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Bulk Italian pork sausage", prep: "", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest of 2, plus 2 tbsp juice", quantity: "2", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise", prep: "such as Primal Kitchen Mayo", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Sharp Cheddar cheese", prep: "shredded", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Scallions", prep: "thinly sliced, divided", quantity: "2", unit: "bunches", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Broil the florets",
+        detail:
+          "Preheat the broiler to its highest setting. Line two baking sheets with parchment paper. Arrange the broccoli and cauliflower florets in a single layer on the baking sheet and season with the olive oil, salt, and ½ teaspoon pepper. Place the pan on the top shelf of the oven and broil for 3 to 5 minutes, or until the florets begin to char slightly."
+      },
+      {
+        step_number: 2,
+        title: "Brown the sausage",
+        detail:
+          "Reduce the broiler heat to its lowest setting and place a shelf in the bottom half of the oven. In a large, ovenproof skillet over medium-high heat, cook the sausage, breaking it into bite-size pieces."
+      },
+      {
+        step_number: 3,
+        title: "Combine & finish under the broiler",
+        detail:
+          "Meanwhile, in a small bowl, combine the garlic, lemon zest and juice, mayonnaise, cheese, half the scallions, and remaining ½ teaspoon pepper. Once the sausage is cooked through, add the broiled broccoli and cauliflower to the skillet and toss to combine. Top with the seasoned mayonnaise mixture, then place the pan on the low shelf and broil until the top is golden and bubbly, about 3 minutes. Sprinkle with the remaining scallions and serve hot."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sheet-pan-sausage-cabbage",
+    title: "Sheet-Pan Sausage and Cabbage",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌭",
+    tags: ["Sheet-Pan", "Low-Carb", "Easy"],
+    description:
+      "This German-inspired dish is naturally low in carbohydrates, easy to prepare, and absolutely delicious.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#9C6B3F",
+
+    macro_profiles: {
+      serving_2: { calories: 677, protein_g: 33, fat_g: 49, carbs_g: 26 },
+      serving_4: { calories: 1354, protein_g: 66, fat_g: 98, carbs_g: 52 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Cooked sausage links", prep: "of your choice", quantity: "4", unit: "", category: "Meat" },
+        { item: "Green cabbage", prep: "cut into 8 wedges", quantity: "1", unit: "small head", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Whole-grain old-fashioned mustard", prep: "sugar-free, for serving", quantity: "1-2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Cooked sausage links", prep: "of your choice", quantity: "8", unit: "", category: "Meat" },
+        { item: "Green cabbage", prep: "each cut into 8 wedges", quantity: "2", unit: "small heads", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Whole-grain old-fashioned mustard", prep: "sugar-free, for serving", quantity: "2-4", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the oven",
+        detail: "Preheat the oven to 450°F. Line a baking sheet with parchment paper."
+      },
+      {
+        step_number: 2,
+        title: "Arrange & drizzle",
+        detail:
+          "Arrange the sausages and cabbage wedges on the prepared baking sheet. Drizzle the cabbage with the olive oil."
+      },
+      {
+        step_number: 3,
+        title: "Season, roast & serve",
+        detail:
+          "In a small bowl, combine the salt, pepper, garlic powder, and onion powder. Sprinkle the seasoning mixture generously over the cabbage. Roast for 20 minutes and serve hot with the whole-grain mustard."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "shepherds-pie",
+    title: "Shepherd's Pie",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥧",
+    tags: ["Comfort", "Casserole", "High-Protein"],
+    description:
+      "Ground lamb and yellow curry powder combine with fresh vegetables and healthful fats, herbs, and Parmesan cheese to bring out comfort in every bite. This is wonderful any time of the year, because the vegetables can be sourced year-round. Fresh ground lamb is in peak season in the United States from March to October but can generally be found frozen during the winter.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#A65E3A",
+
+    macro_profiles: {
+      serving_2: { calories: 514, protein_g: 30, fat_g: 40, carbs_g: 10 },
+      serving_4: { calories: 1027, protein_g: 60, fat_g: 79, carbs_g: 19 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Cauliflower", prep: "cut into large florets", quantity: "1/2", unit: "medium head", category: "Produce" },
+        { item: "Garlic cloves", prep: "", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "divided", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lard or beef tallow", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Celery stalks", prep: "thinly sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Carrots", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "2", unit: "oz", category: "Produce" },
+        { item: "Ground lamb", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Pepper", prep: "divided", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Yellow curry powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Butter", prep: "melted", quantity: "1/2", unit: "stick", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Cauliflower", prep: "cut into large florets", quantity: "1", unit: "medium head", category: "Produce" },
+        { item: "Garlic cloves", prep: "", quantity: "2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "divided", quantity: "1 tbsp + 1 tsp", unit: "", category: "Pantry" },
+        { item: "Lard or beef tallow", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Celery stalks", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Carrots", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Ground lamb", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Pepper", prep: "divided", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Yellow curry powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Butter", prep: "melted", quantity: "1", unit: "stick", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the broiler",
+        detail: "Preheat the broiler to its lowest setting."
+      },
+      {
+        step_number: 2,
+        title: "Boil the cauliflower",
+        detail:
+          "Place the florets, whole garlic cloves, and 1 teaspoon salt in a medium pot. Add just enough water to cover. Bring to a boil, reduce the heat, and simmer for 12 to 15 minutes, until the florets are fork-tender."
+      },
+      {
+        step_number: 3,
+        title: "Cook the lamb & vegetables",
+        detail:
+          "Meanwhile, in a large ovenproof skillet, melt the lard over medium-high heat. Add the onion, celery, carrots, and mushrooms. Cook 5 minutes. Add the lamb and season with 1 tablespoon salt, ½ teaspoon pepper, curry powder, paprika, and minced garlic. Cook, stirring occasionally, until the lamb is cooked through."
+      },
+      {
+        step_number: 4,
+        title: "Make the cauliflower mash",
+        detail:
+          "When the cauliflower is fork-tender, drain well and transfer to the bowl of a food processor. Add the melted butter, Parmesan, and the remaining ½ teaspoon pepper. Puree until smooth. Taste and adjust seasoning."
+      },
+      {
+        step_number: 5,
+        title: "Top & broil",
+        detail:
+          "Top the meat mixture in the skillet with the cauliflower mash and broil in the oven for about 6 to 8 minutes, or until warmed through and slightly golden. Serve hot, garnished with chopped parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "asian-lettuce-cups",
+    title: "Asian Lettuce Cups",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥬",
+    tags: ["Asian-Inspired", "Low-Carb", "Quick"],
+    description:
+      "It's amazing how fresh herbs and spices and good-quality cooking oils can transform plain meats. Ginger, sesame oil, and chili garlic sauce make these Asian lettuce wraps mouthwatering without leaving you feeling stuffed or bloated.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#6B9B7C",
+
+    macro_profiles: {
+      serving_2: { calories: 1372, protein_g: 92, fat_g: 100, carbs_g: 26 },
+      serving_4: { calories: 2744, protein_g: 184, fat_g: 200, carbs_g: 52 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "minced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Ground turkey or chicken", prep: "", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Carrot", prep: "shredded", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery stalks", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Chili garlic sauce", prep: "sugar-free, such as Yai's Thai", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Bibb lettuce", prep: "leaves separated", quantity: "1", unit: "head", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Nuts", prep: "chopped, such as macadamia nuts or almonds", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lard", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Onion", prep: "minced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Ground turkey or chicken", prep: "", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Carrot", prep: "shredded", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery stalks", prep: "thinly sliced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chili garlic sauce", prep: "sugar-free, such as Yai's Thai", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Bibb lettuce", prep: "leaves separated", quantity: "2", unit: "heads", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Nuts", prep: "chopped, such as macadamia nuts or almonds", quantity: "1", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the meat",
+        detail:
+          "Melt the lard in a large skillet over medium-high heat. Add the onion and sauté for 2 minutes, then add the ground meat. Cook through, stirring occasionally to break up the meat, about 10 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Add aromatics & sauce",
+        detail:
+          "Add the garlic, ginger, carrot, celery, coconut aminos, sesame oil, and chili garlic sauce. Cook for 2 minutes, stirring to combine well."
+      },
+      {
+        step_number: 3,
+        title: "Fill & garnish",
+        detail:
+          "Divide the mixture between the lettuce cups and top with the cilantro and chopped nuts."
+      }
+    ]
   }
 ];
 
