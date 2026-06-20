@@ -10,8 +10,10 @@
      • the tier native to the source recipe is transcribed verbatim,
      • the other tier is pre-computed (here: 2-serving native → 4-serving = 2×)
        with sensible ingredient rounding (whole eggs, teaspoons, etc.).
-   macro_profiles are TOTALS for the selected tier (matching the book's
-   "Total calories" listing and the schema), not per single serving.
+   macro_profiles are PER SINGLE SERVING and identical across both tiers:
+   the book's printed macro set describes one portion, and the serving size
+   only changes how much the recipe makes — not the macros. (serving_2 and
+   serving_4 are kept as equal copies so the schema/rendering stays intact.)
 
    Ingredient categories drive the grouped grocery list:
      Meat · Dairy · Produce · Pantry
@@ -48,7 +50,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 643, protein_g: 70, fat_g: 35, carbs_g: 12 },
-      serving_4: { calories: 1286, protein_g: 140, fat_g: 70, carbs_g: 24 }
+      serving_4: { calories: 643, protein_g: 70, fat_g: 35, carbs_g: 12 }
     },
 
     scaling_options: [2, 4],
@@ -121,7 +123,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1270, protein_g: 24, fat_g: 122, carbs_g: 19 },
-      serving_4: { calories: 2540, protein_g: 48, fat_g: 244, carbs_g: 38 }
+      serving_4: { calories: 1270, protein_g: 24, fat_g: 122, carbs_g: 19 }
     },
 
     scaling_options: [2, 4],
@@ -183,7 +185,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 682, protein_g: 44, fat_g: 42, carbs_g: 32 },
-      serving_4: { calories: 1364, protein_g: 88, fat_g: 84, carbs_g: 64 }
+      serving_4: { calories: 682, protein_g: 44, fat_g: 42, carbs_g: 32 }
     },
 
     scaling_options: [2, 4],
@@ -265,7 +267,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 540, protein_g: 19, fat_g: 40, carbs_g: 26 },
-      serving_4: { calories: 1080, protein_g: 38, fat_g: 80, carbs_g: 52 }
+      serving_4: { calories: 540, protein_g: 19, fat_g: 40, carbs_g: 26 }
     },
 
     scaling_options: [2, 4],
@@ -347,7 +349,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 },
-      serving_4: { calories: 2734, protein_g: 124, fat_g: 222, carbs_g: 60 }
+      serving_4: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 }
     },
 
     scaling_options: [2, 4],
@@ -432,7 +434,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 756, protein_g: 88, fat_g: 36, carbs_g: 20 },
-      serving_4: { calories: 1512, protein_g: 176, fat_g: 72, carbs_g: 40 }
+      serving_4: { calories: 756, protein_g: 88, fat_g: 36, carbs_g: 20 }
     },
 
     scaling_options: [2, 4],
@@ -514,7 +516,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1009, protein_g: 121, fat_g: 53, carbs_g: 12 },
-      serving_4: { calories: 2018, protein_g: 242, fat_g: 106, carbs_g: 24 }
+      serving_4: { calories: 1009, protein_g: 121, fat_g: 53, carbs_g: 12 }
     },
 
     scaling_options: [2, 4],
@@ -584,7 +586,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 746, protein_g: 63, fat_g: 46, carbs_g: 20 },
-      serving_4: { calories: 1492, protein_g: 126, fat_g: 92, carbs_g: 40 }
+      serving_4: { calories: 746, protein_g: 63, fat_g: 46, carbs_g: 20 }
     },
 
     scaling_options: [2, 4],
@@ -671,7 +673,7 @@ const RECIPES = [
     accent: "#A05A45",
 
     macro_profiles: {
-      serving_2: { calories: 588, protein_g: 38, fat_g: 42, carbs_g: 15 },
+      serving_2: { calories: 1176, protein_g: 75, fat_g: 84, carbs_g: 30 },
       serving_4: { calories: 1176, protein_g: 75, fat_g: 84, carbs_g: 30 }
     },
 
@@ -755,7 +757,7 @@ const RECIPES = [
     accent: "#C99A4E",
 
     macro_profiles: {
-      serving_2: { calories: 357, protein_g: 23, fat_g: 27, carbs_g: 6 },
+      serving_2: { calories: 714, protein_g: 45, fat_g: 54, carbs_g: 12 },
       serving_4: { calories: 714, protein_g: 45, fat_g: 54, carbs_g: 12 }
     },
 
@@ -839,7 +841,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1245, protein_g: 88, fat_g: 77, carbs_g: 50 },
-      serving_4: { calories: 2490, protein_g: 176, fat_g: 154, carbs_g: 100 }
+      serving_4: { calories: 1245, protein_g: 88, fat_g: 77, carbs_g: 50 }
     },
 
     scaling_options: [2, 4],
@@ -917,7 +919,7 @@ const RECIPES = [
     accent: "#B7A23F",
 
     macro_profiles: {
-      serving_2: { calories: 533, protein_g: 35, fat_g: 41, carbs_g: 8 },
+      serving_2: { calories: 1065, protein_g: 69, fat_g: 81, carbs_g: 15 },
       serving_4: { calories: 1065, protein_g: 69, fat_g: 81, carbs_g: 15 }
     },
 
@@ -1013,7 +1015,7 @@ const RECIPES = [
     accent: "#9C6B43",
 
     macro_profiles: {
-      serving_2: { calories: 643, protein_g: 43, fat_g: 43, carbs_g: 23 },
+      serving_2: { calories: 1285, protein_g: 85, fat_g: 85, carbs_g: 45 },
       serving_4: { calories: 1285, protein_g: 85, fat_g: 85, carbs_g: 45 }
     },
 
@@ -1102,7 +1104,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 763, protein_g: 33, fat_g: 59, carbs_g: 25 },
-      serving_4: { calories: 1526, protein_g: 66, fat_g: 118, carbs_g: 50 }
+      serving_4: { calories: 763, protein_g: 33, fat_g: 59, carbs_g: 25 }
     },
 
     scaling_options: [2, 4],
@@ -1176,7 +1178,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1311, protein_g: 54, fat_g: 99, carbs_g: 51 },
-      serving_4: { calories: 2622, protein_g: 108, fat_g: 198, carbs_g: 102 }
+      serving_4: { calories: 1311, protein_g: 54, fat_g: 99, carbs_g: 51 }
     },
 
     scaling_options: [2, 4],
@@ -1274,7 +1276,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1150, protein_g: 61, fat_g: 94, carbs_g: 15 },
-      serving_4: { calories: 2300, protein_g: 122, fat_g: 188, carbs_g: 30 }
+      serving_4: { calories: 1150, protein_g: 61, fat_g: 94, carbs_g: 15 }
     },
 
     scaling_options: [2, 4],
@@ -1352,7 +1354,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1692, protein_g: 75, fat_g: 140, carbs_g: 33 },
-      serving_4: { calories: 3384, protein_g: 150, fat_g: 280, carbs_g: 66 }
+      serving_4: { calories: 1692, protein_g: 75, fat_g: 140, carbs_g: 33 }
     },
 
     scaling_options: [2, 4],
@@ -1424,7 +1426,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 677, protein_g: 33, fat_g: 49, carbs_g: 26 },
-      serving_4: { calories: 1354, protein_g: 66, fat_g: 98, carbs_g: 52 }
+      serving_4: { calories: 677, protein_g: 33, fat_g: 49, carbs_g: 26 }
     },
 
     scaling_options: [2, 4],
@@ -1488,7 +1490,7 @@ const RECIPES = [
     accent: "#A65E3A",
 
     macro_profiles: {
-      serving_2: { calories: 514, protein_g: 30, fat_g: 40, carbs_g: 10 },
+      serving_2: { calories: 1027, protein_g: 60, fat_g: 79, carbs_g: 19 },
       serving_4: { calories: 1027, protein_g: 60, fat_g: 79, carbs_g: 19 }
     },
 
@@ -1582,7 +1584,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1372, protein_g: 92, fat_g: 100, carbs_g: 26 },
-      serving_4: { calories: 2744, protein_g: 184, fat_g: 200, carbs_g: 52 }
+      serving_4: { calories: 1372, protein_g: 92, fat_g: 100, carbs_g: 26 }
     },
 
     scaling_options: [2, 4],
@@ -1658,7 +1660,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 955, protein_g: 61, fat_g: 67, carbs_g: 27 },
-      serving_4: { calories: 1910, protein_g: 122, fat_g: 134, carbs_g: 54 }
+      serving_4: { calories: 955, protein_g: 61, fat_g: 67, carbs_g: 27 }
     },
 
     scaling_options: [2, 4],
@@ -1730,7 +1732,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 875, protein_g: 54, fat_g: 63, carbs_g: 23 },
-      serving_4: { calories: 1750, protein_g: 108, fat_g: 126, carbs_g: 46 }
+      serving_4: { calories: 875, protein_g: 54, fat_g: 63, carbs_g: 23 }
     },
 
     scaling_options: [2, 4],
@@ -1810,7 +1812,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1866, protein_g: 160, fat_g: 106, carbs_g: 68 },
-      serving_4: { calories: 3732, protein_g: 320, fat_g: 212, carbs_g: 136 }
+      serving_4: { calories: 1866, protein_g: 160, fat_g: 106, carbs_g: 68 }
     },
 
     scaling_options: [2, 4],
@@ -1898,7 +1900,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 857, protein_g: 74, fat_g: 57, carbs_g: 12 },
-      serving_4: { calories: 1714, protein_g: 148, fat_g: 114, carbs_g: 24 }
+      serving_4: { calories: 857, protein_g: 74, fat_g: 57, carbs_g: 12 }
     },
 
     scaling_options: [2, 4],
@@ -1984,7 +1986,7 @@ const RECIPES = [
 
     macro_profiles: {
       serving_2: { calories: 1052, protein_g: 70, fat_g: 64, carbs_g: 49 },
-      serving_4: { calories: 2104, protein_g: 140, fat_g: 128, carbs_g: 98 }
+      serving_4: { calories: 1052, protein_g: 70, fat_g: 64, carbs_g: 49 }
     },
 
     scaling_options: [2, 4],
@@ -2038,6 +2040,1250 @@ const RECIPES = [
         title: "Spaghetti squash option",
         detail:
           "To use spaghetti squash instead of cabbage, preheat the oven to 450°F and line a baking sheet with parchment paper. Cut a small spaghetti squash in half lengthwise, scoop out the seeds, and season generously with olive oil, salt, and pepper. Place the halves cut side down on the prepared baking sheet and roast until fork-tender and slightly golden, about 25 minutes."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "caribbean-seafood-stew",
+    title: "Caribbean Seafood Stew",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🦐",
+    tags: ["Quick", "Seafood", "One-Pot"],
+    description:
+      "Not only is this dish poppin' with exotic flavors, it's also super quick to prepare, thanks to fast-cooking red snapper.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#2E8B8B",
+
+    macro_profiles: {
+      serving_2: { calories: 829, protein_g: 91, fat_g: 41, carbs_g: 24 },
+      serving_4: { calories: 829, protein_g: 91, fat_g: 41, carbs_g: 24 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Freshly squeezed lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Skinless wild-caught salmon, tilapia, or mahi-mahi fillets", prep: "cut into 1-inch cubes", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Uncooked medium shrimp", prep: "peeled and deveined", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Butter or ghee", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery", prep: "diced", quantity: "2", unit: "stalks", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Unsweetened coconut milk or heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Freshly squeezed lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Skinless wild-caught salmon, tilapia, or mahi-mahi fillets", prep: "cut into 1-inch cubes", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Uncooked medium shrimp", prep: "peeled and deveined", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Butter or ghee", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "12", unit: "", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery", prep: "diced", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Unsweetened coconut milk or heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the seafood",
+        detail:
+          "In a medium bowl, combine the olive oil, lime juice, salt, pepper, fish, and shrimp and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the aromatics",
+        detail:
+          "In a medium pan, heat the butter over medium-high heat. Add the onion, garlic, bell pepper, celery, and red pepper flakes. Cook about 4 minutes, or until the onion is translucent."
+      },
+      {
+        step_number: 3,
+        title: "Simmer & finish",
+        detail:
+          "Add the diced tomatoes and coconut milk. Bring to a boil, reduce to a simmer, and cook, uncovered, for 5 minutes. Stir in the fish mixture. Return to a simmer and cook 5 more minutes, or until the shrimp is opaque. Serve hot, with cilantro and avocado on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "moroccan-lamb-stew",
+    title: "Moroccan Lamb Stew",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍲",
+    tags: ["Stew", "Spiced", "Special-Occasion"],
+    description:
+      "The Moroccan spice combinations in this dish will make you feel like you're on a vacation adventure in North Africa. This dish is best eaten with lots of loved ones and candles—so make it for an extra-special occasion and enjoy!",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#B5651D",
+
+    macro_profiles: {
+      serving_2: { calories: 1105, protein_g: 59, fat_g: 81, carbs_g: 35 },
+      serving_4: { calories: 1105, protein_g: 59, fat_g: 81, carbs_g: 35 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter or ghee", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Ground lamb", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Turmeric", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cauliflower florets", prep: "cut into bite-size pieces", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Unsweetened coconut milk", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Beef or chicken bone broth", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Plain full-fat Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter or ghee", prep: "", quantity: "8", unit: "tbsp", category: "Dairy" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "12", unit: "", category: "Produce" },
+        { item: "Ground lamb", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Smoked paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Turmeric", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cauliflower florets", prep: "cut into bite-size pieces", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Unsweetened coconut milk", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Beef or chicken bone broth", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Plain full-fat Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the lamb & spices",
+        detail:
+          "In a medium Dutch oven over medium-high heat, melt the butter. Add the onion, ginger, and garlic. Sauté 3 minutes, then add the ground lamb, paprika, cumin, turmeric, cinnamon, salt, and pepper. Continue to sauté until the lamb is cooked through, about 5 minutes, stirring occasionally."
+      },
+      {
+        step_number: 2,
+        title: "Simmer the stew",
+        detail:
+          "Add the cauliflower, tomato paste, coconut milk, and bone broth and stir to combine. Bring to a boil, then reduce to a simmer. Simmer, uncovered, for 5 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Make the lemon-yogurt sauce",
+        detail:
+          "In a small bowl, whisk the yogurt with the lemon zest and juice."
+      },
+      {
+        step_number: 4,
+        title: "Serve",
+        detail:
+          "To serve, top individual servings of stew with cilantro, avocado, and lemon-yogurt sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "beef-taco-casserole",
+    title: "Beef Taco Casserole",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌮",
+    tags: ["Casserole", "Family-Size", "Low-Carb"],
+    description:
+      "This casserole eschews the traditional base of white rice in favor of lighter, low-carb cauliflower rice. The cauliflower takes on the delicious flavors of all the many warm and mouthwatering spices in the sauce, so go ahead and keep a supply of cauliflower rice in your fridge or freezer so you can whip up meals like this anytime you like.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#C0492B",
+
+    macro_profiles: {
+      serving_2: { calories: 1090, protein_g: 76, fat_g: 70, carbs_g: 39 },
+      serving_4: { calories: 1090, protein_g: 76, fat_g: 70, carbs_g: 39 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lard", prep: "divided", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Frozen cauliflower rice", prep: "or 8 oz chopped cauliflower riced in a food processor", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Red or green bell pepper", prep: "seeded and diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Ground beef", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Cumin", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Shredded Cheddar or Colby cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Shredded greens, such as romaine or cabbage", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Diced black olives", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Jalapeño pepper", prep: "seeded and thinly sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Prepared salsa", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lard", prep: "divided", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Frozen cauliflower rice", prep: "or 16 oz chopped cauliflower riced in a food processor", quantity: "1", unit: "(16-oz) bag", category: "Produce" },
+        { item: "Red or green bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Ground beef", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Shredded Cheddar or Colby cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Shredded greens, such as romaine or cabbage", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Diced fresh tomatoes", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Diced black olives", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Jalapeño pepper", prep: "seeded and thinly sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Prepared salsa", prep: "", quantity: "1", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat & brown the cauliflower rice",
+        detail:
+          "Preheat the oven to 425°F. In a large skillet, heat 1 tablespoon of the lard over medium-high heat. Add the cauliflower rice and sauté until brown. Transfer to a 9 × 13-inch casserole dish and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail:
+          "In the same skillet over medium-high heat, melt the remaining lard. Add the bell pepper and onion. Cook until just softened, then add the ground beef. Add the cumin, coriander, salt, pepper, chili powder, and garlic powder and toss to coat, breaking up the meat as it cooks."
+      },
+      {
+        step_number: 3,
+        title: "Assemble & bake",
+        detail:
+          "Just before the meat is cooked through, stir in the tomato paste and mix thoroughly. Layer the beef mixture on top of the cauliflower rice, top with shredded cheese, and bake for 12 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Add toppings & serve",
+        detail:
+          "Remove the casserole from the oven. Spread sour cream over the top, then follow with the remaining toppings, sprinkling them over the sour cream in layers."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "beef-and-broccoli",
+    title: "Beef and Broccoli",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥦",
+    tags: ["Quick", "Stir-Fry", "High-Protein"],
+    description:
+      "This popular ancestral staple meal is better than ever, thanks to the addition of freshly grated ginger and chopped nuts. Your mouth is going to water just thinking about it. Note: Coconut aminos is a liquid condiment similar to soy sauce, but instead of being fermented from soybeans, it's fermented from the sap of coconut palm trees and sea salt. It's gluten- and grain-free and used often in Asian cuisine. It's a great replacement in recipes calling for soy sauce or tamari.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#5B7A3A",
+
+    macro_profiles: {
+      serving_2: { calories: 1550, protein_g: 115, fat_g: 106, carbs_g: 34 },
+      serving_4: { calories: 1550, protein_g: 115, fat_g: 106, carbs_g: 34 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil or avocado oil", prep: "divided", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Sirloin steak", prep: "sliced against the grain", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Broccoli florets", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Chopped nuts, such as Brazil nuts, macadamia nuts, almonds, or pecans", prep: "chopped", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Beef bone broth", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil or avocado oil", prep: "divided", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Sirloin steak", prep: "sliced against the grain", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Broccoli florets", prep: "", quantity: "8", unit: "cups", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Grated fresh ginger", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Chopped nuts, such as Brazil nuts, macadamia nuts, almonds, or pecans", prep: "chopped", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Beef bone broth", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the steak",
+        detail:
+          "Heat 2 tablespoons of the oil in a large skillet over high heat. Add the steak and brown quickly, then transfer to a plate and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Cook the broccoli & combine",
+        detail:
+          "Reduce the heat to medium-high, then add the remaining oil. Add the broccoli and cook 5 minutes, stirring occasionally. Return the steak to the pan, then add the coconut aminos, garlic, red pepper flakes, ginger, nuts, scallions, and bone broth. Stir to combine and cook 2 minutes to thicken slightly. Serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-thighs-chard-mushroom-cream-sauce",
+    title: "Chicken Thighs with Chard in Mushroom Cream Sauce",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍗",
+    tags: ["One-Pan", "Creamy", "Comfort"],
+    description:
+      "Never underestimate how indulgent chicken thighs can taste when you roast them and smother them in a rich cream and mushroom sauce. Instead of using cans of condensed mushroom soup, opt for the real deal, with fresh mushrooms and organic heavy cream (or coconut cream if you prefer).",
+    prep_time_mins: 5,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#8A6D3B",
+
+    macro_profiles: {
+      serving_2: { calories: 903, protein_g: 53, fat_g: 71, carbs_g: 13 },
+      serving_4: { calories: 903, protein_g: 53, fat_g: 71, carbs_g: 13 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Bone-in chicken thighs", prep: "", quantity: "4", unit: "", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Uncured bacon", prep: "chopped", quantity: "4", unit: "slices", category: "Meat" },
+        { item: "Fresh mushrooms", prep: "chopped", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Swiss chard", prep: "chopped", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh thyme", prep: "chopped", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Italian seasoning", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Bone-in chicken thighs", prep: "", quantity: "8", unit: "", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Uncured bacon", prep: "chopped", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Fresh mushrooms", prep: "chopped", quantity: "1", unit: "lb", category: "Produce" },
+        { item: "Swiss chard", prep: "chopped", quantity: "6", unit: "cups", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Fresh thyme", prep: "chopped", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season & roast the chicken",
+        detail:
+          "Preheat the oven to 375°F. Line a baking sheet with parchment paper. In a small bowl, combine the Italian seasoning, salt, and pepper. Arrange the chicken thighs on the prepared baking sheet and cover evenly with the seasoning mixture. Bake for 20 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Cook the bacon & mushrooms",
+        detail:
+          "In a large skillet, heat the olive oil over medium heat. Add the chopped bacon and sauté until fully cooked. Using a slotted spoon, transfer to a bowl, reserving the fat in the skillet. Increase the heat to medium-high and add the mushrooms. Cook until golden brown, about 3 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Build the cream sauce & finish",
+        detail:
+          "Add the chopped chard, garlic, cream, and thyme. Cook to wilt the chard, about 3 minutes. Add the cooked chicken thighs and bacon and simmer for 3 minutes. Taste and adjust seasoning, then serve hot."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sisson-bigass-salad",
+    title: "Sisson Bigass Salad",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥗",
+    tags: ["No-Cook", "Salad", "Customizable"],
+    description:
+      "This is just one of many variations of my centerpiece midday or evening meal. Experiment with steak, chicken, turkey, and other meats in place of the tuna, and an assortment of colorful vegetables and/or dressings.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#7BA05B",
+
+    macro_profiles: {
+      serving_2: { calories: 879, protein_g: 54, fat_g: 63, carbs_g: 24 },
+      serving_4: { calories: 879, protein_g: 54, fat_g: 63, carbs_g: 24 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Shredded lettuce or mixed greens", prep: "", quantity: "3-4", unit: "cups", category: "Produce" },
+        { item: "Sliced fresh vegetables, such as mushrooms, bell peppers, carrots, beets, and tomatoes", prep: "sliced", quantity: "1-2", unit: "cups", category: "Produce" },
+        { item: "Shredded Cheddar cheese (optional)", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "1", unit: "(15-oz) can", category: "Meat" },
+        { item: "Nuts, such as walnuts, pecans, or almonds", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Sunflower or pumpkin seeds", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado oil-based salad dressing, such as Primal Kitchen Balsamic Vinaigrette or Green Goddess", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Shredded lettuce or mixed greens", prep: "", quantity: "6-8", unit: "cups", category: "Produce" },
+        { item: "Sliced fresh vegetables, such as mushrooms, bell peppers, carrots, beets, and tomatoes", prep: "sliced", quantity: "2-4", unit: "cups", category: "Produce" },
+        { item: "Shredded Cheddar cheese (optional)", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "2", unit: "(15-oz) cans", category: "Meat" },
+        { item: "Nuts, such as walnuts, pecans, or almonds", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Sunflower or pumpkin seeds", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado oil-based salad dressing, such as Primal Kitchen Balsamic Vinaigrette or Green Goddess", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Layer & store",
+        detail:
+          "In a large shallow bowl, or a resealable storage container, layer the lettuce, vegetables, and cheese (if desired), in that order. Flake the tuna over the top. The salad can be stored and transported at this point."
+      },
+      {
+        step_number: 2,
+        title: "Finish & serve",
+        detail:
+          "When you're ready to eat, sprinkle the nuts and seeds over the top and drizzle with the dressing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "caribbean-taco-salad",
+    title: "Caribbean Taco Salad",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌴",
+    tags: ["Salad", "Spiced", "Ground-Turkey"],
+    description:
+      "If you've never tried combining chili powder and cinnamon, this salad is going to make you an instant convert—ground turkey will never taste better! Put on some reggae music and drift off on your own island fantasy.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#D98A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 1193, protein_g: 76, fat_g: 89, carbs_g: 22 },
+      serving_4: { calories: 1193, protein_g: 76, fat_g: 89, carbs_g: 22 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Ground turkey", prep: "", quantity: "1", unit: "(20-oz) package", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Green or red bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Lime", prep: "zested", quantity: "1", unit: "", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Thinly sliced green cabbage", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Baby spinach leaves", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1/2", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Ground turkey", prep: "", quantity: "2", unit: "(20-oz) packages", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Green or red bell pepper", prep: "seeded and diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Lime", prep: "zested", quantity: "2", unit: "", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Thinly sliced green cabbage", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Baby spinach leaves", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the seasoned turkey",
+        detail:
+          "In a large skillet over medium-high heat, melt the butter. Add the turkey, salt, pepper, cumin, oregano, chili powder, paprika, onion powder, cayenne, and cinnamon. Cook, breaking up into small bits, until the meat is cooked through."
+      },
+      {
+        step_number: 2,
+        title: "Add aromatics & lime",
+        detail:
+          "Add the garlic, ginger, and bell pepper and cook until fragrant, about 1 minute. Add the lime zest and juice, and olive oil. Toss to combine."
+      },
+      {
+        step_number: 3,
+        title: "Assemble & serve",
+        detail:
+          "In a medium bowl, combine the cabbage and spinach. Top with the meat mixture, scallions, and cilantro."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "tuna-salad-cucumber-chips",
+    title: "Tuna Salad with Cucumber \"Chips\"",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🐟",
+    tags: ["No-Cook", "Quick", "Light"],
+    description:
+      "Keep canned tuna in your pantry to use as a quick and versatile meal base. Look for label designations such as \"line caught\" or \"pole caught\" to avoid problems associated with industrialized tuna operations. Combined with mayonnaise and avocado, this salad is amazing served with your favorite low-carb crudités, such as the cucumber suggested here or radish, jicama, and bell pepper.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#5B9AA0",
+
+    macro_profiles: {
+      serving_2: { calories: 735, protein_g: 42, fat_g: 59, carbs_g: 9 },
+      serving_4: { calories: 735, protein_g: 42, fat_g: 59, carbs_g: 9 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "12", unit: "oz", category: "Meat" },
+        { item: "Celery", prep: "diced small", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Avocado", prep: "mashed", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise, such as Primal Kitchen Mayo", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Everything bagel seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "English cucumber", prep: "sliced on the diagonal", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "24", unit: "oz", category: "Meat" },
+        { item: "Celery", prep: "diced small", quantity: "8", unit: "stalks", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Avocado", prep: "mashed", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise, such as Primal Kitchen Mayo", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Everything bagel seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "English cucumber", prep: "sliced on the diagonal", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix & serve",
+        detail:
+          "Combine the tuna, celery, scallions, lemon zest and juice, avocado, mayonnaise, bagel seasoning, and pepper in a medium bowl. Serve sliced cucumber on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "taco-salad",
+    title: "Taco Salad",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥗",
+    tags: ["Salad", "Make-Ahead", "High-Protein"],
+    description:
+      "Who needs a tortilla when you can enjoy the varied and intense flavors and textures in this ultrasophisticated spin on a popular staple? Again, nothing you'll find in a restaurant will ever compare to this, so make a huge batch of it and enjoy it all week.",
+    prep_time_mins: 15,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#C0492B",
+
+    macro_profiles: {
+      serving_2: { calories: 1453, protein_g: 108, fat_g: 97, carbs_g: 37 },
+      serving_4: { calories: 1453, protein_g: 108, fat_g: 97, carbs_g: 37 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground beef", prep: "", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chopped leafy greens, such as romaine, spinach, or kale", prep: "chopped", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Shredded green cabbage", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Fresh white button mushrooms", prep: "thinly sliced", quantity: "2", unit: "oz", category: "Produce" },
+        { item: "Fresh cherry tomatoes", prep: "halved", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery", prep: "thinly sliced", quantity: "2", unit: "stalks", category: "Produce" },
+        { item: "Shredded Cheddar cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Prepared salsa", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "bunch", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "2", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Ground beef", prep: "", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chopped leafy greens, such as romaine, spinach, or kale", prep: "chopped", quantity: "8", unit: "cups", category: "Produce" },
+        { item: "Shredded green cabbage", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Fresh white button mushrooms", prep: "thinly sliced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Fresh cherry tomatoes", prep: "halved", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery", prep: "thinly sliced", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Shredded Cheddar cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Prepared salsa", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "bunches", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "4", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the seasoned beef",
+        detail:
+          "In a large skillet over medium heat, combine the ground beef, garlic, cumin, coriander, chili powder, salt, and pepper. Sauté, mixing thoroughly, until the meat is cooked through. Remove from the heat and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Layer the salad",
+        detail:
+          "In a large bowl, layer the greens, cabbage, mushrooms, tomatoes, avocado, celery, and cheese."
+      },
+      {
+        step_number: 3,
+        title: "Make the dressing & assemble",
+        detail:
+          "To make the dressing, whisk together the sour cream, salsa, cilantro, scallions, and lime juice in a small bowl. Spoon the beef mixture over the greens and vegetables and generously drizzle with dressing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "green-chili-chicken-chili",
+    title: "Green Chili Chicken Chili",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌶️",
+    tags: ["One-Pot", "Spicy", "Family-Size"],
+    description:
+      "This one-pot chicken-and-vegetable dish hits the spot, bursting with flavors from spicy pork sausage, comforting bone broth, and a big dose of dried and fresh herbs and spices.",
+    prep_time_mins: 8,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#6B8E3D",
+
+    macro_profiles: {
+      serving_2: { calories: 993, protein_g: 88, fat_g: 61, carbs_g: 23 },
+      serving_4: { calories: 993, protein_g: 88, fat_g: 61, carbs_g: 23 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil or lard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow onion", prep: "chopped", quantity: "1/2", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Ground chicken", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Spicy bulk sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Zucchini", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Diced green chilies", prep: "", quantity: "1", unit: "(14-oz) can", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Chicken bone broth", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh or pickled jalapeño peppers", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Full-fat sour cream", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Shredded cheese", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Diced black olives", prep: "for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Avocado", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil or lard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow onion", prep: "chopped", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Ground chicken", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Spicy bulk sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Zucchini", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Diced green chilies", prep: "", quantity: "2", unit: "(14-oz) cans", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Chicken bone broth", prep: "", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh or pickled jalapeño peppers", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Full-fat sour cream", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Shredded cheese", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Diced black olives", prep: "for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Avocado", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the meats",
+        detail:
+          "Heat the oil in a large stock pot over medium heat. Add the onion and garlic and cook 3 minutes. Add the chicken thighs, ground chicken, and sausage. Cook about 8 minutes, stirring to break up the meat, until almost fully cooked."
+      },
+      {
+        step_number: 2,
+        title: "Simmer & finish",
+        detail:
+          "Add the zucchini, green chilies, cumin, oregano, coriander, and cayenne. Bring to a boil, reduce the heat, and simmer, uncovered, for 10 minutes. Remove from the heat, adjust seasoning, and add the cilantro and scallions. Serve hot with toppings on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "brads-noatmeal",
+    title: "Brad's \"NOatmeal\"",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥣",
+    tags: ["Breakfast", "Grain-Free", "Make-Ahead"],
+    description:
+      "Made with healthful fats and protein and just enough natural sweetness, this oatmeal is easy to make and incredibly rich and satisfying. Vary the amount of nut butter according to your preferred consistency. Double or triple the recipe to have a ready-made supply for busy mornings.",
+    prep_time_mins: 5,
+    cook_time_mins: 7,
+    native_serving: 4,
+    accent: "#C9A86A",
+
+    macro_profiles: {
+      serving_2: { calories: 331, protein_g: 11, fat_g: 23, carbs_g: 20 },
+      serving_4: { calories: 331, protein_g: 11, fat_g: 23, carbs_g: 20 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Unsweetened coconut or almond milk", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Large egg yolks", prep: "", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Pure vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pureed nuts of your choice", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Nut butter, such as Brad's Macadamia Masterpiece", prep: "or more or less to taste", quantity: "1 1/2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Unsweetened coconut or almond milk", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Large egg yolks", prep: "", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Pure vanilla extract", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pureed nuts of your choice", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Nut butter, such as Brad's Macadamia Masterpiece", prep: "or more or less to taste", quantity: "3", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Simmer & thicken",
+        detail:
+          "In a large saucepan, combine the milk, egg yolks, vanilla, and cinnamon and mix well. Simmer on low heat for about five minutes, stirring occasionally. When the mixture is warm and well blended, add the nuts and nut butter and stir a couple more minutes until the desired consistency is reached. Keep in mind that the mixture will thicken significantly after being removed from the heat, so err on the watery side when you pull the pan off the stove."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "breakfast-hash-broiled-eggs",
+    title: "Breakfast Hash and Broiled Eggs",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍳",
+    tags: ["Breakfast", "One-Skillet", "High-Protein"],
+    description:
+      "Hashes are often prepared with shredded potatoes, but why not experiment and use brussels sprouts? If you can't find brussels sprouts, a big bag of preshredded cabbage is a nice low-carb alternative.",
+    prep_time_mins: 10,
+    cook_time_mins: 18,
+    native_serving: 2,
+    accent: "#A0703C",
+
+    macro_profiles: {
+      serving_2: { calories: 2408, protein_g: 134, fat_g: 180, carbs_g: 63 },
+      serving_4: { calories: 2408, protein_g: 134, fat_g: 180, carbs_g: 63 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Bulk pork sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Shallot", prep: "minced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Brussels sprouts", prep: "quartered", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Large pastured eggs", prep: "", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Goat cheese", prep: "crumbled", quantity: "2", unit: "oz", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Bulk pork sausage", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh mushrooms", prep: "diced", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Shallot", prep: "minced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Brussels sprouts", prep: "quartered", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Large pastured eggs", prep: "", quantity: "8", unit: "", category: "Dairy" },
+        { item: "Goat cheese", prep: "crumbled", quantity: "4", unit: "oz", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the broiler",
+        detail: "Preheat the broiler to its highest setting."
+      },
+      {
+        step_number: 2,
+        title: "Brown the sausage",
+        detail:
+          "In a large ovenproof skillet, cook the sausage over medium heat, breaking it up into bite-size pieces, until cooked through. Using a slotted spoon, remove the meat from the pan and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the hash",
+        detail:
+          "To the fat remaining in the skillet, add the butter and mushrooms and cook on medium-high heat until golden brown. Add the shallot, brussels sprouts, and garlic. Sauté until the brussels sprouts are tender and the shallot is translucent, about 5 minutes. Season with salt and pepper. Transfer the cooked sausage back into the skillet and toss to combine. Taste and adjust seasoning."
+      },
+      {
+        step_number: 4,
+        title: "Add eggs & broil",
+        detail:
+          "Make four wells in the sausage mixture. Crack an egg into each well, season with salt and pepper, and place the pan on the middle rack of the oven. Broil for 3–5 minutes, depending on how runny you like the yolks. Top with crumbled cheese and serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "hearty-farmers-market-breakfast-casserole",
+    title: "Hearty Farmer's Market Breakfast Casserole",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥘",
+    tags: ["Breakfast", "Casserole", "Make-Ahead"],
+    description:
+      "Filled with vegetables, herbs, and lots of protein, this dish will keep you full and grounded all morning. You'll love it so much that you'll be tempted to eat it for dinner!",
+    prep_time_mins: 12,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_2: { calories: 765, protein_g: 41, fat_g: 61, carbs_g: 13 },
+      serving_4: { calories: 765, protein_g: 41, fat_g: 61, carbs_g: 13 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Bulk pork sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Red or green bell pepper", prep: "seeded and diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Zucchini", prep: "diced", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Large pastured eggs", prep: "", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Shredded Cheddar cheese", prep: "divided", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Fresh parsley", prep: "minced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Bulk pork sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Red or green bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Zucchini", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Large pastured eggs", prep: "", quantity: "8", unit: "", category: "Dairy" },
+        { item: "Shredded Cheddar cheese", prep: "divided", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "minced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Heavy cream or unsweetened coconut cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the oven",
+        detail: "Preheat the oven to 375°F."
+      },
+      {
+        step_number: 2,
+        title: "Brown the sausage & vegetables",
+        detail:
+          "In a large pan over medium heat, brown the sausage, breaking it up into bite-size pieces. Increase the heat to medium-high and add the bell pepper, zucchini, onion, and garlic and sauté for 5 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Assemble & bake",
+        detail:
+          "Meanwhile, in a large bowl, whisk together the eggs, ½ cup cheese, basil, parsley, salt, pepper, and cream. Transfer the cooked sausage mixture to a 9-inch pie pan. Pour the egg mixture over the top and sprinkle with the scallions and remaining cheese. Bake for 25 minutes, or until golden brown and just set."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chaffle-avocado-toast",
+    title: "Chaffle Avocado Toast",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥑",
+    tags: ["Breakfast", "Keto", "Chaffle"],
+    description:
+      "Who says you have to fill your waffle iron with nutrient-deficient grains and sweeteners? Haul that thing back out of the dark cupboard corner and try the increasingly popular \"chaffle\"—a cheese waffle! This deliciously crispy concoction is topped with healthful fats, vegetables, and protein.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#6E9B4E",
+
+    macro_profiles: {
+      serving_2: { calories: 520, protein_g: 26, fat_g: 40, carbs_g: 14 },
+      serving_4: { calories: 520, protein_g: 26, fat_g: 40, carbs_g: 14 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Large pastured eggs", prep: "", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Shredded cheese, such as Cheddar or half Parmesan and half mozzarella", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Scallion", prep: "thinly sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Uncured bacon", prep: "", quantity: "4", unit: "slices", category: "Meat" },
+        { item: "Avocado", prep: "", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cucumber", prep: "peeled and thinly sliced", quantity: "4-inch", unit: "section", category: "Produce" },
+        { item: "Lemon wedges", prep: "", quantity: "2", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "pinch", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Large pastured eggs", prep: "", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Shredded cheese, such as Cheddar or half Parmesan and half mozzarella", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Scallion", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Uncured bacon", prep: "", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Avocado", prep: "", quantity: "2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cucumber", prep: "peeled and thinly sliced", quantity: "8-inch", unit: "section", category: "Produce" },
+        { item: "Lemon wedges", prep: "", quantity: "4", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "2", unit: "pinches", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the chaffles",
+        detail:
+          "In a medium bowl, combine the eggs with the shredded cheese, pepper, and scallion. Pour the batter into a waffle maker and cook according to the manufacturer's directions—in two batches if necessary—until golden brown. Transfer to a wire rack."
+      },
+      {
+        step_number: 2,
+        title: "Cook the bacon",
+        detail:
+          "Meanwhile, in a large skillet over medium heat, cook the bacon, chop it, then set aside."
+      },
+      {
+        step_number: 3,
+        title: "Mash the avocado",
+        detail:
+          "In a small bowl, mash the avocado flesh with the salt and garlic powder."
+      },
+      {
+        step_number: 4,
+        title: "Assemble & serve",
+        detail:
+          "To assemble, layer cucumber slices on top of the chaffles, followed by the avocado mixture, chopped bacon, a squeeze of fresh lemon juice, and a pinch of red pepper flakes. Tip: Make a double or triple batch of chaffles, then store them in the freezer. When you're ready to eat, simply pop them in the toaster."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-chicken-tortilla-soup",
+    title: "Creamy Chicken Tortilla Soup",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍜",
+    tags: ["Soup", "One-Pot", "Family-Size"],
+    description:
+      "You won't miss tortilla chips when you experience this incredibly intense and diverse blend of flavors and toppings.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#C2622E",
+
+    macro_profiles: {
+      serving_2: { calories: 623, protein_g: 52, fat_g: 31, carbs_g: 34 },
+      serving_4: { calories: 623, protein_g: 52, fat_g: 31, carbs_g: 34 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lard or beef tallow", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
+        { item: "Tomato paste", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Canned diced green chilies", prep: "", quantity: "2", unit: "oz", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Zucchini", prep: "quartered lengthwise and sliced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Carrots", prep: "halved and sliced lengthwise", quantity: "1", unit: "", category: "Produce" },
+        { item: "Green, white, or red cabbage", prep: "chopped", quantity: "1/2", unit: "small head", category: "Produce" },
+        { item: "Chicken bone broth", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh jalapeño peppers", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Black olives", prep: "sliced, for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Shredded cheese", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Onion", prep: "diced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Avocado", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Lard or beef tallow", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
+        { item: "Tomato paste", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Canned diced green chilies", prep: "", quantity: "4", unit: "oz", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Zucchini", prep: "quartered lengthwise and sliced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Carrots", prep: "halved and sliced lengthwise", quantity: "2", unit: "", category: "Produce" },
+        { item: "Green, white, or red cabbage", prep: "chopped", quantity: "1", unit: "small head", category: "Produce" },
+        { item: "Chicken bone broth", prep: "", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh jalapeño peppers", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Black olives", prep: "sliced, for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Shredded cheese", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Onion", prep: "diced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Avocado", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the chicken & spices",
+        detail:
+          "In a large soup pot over medium-high heat, melt the lard. Add the onion and sauté until translucent, about 3 minutes. Add the diced chicken thighs, tomato paste, green chilies, cumin, coriander, oregano, chili powder, smoked paprika, salt, and pepper. Stir to combine and sauté until the chicken is almost cooked through, about 10 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Add vegetables & simmer",
+        detail:
+          "Add the garlic, zucchini, carrots, cabbage, and bone broth. Bring to a boil, then reduce to a simmer. Simmer for 10 minutes, or until the vegetables are crisp-tender."
+      },
+      {
+        step_number: 3,
+        title: "Finish & serve",
+        detail:
+          "Stir in the cilantro, scallions, and sour cream. Taste and adjust seasoning. Serve with the toppings on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "tuscan-sausage-soup",
+    title: "Tuscan Sausage Soup",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍲",
+    tags: ["Soup", "One-Pot", "Italian"],
+    description:
+      "The combination of fatty Italian sausage, sun-dried tomatoes, and dry Parmesan cheese in this hearty one-pot recipe is going to blow you away. Let this one bubble for a while in your kitchen, so the delicious aroma drifts through your home as you cultivate gratitude for the opportunity to eat such delicious food.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#8C5A3C",
+
+    macro_profiles: {
+      serving_2: { calories: 613, protein_g: 34, fat_g: 45, carbs_g: 18 },
+      serving_4: { calories: 613, protein_g: 34, fat_g: 45, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Spicy bulk Italian sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Zucchini", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Sun-dried tomatoes packed in olive oil", prep: "drained and minced", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Fresh basil", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Chicken bone broth", prep: "", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Fresh spinach leaves", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Spicy bulk Italian sausage", prep: "", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Zucchini", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Sun-dried tomatoes packed in olive oil", prep: "drained and minced", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Fresh basil", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chicken bone broth", prep: "", quantity: "6", unit: "cups", category: "Pantry" },
+        { item: "Fresh spinach leaves", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the sausage",
+        detail:
+          "In a large soup pot over medium heat, cook the sausage, breaking it into bite-size pieces. Just before it's cooked through, transfer to a bowl using a slotted spoon, reserving the fat in the pot."
+      },
+      {
+        step_number: 2,
+        title: "Sauté aromatics & vegetables",
+        detail:
+          "Increase the heat to medium-high, add the olive oil and onion, and cook until translucent, about 3 minutes. Add the garlic, zucchini, sun-dried tomatoes, basil, parsley, dried oregano, salt, and pepper. Toss to coat and cook for an additional 5 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Simmer & finish",
+        detail:
+          "Transfer the sausage back into the pot and cover with the broth. Bring to a boil, then reduce the heat to a simmer. Add the spinach and stir just to wilt. Remove from the heat, add the grated Parmesan, and serve hot."
       }
     ]
   }

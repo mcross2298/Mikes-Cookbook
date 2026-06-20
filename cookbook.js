@@ -185,23 +185,20 @@
     }
     pane.appendChild(about);
 
-    // macro_profiles are stored as TOTALS for the tier; the card shows the
-    // macros for ONE individual serving, so divide the tier total by its
-    // serving count (per-serving values are the same across both tiers).
+    // macro_profiles are stored PER SINGLE SERVING and are identical across
+    // both tiers — the book's printed macros describe one portion, and the
+    // serving size only changes how much the recipe makes, not the macros.
     var m = r.macro_profiles["serving_" + state.serving] || {};
-    function perServing(total) {
-      return total != null ? Math.round(total / state.serving) : null;
-    }
     var card = el("div", "card");
     card.appendChild(el("p", "card-label", "Macro Profile · Per Serving"));
     var grid = el("div", "macro-grid");
-    grid.appendChild(macroCell("cals", perServing(m.calories), "kcal", "Calories"));
-    grid.appendChild(macroCell("", perServing(m.protein_g), "g", "Protein"));
-    grid.appendChild(macroCell("", perServing(m.fat_g), "g", "Fat"));
-    grid.appendChild(macroCell("", perServing(m.carbs_g), "g", "Carbs"));
+    grid.appendChild(macroCell("cals", m.calories, "kcal", "Calories"));
+    grid.appendChild(macroCell("", m.protein_g, "g", "Protein"));
+    grid.appendChild(macroCell("", m.fat_g, "g", "Fat"));
+    grid.appendChild(macroCell("", m.carbs_g, "g", "Carbs"));
     card.appendChild(grid);
     card.appendChild(el("p", "macro-foot",
-      "Per individual serving (1 of " + state.serving + ")."));
+      "Per single serving. The serving size changes how much the recipe makes, not the macros."));
     pane.appendChild(card);
   }
   function macroCell(extra, num, unit, key) {
