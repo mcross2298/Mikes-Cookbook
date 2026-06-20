@@ -864,7 +864,7 @@ const COLLECTIONS = [
     blurb:
       "Cherished heirloom hand-me-downs from Kelli's kitchen — the family " +
       "recipes worth passing on. Coming soon.",
-    designer: "✍️ Curated by Mike Cross",
+    designer: "✍️ Kelli Cross, with love",
     accent: "#B08D57",          // heritage gold
     icon: "🥧",
     status: "coming-soon",
@@ -877,7 +877,7 @@ const COLLECTIONS = [
     blurb:
       "Zero-carb, meat-forward performance plates — beef, organs, eggs and " +
       "fat for full carnivore eating. Coming soon.",
-    designer: "✍️ Curated by Mike Cross",
+    designer: "✍️ Designed by Mike Cross",
     accent: "#B23A48",          // crimson
     icon: "🥩",
     status: "coming-soon",
