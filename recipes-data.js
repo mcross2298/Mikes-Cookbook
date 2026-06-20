@@ -1668,6 +1668,384 @@ const RECIPES = [
           "Add the chopped chard, garlic, cream, and thyme. Cook to wilt the chard, about 3 minutes. Add the cooked chicken thighs and bacon and simmer for 3 minutes. Taste and adjust seasoning, then serve hot."
       }
     ]
+  },
+
+  {
+    recipe_id: "sisson-bigass-salad",
+    title: "Sisson Bigass Salad",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥗",
+    tags: ["No-Cook", "Salad", "Customizable"],
+    description:
+      "This is just one of many variations of my centerpiece midday or evening meal. Experiment with steak, chicken, turkey, and other meats in place of the tuna, and an assortment of colorful vegetables and/or dressings.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#7BA05B",
+
+    macro_profiles: {
+      serving_2: { calories: 879, protein_g: 54, fat_g: 63, carbs_g: 24 },
+      serving_4: { calories: 1758, protein_g: 108, fat_g: 126, carbs_g: 48 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Shredded lettuce or mixed greens", prep: "", quantity: "3-4", unit: "cups", category: "Produce" },
+        { item: "Sliced fresh vegetables, such as mushrooms, bell peppers, carrots, beets, and tomatoes", prep: "sliced", quantity: "1-2", unit: "cups", category: "Produce" },
+        { item: "Shredded Cheddar cheese (optional)", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "1", unit: "(15-oz) can", category: "Meat" },
+        { item: "Nuts, such as walnuts, pecans, or almonds", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Sunflower or pumpkin seeds", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado oil-based salad dressing, such as Primal Kitchen Balsamic Vinaigrette or Green Goddess", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Shredded lettuce or mixed greens", prep: "", quantity: "6-8", unit: "cups", category: "Produce" },
+        { item: "Sliced fresh vegetables, such as mushrooms, bell peppers, carrots, beets, and tomatoes", prep: "sliced", quantity: "2-4", unit: "cups", category: "Produce" },
+        { item: "Shredded Cheddar cheese (optional)", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "2", unit: "(15-oz) cans", category: "Meat" },
+        { item: "Nuts, such as walnuts, pecans, or almonds", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Sunflower or pumpkin seeds", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado oil-based salad dressing, such as Primal Kitchen Balsamic Vinaigrette or Green Goddess", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Layer & store",
+        detail:
+          "In a large shallow bowl, or a resealable storage container, layer the lettuce, vegetables, and cheese (if desired), in that order. Flake the tuna over the top. The salad can be stored and transported at this point."
+      },
+      {
+        step_number: 2,
+        title: "Finish & serve",
+        detail:
+          "When you're ready to eat, sprinkle the nuts and seeds over the top and drizzle with the dressing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "caribbean-taco-salad",
+    title: "Caribbean Taco Salad",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌴",
+    tags: ["Salad", "Spiced", "Ground-Turkey"],
+    description:
+      "If you've never tried combining chili powder and cinnamon, this salad is going to make you an instant convert—ground turkey will never taste better! Put on some reggae music and drift off on your own island fantasy.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#D98A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 1193, protein_g: 76, fat_g: 89, carbs_g: 22 },
+      serving_4: { calories: 2386, protein_g: 152, fat_g: 178, carbs_g: 44 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Ground turkey", prep: "", quantity: "1", unit: "(20-oz) package", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Green or red bell pepper", prep: "seeded and diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Lime", prep: "zested", quantity: "1", unit: "", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Thinly sliced green cabbage", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Baby spinach leaves", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1/2", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Ground turkey", prep: "", quantity: "2", unit: "(20-oz) packages", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Green or red bell pepper", prep: "seeded and diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Lime", prep: "zested", quantity: "2", unit: "", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Thinly sliced green cabbage", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Baby spinach leaves", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the seasoned turkey",
+        detail:
+          "In a large skillet over medium-high heat, melt the butter. Add the turkey, salt, pepper, cumin, oregano, chili powder, paprika, onion powder, cayenne, and cinnamon. Cook, breaking up into small bits, until the meat is cooked through."
+      },
+      {
+        step_number: 2,
+        title: "Add aromatics & lime",
+        detail:
+          "Add the garlic, ginger, and bell pepper and cook until fragrant, about 1 minute. Add the lime zest and juice, and olive oil. Toss to combine."
+      },
+      {
+        step_number: 3,
+        title: "Assemble & serve",
+        detail:
+          "In a medium bowl, combine the cabbage and spinach. Top with the meat mixture, scallions, and cilantro."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "tuna-salad-cucumber-chips",
+    title: "Tuna Salad with Cucumber \"Chips\"",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🐟",
+    tags: ["No-Cook", "Quick", "Light"],
+    description:
+      "Keep canned tuna in your pantry to use as a quick and versatile meal base. Look for label designations such as \"line caught\" or \"pole caught\" to avoid problems associated with industrialized tuna operations. Combined with mayonnaise and avocado, this salad is amazing served with your favorite low-carb crudités, such as the cucumber suggested here or radish, jicama, and bell pepper.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#5B9AA0",
+
+    macro_profiles: {
+      serving_2: { calories: 735, protein_g: 42, fat_g: 59, carbs_g: 9 },
+      serving_4: { calories: 1470, protein_g: 84, fat_g: 118, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "12", unit: "oz", category: "Meat" },
+        { item: "Celery", prep: "diced small", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Avocado", prep: "mashed", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise, such as Primal Kitchen Mayo", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Everything bagel seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "English cucumber", prep: "sliced on the diagonal", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Sustainably harvested canned tuna packed in water", prep: "drained", quantity: "24", unit: "oz", category: "Meat" },
+        { item: "Celery", prep: "diced small", quantity: "8", unit: "stalks", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Avocado", prep: "mashed", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocado oil-based mayonnaise, such as Primal Kitchen Mayo", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Everything bagel seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "English cucumber", prep: "sliced on the diagonal", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix & serve",
+        detail:
+          "Combine the tuna, celery, scallions, lemon zest and juice, avocado, mayonnaise, bagel seasoning, and pepper in a medium bowl. Serve sliced cucumber on the side."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "taco-salad",
+    title: "Taco Salad",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥗",
+    tags: ["Salad", "Make-Ahead", "High-Protein"],
+    description:
+      "Who needs a tortilla when you can enjoy the varied and intense flavors and textures in this ultrasophisticated spin on a popular staple? Again, nothing you'll find in a restaurant will ever compare to this, so make a huge batch of it and enjoy it all week.",
+    prep_time_mins: 15,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#C0492B",
+
+    macro_profiles: {
+      serving_2: { calories: 1453, protein_g: 108, fat_g: 97, carbs_g: 37 },
+      serving_4: { calories: 2906, protein_g: 216, fat_g: 194, carbs_g: 74 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground beef", prep: "", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chopped leafy greens, such as romaine, spinach, or kale", prep: "chopped", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Shredded green cabbage", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Fresh white button mushrooms", prep: "thinly sliced", quantity: "2", unit: "oz", category: "Produce" },
+        { item: "Fresh cherry tomatoes", prep: "halved", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery", prep: "thinly sliced", quantity: "2", unit: "stalks", category: "Produce" },
+        { item: "Shredded Cheddar cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Prepared salsa", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "bunch", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "2", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Ground beef", prep: "", quantity: "3", unit: "lb", category: "Meat" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chopped leafy greens, such as romaine, spinach, or kale", prep: "chopped", quantity: "8", unit: "cups", category: "Produce" },
+        { item: "Shredded green cabbage", prep: "", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Fresh white button mushrooms", prep: "thinly sliced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Fresh cherry tomatoes", prep: "halved", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery", prep: "thinly sliced", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Shredded Cheddar cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Full-fat sour cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Prepared salsa", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "2", unit: "bunches", category: "Produce" },
+        { item: "Limes", prep: "juiced", quantity: "4", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the seasoned beef",
+        detail:
+          "In a large skillet over medium heat, combine the ground beef, garlic, cumin, coriander, chili powder, salt, and pepper. Sauté, mixing thoroughly, until the meat is cooked through. Remove from the heat and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Layer the salad",
+        detail:
+          "In a large bowl, layer the greens, cabbage, mushrooms, tomatoes, avocado, celery, and cheese."
+      },
+      {
+        step_number: 3,
+        title: "Make the dressing & assemble",
+        detail:
+          "To make the dressing, whisk together the sour cream, salsa, cilantro, scallions, and lime juice in a small bowl. Spoon the beef mixture over the greens and vegetables and generously drizzle with dressing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "green-chili-chicken-chili",
+    title: "Green Chili Chicken Chili",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🌶️",
+    tags: ["One-Pot", "Spicy", "Family-Size"],
+    description:
+      "This one-pot chicken-and-vegetable dish hits the spot, bursting with flavors from spicy pork sausage, comforting bone broth, and a big dose of dried and fresh herbs and spices.",
+    prep_time_mins: 8,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#6B8E3D",
+
+    macro_profiles: {
+      serving_2: { calories: 497, protein_g: 44, fat_g: 31, carbs_g: 12 },
+      serving_4: { calories: 993, protein_g: 88, fat_g: 61, carbs_g: 23 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Extra-virgin olive oil or lard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow onion", prep: "chopped", quantity: "1/2", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Ground chicken", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Spicy bulk sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Zucchini", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Diced green chilies", prep: "", quantity: "1", unit: "(14-oz) can", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Chicken bone broth", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh or pickled jalapeño peppers", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Full-fat sour cream", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Shredded cheese", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Diced black olives", prep: "for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Avocado", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Extra-virgin olive oil or lard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow onion", prep: "chopped", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Ground chicken", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Spicy bulk sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Zucchini", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Diced green chilies", prep: "", quantity: "2", unit: "(14-oz) cans", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Coriander", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Chicken bone broth", prep: "", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Chopped fresh cilantro leaves", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Thinly sliced scallions", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh or pickled jalapeño peppers", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Full-fat sour cream", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Shredded cheese", prep: "for topping", quantity: "", unit: "", category: "Dairy" },
+        { item: "Diced black olives", prep: "for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Avocado", prep: "sliced, for topping", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the meats",
+        detail:
+          "Heat the oil in a large stock pot over medium heat. Add the onion and garlic and cook 3 minutes. Add the chicken thighs, ground chicken, and sausage. Cook about 8 minutes, stirring to break up the meat, until almost fully cooked."
+      },
+      {
+        step_number: 2,
+        title: "Simmer & finish",
+        detail:
+          "Add the zucchini, green chilies, cumin, oregano, coriander, and cayenne. Bring to a boil, reduce the heat, and simmer, uncovered, for 10 minutes. Remove from the heat, adjust seasoning, and add the cilantro and scallions. Serve hot with toppings on the side."
+      }
+    ]
   }
 ];
 
