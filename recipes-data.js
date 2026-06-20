@@ -103,6 +103,326 @@ const RECIPES = [
           "In a medium bowl, combine the cream cheese, goat cheese, jalapeños, garlic, and scallions. Drop the cheese mixture in small dollops over the chicken and vegetables and bake for 20 minutes, or until lightly browned. Serve hot."
       }
     ]
+  },
+
+  {
+    recipe_id: "broccoli-bacon-slaw",
+    title: "Broccoli and Bacon Slaw",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥦",
+    tags: ["Make-Ahead", "Crunchy", "High-Fat"],
+    description:
+      "Slaw doesn't have to mean just cabbage. This recipe uses broccoli and packs a big nutritional punch. Combined with fatty, salty bacon and bright lemon and apple cider vinegar, this dish is a flavor odyssey in your mouth.",
+    prep_time_mins: 5,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#7D8C77",
+
+    macro_profiles: {
+      serving_2: { calories: 1270, protein_g: 24, fat_g: 122, carbs_g: 19 },
+      serving_4: { calories: 2540, protein_g: 48, fat_g: 244, carbs_g: 38 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Red onion", prep: "minced", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Apple cider vinegar", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh broccoli florets", prep: "cut into bite-size pieces", quantity: "4", unit: "cups", category: "Produce" },
+        { item: "Uncured bacon", prep: "cooked and chopped", quantity: "8", unit: "slices", category: "Meat" },
+        { item: "Roasted pepitas", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Avocado oil-based mayonnaise (such as Primal Kitchen Mayo)", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Red onion", prep: "minced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lemon", prep: "zest and juice", quantity: "1", unit: "", category: "Produce" },
+        { item: "Apple cider vinegar", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh broccoli florets", prep: "cut into bite-size pieces", quantity: "8", unit: "cups", category: "Produce" },
+        { item: "Uncured bacon", prep: "cooked and chopped", quantity: "16", unit: "slices", category: "Meat" },
+        { item: "Roasted pepitas", prep: "", quantity: "1", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the dressing",
+        detail:
+          "In a large bowl, whisk together the mayonnaise, onion, lemon zest and juice, vinegar, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Fold in & chill",
+        detail:
+          "Add the broccoli, chopped bacon, and pepitas and combine thoroughly. Chill or serve at room temperature."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sesame-ginger-chicken-stir-fry",
+    title: "Sesame-Ginger Chicken and Vegetable Stir-Fry",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🥢",
+    tags: ["Quick", "Asian-Inspired", "High-Protein"],
+    description:
+      "Want a super-satisfying meal super fast? Try this stir-fry with a bunch of green vegetables, fatty chicken thighs, and Asian-inspired seasonings. This is wonderful enjoyed on its own as well as on a bed of cauliflower rice.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#C8894F",
+
+    macro_profiles: {
+      serving_2: { calories: 682, protein_g: 44, fat_g: 42, carbs_g: 32 },
+      serving_4: { calories: 1364, protein_g: 88, fat_g: 84, carbs_g: 64 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter or ghee", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "4", unit: "", category: "Meat" },
+        { item: "Avocado oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Fresh ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "cut into bite-size pieces", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Carrot", prep: "cut into 1/4-inch slices", quantity: "1", unit: "", category: "Produce" },
+        { item: "Celery", prep: "cut into bite-size pieces", quantity: "2", unit: "stalks", category: "Produce" },
+        { item: "Green cabbage", prep: "chopped", quantity: "1/2", unit: "small head", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yai's Thai Chili Garlic Hot Sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Butter or ghee", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Boneless, skinless chicken thighs", prep: "cut into 1-inch cubes", quantity: "8", unit: "", category: "Meat" },
+        { item: "Avocado oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "2", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "8", unit: "", category: "Produce" },
+        { item: "Fresh ginger", prep: "grated", quantity: "4", unit: "tsp", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "cut into bite-size pieces", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Carrot", prep: "cut into 1/4-inch slices", quantity: "2", unit: "", category: "Produce" },
+        { item: "Celery", prep: "cut into bite-size pieces", quantity: "4", unit: "stalks", category: "Produce" },
+        { item: "Green cabbage", prep: "chopped", quantity: "1", unit: "small head", category: "Produce" },
+        { item: "Coconut aminos", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Yai's Thai Chili Garlic Hot Sauce", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh cilantro leaves", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "thinly sliced", quantity: "1", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the chicken",
+        detail:
+          "In a large skillet over medium heat, melt the butter. Sauté the chicken until cooked through. Transfer to a plate and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Stir-fry the vegetables",
+        detail:
+          "In the same skillet, heat the avocado oil over medium-high heat. Add the onion, garlic, ginger, broccoli, carrot, celery, and cabbage and cook for 4 minutes, stirring occasionally."
+      },
+      {
+        step_number: 3,
+        title: "Combine & finish",
+        detail:
+          "Return the chicken to the skillet, then add the coconut aminos, sesame oil, chili garlic sauce, and sesame seeds. Toss to coat and cook 2 more minutes. Serve garnished with cilantro and scallions, with additional spice on the side if desired."
+      }
+    ]
+  },
+
+  /* ---------------------------------------------------------------------------
+     NOTE: Some ingredient lines below were partly obscured in the source
+     photos. Lines marked  // VERIFY  are best-effort transcriptions to confirm
+     against the book during review.
+     ------------------------------------------------------------------------- */
+  {
+    recipe_id: "cauliflower-fried-rice-eggs",
+    title: "Cauliflower Fried Rice with Eggs",
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍳",
+    tags: ["Quick", "One-Pan", "Meatless"],
+    description:
+      "As you experience the bold flavors of fresh ginger, coconut aminos, and cilantro, you won't miss the tropical white rice (and its blood sugar spike). This veggie-packed cauliflower fried rice comes together in a single skillet.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#9AA06B",
+
+    macro_profiles: {
+      serving_4: { calories: 540, protein_g: 17, fat_g: 40, carbs_g: 26 },
+      serving_2: { calories: 270, protein_g: 9, fat_g: 20, carbs_g: 13 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Butter", prep: "divided", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh mushrooms", prep: "sliced", quantity: "2", unit: "oz", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Frozen riced cauliflower", prep: "", quantity: "1", unit: "(12-oz) bag", category: "Produce" },
+        { item: "Carrot", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "cut into small pieces", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Large pastured eggs", prep: "beaten", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1", unit: "tbsp", category: "Produce" }, // VERIFY
+        { item: "Coconut aminos", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Everything bagel seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Fresh cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" }, // VERIFY
+        { item: "Scallions", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" }, // VERIFY
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Chili garlic sauce", prep: "for serving", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_2: [
+        { item: "Butter", prep: "divided", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh mushrooms", prep: "sliced", quantity: "1", unit: "oz", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Frozen riced cauliflower", prep: "", quantity: "1/2", unit: "(12-oz) bag", category: "Produce" },
+        { item: "Carrot", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Fresh broccoli florets", prep: "cut into small pieces", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Large pastured eggs", prep: "beaten", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Grated fresh ginger", prep: "", quantity: "1 1/2", unit: "tsp", category: "Produce" }, // VERIFY
+        { item: "Coconut aminos", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Everything bagel seasoning", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Fresh cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }, // VERIFY
+        { item: "Scallions", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }, // VERIFY
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Chili garlic sauce", prep: "for serving", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the mushrooms",
+        detail:
+          "In a large skillet, melt 2 tablespoons of the butter over medium heat until golden brown. Add the mushrooms and cook over medium-high heat until golden brown."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the vegetables",
+        detail:
+          "Add the onion, garlic, ginger, carrot, and broccoli. Increase the heat to medium-high and sauté until the vegetables are crisp-tender, about 4 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Scramble the eggs",
+        detail:
+          "Make a well in the middle of the vegetables and add the remaining 2 tablespoons butter. Pour the eggs into the well, season with salt and pepper, and cook until scrambled, stirring occasionally."
+      },
+      {
+        step_number: 4,
+        title: "Add cauliflower rice & finish",
+        detail:
+          "Add the cauliflower rice, sesame oil, coconut aminos, and bagel seasoning. Toss to combine. Taste and adjust seasoning, then garnish with the cilantro and scallions and serve with chili garlic sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sausage-pepperoni-pizza-bake",
+    title: "Sausage and Pepperoni Pizza Bake", // VERIFY title (banner obscured in photo)
+    category: "Primal",
+    source: "Two Meals a Day",
+    icon: "🍕",
+    tags: ["Pizza-Inspired", "Comfort", "High-Fat"],
+    description:
+      "The bold flavors of Italian sausage and pepperoni are topped with sweet, creamy mozzarella and vegetables — the distinct flavor of your favorite veggie pizza, just without the bloat.",
+    prep_time_mins: 20,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B5503F",
+
+    macro_profiles: {
+      serving_4: { calories: 1367, protein_g: 62, fat_g: 111, carbs_g: 30 },
+      serving_2: { calories: 684, protein_g: 31, fat_g: 56, carbs_g: 15 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Bulk Italian sausage", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Avocado oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Fresh cauliflower florets", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and cut into 1-inch pieces", quantity: "1", unit: "", category: "Produce" }, // VERIFY
+        { item: "Fresh mushrooms", prep: "sliced", quantity: "4", unit: "oz", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1/2", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }, // VERIFY
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepperoni", prep: "", quantity: "1/2", unit: "cup", category: "Meat" }, // VERIFY
+        { item: "Shredded mozzarella cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "for garnish", quantity: "1/4", unit: "cup", category: "Produce" } // VERIFY
+      ],
+      serving_2: [
+        { item: "Bulk Italian sausage", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Avocado oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }, // VERIFY
+        { item: "Fresh cauliflower florets", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Green bell pepper", prep: "seeded and cut into 1-inch pieces", quantity: "1/2", unit: "", category: "Produce" }, // VERIFY
+        { item: "Fresh mushrooms", prep: "sliced", quantity: "2", unit: "oz", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1/4", unit: "small", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Italian seasoning", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }, // VERIFY
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Pepperoni", prep: "", quantity: "1/4", unit: "cup", category: "Meat" }, // VERIFY
+        { item: "Shredded mozzarella cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Grated Parmesan cheese", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh basil", prep: "for garnish", quantity: "2", unit: "tbsp", category: "Produce" } // VERIFY
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the broiler",
+        detail: "Preheat the broiler to its highest setting."
+      },
+      {
+        step_number: 2,
+        title: "Brown the sausage",
+        detail:
+          "In a large ovenproof skillet over medium-high heat, cook the sausage until browned through, then transfer to a bowl."
+      },
+      {
+        step_number: 3,
+        title: "Cook the vegetables",
+        detail:
+          "In the same skillet, heat the oil over medium-high heat, then add the cauliflower, bell pepper, mushrooms, red onion, garlic, Italian seasoning, salt, and pepper. Cook for 6 minutes, then return the cooked sausage and add the pepperoni. Top with the mozzarella and Parmesan."
+      },
+      {
+        step_number: 4,
+        title: "Broil & garnish",
+        detail:
+          "Transfer the skillet to the middle rack of the oven and broil until the cheese is bubbly and golden, about 5 minutes. Remove from the oven, garnish with the basil, and serve hot."
+      }
+    ]
   }
 ];
 
