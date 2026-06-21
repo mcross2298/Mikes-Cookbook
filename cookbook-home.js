@@ -73,7 +73,7 @@
     var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
 
     var meta = [];
-    if (r.category) meta.push(esc(r.category));
+    if (r.dish_category) meta.push(esc(r.dish_category));
     if (totalTime) meta.push(totalTime + " min");
     var macro = [];
     if (m.calories != null) macro.push(Math.round(m.calories / tier) + " cal");
@@ -154,14 +154,31 @@
 
   /* ══ RECIPES screen — collections + app-wide search & filtering ══════ */
   // Default view = flagship collection cards (unchanged). Once a search query
-  // or a facet (diet / tag) is active, the screen switches to a flat grid of
+  // or a dish-type filter is active, the screen switches to a flat grid of
   // matching recipe cards drawn from ALL recipes — not just one collection.
-  var DIET_ORDER = ["Primal", "Carnivore", "Heritage"];
+  //
+  // Filter chips scope by dish-type category (Breakfast | Salads & Slaws |
+  // Soups, Stews & Chilis | Casseroles & Bakes | Skillets & Stir-Fries |
+  // Grilled & Sheet-Pan | Sandwiches). Each recipe declares exactly one
+  // `dish_category`, so the chip bar stays short and the filter is unambiguous
+  // — a recipe always has a single home (replaces the old diet + ~40 free-form
+  // tag chips). The full descriptive tags still drive search and the detail
+  // page.
+  var CATEGORY_ORDER = [
+    "Breakfast",
+    "Salads & Slaws",
+    "Soups, Stews & Chilis",
+    "Casseroles & Bakes",
+    "Skillets & Stir-Fries",
+    "Grilled & Sheet-Pan",
+    "Sandwiches"
+  ];
 
   function recipesMatch(r, q) {
     if (!q) return true;
     q = q.toLowerCase();
     if ((r.title || "").toLowerCase().indexOf(q) >= 0) return true;
+    if ((r.dish_category || "").toLowerCase().indexOf(q) >= 0) return true;
     if ((r.category || "").toLowerCase().indexOf(q) >= 0) return true;
     if ((r.tags || []).join(" ").toLowerCase().indexOf(q) >= 0) return true;
     var ing = r.ingredients_by_serving &&
@@ -170,20 +187,13 @@
     return false;
   }
   function facetList() {
-    var diets = DIET_ORDER.filter(function (d) {
-      return recipes().some(function (r) { return r.category === d; });
+    var cats = CATEGORY_ORDER.filter(function (c) {
+      return recipes().some(function (r) { return r.dish_category === c; });
     });
-    var tags = [];
-    recipes().forEach(function (r) {
-      (r.tags || []).forEach(function (t) { if (tags.indexOf(t) < 0) tags.push(t); });
-    });
-    tags.sort();
-    return ["All"].concat(diets).concat(tags);
+    return ["All"].concat(cats);
   }
   function inFacet(r, f) {
-    if (f === "All") return true;
-    if (r.category === f) return true;
-    return (r.tags || []).indexOf(f) >= 0;
+    return f === "All" || r.dish_category === f;
   }
 
   function renderRecipes() {

@@ -82,7 +82,7 @@
     var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
 
     var meta = [];
-    if (r.category) meta.push(esc(r.category));
+    if (r.dish_category) meta.push(esc(r.dish_category));
     if (totalTime) meta.push(totalTime + " min");
     var macro = [];
     if (m.calories != null) macro.push(m.calories + " cal");

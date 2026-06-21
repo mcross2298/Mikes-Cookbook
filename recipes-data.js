@@ -41,6 +41,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🌶️",
     tags: ["Spicy", "One-Dish", "High-Protein"],
+    dish_category: "Casseroles & Bakes",
     description:
       "This adds a new dimension of flavor to an old favorite with the creative combination of chicken thighs, bacon, vegetables, and cream cheese. If you want the poppers to be less spicy, simply use jarred pickled jalapeños instead of fresh.",
     prep_time_mins: 10,
@@ -114,6 +115,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥦",
     tags: ["Make-Ahead", "Crunchy", "High-Fat"],
+    dish_category: "Salads & Slaws",
     description:
       "Slaw doesn't have to mean just cabbage. This recipe uses broccoli and packs a big nutritional punch. Combined with fatty, salty bacon and bright lemon and apple cider vinegar, this dish is a flavor odyssey in your mouth.",
     prep_time_mins: 5,
@@ -176,6 +178,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥢",
     tags: ["Quick", "Asian-Inspired", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "Want a super-satisfying meal super fast? Try this stir-fry with a bunch of green vegetables, fatty chicken thighs, and Asian-inspired seasonings. This is wonderful enjoyed on its own as well as on a bed of cauliflower rice.",
     prep_time_mins: 10,
@@ -258,6 +261,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍳",
     tags: ["Quick", "One-Pan", "Meatless"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "As you experience the bold flavors of fresh ginger, sesame oil, coconut aminos, and cilantro, you won't be missing regular old rice (and its blood-sugar spike!) for one second.",
     prep_time_mins: 10,
@@ -340,6 +344,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍕",
     tags: ["Pizza-Inspired", "Comfort", "High-Fat"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "The big, bold flavors of Italian sausage and pepperoni are topped with sweet and creamy mozzarella cheese and vegetables. Enjoy the distinct flavors of your favorite veggie pizza, but without the bloating and sugar crash!",
     prep_time_mins: 8,
@@ -425,6 +430,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍗",
     tags: ["Sheet-Pan", "High-Protein", "Summer"],
+    dish_category: "Grilled & Sheet-Pan",
     description:
       "Summer, when zucchini is at its best, is the perfect time to put this recipe on repeat. A little Parmesan cheese goes a long way, heightening this dish's naturally sweet and salty flavors.",
     prep_time_mins: 5,
@@ -507,6 +513,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🐟",
     tags: ["Sheet-Pan", "Quick", "High-Protein"],
+    dish_category: "Grilled & Sheet-Pan",
     description:
       "Freshly broiled salmon served with seasonal vegetables is one of the greatest culinary pairings known to humankind. Keep a supply of frozen wild-caught salmon fillets in your freezer so you can whip up this dish anytime, along with the freshest vegetables of the season.",
     prep_time_mins: 5,
@@ -577,6 +584,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🧆",
     tags: ["Asian-Inspired", "Sheet-Pan", "High-Protein"],
+    dish_category: "Grilled & Sheet-Pan",
     description:
       "Anyone who takes the leap and replaces grain-based pasta with spaghetti squash knows the truth: not only is spaghetti squash much more healthful, it also tastes much better! If you have an Instant Pot, your squash cooking time will be reduced dramatically, giving you more time to play outside.",
     prep_time_mins: 10,
@@ -665,6 +673,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥩",
     tags: ["Grilled", "Make-Ahead", "High-Fat"],
+    dish_category: "Grilled & Sheet-Pan",
     description:
       "The fresh flavor of lime pairs with the warm and grounding flavors of coconut aminos and sesame oil for a delicious and memorable combination. Flank steak marinates in just thirty minutes, making this recipe a great choice when you're pressed for time.",
     prep_time_mins: 10,
@@ -749,6 +758,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🧀",
     tags: ["Casserole", "Comfort", "High-Fat"],
+    dish_category: "Casseroles & Bakes",
     description:
       "Creamy chicken with broccoli and mushrooms gets even more comforting and pleasurable with the addition of shredded Cheddar cheese.",
     prep_time_mins: 15,
@@ -832,6 +842,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥪",
     tags: ["Skillet", "Comfort", "High-Fat"],
+    dish_category: "Sandwiches",
     description:
       "Salty corned beef broiled with sweet Swiss cheese captures the heart's every single time, so make this when you need a little extra self-love or when you're wanting to share that love with a friend.",
     prep_time_mins: 5,
@@ -911,6 +922,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍋",
     tags: ["Grilled", "Make-Ahead", "High-Protein"],
+    dish_category: "Grilled & Sheet-Pan",
     description:
       "Adding lemon zest to a warm recipe like this gives it a special burst of flavor, so try to keep fresh lemons in your kitchen at all times. Get comfortable using your broiler by watching the pan carefully and pulling it out when the meat and vegetables are perfectly bronze and crispy but not burned. Adjust the cooking times based on your experience, because ovens can vary a bit.",
     prep_time_mins: 15,
@@ -1007,6 +1019,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍖",
     tags: ["Instant-Pot", "Make-Ahead", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "Have you tried cooking pork in the Instant Pot electric pressure cooker? Every tender and juicy bite will taste just as if it's been slow-cooking all day. After you make it this way, you won't want to cook it any other way. Enjoy this throughout the week over a big pile of leafy greens, in a bowl with cauliflower rice, or just by itself—it's that good!",
     prep_time_mins: 8,
@@ -1095,6 +1108,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🧇",
     tags: ["Quick", "Sandwich", "High-Fat"],
+    dish_category: "Sandwiches",
     description:
       "Remember my brilliant suggestion to make chaffles (page 226)? Well, now's the time to haul those chaffles out of the freezer and whip up these open-faced sammies with mouthwatering lemon-garlic aioli. The savory taste will make them a favorite as soon as you take your first bite!",
     prep_time_mins: 5,
@@ -1169,6 +1183,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍛",
     tags: ["Quick", "One-Pot", "Comfort"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "If you're tired of plain old chicken, reinvigorate your taste buds with this preparation of cubed meat simmered in butter with diced tomatoes and fresh herbs and spices.",
     prep_time_mins: 10,
@@ -1267,6 +1282,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍝",
     tags: ["Seasonal", "One-Skillet", "High-Fat"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "Use asparagus in the spring, brussels sprouts in the fall, and cabbage in the winter—or choose from among other fresh seasonal options at your local farmer's market.",
     prep_time_mins: 10,
@@ -1345,6 +1361,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥦",
     tags: ["One-Skillet", "High-Fat", "Cheesy"],
+    dish_category: "Casseroles & Bakes",
     description:
       "Cruciferous vegetables such as cauliflower and broccoli pair beautifully with healthful mayonnaise and melted cheese. Italian sausage rounds out this dish with a big dose of protein and nutritious fat. Once you've made this a couple of times, you'll have it committed to memory and be able to whip it up in no time.",
     prep_time_mins: 10,
@@ -1417,6 +1434,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🌭",
     tags: ["Sheet-Pan", "Low-Carb", "Easy"],
+    dish_category: "Grilled & Sheet-Pan",
     description:
       "This German-inspired dish is naturally low in carbohydrates, easy to prepare, and absolutely delicious.",
     prep_time_mins: 5,
@@ -1482,6 +1500,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥧",
     tags: ["Comfort", "Casserole", "High-Protein"],
+    dish_category: "Casseroles & Bakes",
     description:
       "Ground lamb and yellow curry powder combine with fresh vegetables and healthful fats, herbs, and Parmesan cheese to bring out comfort in every bite. This is wonderful any time of the year, because the vegetables can be sourced year-round. Fresh ground lamb is in peak season in the United States from March to October but can generally be found frozen during the winter.",
     prep_time_mins: 15,
@@ -1575,6 +1594,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥬",
     tags: ["Asian-Inspired", "Low-Carb", "Quick"],
+    dish_category: "Sandwiches",
     description:
       "It's amazing how fresh herbs and spices and good-quality cooking oils can transform plain meats. Ginger, sesame oil, and chili garlic sauce make these Asian lettuce wraps mouthwatering without leaving you feeling stuffed or bloated.",
     prep_time_mins: 10,
@@ -1651,6 +1671,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🫑",
     tags: ["Italian", "Stuffed", "High-Protein"],
+    dish_category: "Casseroles & Bakes",
     description:
       "Stuffed bell peppers are typically filled with rice, but you can do better with ground beef and Italian sausage. Top with Parmesan and broil, and you have yourself the most convenient of gourmet meals. Try it tonight!",
     prep_time_mins: 10,
@@ -1723,6 +1744,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🫑",
     tags: ["Mediterranean", "Stuffed", "Lamb"],
+    dish_category: "Casseroles & Bakes",
     description:
       "Mediterranean flavors, such as olives, lemon, artichoke, and feta, always make for an intense and satisfying meal. Naturally salty, these peppers will be most delicious after you have ditched processed foods and your body is craving a healthy dose of sodium.",
     prep_time_mins: 10,
@@ -1803,6 +1825,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🐟",
     tags: ["Seafood", "Taco-Bowl", "Fresh"],
+    dish_category: "Salads & Slaws",
     description:
       "Any meal featuring this exotic creation is sure to be a hit. The macadamia nut topping will make you the star of any potluck gathering.",
     prep_time_mins: 10,
@@ -1891,6 +1914,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍔",
     tags: ["Burgers", "Low-Carb", "Tangy"],
+    dish_category: "Sandwiches",
     description:
       "Classic dill pickle is paired with pepperoncini, cream cheese, and fresh dill and finished with a healthy scoop of gut-healing sauerkraut. The buttery score is off the charts. Are you salivating yet?",
     prep_time_mins: 10,
@@ -1977,6 +2001,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🐟",
     tags: ["Seafood", "One-Skillet", "Comfort"],
+    dish_category: "Casseroles & Bakes",
     description:
       "Put a creative spin on an all-American classic by using cabbage or spaghetti squash instead of pasta.",
     prep_time_mins: 10,
@@ -2051,6 +2076,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🦐",
     tags: ["Quick", "Seafood", "One-Pot"],
+    dish_category: "Soups, Stews & Chilis",
     description:
       "Not only is this dish poppin' with exotic flavors, it's also super quick to prepare, thanks to fast-cooking red snapper.",
     prep_time_mins: 10,
@@ -2133,6 +2159,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍲",
     tags: ["Stew", "Spiced", "Special-Occasion"],
+    dish_category: "Soups, Stews & Chilis",
     description:
       "The Moroccan spice combinations in this dish will make you feel like you're on a vacation adventure in North Africa. This dish is best eaten with lots of loved ones and candles—so make it for an extra-special occasion and enjoy!",
     prep_time_mins: 10,
@@ -2227,6 +2254,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🌮",
     tags: ["Casserole", "Family-Size", "Low-Carb"],
+    dish_category: "Casseroles & Bakes",
     description:
       "This casserole eschews the traditional base of white rice in favor of lighter, low-carb cauliflower rice. The cauliflower takes on the delicious flavors of all the many warm and mouthwatering spices in the sauce, so go ahead and keep a supply of cauliflower rice in your fridge or freezer so you can whip up meals like this anytime you like.",
     prep_time_mins: 10,
@@ -2325,6 +2353,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥦",
     tags: ["Quick", "Stir-Fry", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "This popular ancestral staple meal is better than ever, thanks to the addition of freshly grated ginger and chopped nuts. Your mouth is going to water just thinking about it. Note: Coconut aminos is a liquid condiment similar to soy sauce, but instead of being fermented from soybeans, it's fermented from the sap of coconut palm trees and sea salt. It's gluten- and grain-free and used often in Asian cuisine. It's a great replacement in recipes calling for soy sauce or tamari.",
     prep_time_mins: 5,
@@ -2389,6 +2418,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍗",
     tags: ["One-Pan", "Creamy", "Comfort"],
+    dish_category: "Skillets & Stir-Fries",
     description:
       "Never underestimate how indulgent chicken thighs can taste when you roast them and smother them in a rich cream and mushroom sauce. Instead of using cans of condensed mushroom soup, opt for the real deal, with fresh mushrooms and organic heavy cream (or coconut cream if you prefer).",
     prep_time_mins: 5,
@@ -2463,6 +2493,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥗",
     tags: ["No-Cook", "Salad", "Customizable"],
+    dish_category: "Salads & Slaws",
     description:
       "This is just one of many variations of my centerpiece midday or evening meal. Experiment with steak, chicken, turkey, and other meats in place of the tuna, and an assortment of colorful vegetables and/or dressings.",
     prep_time_mins: 10,
@@ -2521,6 +2552,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🌴",
     tags: ["Salad", "Spiced", "Ground-Turkey"],
+    dish_category: "Salads & Slaws",
     description:
       "If you've never tried combining chili powder and cinnamon, this salad is going to make you an instant convert—ground turkey will never taste better! Put on some reggae music and drift off on your own island fantasy.",
     prep_time_mins: 10,
@@ -2613,6 +2645,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🐟",
     tags: ["No-Cook", "Quick", "Light"],
+    dish_category: "Salads & Slaws",
     description:
       "Keep canned tuna in your pantry to use as a quick and versatile meal base. Look for label designations such as \"line caught\" or \"pole caught\" to avoid problems associated with industrialized tuna operations. Combined with mayonnaise and avocado, this salad is amazing served with your favorite low-carb crudités, such as the cucumber suggested here or radish, jicama, and bell pepper.",
     prep_time_mins: 5,
@@ -2669,6 +2702,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥗",
     tags: ["Salad", "Make-Ahead", "High-Protein"],
+    dish_category: "Salads & Slaws",
     description:
       "Who needs a tortilla when you can enjoy the varied and intense flavors and textures in this ultrasophisticated spin on a popular staple? Again, nothing you'll find in a restaurant will ever compare to this, so make a huge batch of it and enjoy it all week.",
     prep_time_mins: 15,
@@ -2757,6 +2791,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🌶️",
     tags: ["One-Pot", "Spicy", "Family-Size"],
+    dish_category: "Soups, Stews & Chilis",
     description:
       "This one-pot chicken-and-vegetable dish hits the spot, bursting with flavors from spicy pork sausage, comforting bone broth, and a big dose of dried and fresh herbs and spices.",
     prep_time_mins: 8,
@@ -2841,6 +2876,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥣",
     tags: ["Breakfast", "Grain-Free", "Make-Ahead"],
+    dish_category: "Breakfast",
     description:
       "Made with healthful fats and protein and just enough natural sweetness, this oatmeal is easy to make and incredibly rich and satisfying. Vary the amount of nut butter according to your preferred consistency. Double or triple the recipe to have a ready-made supply for busy mornings.",
     prep_time_mins: 5,
@@ -2891,6 +2927,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍳",
     tags: ["Breakfast", "One-Skillet", "High-Protein"],
+    dish_category: "Breakfast",
     description:
       "Hashes are often prepared with shredded potatoes, but why not experiment and use brussels sprouts? If you can't find brussels sprouts, a big bag of preshredded cabbage is a nice low-carb alternative.",
     prep_time_mins: 10,
@@ -2964,6 +3001,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥘",
     tags: ["Breakfast", "Casserole", "Make-Ahead"],
+    dish_category: "Breakfast",
     description:
       "Filled with vegetables, herbs, and lots of protein, this dish will keep you full and grounded all morning. You'll love it so much that you'll be tempted to eat it for dinner!",
     prep_time_mins: 12,
@@ -3039,6 +3077,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🥑",
     tags: ["Breakfast", "Keto", "Chaffle"],
+    dish_category: "Breakfast",
     description:
       "Who says you have to fill your waffle iron with nutrient-deficient grains and sweeteners? Haul that thing back out of the dark cupboard corner and try the increasingly popular \"chaffle\"—a cheese waffle! This deliciously crispy concoction is topped with healthful fats, vegetables, and protein.",
     prep_time_mins: 10,
@@ -3117,6 +3156,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍜",
     tags: ["Soup", "One-Pot", "Family-Size"],
+    dish_category: "Soups, Stews & Chilis",
     description:
       "You won't miss tortilla chips when you experience this incredibly intense and diverse blend of flavors and toppings.",
     prep_time_mins: 15,
@@ -3217,6 +3257,7 @@ const RECIPES = [
     source: "Two Meals a Day",
     icon: "🍲",
     tags: ["Soup", "One-Pot", "Italian"],
+    dish_category: "Soups, Stews & Chilis",
     description:
       "The combination of fatty Italian sausage, sun-dried tomatoes, and dry Parmesan cheese in this hearty one-pot recipe is going to blow you away. Let this one bubble for a while in your kitchen, so the delicious aroma drifts through your home as you cultivate gratitude for the opportunity to eat such delicious food.",
     prep_time_mins: 10,

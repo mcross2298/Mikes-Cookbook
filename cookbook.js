@@ -275,10 +275,8 @@
     h.appendChild(nav);
 
     var eyebrow = el("div", "r-eyebrow");
-    eyebrow.appendChild(el("span", "r-tag", esc(r.category)));
-    (r.tags || []).slice(0, 1).forEach(function (t) {
-      eyebrow.appendChild(el("span", "r-tag sage", esc(t)));
-    });
+    if (r.dish_category) eyebrow.appendChild(el("span", "r-tag", esc(r.dish_category)));
+    if (r.category) eyebrow.appendChild(el("span", "r-tag sage", esc(r.category)));
     h.appendChild(eyebrow);
 
     h.appendChild(el("h1", "r-title", esc(r.title)));
