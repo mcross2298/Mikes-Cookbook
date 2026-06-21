@@ -52,12 +52,12 @@
         var installing = reg.installing;
         if (!installing) return;
         installing.addEventListener("statechange", function () {
-          // Installed while a controller exists → an update is waiting.
+          // Installed while a controller exists → an update is ready. The new
+          // worker self-activates (skipWaiting), so we just flash a brief
+          // notice; controllerchange below reloads the page onto the new code.
           if (installing.state === "installed" && navigator.serviceWorker.controller) {
-            var t = toast("Update available", "Refresh", function () {
-              dismiss(t);
-              installing.postMessage({ type: "SKIP_WAITING" });
-            });
+            var t = toast("Updating…");
+            setTimeout(function () { dismiss(t); }, 2500);
           }
         });
       });
