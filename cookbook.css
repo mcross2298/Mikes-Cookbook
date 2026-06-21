@@ -594,6 +594,7 @@ body {
 @media (min-width: 560px) { .card-grid { grid-template-columns: 1fr 1fr; } }
 
 .rc {
+  position: relative;            /* anchors the corner ❤ favorite toggle */
   display: flex;
   flex-direction: column;
   text-decoration: none;
