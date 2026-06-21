@@ -261,14 +261,19 @@
     back.href = document.referrer && /collection\.html|index\.html/.test(document.referrer)
       ? "javascript:history.back()" : "index.html#recipes";
     nav.appendChild(back);
+    // Labeled pill so the save control is obvious (not just a bare icon).
+    function favLabel(on) {
+      return (on ? "❤" : "♡") +
+        ' <span class="r-fav-text">' + (on ? "Saved" : "Save") + "</span>";
+    }
     var heart = el("button", "fav-toggle r-fav" + (isFav(r.recipe_id) ? " on" : ""),
-      isFav(r.recipe_id) ? "❤" : "♡");
+      favLabel(isFav(r.recipe_id)));
     heart.type = "button";
     heart.setAttribute("aria-label", "Toggle favorite");
     heart.addEventListener("click", function () {
       var on = toggleFav(r.recipe_id);
       heart.classList.toggle("on", on);
-      heart.textContent = on ? "❤" : "♡";
+      heart.innerHTML = favLabel(on);
       pop(heart);
     });
     nav.appendChild(heart);

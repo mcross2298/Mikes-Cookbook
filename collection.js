@@ -6,7 +6,7 @@
    placeholder instead of a list — so all three Recipes-tab cards are tappable.
 
    Reuses the .rc recipe card and the ❤️ favorite store (mc-cookbook:favorites)
-   so favoriting here shows up on the Favorites tab. No framework, no build.
+   so favoriting here shows up in the Home favorites list. No framework, no build.
    ========================================================================== */
 (function () {
   "use strict";

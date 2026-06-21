@@ -641,7 +641,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   TABBED SHELL  —  Home · Recipes · Favorites (mirrors 4WTO dashboard)
+   TABBED SHELL  —  Home · Categories · Recipes (mirrors 4WTO dashboard)
    ═══════════════════════════════════════════════════════════════════ */
 :root { --tab-h: 64px; }
 
@@ -815,6 +815,27 @@ body {
 .home-section-head h2 { font-family: var(--serif); font-size: 18px; font-weight: 700; margin: 0; color: var(--on-dark); }
 .home-section-link { font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; cursor: pointer; }
 
+/* Compact, tappable Favorites module on Home — opens the favorites list. */
+.home-fav {
+  appearance: none; cursor: pointer; font-family: inherit; text-align: left;
+  display: flex; align-items: center; gap: 14px;
+  margin: 14px 20px 0; padding: 13px 16px;
+  background: var(--bg-elev); border: 1px solid var(--line-dark); border-radius: 14px;
+  color: var(--on-dark);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.home-fav:active { transform: scale(0.99); }
+.home-fav:hover { border-color: rgba(255,90,110,0.45); }
+.home-fav-icon {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 18px; color: #ff5a6e;
+  background: rgba(255,90,110,0.12); border: 1px solid rgba(255,90,110,0.4);
+}
+.home-fav-text { flex: 1; display: flex; flex-direction: column; line-height: 1.25; }
+.home-fav-title { font-size: 15px; font-weight: 800; color: var(--on-dark); }
+.home-fav-sub { font-size: 12.5px; color: var(--on-dark-dim); margin-top: 1px; }
+.home-fav-arrow { flex: 0 0 auto; font-size: 18px; font-weight: 800; color: var(--accent); }
+
 /* ═══════════════════════════════════════════════════════════════════
    FAVORITES screen + ❤️ toggle
    ═══════════════════════════════════════════════════════════════════ */
@@ -851,6 +872,10 @@ body {
 .col-back { display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
   color: var(--on-dark-dim); font-size: 13px; font-weight: 700; margin-bottom: 12px; }
 .col-back:active { color: var(--on-dark); }
+/* The shell uses <button class="col-back"> for in-page back (Categories /
+   Favorites); strip the native button chrome so it matches the link form. */
+button.col-back { appearance: none; -webkit-appearance: none;
+  background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; }
 .col-title { font-family: var(--serif); font-size: 25px; font-weight: 700; margin: 0; color: var(--on-dark); }
 .col-sub { font-size: 13px; color: var(--on-dark-dim); margin: 3px 0 0; }
 .search-wrap { padding: 6px 20px 14px; }
@@ -869,9 +894,12 @@ body {
 .r-back { text-decoration: none; color: var(--on-dark-dim); font-size: 14px; font-weight: 700; }
 .r-back:active { color: var(--on-dark); }
 .r-fav {
-  position: static; width: 38px; height: 38px; font-size: 17px;
+  position: static; width: auto; height: 38px; padding: 0 14px; gap: 7px;
+  border-radius: 999px; font-size: 17px;
   background: var(--bg-elev); border: 1px solid var(--line-dark);
 }
+.r-fav-text { font-size: 13px; font-weight: 800; letter-spacing: 0.03em; }
+.r-fav.on { color: #ff5a6e; border-color: rgba(255,90,110,0.5); background: rgba(255,90,110,0.10); }
 
 /* ── Reduced motion ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

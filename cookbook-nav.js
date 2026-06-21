@@ -1,7 +1,7 @@
 /* ==========================================================================
    cookbook-nav.js  —  Phase 2 (Pillar 1: persistent navigation)
    --------------------------------------------------------------------------
-   One source of truth for the bottom tab bar (Home · Recipes · Favorites),
+   One source of truth for the bottom tab bar (Home · Categories · Recipes),
    shared across the whole hybrid app:
 
      index.html       SPA shell — buttons that drive in-page setTab() (no reload)
@@ -11,7 +11,7 @@
    A page opts in with `data-tabbar` on <main class="app">:
      data-tabbar="shell"     → the shell renders & wires its own (see cookbook-home.js)
      data-tabbar="recipes"   → render a link-mode bar with "Recipes" active
-     data-tabbar="home" | "favorites" → same, different active tab
+     data-tabbar="home" | "categories" → same, different active tab
 
    Standalone pages auto-render on load. The shell calls MCNav.render() itself
    so button wiring stays in cookbook-home.js. No framework, no build step.
@@ -22,9 +22,9 @@
   // The canonical tabs, in display order. Markup mirrors the original
   // index.html bar so the existing .tab-bar / .tab / .tab-icon CSS applies.
   var TABS = [
-    { id: "home",      icon: "🏠", label: "Home" },
-    { id: "recipes",   icon: "📖", label: "Recipes" },
-    { id: "favorites", icon: "❤️", label: "Favorites" }
+    { id: "home",       icon: "🏠", label: "Home" },
+    { id: "categories", icon: "🍽️", label: "Categories" },
+    { id: "recipes",    icon: "📖", label: "Recipes" }
   ];
 
   function build(active, mode) {
