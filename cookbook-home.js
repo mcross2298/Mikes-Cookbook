@@ -6,9 +6,11 @@
    (e.g. "Two Meals a Day"), and renders a filterable grid of recipe cards.
    Tapping a card opens recipe.html?id=<recipe_id>.
 
-   Filter chips scope the grid by diet category (Primal | Carnivore |
-   Heritage), with an "All" default. Empty collections are hidden under the
-   active filter. No framework, no build step.
+   Filter chips scope the grid by dish-type category (Breakfast | Salads &
+   Slaws | Soups, Stews & Chilis | Casseroles & Bakes | Skillets & Stir-Fries |
+   Grilled & Sheet-Pan | Sandwiches), with an "All" default. Each recipe has
+   exactly one `dish_category`. Empty collections are hidden under the active
+   filter. No framework, no build step.
    ========================================================================== */
 (function () {
   "use strict";
@@ -26,8 +28,18 @@
     });
   };
 
-  // Diet categories in display order (only those present are shown as chips).
-  var CATEGORY_ORDER = ["Primal", "Carnivore", "Heritage"];
+  // Dish-type categories in display order (only those present are shown as
+  // chips). Each recipe declares exactly one `dish_category`, so the filter is
+  // unambiguous — a recipe always has a single home.
+  var CATEGORY_ORDER = [
+    "Breakfast",
+    "Salads & Slaws",
+    "Soups, Stews & Chilis",
+    "Casseroles & Bakes",
+    "Skillets & Stir-Fries",
+    "Grilled & Sheet-Pan",
+    "Sandwiches"
+  ];
 
   var state = { filter: "All" };
 
@@ -45,7 +57,7 @@
     bar.innerHTML = "";
 
     var present = CATEGORY_ORDER.filter(function (c) {
-      return recipes().some(function (r) { return r.category === c; });
+      return recipes().some(function (r) { return r.dish_category === c; });
     });
     var chips = ["All"].concat(present);
 
@@ -67,7 +79,7 @@
     root.innerHTML = "";
 
     var list = recipes().filter(function (r) {
-      return state.filter === "All" || r.category === state.filter;
+      return state.filter === "All" || r.dish_category === state.filter;
     });
 
     if (!list.length) {
@@ -110,7 +122,7 @@
     var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
 
     var meta = [];
-    if (r.category) meta.push(esc(r.category));
+    if (r.dish_category) meta.push(esc(r.dish_category));
     if (totalTime) meta.push(totalTime + " min");
 
     var macro = [];
