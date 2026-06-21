@@ -1076,3 +1076,154 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
   transition: transform var(--dur-fast, 120ms) var(--ease-out, ease);
 }
 .sw-toast-btn:active { transform: scale(0.95); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   THIS WEEK — meal planner spoke (#screen-planner) + recipe picker
+   Reuses the recipe page's .servings segmented control, the cream
+   .grocery-card list, .col-grid, and .rc cards. Planner-specific layout
+   lives on the dark surface, echoing the home-hub modules.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Sub-nav (Plan / Grocery / Recipes) + the List ⇄ Schedule toggle reuse
+   .servings / .serving-opt; only their outer spacing differs. */
+.servings.planner-nav   { margin: 6px 16px 2px; }
+.servings.plan-modetoggle { margin: 4px 0 16px; }
+
+.planner-body { padding: 8px 16px calc(40px + env(safe-area-inset-bottom)); }
+
+/* ── A planned meal row (List view + Unscheduled tray) ─────────────── */
+.plan-list { margin: 0 0 4px; }
+.plan-meal {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  background: var(--bg-elev); border: 1px solid var(--line-dark);
+  border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 10px;
+}
+.plan-meal-icon { flex: 0 0 auto; font-size: 24px; line-height: 1; }
+.plan-meal-main { flex: 1 1 140px; min-width: 120px; }
+.plan-meal-title {
+  display: block; font-family: var(--serif); font-size: 16px; font-weight: 700;
+  color: var(--on-dark); text-decoration: none; line-height: 1.2;
+}
+.plan-meal-meta { font-size: 12px; color: var(--on-dark-dim); margin: 3px 0 0; }
+.plan-meal-controls {
+  flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.plan-pickers { flex: 1 1 auto; display: flex; gap: 8px; min-width: 0; }
+.plan-select {
+  flex: 1 1 auto; min-width: 0; appearance: none; -webkit-appearance: none;
+  font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--on-dark);
+  background-color: var(--bg); border: 1px solid var(--line-dark); border-radius: var(--r-sm);
+  padding: 7px 26px 7px 10px; cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA0A2' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat; background-position: right 9px center;
+}
+.plan-select:focus { outline: none; border-color: rgba(var(--accent-rgb), 0.5); }
+
+/* Per-meal 2/4 serving toggle (compact segmented). */
+.plan-serv {
+  flex: 0 0 auto; display: inline-flex; gap: 2px; padding: 2px;
+  background: var(--bg); border: 1px solid var(--line-dark); border-radius: var(--r-sm);
+}
+.plan-serv-opt {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  font-family: var(--sans); font-size: 12px; font-weight: 700;
+  color: var(--on-dark-dim); padding: 5px 11px; border-radius: 6px;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.plan-serv-opt.active { background: var(--accent); color: #fff; }
+
+.plan-remove {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-dark); background: transparent;
+  color: var(--on-dark-dim); font-size: 13px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.plan-remove:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
+.plan-remove:active { transform: scale(0.9); }
+
+/* Add / clear actions. .plan-add reuses .cook-start (accent block button). */
+.plan-add { margin: 6px 0 0; }
+.plan-clear {
+  appearance: none; display: block; width: 100%; margin: 10px 0 0; cursor: pointer;
+  padding: 12px; background: transparent; border: 1px solid var(--line-dark);
+  border-radius: var(--r-md); color: var(--on-dark-dim);
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.plan-clear:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.4); }
+.plan-clear:active { transform: scale(0.99); }
+
+/* ── Schedule view: Unscheduled tray + day blocks with B/L/D slots ──── */
+.plan-tray {
+  border: 1px dashed var(--line-dark); border-radius: var(--r-md);
+  padding: 12px 12px 4px; margin-bottom: 18px;
+}
+.plan-tray-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+.plan-day { margin-bottom: 18px; }
+.plan-day-head {
+  font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--on-dark);
+  margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line-dark);
+}
+.plan-slot { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; }
+.plan-slot-label {
+  flex: 0 0 76px; padding-top: 9px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--on-dark-dim);
+}
+.plan-slot-cell { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.plan-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-elev); border: 1px solid var(--line-dark);
+  border-radius: 10px; padding: 8px 10px;
+}
+.plan-chip-icon { flex: 0 0 auto; font-size: 18px; line-height: 1; }
+.plan-chip-title {
+  flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--on-dark);
+  text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.plan-slot-add {
+  align-self: flex-start; appearance: none; cursor: pointer;
+  padding: 8px 13px; border: 1px dashed var(--line-dark); border-radius: 10px;
+  background: transparent; color: var(--on-dark-dim);
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.plan-slot-add:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
+.plan-slot-add:active { transform: scale(0.97); }
+
+/* ── Recipe picker overlay (full-screen; mirrors Cooking Mode) ─────── */
+body.picking { overflow: hidden; }
+.picker {
+  position: fixed; inset: 0; z-index: 120;
+  display: flex; flex-direction: column;
+  background: var(--bg); color: var(--on-dark);
+  animation: cookIn var(--dur) var(--ease-out);
+}
+.picker-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: calc(14px + env(safe-area-inset-top)) 18px 12px;
+  border-bottom: 1px solid var(--line-dark);
+}
+.picker-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--on-dark); }
+.picker-close {
+  appearance: none; border: 0; background: transparent; cursor: pointer;
+  font-family: var(--sans); font-size: 14px; font-weight: 800; color: var(--accent);
+}
+.picker-close:active { opacity: 0.7; }
+.picker-search { padding: 12px 18px 6px; }
+.picker-results {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+.picker-results .col-grid { padding-top: 6px; }
+
+/* The picker card is a <button> wearing the .rc recipe-card look. */
+.rc-pick {
+  appearance: none; -webkit-appearance: none; width: 100%; padding: 0;
+  text-align: left; cursor: pointer; font-family: inherit;
+}
+.rc-pick .rc-macro { color: var(--accent); font-weight: 700; }
