@@ -14,19 +14,17 @@
 </head>
 <body>
   <main class="app shell" data-tabbar="shell">
-    <!-- Screens swap like 4WTO's dashboard; only .active is shown.
-         Favorites has no tab — it's opened from the Home favorites module. -->
+    <!-- Home-hub shell: only the .active screen shows. There is no bottom tab
+         bar — Home is the hub and each spoke screen has a "‹ Home" anchor.
+         Spokes (Categories / Recipes / Favorites) are opened from the Home
+         modules in cookbook-home.js. -->
     <section class="screen active" id="screen-home"></section>
     <section class="screen" id="screen-categories"></section>
     <section class="screen" id="screen-recipes"></section>
     <section class="screen" id="screen-favorites"></section>
-
-    <!-- Bottom tab bar is rendered by cookbook-nav.js (one shared bar
-         across index / recipe / collection). -->
   </main>
 
   <script src="recipes-data.js"></script>
-  <script src="cookbook-nav.js"></script>
   <script src="cookbook-home.js"></script>
   <script src="cookbook-sw.js"></script>
 </body>

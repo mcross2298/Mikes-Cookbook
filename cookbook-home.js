@@ -1,21 +1,20 @@
 /* ==========================================================================
-   cookbook-home.js  —  Phase 3 (tabbed shell)
+   cookbook-home.js  —  Phase 3 (Home-hub shell)
    --------------------------------------------------------------------------
-   Drives index.html as a 4WTO-style tabbed PWA shell:
+   Drives index.html as a hub-and-spoke PWA shell — no bottom tab bar. Home is
+   the hub; you tap a module to drill into a spoke screen, and every spoke has
+   a "‹ Home" anchor back:
 
-     Home        — landing: hero + quick stats + a tappable Favorites module
-                   + a featured recipe. Favorites no longer has its own tab;
-                   the Favorites module opens the favorites list (#favorites).
-     Categories  — the 7 dish-type categories as premium cards (mirrors the
-                   Recipes-tab collection cards). Tapping a category drills
-                   into a grid of that category's recipes.
+     Home        — hub: hero + quick stats + tappable Categories / Recipes /
+                   Favorites modules.
+     Categories  — the 7 dish-type categories as premium cards. Tapping a
+                   category drills into a grid of that category's recipes.
      Recipes     — flagship COLLECTION cards + app-wide search.
-                   "Two Meals a Day" (live) opens collection.html?c=<id>;
-                   coming-soon collections show a placeholder.
+     Favorites   — recipes the user ❤'d (localStorage).
 
-   Reads RECIPES + COLLECTIONS from recipes-data.js. No framework, no build.
-   Active tab is mirrored to location.hash (#recipes) so it survives reloads
-   and returning from collection.html / recipe.html.
+   The two standalone deep pages (recipe.html / collection.html) get a single
+   persistent Home button from cookbook-nav.js. Active screen is mirrored to
+   location.hash (#recipes) so it survives reloads and deep links.
    ========================================================================== */
 (function () {
   "use strict";
@@ -135,7 +134,22 @@
     return card;
   }
 
-  /* ══ HOME screen ════════════════════════════════════════════════════ */
+  /* ══ HOME screen — the hub ══════════════════════════════════════════ */
+  function homeModule(opts) {
+    var b = el("button", "home-mod" + (opts.fav ? " fav" : ""));
+    b.type = "button";
+    b.setAttribute("aria-label", opts.title);
+    b.innerHTML =
+      '<span class="home-mod-icon">' + esc(opts.icon) + "</span>" +
+      '<span class="home-mod-text">' +
+        '<span class="home-mod-title">' + esc(opts.title) + "</span>" +
+        '<span class="home-mod-sub">' + esc(opts.sub) + "</span>" +
+      "</span>" +
+      '<span class="home-mod-arrow">→</span>';
+    b.addEventListener("click", opts.onTap);
+    return b;
+  }
+
   function renderHome() {
     var s = $("#screen-home");
     s.innerHTML = "";
@@ -144,9 +158,8 @@
       "Heirloom hand-me-downs & performance plates."));
 
     var live = collections().filter(function (c) { return c.status === "live"; });
-    var featured = live.length ? recipesIn(live[0])[0] : recipes()[0];
 
-    // Hero
+    // Hero — spotlight the live collection.
     var hero = el("div", "home-hero");
     var hc = el("div", "home-hero-card");
     hc.innerHTML =
@@ -171,42 +184,45 @@
       });
     s.appendChild(stats);
 
-    // Favorites module — compact, tappable, opens the favorites list.
+    // Browse modules — the spokes. Each drills into a full-screen card view.
+    var browse = el("div", "home-browse");
+    browse.appendChild(el("div", "tier-label", "Browse"));
+
+    browse.appendChild(homeModule({
+      icon: "🍽️", title: "Categories",
+      sub: presentCategories().length + " dish types",
+      onTap: function () { setTab("categories"); }
+    }));
+    browse.appendChild(homeModule({
+      icon: "📖", title: "Recipes",
+      sub: collections().length + " collections · " + recipes().length + " recipes",
+      onTap: function () { setTab("recipes"); }
+    }));
     var favCount = loadFavs().size;
-    var favMod = el("button", "home-fav");
-    favMod.type = "button";
-    favMod.setAttribute("aria-label", "Open favorites");
-    favMod.innerHTML =
-      '<span class="home-fav-icon">❤</span>' +
-      '<span class="home-fav-text">' +
-        '<span class="home-fav-title">Favorites</span>' +
-        '<span class="home-fav-sub">' +
-          (favCount ? favCount + (favCount === 1 ? " saved recipe" : " saved recipes")
-                    : "Tap the heart on any recipe to save it") +
-        "</span>" +
-      "</span>" +
-      '<span class="home-fav-arrow">→</span>';
-    favMod.addEventListener("click", function () { setTab("favorites"); });
-    s.appendChild(favMod);
+    browse.appendChild(homeModule({
+      icon: "❤", fav: true, title: "Favorites",
+      sub: favCount ? favCount + (favCount === 1 ? " saved recipe" : " saved recipes")
+                    : "Tap the heart on any recipe to save it",
+      onTap: function () { setTab("favorites"); }
+    }));
+    s.appendChild(browse);
+  }
 
-    // Featured recipe
-    if (featured) {
-      var head = el("div", "home-section-head");
-      head.innerHTML = "<h2>Featured</h2>";
-      var link = el("span", "home-section-link", "All recipes →");
-      link.addEventListener("click", function () { setTab("recipes"); });
-      head.appendChild(link);
-      s.appendChild(head);
-
-      var grid = el("div", "col-grid");
-      grid.appendChild(recipeCard(featured));
-      s.appendChild(grid);
-    }
+  /* ── Shared spoke top bar with a "‹ <label>" anchor ───────────────── */
+  function backTopBar(backLabel, title, sub, onBack) {
+    var t = el("div", "shell-top");
+    var back = el("button", "col-back", backLabel);
+    back.type = "button";
+    back.addEventListener("click", onBack);
+    t.appendChild(back);
+    t.appendChild(el("h1", "shell-title", esc(title)));
+    if (sub) t.appendChild(el("p", "shell-sub", esc(sub)));
+    return t;
   }
 
   /* ══ CATEGORIES screen — the 7 dish types, then a per-category grid ══ */
-  // Default view: one premium card per category (reuses the .cat-card look from
-  // the Recipes tab). Tapping a card drills into that category's recipe grid.
+  // Default view: one premium card per category (reuses the .cat-card look).
+  // Tapping a card drills into that category's recipe grid.
   var catState = { open: null };
 
   function categoryCard(cat) {
@@ -241,7 +257,8 @@
 
     if (catState.open) { renderCategoryDetail(s, catState.open); return; }
 
-    s.appendChild(topBar(null, "Categories", "Browse by dish type"));
+    s.appendChild(backTopBar("‹ Home", "Categories", "Browse by dish type",
+      function () { setTab("home"); }));
     var wrap = el("div", "cards-wrap");
     presentCategories().forEach(function (cat) { wrap.appendChild(categoryCard(cat)); });
     s.appendChild(wrap);
@@ -249,20 +266,9 @@
 
   function renderCategoryDetail(s, cat) {
     var list = recipesInCategory(cat);
-
-    var top = el("div", "shell-top");
-    var back = el("button", "col-back", "‹ Categories");
-    back.type = "button";
-    back.addEventListener("click", function () {
-      catState.open = null;
-      renderCategories();
-      window.scrollTo(0, 0);
-    });
-    top.appendChild(back);
-    top.appendChild(el("h1", "shell-title", esc(cat)));
-    top.appendChild(el("p", "shell-sub",
-      list.length + (list.length === 1 ? " recipe" : " recipes")));
-    s.appendChild(top);
+    s.appendChild(backTopBar("‹ Categories", cat,
+      list.length + (list.length === 1 ? " recipe" : " recipes"),
+      function () { catState.open = null; renderCategories(); window.scrollTo(0, 0); }));
 
     if (!list.length) {
       s.appendChild(el("div", "empty",
@@ -277,7 +283,7 @@
   /* ══ RECIPES screen — collection cards + app-wide search ════════════ */
   // Default view = flagship collection cards. Once a search query is active,
   // the screen switches to a flat grid of matching recipe cards drawn from ALL
-  // recipes. Dish-type browsing now lives on its own Categories tab.
+  // recipes. Dish-type browsing lives on the Categories spoke.
   function recipesMatch(r, q) {
     if (!q) return true;
     q = q.toLowerCase();
@@ -294,8 +300,9 @@
   function renderRecipes() {
     var s = $("#screen-recipes");
     s.innerHTML = "";
-    s.appendChild(topBar(null, "Recipes",
-      collections().length + " collections · " + recipes().length + " recipes"));
+    s.appendChild(backTopBar("‹ Home", "Recipes",
+      collections().length + " collections · " + recipes().length + " recipes",
+      function () { setTab("home"); }));
 
     // Search box
     var searchWrap = el("div", "search-wrap");
@@ -360,7 +367,7 @@
     return card;
   }
 
-  /* ══ FAVORITES screen (no tab — opened from the Home module) ═════════ */
+  /* ══ FAVORITES screen ═══════════════════════════════════════════════ */
   function renderFavorites() {
     var s = $("#screen-favorites");
     s.innerHTML = "";
@@ -368,15 +375,9 @@
     var favs = loadFavs();
     var list = recipes().filter(function (r) { return favs.has(r.recipe_id); });
 
-    var top = el("div", "shell-top");
-    var back = el("button", "col-back", "‹ Home");
-    back.type = "button";
-    back.addEventListener("click", function () { setTab("home"); });
-    top.appendChild(back);
-    top.appendChild(el("h1", "shell-title", "Favorites"));
-    top.appendChild(el("p", "shell-sub",
-      (list.length || "No") + (list.length === 1 ? " saved recipe" : " saved recipes")));
-    s.appendChild(top);
+    s.appendChild(backTopBar("‹ Home", "Favorites",
+      (list.length || "No") + (list.length === 1 ? " saved recipe" : " saved recipes"),
+      function () { setTab("home"); }));
 
     if (!list.length) {
       s.appendChild(el("div", "empty",
@@ -389,7 +390,7 @@
     s.appendChild(grid);
   }
 
-  /* ── Shared top bar ───────────────────────────────────────────────── */
+  /* ── Shared top bar (brand / titles, no back) ─────────────────────── */
   function topBar(eyebrow, title, sub) {
     var t = el("div", "shell-top");
     t.innerHTML =
@@ -399,43 +400,28 @@
     return t;
   }
 
-  /* ── Tab switching ────────────────────────────────────────────────── */
-  // Bar tabs are home/categories/recipes. Favorites is a screen with no tab —
-  // it's reached from the Home favorites module and keeps Home lit in the bar.
+  /* ── Screen switching (hub-and-spoke; mirrored to location.hash) ──── */
   var SCREENS = ["home", "categories", "recipes", "favorites"];
-  var BAR_TABS = ["home", "categories", "recipes"];
   function setTab(name) {
     if (SCREENS.indexOf(name) < 0) name = "home";
-
-    if (name === "categories") catState.open = null;  // tab tap → category grid
+    if (name === "categories") catState.open = null;  // re-entry → category grid
 
     SCREENS.forEach(function (t) {
       var sc = $("#screen-" + t);
       if (sc) sc.classList.toggle("active", t === name);
     });
-    var barActive = (name === "favorites") ? "home" : name;
-    BAR_TABS.forEach(function (t) {
-      $("#tab-" + t).classList.toggle("active", t === barActive);
-    });
 
-    if (name === "favorites") renderFavorites();   // refresh live each open
+    if (name === "home") renderHome();
     if (name === "categories") renderCategories();
-    if (name === "home") renderHome();             // keep fav count current
+    if (name === "recipes") renderRecipes();
+    if (name === "favorites") renderFavorites();
+
     history.replaceState(null, "", name === "home" ? location.pathname : "#" + name);
     window.scrollTo(0, 0);
   }
 
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
-    // Render the shared bottom bar in shell mode (buttons drive in-page setTab).
-    if (window.MCNav) MCNav.render({ mode: "shell", active: (location.hash || "#home").slice(1) });
-    renderHome();
-    renderCategories();
-    renderRecipes();
-    renderFavorites();
-    document.querySelectorAll(".tab").forEach(function (btn) {
-      btn.addEventListener("click", function () { setTab(btn.getAttribute("data-tab")); });
-    });
     setTab((location.hash || "#home").slice(1));
   }
   if (document.readyState === "loading") {

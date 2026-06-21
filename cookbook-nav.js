@@ -1,81 +1,38 @@
 /* ==========================================================================
-   cookbook-nav.js  —  Phase 2 (Pillar 1: persistent navigation)
+   cookbook-nav.js  —  Phase 3 (Home anchor for deep pages)
    --------------------------------------------------------------------------
-   One source of truth for the bottom tab bar (Home · Categories · Recipes),
-   shared across the whole hybrid app:
-
-     index.html       SPA shell — buttons that drive in-page setTab() (no reload)
-     recipe.html      standalone page — links back to index.html#<tab>
-     collection.html  standalone page — links back to index.html#<tab>
+   The app is hub-and-spoke: index.html is the Home hub and there is no bottom
+   tab bar. The two standalone deep pages (recipe.html / collection.html) live
+   outside the shell, so they get a single persistent "Home" button — the
+   anchor that keeps the user one tap from the hub.
 
    A page opts in with `data-tabbar` on <main class="app">:
-     data-tabbar="shell"     → the shell renders & wires its own (see cookbook-home.js)
-     data-tabbar="recipes"   → render a link-mode bar with "Recipes" active
-     data-tabbar="home" | "categories" → same, different active tab
+     data-tabbar="shell"  → the index.html hub; this file renders nothing.
+     data-tabbar="page"   → standalone deep page; render the Home button.
 
-   Standalone pages auto-render on load. The shell calls MCNav.render() itself
-   so button wiring stays in cookbook-home.js. No framework, no build step.
+   No framework, no build step.
    ========================================================================== */
 (function () {
   "use strict";
 
-  // The canonical tabs, in display order. Markup mirrors the original
-  // index.html bar so the existing .tab-bar / .tab / .tab-icon CSS applies.
-  var TABS = [
-    { id: "home",       icon: "🏠", label: "Home" },
-    { id: "categories", icon: "🍽️", label: "Categories" },
-    { id: "recipes",    icon: "📖", label: "Recipes" }
-  ];
-
-  function build(active, mode) {
-    var nav = document.createElement("nav");
-    nav.className = "tab-bar";
-    nav.setAttribute("role", "tablist");
-    nav.setAttribute("aria-label", "Primary");
-
-    TABS.forEach(function (t) {
-      var on = t.id === active;
-      var node;
-      if (mode === "shell") {
-        // In the shell, tabs are buttons wired to in-page screen swaps.
-        node = document.createElement("button");
-        node.type = "button";
-        node.id = "tab-" + t.id;
-        node.setAttribute("data-tab", t.id);
-      } else {
-        // On standalone pages, tabs navigate back to the shell at the hash.
-        node = document.createElement("a");
-        node.href = "index.html#" + t.id;
-      }
-      node.className = "tab" + (on ? " active" : "");
-      node.setAttribute("role", "tab");
-      if (on) node.setAttribute("aria-current", "page");
-      node.innerHTML =
-        '<span class="tab-icon">' + t.icon + "</span>" + t.label;
-      nav.appendChild(node);
-    });
-    return nav;
-  }
-
-  // Render (or re-render) the bar into <main.app>, replacing any existing bar.
-  function render(opts) {
-    opts = opts || {};
+  // Render (once) a fixed Home button into <main.app>.
+  function renderHomeLink() {
     var mount = document.querySelector("main.app");
-    if (!mount) return null;
-    var prev = mount.querySelector(".tab-bar");
-    if (prev) prev.parentNode.removeChild(prev);
-    var bar = build(opts.active || "home", opts.mode || "link");
-    mount.appendChild(bar);
-    return bar;
+    if (!mount || mount.querySelector(".home-fab")) return null;
+    var a = document.createElement("a");
+    a.className = "home-fab";
+    a.href = "index.html";
+    a.setAttribute("aria-label", "Home");
+    a.innerHTML = '<span class="home-fab-icon">🏠</span>Home';
+    mount.appendChild(a);
+    return a;
   }
 
-  // Standalone pages opt in via data-tabbar; the shell ("shell") wires itself.
+  // Deep pages opt in via data-tabbar; the shell ("shell") renders nothing.
   function autoInit() {
     var mount = document.querySelector("main.app[data-tabbar]");
-    if (!mount) return;
-    var active = mount.getAttribute("data-tabbar");
-    if (active === "shell") return; // cookbook-home.js owns the shell bar
-    render({ active: active, mode: "link" });
+    if (!mount || mount.getAttribute("data-tabbar") === "shell") return;
+    renderHomeLink();
   }
 
   if (document.readyState === "loading") {
@@ -84,5 +41,5 @@
     autoInit();
   }
 
-  window.MCNav = { render: render, TABS: TABS };
+  window.MCNav = { renderHomeLink: renderHomeLink };
 })();

@@ -815,26 +815,49 @@ body {
 .home-section-head h2 { font-family: var(--serif); font-size: 18px; font-weight: 700; margin: 0; color: var(--on-dark); }
 .home-section-link { font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; cursor: pointer; }
 
-/* Compact, tappable Favorites module on Home — opens the favorites list. */
-.home-fav {
+/* ── Home browse modules (Categories / Recipes / Favorites spokes) ──── */
+.home-browse { padding: 14px 20px 28px; }
+.home-browse .tier-label { margin: 2px 0 12px; }
+.home-mod {
   appearance: none; cursor: pointer; font-family: inherit; text-align: left;
-  display: flex; align-items: center; gap: 14px;
-  margin: 14px 20px 0; padding: 13px 16px;
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  margin: 0 0 11px; padding: 13px 16px;
   background: var(--bg-elev); border: 1px solid var(--line-dark); border-radius: 14px;
   color: var(--on-dark);
   transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
-.home-fav:active { transform: scale(0.99); }
-.home-fav:hover { border-color: rgba(255,90,110,0.45); }
-.home-fav-icon {
+.home-mod:last-child { margin-bottom: 0; }
+.home-mod:active { transform: scale(0.99); }
+.home-mod:hover { border-color: rgba(var(--accent-rgb),0.45); }
+.home-mod-icon {
   flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
-  display: grid; place-items: center; font-size: 18px; color: #ff5a6e;
-  background: rgba(255,90,110,0.12); border: 1px solid rgba(255,90,110,0.4);
+  display: grid; place-items: center; font-size: 18px; color: var(--accent);
+  background: rgba(var(--accent-rgb),0.12); border: 1px solid rgba(var(--accent-rgb),0.4);
 }
-.home-fav-text { flex: 1; display: flex; flex-direction: column; line-height: 1.25; }
-.home-fav-title { font-size: 15px; font-weight: 800; color: var(--on-dark); }
-.home-fav-sub { font-size: 12.5px; color: var(--on-dark-dim); margin-top: 1px; }
-.home-fav-arrow { flex: 0 0 auto; font-size: 18px; font-weight: 800; color: var(--accent); }
+.home-mod.fav .home-mod-icon {
+  color: #ff5a6e; background: rgba(255,90,110,0.12); border-color: rgba(255,90,110,0.4);
+}
+.home-mod.fav:hover { border-color: rgba(255,90,110,0.45); }
+.home-mod-text { flex: 1; display: flex; flex-direction: column; line-height: 1.25; }
+.home-mod-title { font-size: 15px; font-weight: 800; color: var(--on-dark); }
+.home-mod-sub { font-size: 12.5px; color: var(--on-dark-dim); margin-top: 1px; }
+.home-mod-arrow { flex: 0 0 auto; font-size: 18px; font-weight: 800; color: var(--accent); }
+
+/* ── Persistent Home button (deep pages: recipe.html / collection.html) ─ */
+.home-fab {
+  position: fixed; right: 16px; z-index: 50;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 16px; border-radius: 999px; text-decoration: none;
+  background: rgba(30,32,34,0.96); color: var(--on-dark);
+  border: 1px solid var(--line-dark);
+  font-size: 13px; font-weight: 800; letter-spacing: 0.03em;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.40);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.home-fab:active { transform: scale(0.95); }
+.home-fab-icon { font-size: 16px; line-height: 1; }
 
 /* ═══════════════════════════════════════════════════════════════════
    FAVORITES screen + ❤️ toggle
@@ -923,6 +946,7 @@ button.col-back { appearance: none; -webkit-appearance: none;
 
 body.cooking { overflow: hidden; }
 body.cooking .tab-bar { display: none; } /* sanctioned exception */
+body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking */
 
 .cook {
   position: fixed; inset: 0; z-index: 100;
