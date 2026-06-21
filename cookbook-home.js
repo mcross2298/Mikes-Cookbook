@@ -40,12 +40,6 @@
     if (h.length !== 6) return "200,122,83";
     return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(",");
   }
-  // Retrigger a one-shot animation: drop the class, force reflow, re-add.
-  var pop = function (node) {
-    node.classList.remove("pop");
-    void node.offsetWidth; // eslint-disable-line no-unused-expressions
-    node.classList.add("pop");
-  };
   var CHECK_SVG =
     '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" ' +
     'stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
@@ -285,23 +279,20 @@
         (macro.length ? '<p class="rc-macro">' + macro.join(" · ") + "</p>" : "") +
       "</div>";
 
-    // A heart on every card — favorite straight from the grid. Filled when
-    // saved, outline when not; tapping flips it in place. On the Favorites
-    // screen, un-saving also drops the card out of the list immediately.
-    var saved = loadFavs().has(r.recipe_id);
-    var heart = el("button", "fav-toggle" + (saved ? " on" : ""), saved ? "❤" : "♡");
-    heart.type = "button";
-    heart.setAttribute("aria-label", saved ? "Remove from favorites" : "Add to favorites");
-    heart.addEventListener("click", function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var on = toggleFav(r.recipe_id);
-      if (opts.fav) { renderFavorites(); return; }   // drop out of the favorites grid
-      heart.classList.toggle("on", on);
-      heart.textContent = on ? "❤" : "♡";
-      heart.setAttribute("aria-label", on ? "Remove from favorites" : "Add to favorites");
-      pop(heart);
-    });
-    card.appendChild(heart);
+    // The heart lives on the recipe page (upper-right Save) — not on browse
+    // cards. The one exception is the Favorites screen, where a filled heart
+    // doubles as a quick "remove from favorites" affordance.
+    if (opts.fav) {
+      var heart = el("button", "fav-toggle on", "❤");
+      heart.type = "button";
+      heart.setAttribute("aria-label", "Remove from favorites");
+      heart.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        toggleFav(r.recipe_id);
+        renderFavorites();           // drop it from the list immediately
+      });
+      card.appendChild(heart);
+    }
     return card;
   }
 
