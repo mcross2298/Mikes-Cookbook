@@ -5,8 +5,8 @@
    the hub; you tap a module to drill into a spoke screen, and every spoke has
    a "‹ Home" anchor back:
 
-     Home        — hub: hero + quick stats + tappable Categories / Recipes /
-                   Favorites modules.
+     Home        — hub: hero + tappable Categories / Recipes / Favorites
+                   modules.
      Categories  — the 7 dish-type categories as premium cards. Tapping a
                    category drills into a grid of that category's recipes.
      Recipes     — flagship COLLECTION cards + app-wide search.
@@ -135,11 +135,18 @@
   }
 
   /* ══ HOME screen — the hub ══════════════════════════════════════════ */
+  // Each module is a premium glass card (gradient + accent border + soft
+  // glow), echoing the "Now Cooking" hero. A per-module accent (--hm) drives
+  // the gradient, border, glow, and icon so the three read as a tactile set.
   function homeModule(opts) {
-    var b = el("button", "home-mod" + (opts.fav ? " fav" : ""));
+    var accent = opts.accent || "#C87A53";
+    var b = el("button", "home-mod");
     b.type = "button";
     b.setAttribute("aria-label", opts.title);
+    b.style.setProperty("--hm", accent);
+    b.style.setProperty("--hm-rgb", rgbFromHex(accent));
     b.innerHTML =
+      '<span class="home-mod-glow"></span>' +
       '<span class="home-mod-icon">' + esc(opts.icon) + "</span>" +
       '<span class="home-mod-text">' +
         '<span class="home-mod-title">' + esc(opts.title) + "</span>" +
@@ -173,34 +180,24 @@
     hero.appendChild(hc);
     s.appendChild(hero);
 
-    // Quick stats
-    var stats = el("div", "home-stats");
-    [[recipes().length, "Recipes"], [presentCategories().length, "Categories"], [collections().length, "Collections"]]
-      .forEach(function (p) {
-        var c = el("div", "home-stat");
-        c.innerHTML = '<div class="home-stat-num">' + p[0] + "</div>" +
-                      '<div class="home-stat-key">' + p[1] + "</div>";
-        stats.appendChild(c);
-      });
-    s.appendChild(stats);
-
     // Browse modules — the spokes. Each drills into a full-screen card view.
+    // Per-module accents keep the trio cohesive with the warm hero palette.
     var browse = el("div", "home-browse");
     browse.appendChild(el("div", "tier-label", "Browse"));
 
     browse.appendChild(homeModule({
-      icon: "🍽️", title: "Categories",
+      icon: "🍽️", title: "Categories", accent: "#C87A53",
       sub: presentCategories().length + " dish types",
       onTap: function () { setTab("categories"); }
     }));
     browse.appendChild(homeModule({
-      icon: "📖", title: "Recipes",
+      icon: "📖", title: "Recipes", accent: "#D9A05B",
       sub: collections().length + " collections · " + recipes().length + " recipes",
       onTap: function () { setTab("recipes"); }
     }));
     var favCount = loadFavs().size;
     browse.appendChild(homeModule({
-      icon: "❤", fav: true, title: "Favorites",
+      icon: "❤", title: "Favorites", accent: "#FF5A6E",
       sub: favCount ? favCount + (favCount === 1 ? " saved recipe" : " saved recipes")
                     : "Tap the heart on any recipe to save it",
       onTap: function () { setTab("favorites"); }
