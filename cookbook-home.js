@@ -923,8 +923,32 @@
     window.scrollTo(0, 0);
   }
 
+  // The currently visible screen, read from the DOM so it stays correct even
+  // after hash-less home navigation.
+  function activeScreen() {
+    for (var i = 0; i < SCREENS.length; i++) {
+      var sc = $("#screen-" + SCREENS[i]);
+      if (sc && sc.classList.contains("active")) return SCREENS[i];
+    }
+    return "home";
+  }
+
+  // Live favorites sync. The recipe view (and any other tab) writes the shared
+  // store from a DIFFERENT document, so the `storage` event is our signal to
+  // re-render without a manual refresh. Only the favorites-aware screens care;
+  // a null key means localStorage was cleared, so refresh defensively.
+  function wireFavSync() {
+    window.addEventListener("storage", function (e) {
+      if (e.key && e.key !== FAV_KEY) return;
+      var screen = activeScreen();
+      if (screen === "home") renderHome();
+      else if (screen === "favorites") renderFavorites();
+    });
+  }
+
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
+    wireFavSync();
     setTab((location.hash || "#home").slice(1));
   }
   if (document.readyState === "loading") {
