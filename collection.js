@@ -44,7 +44,7 @@
   function toggleFav(id) {
     var set = loadFavs();
     if (set.has(id)) set.delete(id); else set.add(id);
-    try { localStorage.setItem(FAV_KEY, JSON.stringify([].slice.call(set))); } catch (e) {}
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
     return set.has(id);
   }
 

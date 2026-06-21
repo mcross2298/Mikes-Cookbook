@@ -67,7 +67,7 @@
     catch (e) { return new Set(); }
   }
   function saveFavs(set) {
-    try { localStorage.setItem(FAV_KEY, JSON.stringify([].slice.call(set))); } catch (e) {}
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
   }
   function toggleFav(id) {
     var set = loadFavs();
@@ -143,7 +143,7 @@
     catch (e) { return new Set(); }
   }
   function saveGroc(set) {
-    try { localStorage.setItem(GROC_KEY, JSON.stringify([].slice.call(set))); } catch (e) {}
+    try { localStorage.setItem(GROC_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
   }
 
   /* ── Quantity math (parse → sum → pretty) for the merged grocery list ─ */
