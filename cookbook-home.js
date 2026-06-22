@@ -146,6 +146,29 @@
     try { localStorage.setItem(GROC_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
   }
 
+  /* ── Cook log (read-only here; written on the recipe detail page) ──────
+     Drives "made recently" awareness in the planner picker. Entries may be
+     bare ISO strings (legacy) or { at, photo } objects. */
+  var COOKED_KEY = "mc-cookbook:cooked";
+  function loadCookedMap() {
+    try { var o = JSON.parse(localStorage.getItem(COOKED_KEY) || "{}"); return (o && typeof o === "object" && !Array.isArray(o)) ? o : {}; }
+    catch (e) { return {}; }
+  }
+  function lastCookedAt(id) {
+    var list = loadCookedMap()[id];
+    if (!Array.isArray(list) || !list.length) return null;
+    var best = null;
+    list.forEach(function (e) {
+      var t = Date.parse((typeof e === "string" ? e : (e && e.at)) || "");
+      if (!isNaN(t) && (best == null || t > best)) best = t;
+    });
+    return best;
+  }
+  function daysSinceCooked(id) {
+    var t = lastCookedAt(id);
+    return t == null ? null : Math.floor((Date.now() - t) / 86400000);
+  }
+
   /* ── Quantity math (parse → sum → pretty) for the merged grocery list ─ */
   // Parses integers, decimals, and simple/mixed fractions ("1", "0.75",
   // "1/2", "1 1/2"). Non-numeric amounts ("to taste") return null and are
@@ -530,8 +553,9 @@
     card.appendChild(el("p", "card-label", "Your cookbook lives on this device"));
     card.appendChild(el("p", "backup-copy",
       "Export a backup file to keep your favorites, weekly plan, grocery " +
-      "check-offs and your own recipes safe — or to move them to another " +
-      "phone. Importing replaces what&rsquo;s on this device."));
+      "check-offs, cook log and your own recipes safe — or to move them to " +
+      "another phone. Cook-log photos are included, so a backup with photos " +
+      "can be several MB. Importing replaces what&rsquo;s on this device."));
 
     var iso;
     try { iso = localStorage.getItem(BACKUP_KEY); } catch (e) { iso = null; }
@@ -1148,6 +1172,13 @@
         '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
         '<p class="rc-macro">＋ Add to week</p>' +
       "</div>";
+    // "Made recently" awareness: flag anything cooked in the last 2 weeks so
+    // the cook can steer away from same-meals-every-week fatigue.
+    var days = daysSinceCooked(r.recipe_id);
+    if (days != null && days <= 14) {
+      card.appendChild(el("span", "rc-cooked-badge",
+        days <= 0 ? "Cooked today" : "Cooked " + days + "d ago"));
+    }
     card.addEventListener("click", function () {
       addMeal(r.recipe_id, { day: ctx.day || null, slot: ctx.slot || null, serving: 2 });
       closePicker();
@@ -1182,6 +1213,22 @@
     sw.appendChild(box);
     ov.appendChild(sw);
 
+    // Optional freshness sort: least-recently-cooked (and never-cooked) first,
+    // so the week doesn't keep surfacing what you just made.
+    var sortFresh = false;
+    var sortRow = el("div", "picker-sort");
+    var sortBtn = el("button", "picker-sort-btn", "↻ Freshest first");
+    sortBtn.type = "button";
+    sortBtn.setAttribute("aria-pressed", "false");
+    sortBtn.addEventListener("click", function () {
+      sortFresh = !sortFresh;
+      sortBtn.classList.toggle("active", sortFresh);
+      sortBtn.setAttribute("aria-pressed", sortFresh ? "true" : "false");
+      paint();
+    });
+    sortRow.appendChild(sortBtn);
+    ov.appendChild(sortRow);
+
     var results = el("div", "picker-results");
     ov.appendChild(results);
 
@@ -1189,6 +1236,12 @@
       var q = box.value.trim();
       results.innerHTML = "";
       var list = recipes().filter(function (r) { return recipesMatch(r, q); });
+      if (sortFresh) {
+        // never-cooked → 0 → sorts first (freshest); most-recent → last.
+        list = list.slice().sort(function (a, b) {
+          return (lastCookedAt(a.recipe_id) || 0) - (lastCookedAt(b.recipe_id) || 0);
+        });
+      }
       if (!list.length) {
         results.appendChild(emptyState("🔍", "No recipes match your search."));
         return;
