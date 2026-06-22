@@ -209,6 +209,165 @@
     } catch (e) {}
   }
 
+  /* ── Cook log (shared store: dated cook history + optional photo) ──────
+     mc-cookbook:cooked → { [recipe_id]: [ { at: ISO, photo: dataURL|null } ] }.
+     Entries are stored chronologically (most recent appended last). A legacy
+     bare-string entry is tolerated and read as { at, photo: null }. The whole
+     mc-cookbook: namespace is already picked up by Home's backup export/import,
+     so cook history (and photos) round-trip through a backup for free. */
+  var COOKED_KEY   = "mc-cookbook:cooked";
+  var MAX_PHOTOS   = 12;       // keep only the N most-recent photos (storage budget)
+  var PHOTO_EDGE   = 1024;     // longest-edge px after downscale
+  var PHOTO_QUALITY = 0.7;     // JPEG quality
+
+  function loadCooked() {
+    try { var o = JSON.parse(localStorage.getItem(COOKED_KEY) || "{}"); return (o && typeof o === "object" && !Array.isArray(o)) ? o : {}; }
+    catch (e) { return {}; }
+  }
+  function saveCooked(map) {
+    try { localStorage.setItem(COOKED_KEY, JSON.stringify(map)); return true; }
+    catch (e) { return false; }      // QuotaExceededError → caller recovers
+  }
+  function normalizeEntry(e) {
+    return (typeof e === "string") ? { at: e, photo: null }
+                                   : { at: e && e.at, photo: (e && e.photo) || null };
+  }
+  function cookedEntries(id) {
+    var list = loadCooked()[id];
+    if (!Array.isArray(list)) return [];
+    return list.map(normalizeEntry).filter(function (e) { return e.at; });
+  }
+  function logCooked(id) {
+    var map = loadCooked();
+    if (!Array.isArray(map[id])) map[id] = [];
+    map[id] = map[id].map(normalizeEntry);
+    map[id].push({ at: new Date().toISOString(), photo: null });
+    saveCooked(map);
+  }
+  function removeCooked(id, at) {
+    var map = loadCooked();
+    if (!Array.isArray(map[id])) return;
+    map[id] = map[id].map(normalizeEntry).filter(function (e) { return e.at !== at; });
+    if (!map[id].length) delete map[id];
+    saveCooked(map);
+  }
+
+  // Relative + absolute date strings for the log.
+  function relTime(iso) {
+    var then = Date.parse(iso || "");
+    if (isNaN(then)) return "";
+    var days = Math.floor((Date.now() - then) / 86400000);
+    if (days <= 0) return "today";
+    if (days === 1) return "yesterday";
+    if (days < 7) return days + " days ago";
+    if (days < 14) return "last week";
+    if (days < 60) return Math.round(days / 7) + " weeks ago";
+    return Math.round(days / 30) + " months ago";
+  }
+  function fmtDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  /* ── Photos on a cooked entry (downscaled, capped, quota-aware) ─────── */
+  function allPhotoEntries(map) {
+    var arr = [];
+    Object.keys(map).forEach(function (id) {
+      if (!Array.isArray(map[id])) return;
+      map[id].forEach(function (e) { if (e && typeof e === "object" && e.photo) arr.push(e); });
+    });
+    return arr;
+  }
+  function photoCount() { return allPhotoEntries(loadCooked()).length; }
+
+  // Keep only the MAX_PHOTOS newest photos; null out the rest in place.
+  function enforcePhotoCap(map) {
+    var withPhotos = allPhotoEntries(map);
+    if (withPhotos.length <= MAX_PHOTOS) return;
+    withPhotos.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
+    for (var i = 0; i < withPhotos.length - MAX_PHOTOS; i++) withPhotos[i].photo = null;
+  }
+  // Last-ditch save under quota pressure: drop oldest photos until it fits.
+  function shrinkAndSave(map) {
+    var withPhotos = allPhotoEntries(map);
+    withPhotos.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
+    for (var i = 0; i < withPhotos.length; i++) {
+      withPhotos[i].photo = null;
+      if (saveCooked(map)) return true;
+    }
+    return saveCooked(map);
+  }
+
+  // Decode → cover-fit downscale to PHOTO_EDGE → JPEG data URL. done(url, err).
+  function downscaleImage(file, done) {
+    var reader = new FileReader();
+    reader.onerror = function () { done(null, "read"); };
+    reader.onload = function () {
+      var img = new Image();
+      img.onerror = function () { done(null, "decode"); };
+      img.onload = function () {
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (!w || !h) { done(null, "empty"); return; }
+        var scale = Math.min(1, PHOTO_EDGE / Math.max(w, h));
+        var cw = Math.round(w * scale), ch = Math.round(h * scale);
+        var canvas = el("canvas"); canvas.width = cw; canvas.height = ch;
+        try {
+          canvas.getContext("2d").drawImage(img, 0, 0, cw, ch);
+          done(canvas.toDataURL("image/jpeg", PHOTO_QUALITY), null);
+        } catch (e) { done(null, "encode"); }
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function pickPhoto(r, at) {
+    var input = el("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.setAttribute("capture", "environment");
+    input.style.display = "none";
+    document.body.appendChild(input);
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (input.parentNode) input.parentNode.removeChild(input);
+      if (!file) return;
+      downscaleImage(file, function (dataUrl, err) {
+        if (err || !dataUrl) { window.alert("Couldn’t process that image — try another."); return; }
+        attachPhoto(r, at, dataUrl);
+      });
+    });
+    input.click();
+  }
+
+  function attachPhoto(r, at, dataUrl) {
+    var map = loadCooked();
+    if (!Array.isArray(map[r.recipe_id])) return;
+    var found = false;
+    map[r.recipe_id] = map[r.recipe_id].map(function (e) {
+      var entry = normalizeEntry(e);
+      if (entry.at === at) { entry.photo = dataUrl; found = true; }
+      return entry;
+    });
+    if (!found) return;
+    enforcePhotoCap(map);
+    if (!saveCooked(map) && !shrinkAndSave(map)) {
+      window.alert("Storage is full — couldn’t save the photo. Remove some older photos and try again.");
+      return;
+    }
+    renderMacros(r);
+  }
+
+  // Tap a thumbnail to view it full-screen; tap anywhere to dismiss.
+  function openPhotoView(url) {
+    var ov = el("div", "photo-view");
+    var img = el("img"); img.src = url; img.alt = "Cooked photo";
+    ov.appendChild(img);
+    ov.addEventListener("click", function () { if (ov.parentNode) ov.parentNode.removeChild(ov); });
+    document.body.appendChild(ov);
+  }
+
   /* ── App state ────────────────────────────────────────────────────── */
   var state = { recipe: null, serving: 2, tab: "overview" };
 
@@ -350,6 +509,8 @@
     }
     pane.appendChild(about);
 
+    pane.appendChild(cookLogCard(r));
+
     // macro_profiles are stored PER SINGLE SERVING and are identical across
     // both tiers — the book's printed macros describe one portion, and the
     // serving size only changes how much the recipe makes, not the macros.
@@ -372,6 +533,81 @@
       "Per single serving. The serving size changes how much the recipe makes, not the macros."));
     pane.appendChild(card);
   }
+  /* ── Cook log card (Overview tab): "Cooked it" + dated history + photos ─ */
+  function cookLogCard(r) {
+    var card = el("div", "card cook-log");
+    card.appendChild(el("p", "card-label", "Cook Log"));
+
+    var entries = cookedEntries(r.recipe_id);
+    if (entries.length) {
+      var last = entries[entries.length - 1];
+      card.appendChild(el("p", "cook-log-last",
+        "Last cooked " + esc(relTime(last.at)) + " · " +
+        entries.length + (entries.length === 1 ? " time" : " times")));
+    } else {
+      card.appendChild(el("p", "cook-log-empty",
+        "Tap below the first time you make this — build a little history (and snap a photo)."));
+    }
+
+    var btn = el("button", "cook-log-btn", "🍳 Cooked it");
+    btn.type = "button";
+    btn.addEventListener("click", function () {
+      logCooked(r.recipe_id);
+      renderMacros(r);
+    });
+    card.appendChild(btn);
+
+    if (entries.length) {
+      var hist = el("div", "cook-hist");
+      // Most recent first; cap the rendered list so long histories stay tidy.
+      entries.slice().reverse().slice(0, 8).forEach(function (e) {
+        hist.appendChild(cookEntryRow(r, e));
+      });
+      card.appendChild(hist);
+
+      if (photoCount() >= MAX_PHOTOS) {
+        card.appendChild(el("p", "cook-log-note",
+          "Keeping your " + MAX_PHOTOS + " most recent photos to save space."));
+      }
+    }
+    return card;
+  }
+
+  function cookEntryRow(r, e) {
+    var row = el("div", "cook-entry");
+
+    if (e.photo) {
+      var img = el("img", "cook-entry-photo");
+      img.src = e.photo;
+      img.alt = "Photo from " + fmtDate(e.at);
+      img.addEventListener("click", function () { openPhotoView(e.photo); });
+      row.appendChild(img);
+    } else {
+      var add = el("button", "cook-entry-add", "📷");
+      add.type = "button";
+      add.setAttribute("aria-label", "Add a photo to this entry");
+      add.addEventListener("click", function () { pickPhoto(r, e.at); });
+      row.appendChild(add);
+    }
+
+    var meta = el("div", "cook-entry-meta");
+    meta.appendChild(el("span", "cook-entry-date", esc(fmtDate(e.at))));
+    meta.appendChild(el("span", "cook-entry-rel", esc(relTime(e.at))));
+    row.appendChild(meta);
+
+    var del = el("button", "cook-entry-del", "✕");
+    del.type = "button";
+    del.setAttribute("aria-label", "Remove this entry");
+    del.addEventListener("click", function () {
+      if (window.confirm("Remove this cooked entry" + (e.photo ? " and its photo?" : "?"))) {
+        removeCooked(r.recipe_id, e.at);
+        renderMacros(r);
+      }
+    });
+    row.appendChild(del);
+    return row;
+  }
+
   function macroCell(extra, num, unit, key) {
     var c = el("div", "macro" + (extra ? " " + extra : ""));
     c.innerHTML =
