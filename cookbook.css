@@ -1228,3 +1228,105 @@ body.picking { overflow: hidden; }
   text-align: left; cursor: pointer; font-family: inherit;
 }
 .rc-pick .rc-macro { color: var(--accent); font-weight: 700; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   ADD-RECIPE FORM — full-screen overlay (reuses .picker shell)
+   A "Medium" recipe form: basics, structured ingredients, numbered steps.
+   ═══════════════════════════════════════════════════════════════════ */
+.recipe-form .picker-top { gap: 8px; }
+.rf-save-top { color: var(--accent); }
+.rf-body {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 16px 18px calc(40px + env(safe-area-inset-bottom));
+}
+.rf-field { margin-bottom: 14px; }
+.rf-label {
+  display: block; margin-bottom: 6px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--on-dark-dim);
+}
+.rf-hint { font-size: 12px; color: var(--on-dark-dim); margin: 6px 0 0; line-height: 1.4; }
+.rf-textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
+.rf-select { width: 100%; font-size: 15px; padding: 12px 34px 12px 14px; }
+.rf-icon-input { width: 84px; text-align: center; font-size: 22px; }
+
+/* Accent swatches */
+.rf-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.rf-swatch {
+  appearance: none; cursor: pointer; width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid transparent; box-shadow: 0 0 0 1px var(--line-dark);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.rf-swatch:active { transform: scale(0.9); }
+.rf-swatch.active { border-color: var(--on-dark); box-shadow: 0 0 0 2px var(--on-dark); }
+
+/* Prep / Cook / Servings — three compact number fields in a row */
+.rf-times { display: flex; gap: 10px; }
+.rf-times .rf-field { flex: 1; margin-bottom: 14px; }
+.rf-num { text-align: center; }
+
+/* Section dividers inside the form */
+.rf-section { margin: 22px 0 4px; }
+.rf-section-hint { margin: 0 0 12px; }
+
+/* Ingredient rows: qty · unit · item · category · remove */
+.rf-ing-wrap { display: flex; flex-direction: column; gap: 8px; }
+.rf-ing { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rf-ing .rf-input { padding: 10px 11px; font-size: 14px; }
+.rf-ing-qty  { flex: 0 0 56px; width: 56px; }
+.rf-ing-unit { flex: 0 0 62px; width: 62px; }
+.rf-ing-item { flex: 1 1 130px; min-width: 110px; }
+.rf-ing-cat  { flex: 0 0 104px; width: 104px; font-size: 12px; padding: 9px 24px 9px 10px; }
+
+/* Step rows: numbered, with optional title + detail */
+.rf-step-wrap { display: flex; flex-direction: column; gap: 12px; }
+.rf-step {
+  border: 1px solid var(--line-dark); border-radius: var(--r-md);
+  padding: 12px; display: flex; flex-direction: column; gap: 8px;
+}
+.rf-step-head { display: flex; align-items: center; justify-content: space-between; }
+.rf-step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.18); color: var(--accent);
+  font-size: 13px; font-weight: 800;
+}
+
+/* Shared remove button for ingredient / step rows */
+.rf-row-remove {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-dark); background: transparent;
+  color: var(--on-dark-dim); font-size: 13px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.rf-row-remove:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
+.rf-row-remove:active { transform: scale(0.9); }
+
+/* "＋ Add ingredient / step" dashed buttons */
+.rf-add {
+  appearance: none; cursor: pointer; width: 100%; margin: 10px 0 4px; padding: 11px;
+  background: transparent; border: 1px dashed var(--line-dark); border-radius: var(--r-md);
+  color: var(--on-dark-dim); font-family: var(--sans); font-size: 13px; font-weight: 700;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.rf-add:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
+.rf-add:active { transform: scale(0.99); }
+
+.rf-error { color: #ff5a6e; font-size: 13px; font-weight: 700; margin: 16px 0 0; min-height: 18px; }
+.rf-save { margin: 6px 0 0; }
+
+/* Delete control on a user-authored recipe card (mirrors the ❤ toggle, left) */
+.rc-delete {
+  position: absolute; left: 12px; top: 12px; z-index: 3;
+  width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line-dark);
+  background: rgba(0,0,0,0.40); color: #fff; font-size: 13px; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.rc-delete:active { transform: scale(0.88); }
+.rc-delete:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.6); }
+
+/* Add-a-recipe CTA inside an empty collection state */
+.empty .cook-start { width: auto; display: inline-flex; margin: 18px auto 0; padding: 12px 22px; }
