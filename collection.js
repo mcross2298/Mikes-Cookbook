@@ -70,7 +70,7 @@
     return false;
   }
 
-  function recipeCard(r) {
+  function recipeCard(r, onChange) {
     var accent = r.accent || "#C87A53";
     var card = el("a", "rc");
     card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
@@ -108,6 +108,22 @@
       pop(heart);
     });
     card.appendChild(heart);
+
+    // User-authored recipes get a delete control so the personal library is
+    // manageable. Removal updates the shared store + the live list.
+    if (r.user && window.MCUser) {
+      var del = el("button", "rc-delete", "✕");
+      del.type = "button";
+      del.setAttribute("aria-label", "Delete this recipe");
+      del.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        if (window.confirm("Delete “" + r.title + "” from your recipes?")) {
+          window.MCUser.remove(r.recipe_id);
+          if (onChange) onChange();
+        }
+      });
+      card.appendChild(del);
+    }
     return card;
   }
 
@@ -126,15 +142,23 @@
     document.documentElement.style.setProperty("--accent-rgb", rgbFromHex(c.accent));
     document.title = c.title + " · Mike's Cookbook";
 
-    var list = (c.status === "live" && c.source_match)
-      ? recipes().filter(function (r) { return r.source === c.source_match; })
-      : [];
+    // Recompute on demand so deletes (user recipes) reflect immediately.
+    function currentList() {
+      return (c.status === "live" && c.source_match)
+        ? recipes().filter(function (r) { return r.source === c.source_match; })
+        : [];
+    }
+    var list = currentList();
 
-    top.innerHTML =
-      '<a class="col-back" href="index.html#recipes">‹ Recipes</a>' +
-      '<h1 class="col-title">' + esc(c.title) + "</h1>" +
-      '<p class="col-sub">' + esc(c.tag.replace(/^★\s*/, "")) +
-        (list.length ? " · " + list.length + " recipes" : "") + "</p>";
+    function paintHead() {
+      var n = currentList().length;
+      top.innerHTML =
+        '<a class="col-back" href="index.html#recipes">‹ Recipes</a>' +
+        '<h1 class="col-title">' + esc(c.title) + "</h1>" +
+        '<p class="col-sub">' + esc(c.tag.replace(/^★\s*/, "")) +
+          (n ? " · " + n + " recipes" : "") + "</p>";
+    }
+    paintHead();
 
     // Coming-soon collections: friendly placeholder, no list / search.
     if (c.status !== "live") {
@@ -158,13 +182,34 @@
     function paint() {
       var q = box.value.trim();
       grid.innerHTML = "";
+      list = currentList();
+      paintHead();
+
+      // A live collection with nothing in it yet (e.g. "My Recipes" before you
+      // add anything): show a friendly invitation rather than a "no match".
+      if (!list.length && !q) {
+        var empty = el("div", "empty",
+          '<span class="empty-emoji">' + esc(c.icon || "🍽️") + "</span>" +
+          "No recipes here yet.<br>" +
+          (c.source_match === (window.MCUser && window.MCUser.SOURCE)
+            ? "Tap <b>Add Recipe</b> on the Home screen to start your library."
+            : esc(c.blurb)));
+        if (c.source_match === (window.MCUser && window.MCUser.SOURCE)) {
+          var add = el("a", "cook-start", "＋ Add a recipe");
+          add.href = "index.html#home";
+          empty.appendChild(add);
+        }
+        grid.appendChild(empty);
+        return;
+      }
+
       var shown = list.filter(function (r) { return matches(r, q); });
       if (!shown.length) {
         grid.appendChild(el("div", "empty",
           '<span class="empty-emoji">🔍</span>No recipes match “' + esc(q) + "”."));
         return;
       }
-      shown.forEach(function (r) { grid.appendChild(recipeCard(r)); });
+      shown.forEach(function (r) { grid.appendChild(recipeCard(r, paint)); });
     }
     box.addEventListener("input", paint);
     paint();

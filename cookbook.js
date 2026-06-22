@@ -353,7 +353,13 @@
     // macro_profiles are stored PER SINGLE SERVING and are identical across
     // both tiers — the book's printed macros describe one portion, and the
     // serving size only changes how much the recipe makes, not the macros.
+    // User-authored recipes are macro-free, so omit the card entirely when
+    // there's nothing to show rather than rendering a grid of em-dashes.
     var m = macrosFor(r, state.serving);
+    var hasMacros = ["calories", "protein_g", "fat_g", "carbs_g"].some(function (k) {
+      return m[k] != null;
+    });
+    if (!hasMacros) return;
     var card = el("div", "card");
     card.appendChild(el("p", "card-label", "Macro Profile · Per Serving"));
     var grid = el("div", "macro-grid");
