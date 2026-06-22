@@ -851,6 +851,58 @@ body {
 .home-mod-sub { font-size: 12.5px; color: var(--on-dark-dim); margin-top: 3px; }
 .home-mod-arrow { position: relative; z-index: 1; flex: 0 0 auto; font-size: 18px; font-weight: 800; color: var(--hm); }
 
+/* ── Home premise — one-line food philosophy under the title ─────────── */
+.home-premise {
+  font-family: var(--serif); font-style: italic;
+  font-size: 13.5px; line-height: 1.35; color: #CBB8A6; margin: 6px 0 0;
+}
+
+/* ── Backup reminder banner + Backup & Restore module ───────────────── */
+.backup-banner {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 20px 4px; padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(var(--sage-rgb),0.16), rgba(0,0,0,0.18)), var(--bg-elev);
+  border: 1px solid rgba(var(--sage-rgb),0.34); border-radius: 14px;
+}
+.backup-banner-icon { flex: 0 0 auto; font-size: 18px; line-height: 1; }
+.backup-banner-text { flex: 1; font-size: 12.5px; line-height: 1.4; color: var(--on-dark); }
+.backup-banner-cta {
+  flex: 0 0 auto; appearance: none; cursor: pointer; font-family: inherit;
+  background: var(--sage); color: #15180f; font-weight: 800; font-size: 12.5px;
+  border: 0; border-radius: 10px; padding: 8px 12px; white-space: nowrap;
+}
+.backup-banner-cta:active { opacity: 0.88; }
+.backup-banner-dismiss {
+  flex: 0 0 auto; appearance: none; cursor: pointer; font-family: inherit;
+  background: transparent; border: 0; color: var(--on-dark-dim);
+  font-size: 15px; line-height: 1; padding: 4px 2px;
+}
+
+.home-backup { padding: 8px 20px 30px; }
+.home-backup .tier-label { margin: 2px 0 12px; }
+.backup-card { margin-bottom: 0; }
+.backup-copy { font-size: 13.5px; line-height: 1.55; color: var(--ink); margin: 0 0 12px; }
+.backup-last {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--ink-dim); margin: 0 0 14px;
+}
+.backup-actions { display: flex; gap: 10px; }
+.backup-btn {
+  flex: 1; appearance: none; cursor: pointer; font-family: var(--sans);
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px 10px; border-radius: var(--r-md);
+  font-size: 14px; font-weight: 800; letter-spacing: 0.01em;
+  transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
+}
+.backup-btn:active { transform: scale(0.98); }
+.backup-export { background: var(--accent); color: #1a1208; border: 0; }
+.backup-export:hover { filter: brightness(1.05); }
+.backup-import { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.backup-import:hover { border-color: rgba(var(--accent-rgb),0.5); }
+.backup-status { font-size: 12.5px; font-weight: 700; margin: 12px 0 0; min-height: 1px; }
+.backup-status.ok  { color: #2E7D52; }
+.backup-status.err { color: #B23A48; }
+
 /* ── Persistent Home button (deep pages: recipe.html / collection.html) ─ */
 .home-fab {
   position: fixed; right: 16px; z-index: 50;
@@ -1154,6 +1206,23 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 }
 .plan-clear:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.4); }
 .plan-clear:active { transform: scale(0.99); }
+
+/* ── Planner payoff CTA — the grocery list as the reward of planning ──── */
+.plan-payoff {
+  appearance: none; cursor: pointer; font-family: inherit; text-align: left;
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  margin: 4px 0 14px; padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb),0.18), rgba(0,0,0,0.22)), var(--bg-elev);
+  border: 1px solid rgba(var(--accent-rgb),0.34); border-radius: 16px;
+  color: var(--on-dark);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur) var(--ease-out);
+}
+.plan-payoff:active { transform: scale(0.99); }
+.plan-payoff:hover { border-color: rgba(var(--accent-rgb),0.55); }
+.plan-payoff-info { flex: 1; display: flex; flex-direction: column; line-height: 1.3; }
+.plan-payoff-counts { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--on-dark); }
+.plan-payoff-sub { font-size: 12px; color: var(--on-dark-dim); margin-top: 2px; }
+.plan-payoff-cta { flex: 0 0 auto; font-size: 13.5px; font-weight: 800; color: var(--accent); white-space: nowrap; }
 
 /* ── Schedule view: Unscheduled tray + day blocks with B/L/D slots ──── */
 .plan-tray {

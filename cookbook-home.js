@@ -173,12 +173,58 @@
     return String(Math.round(v * 100) / 100);
   }
 
-  // Build the combined shopping list across every planned meal, smart-merging
-  // identical item+unit lines and summing their numeric quantities. Returns
-  // categories in aisle order, each holding rows keyed for check-off.
+  // Unit normalization for the smart merge. We only convert within the small,
+  // unambiguous families the data actually uses — volume (tsp↔tbsp↔cup) and
+  // weight (oz↔lb). Anything else (counts, "small", "clove", ml, g…) is merged
+  // only against the exact same unit string and never cross-summed, so the list
+  // can't fabricate a wrong total from incompatible units.
+  var UNIT_DEFS = {
+    "tsp": { cls: "vol", f: 1 }, "teaspoon": { cls: "vol", f: 1 }, "teaspoons": { cls: "vol", f: 1 },
+    "tbsp": { cls: "vol", f: 3 }, "tablespoon": { cls: "vol", f: 3 }, "tablespoons": { cls: "vol", f: 3 },
+    "cup": { cls: "vol", f: 48 }, "cups": { cls: "vol", f: 48 },
+    "oz": { cls: "wt", f: 1 }, "ounce": { cls: "wt", f: 1 }, "ounces": { cls: "wt", f: 1 },
+    "lb": { cls: "wt", f: 16 }, "lbs": { cls: "wt", f: 16 }, "pound": { cls: "wt", f: 16 }, "pounds": { cls: "wt", f: 16 }
+  };
+  // Display ladders (largest unit first) with a plural label and the smallest
+  // value at which we'll use that unit. Volume keeps natural cup-fractions
+  // (down to ¼ cup); weight only promotes to lb at a whole pound, since cooks
+  // read "4 oz" not "¼ lb". The last (smallest) unit is always the fallback.
+  var UNIT_DISPLAY = {
+    vol: [{ u: "cup", p: "cups", f: 48, min: 0.25 }, { u: "tbsp", p: "tbsp", f: 3, min: 1 }, { u: "tsp", p: "tsp", f: 1, min: 0 }],
+    wt:  [{ u: "lb", p: "lb", f: 16, min: 1 }, { u: "oz", p: "oz", f: 1, min: 0 }]
+  };
+  function unitInfo(unit) {
+    return UNIT_DEFS[(unit || "").trim().toLowerCase()] || null;
+  }
+  // A value reads cleanly if it's whole or a common kitchen fraction.
+  function isCleanAmount(v) {
+    var f = v - Math.floor(v + 1e-9);
+    if (f < 0.06 || f > 0.94) return true;
+    var T = [0.25, 1 / 3, 0.5, 2 / 3, 0.75];
+    for (var i = 0; i < T.length; i++) if (Math.abs(f - T[i]) < 0.06) return true;
+    return false;
+  }
+  // Render a convertible bucket's summed base amount in the nicest unit: the
+  // largest unit whose value clears its threshold and reads as a clean amount.
+  function prettyMeasure(base, cls) {
+    var ladder = UNIT_DISPLAY[cls];
+    for (var i = 0; i < ladder.length; i++) {
+      var v = base / ladder[i].f;
+      if (i === ladder.length - 1 || (v >= ladder[i].min - 1e-9 && isCleanAmount(v))) {
+        return prettyQty(v) + " " + (v > 1 + 1e-9 ? ladder[i].p : ladder[i].u);
+      }
+    }
+  }
+
+  // Build the combined shopping list across every planned meal. Quantities for
+  // the SAME item are merged into per-item buckets: amounts in a compatible
+  // unit family are converted to a common base and summed; incompatible units
+  // (e.g. "2 small" vs "4 oz") stay as separate sub-amounts on one line rather
+  // than being force-summed into a wrong total. Returns categories in aisle
+  // order, each holding one row per item keyed for check-off.
   var GROC_CAT_ORDER = ["Meat", "Dairy", "Produce", "Pantry"];
   function buildGrocery() {
-    var merged = {}, order = [];
+    var items = {}, order = [];
     planMeals().forEach(function (meal) {
       var r = recipeById(meal.id);
       if (!r) return;
@@ -188,20 +234,34 @@
         if (!item) return;
         var unit = (ing.unit || "").trim();
         var cat  = ing.category || "Other";
-        var key  = cat + "|" + item.toLowerCase() + "|" + unit.toLowerCase();
-        var entry = merged[key];
-        if (!entry) { entry = merged[key] = { key: key, item: item, unit: unit, category: cat, sum: 0, hasNum: false, texts: [] }; order.push(key); }
-        var num = parseQty(ing.quantity);
-        if (num != null) { entry.sum += num; entry.hasNum = true; }
-        else if (ing.quantity != null && String(ing.quantity).trim()) { entry.texts.push(String(ing.quantity).trim()); }
+        var ikey = cat + "|" + item.toLowerCase();
+        var it = items[ikey];
+        if (!it) { it = items[ikey] = { key: ikey, item: item, category: cat, buckets: {}, bucketOrder: [], texts: [] }; order.push(ikey); }
+
+        var info = unitInfo(unit);
+        var num  = parseQty(ing.quantity);
+        var bkey = info ? ("cls:" + info.cls) : ("u:" + unit.toLowerCase());
+        var bk = it.buckets[bkey];
+        if (!bk) {
+          bk = it.buckets[bkey] = info
+            ? { kind: "conv", cls: info.cls, base: 0, hasNum: false }
+            : { kind: "raw", unit: unit, sum: 0, hasNum: false };
+          it.bucketOrder.push(bkey);
+        }
+        if (num != null) {
+          if (info) bk.base += num * info.f; else bk.sum += num;
+          bk.hasNum = true;
+        } else if (ing.quantity != null && String(ing.quantity).trim()) {
+          it.texts.push(String(ing.quantity).trim() + (unit ? " " + unit : ""));
+        }
       });
     });
 
-    // Group into categories (aisle order first, then any extras seen).
+    // Group items into categories (aisle order first, then any extras seen).
     var groups = {};
-    order.forEach(function (key) {
-      var e = merged[key];
-      (groups[e.category] = groups[e.category] || []).push(e);
+    order.forEach(function (ikey) {
+      var it = items[ikey];
+      (groups[it.category] = groups[it.category] || []).push(it);
     });
     var cats = GROC_CAT_ORDER.filter(function (c) { return groups[c]; })
       .concat(Object.keys(groups).filter(function (c) { return GROC_CAT_ORDER.indexOf(c) < 0; }));
@@ -209,14 +269,21 @@
     return cats.map(function (cat) {
       return {
         category: cat,
-        rows: groups[cat].map(function (e) {
+        rows: groups[cat].map(function (it) {
           var parts = [];
-          if (e.hasNum && e.sum > 0) parts.push(prettyQty(e.sum) + (e.unit ? " " + e.unit : ""));
-          if (e.texts.length) {
-            var uniq = e.texts.filter(function (t, i) { return e.texts.indexOf(t) === i; });
+          it.bucketOrder.forEach(function (bkey) {
+            var bk = it.buckets[bkey];
+            if (bk.kind === "conv") {
+              if (bk.hasNum && bk.base > 0) parts.push(prettyMeasure(bk.base, bk.cls));
+            } else if (bk.hasNum && bk.sum > 0) {
+              parts.push(prettyQty(bk.sum) + (bk.unit ? " " + bk.unit : ""));
+            }
+          });
+          if (it.texts.length) {
+            var uniq = it.texts.filter(function (t, i) { return it.texts.indexOf(t) === i; });
             parts.push(uniq.join(", "));
           }
-          return { key: e.key, item: e.item, qty: parts.join(" · ") };
+          return { key: it.key, item: it.item, qty: parts.join(" · ") };
         })
       };
     });
@@ -328,12 +395,212 @@
     return b;
   }
 
+  /* ══ BACKUP & RESTORE — export/import the whole mc-cookbook: namespace ═
+     The app is local-only: every byte of a cook's data (favorites, the weekly
+     plan, grocery check-offs, their own recipes, per-recipe step/grocery
+     check-offs) lives in localStorage under the mc-cookbook: namespace. This is
+     the safety net — one tap writes it all to a portable JSON file, and a
+     matching import restores it (also the stop-gap for moving a plan between
+     phones until/if real sync ever lands). */
+  var NS         = "mc-cookbook:";
+  var BACKUP_KEY = "mc-cookbook:lastBackupAt";
+  var BACKUP_FMT = 1;                         // backup-file schema version
+  var backupBannerDismissed = false;          // per-session dismissal
+
+  function namespacedKeys() {
+    var out = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf(NS) === 0) out.push(k);
+    }
+    return out;
+  }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function todayStamp() {
+    var d = new Date();
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+
+  function exportData() {
+    var data = {};
+    namespacedKeys().forEach(function (k) { data[k] = localStorage.getItem(k); });
+    var payload = {
+      app: "mikes-cookbook", version: BACKUP_FMT,
+      exportedAt: new Date().toISOString(), data: data
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    var url  = URL.createObjectURL(blob);
+    var a = el("a");
+    a.href = url;
+    a.download = "mikes-cookbook-backup-" + todayStamp() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      if (a.parentNode) a.parentNode.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 0);
+    try { localStorage.setItem(BACKUP_KEY, new Date().toISOString()); } catch (e) {}
+  }
+
+  // Validate → confirm → clean-restore, reporting via done(ok, message). A
+  // malformed or wrong-version file is rejected BEFORE anything is written, so
+  // a bad import can never corrupt the data already on the device.
+  function importData(file, done) {
+    var reader = new FileReader();
+    reader.onerror = function () { done(false, "Couldn't read that file."); };
+    reader.onload = function () {
+      var parsed;
+      try { parsed = JSON.parse(reader.result); }
+      catch (e) { done(false, "That file isn't valid JSON."); return; }
+      var data = parsed && parsed.data;
+      if (!parsed || parsed.version !== BACKUP_FMT ||
+          typeof data !== "object" || data === null || Array.isArray(data)) {
+        done(false, "This doesn't look like a Mike's Cookbook backup file.");
+        return;
+      }
+      if (!window.confirm("This replaces your current saved data with the backup. Continue?")) {
+        done(false, null);                    // cancelled — no-op, not an error
+        return;
+      }
+      try {
+        namespacedKeys().forEach(function (k) { localStorage.removeItem(k); });
+        Object.keys(data).forEach(function (k) {
+          if (k.indexOf(NS) === 0 && data[k] != null) localStorage.setItem(k, String(data[k]));
+        });
+        done(true, null);
+      } catch (e) {
+        done(false, "Couldn't restore — your device storage may be full.");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function relativeDays(iso) {
+    var then = Date.parse(iso || "");
+    if (isNaN(then)) return null;
+    var days = Math.floor((Date.now() - then) / 86400000);
+    if (days <= 0) return "today";
+    if (days === 1) return "yesterday";
+    return days + " days ago";
+  }
+  function hasCookData() {
+    return planMeals().length > 0 || loadFavs().size > 0 ||
+           ((window.MCUser && window.MCUser.count()) || 0) > 0;
+  }
+  function backupIsStale() {
+    var iso;
+    try { iso = localStorage.getItem(BACKUP_KEY); } catch (e) { iso = null; }
+    var then = Date.parse(iso || "");
+    if (isNaN(then)) return true;             // never backed up (or unreadable)
+    return (Date.now() - then) >= 14 * 86400000;
+  }
+
+  // Dismissible inline nudge: only when a backup is stale AND there's data worth
+  // protecting. Dismiss hides it for the session; an export clears it for good.
+  function backupBanner() {
+    var b = el("div", "backup-banner");
+    b.innerHTML =
+      '<span class="backup-banner-icon">🛟</span>' +
+      '<span class="backup-banner-text">Back up your cookbook so a cleared ' +
+        "browser can&rsquo;t wipe your plan &amp; favorites.</span>";
+    var cta = el("button", "backup-banner-cta", "Back up →");
+    cta.type = "button";
+    cta.addEventListener("click", function () {
+      var sec = $("#home-backup");
+      if (sec) sec.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    var x = el("button", "backup-banner-dismiss", "✕");
+    x.type = "button";
+    x.setAttribute("aria-label", "Dismiss backup reminder");
+    x.addEventListener("click", function () {
+      backupBannerDismissed = true;
+      if (b.parentNode) b.parentNode.removeChild(b);
+    });
+    b.appendChild(cta);
+    b.appendChild(x);
+    return b;
+  }
+
+  function renderBackupSection() {
+    var wrap = el("div", "home-backup");
+    wrap.id = "home-backup";
+    wrap.appendChild(el("div", "tier-label", "Backup &amp; Restore"));
+
+    var card = el("div", "card backup-card");
+    card.appendChild(el("p", "card-label", "Your cookbook lives on this device"));
+    card.appendChild(el("p", "backup-copy",
+      "Export a backup file to keep your favorites, weekly plan, grocery " +
+      "check-offs and your own recipes safe — or to move them to another " +
+      "phone. Importing replaces what&rsquo;s on this device."));
+
+    var iso;
+    try { iso = localStorage.getItem(BACKUP_KEY); } catch (e) { iso = null; }
+    var rel = relativeDays(iso);
+    var lastEl = el("p", "backup-last", rel ? "Last backup: " + esc(rel) : "No backup yet.");
+    card.appendChild(lastEl);
+
+    var actions = el("div", "backup-actions");
+    var exportBtn = el("button", "backup-btn backup-export", "⬇&nbsp; Export backup");
+    exportBtn.type = "button";
+    var importBtn = el("button", "backup-btn backup-import", "⬆&nbsp; Import backup");
+    importBtn.type = "button";
+    var fileInput = el("input", "backup-file");
+    fileInput.type = "file";
+    fileInput.accept = "application/json";
+    fileInput.hidden = true;
+
+    var status = el("p", "backup-status", "");
+
+    exportBtn.addEventListener("click", function () {
+      exportData();
+      lastEl.textContent = "Last backup: today";
+      var banner = $(".backup-banner");
+      if (banner && banner.parentNode) banner.parentNode.removeChild(banner);
+      status.className = "backup-status ok";
+      status.textContent = "Backup file downloaded ✓";
+    });
+    importBtn.addEventListener("click", function () { fileInput.click(); });
+    fileInput.addEventListener("change", function () {
+      var file = fileInput.files && fileInput.files[0];
+      fileInput.value = "";                   // allow re-importing the same file
+      if (!file) return;
+      importData(file, function (ok, msg) {
+        if (ok) {
+          status.className = "backup-status ok";
+          status.textContent = "Restored ✓ Reloading…";
+          // Reload so restored favorites, plan AND user recipes (merged at load)
+          // all reflect the imported data immediately.
+          setTimeout(function () { window.location.reload(); }, 700);
+        } else if (msg) {
+          status.className = "backup-status err";
+          status.textContent = msg;
+        }
+      });
+    });
+
+    actions.appendChild(exportBtn);
+    actions.appendChild(importBtn);
+    card.appendChild(actions);
+    card.appendChild(fileInput);
+    card.appendChild(status);
+    wrap.appendChild(card);
+    return wrap;
+  }
+
   function renderHome() {
     var s = $("#screen-home");
     s.innerHTML = "";
 
-    s.appendChild(topBar("Mike's", "Cookbook",
-      "Heirloom hand-me-downs & performance plates."));
+    var bar = topBar("Mike's", "Cookbook",
+      "Heirloom hand-me-downs & performance plates.");
+    bar.appendChild(el("p", "home-premise",
+      "Whole-food, low-carb cooking — built around a two-meals-a-day rhythm."));
+    s.appendChild(bar);
+
+    // Safety-net nudge: stale backup + data worth protecting.
+    if (!backupBannerDismissed && backupIsStale() && hasCookData()) {
+      s.appendChild(backupBanner());
+    }
 
     // Hero — the weekly meal planner entry (replaces the old "Now Cooking"
     // collection spotlight). Reflects the live plan and opens the planner spoke.
@@ -395,6 +662,8 @@
       onTap: function () { openRecipeForm(); }
     }));
     s.appendChild(browse);
+
+    s.appendChild(renderBackupSection());
   }
 
   /* ── Shared spoke top bar with a "‹ <label>" anchor ───────────────── */
@@ -739,6 +1008,27 @@
       renderPlanList(body, meals);
     } else {
       renderPlanSchedule(body, meals);
+    }
+
+    // The payoff of planning: a live count + one-tap jump straight to the
+    // merged grocery list, so the list isn't a tab the cook has to discover.
+    if (meals.length) {
+      var gcount = groceryItemCount();
+      var payoff = el("button", "plan-payoff");
+      payoff.type = "button";
+      payoff.innerHTML =
+        '<span class="plan-payoff-info">' +
+          '<span class="plan-payoff-counts">' +
+            meals.length + (meals.length === 1 ? " meal" : " meals") + " · " +
+            gcount + (gcount === 1 ? " grocery item" : " grocery items") +
+          "</span>" +
+          '<span class="plan-payoff-sub">Your combined shopping list is ready</span>' +
+        "</span>" +
+        '<span class="plan-payoff-cta">View list →</span>';
+      payoff.addEventListener("click", function () {
+        plannerState.view = "grocery"; refresh(); window.scrollTo(0, 0);
+      });
+      body.appendChild(payoff);
     }
 
     var add = el("button", "cook-start plan-add", "＋&nbsp;&nbsp;Add a meal");
