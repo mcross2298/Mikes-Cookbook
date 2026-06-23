@@ -19,7 +19,7 @@
   // Set this to the workout app's public base URL (e.g.
   // "https://your-workout-app.example/dashboard.html") to enable the
   // "Send to Workout app" hand-off. Blank = option hidden.
-  var WORKOUT_URL = "";
+  var WORKOUT_URL = "https://mcross2298.github.io/4-Weeks-to-Open-/dashboard.html";
 
   function num(v, d) { var n = parseFloat(v); return isFinite(n) ? n : (d || 0); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
