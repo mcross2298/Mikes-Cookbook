@@ -820,6 +820,22 @@
       sub: collections().length + " collections · " + recipes().length + " recipes",
       onTap: function () { setTab("recipes"); }
     }));
+    // Macro Tracker — the standalone, in-cookbook day tracker (tracker.js).
+    browse.appendChild(homeModule({
+      icon: "📊", title: "Macro Tracker", accent: "#7D8C77",
+      sub: (function () {
+        try {
+          if (window.MCTrackerStore) {
+            var g = MCTrackerStore.getGoals();
+            var t = MCTrackerStore.totalsOf(MCTrackerStore.entriesFor(MCTrackerStore.todayKey()));
+            if (g) return t.kcal + " / " + g.kcal + " kcal today";
+            if (t.kcal) return t.kcal + " kcal logged today";
+          }
+        } catch (e) {}
+        return "Track calories & macros by the hour";
+      })(),
+      onTap: function () { setTab("tracker"); }
+    }));
     // Mike's Favorites — the curated, shipped-to-everyone shortlist of recipes
     // Mike has actually made and loved. Distinct from the personal ❤ below.
     var mikeCount = mikesList().length;
@@ -863,6 +879,21 @@
     t.appendChild(el("h1", "shell-title", esc(title)));
     if (sub) t.appendChild(el("p", "shell-sub", esc(sub)));
     return t;
+  }
+
+  /* ══ MACRO TRACKER screen — mounts the standalone tracker (tracker.js) ══ */
+  // The tracker owns its own calendar / summary / hourly-timeline UI; the shell
+  // just provides the "‹ Home" frame and a mount point so back-nav is uniform.
+  function renderTracker() {
+    var s = $("#screen-tracker");
+    if (!s) return;
+    s.innerHTML = "";
+    s.appendChild(backTopBar("‹ Home", "Macro Tracker", "Track your day, by the hour",
+      function () { setTab("home"); }));
+    var body = el("div", "tracker-body");
+    s.appendChild(body);
+    if (window.MCTracker && MCTracker.mount) MCTracker.mount(body);
+    else body.appendChild(el("p", "shell-sub", "Tracker is loading — reopen in a moment."));
   }
 
   /* ══ CATEGORIES screen — the 7 dish types, then a per-category grid ══ */
@@ -1840,7 +1871,7 @@
   }
 
   /* ── Screen switching (hub-and-spoke; mirrored to location.hash) ──── */
-  var SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes"];
+  var SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes", "tracker"];
   function setTab(name) {
     if (SCREENS.indexOf(name) < 0) name = "home";
     if (name === "categories") catState.open = null;  // re-entry → category grid
@@ -1857,6 +1888,7 @@
     if (name === "recipes") renderRecipes();
     if (name === "favorites") renderFavorites();
     if (name === "mikes") renderMikes();
+    if (name === "tracker") renderTracker();
 
     history.replaceState(null, "", name === "home" ? location.pathname : "#" + name);
     window.scrollTo(0, 0);
