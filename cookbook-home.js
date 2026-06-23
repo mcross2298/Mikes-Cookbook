@@ -1053,6 +1053,27 @@
     wrap.appendChild(el("p", "owner-bar-help",
       "Double-tap any recipe card to add or remove it. A single tap still opens the recipe."));
 
+    // One-tap migrate: pull the personal ❤ favorites stored on THIS device into
+    // the Mike's list (union, keeping current order). This is how "the recipes I
+    // already love" move over — the import runs locally where the hearts live,
+    // then Copy-list publishes them. Non-destructive: personal hearts are kept.
+    var myFavs = loadFavs();
+    if (myFavs.size) {
+      var imp = el("button", "owner-btn owner-import",
+        "＋ Add my ❤ favorites (" + myFavs.size + ")");
+      imp.type = "button";
+      imp.addEventListener("click", function () {
+        var list = mikesList().slice(), added = 0;
+        myFavs.forEach(function (id) {
+          if (recipeById(id) && list.indexOf(id) < 0) { list.push(id); added++; }
+        });
+        saveMikeDraft(list);
+        renderMikes();
+        if (!added) window.alert("Your ❤ favorites are already in Mike's Favorites.");
+      });
+      wrap.appendChild(imp);
+    }
+
     if (!mikeDraftDirty()) return wrap;
 
     // Unpublished changes → offer Copy-list (publish) and Discard.

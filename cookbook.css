@@ -994,6 +994,11 @@ body {
   transition: transform var(--dur-fast) var(--ease-out), filter var(--dur-fast) var(--ease-out);
 }
 .owner-btn:active { transform: scale(0.98); }
+.owner-import {
+  display: block; width: 100%; margin-top: 12px;
+  background: rgba(224,164,88,0.16); color: var(--on-dark);
+  border: 1px solid rgba(224,164,88,0.42);
+}
 .owner-copy { flex: 1; background: #E0A458; color: #2a1d05; border: 0; }
 .owner-copy:hover { filter: brightness(1.05); }
 .owner-revert { flex: 0 0 auto; background: transparent; color: var(--on-dark-dim); border: 1px solid var(--line-dark); }
