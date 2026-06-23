@@ -1477,3 +1477,71 @@ body.picking { overflow: hidden; }
   background: rgba(10,11,12,0.72); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
   color: #fff; font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE 3 — Pantry staples (planner grocery list)
+   ═══════════════════════════════════════════════════════════════════ */
+/* Per-row staple toggle — pushes to the far right of a grocery row. */
+.grocery-staple {
+  flex: 0 0 auto; margin-left: auto; appearance: none; cursor: pointer;
+  width: 34px; height: 34px; border-radius: 9px;
+  display: grid; place-items: center; font-size: 16px; line-height: 1;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-dim);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.grocery-staple:hover { border-color: rgba(var(--accent-rgb),0.5); }
+.grocery-staple:active { transform: scale(0.9); }
+.grocery-staple.on { background: rgba(var(--accent-rgb),0.12); border-color: rgba(var(--accent-rgb),0.45); color: var(--accent); }
+
+/* "Check your pantry" collapsible footer (cream card to match the list). */
+.pantry-foot {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); overflow: hidden; margin-bottom: 14px;
+}
+.pantry-foot-head {
+  appearance: none; cursor: pointer; font-family: var(--sans);
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 14px 16px; background: transparent; border: 0; text-align: left;
+  font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: var(--ink);
+}
+.pantry-foot-title { flex: 0 1 auto; }
+.pantry-foot-count {
+  font-size: 11px; font-weight: 700; color: var(--ink-dim);
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 999px; min-width: 20px; text-align: center; padding: 1px 7px;
+}
+.pantry-foot-chev { margin-left: auto; font-size: 13px; color: var(--ink-dim); }
+.pantry-foot-list { padding: 0 16px 8px; }
+.pantry-foot-list .grocery-row { opacity: 0.85; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE 3 — Accessibility & mobile-use pass
+   Kitchen-grade touch: no tap delay, keyboard focus rings, and a ≥44px
+   touch floor on the compact icon buttons (visual size unchanged — the
+   floor is an invisible centered pseudo-element, so layout is untouched).
+   prefers-reduced-motion and safe-area insets are already honored above.
+   ═══════════════════════════════════════════════════════════════════ */
+button, a, input, select, textarea, [role="button"], .check-row {
+  touch-action: manipulation;            /* remove the 300ms double-tap delay */
+}
+/* Visible focus ring for keyboard users (tap-highlight stays suppressed). */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Invisible 44×44 minimum hit area, centered on each compact control. Only
+   on standalone icon buttons — never on adjacent pairs (e.g. the 2/4 serving
+   toggle), where overlapping floors would steal each other's edge taps. */
+.serving-step, .cook-font-btn, .plan-remove, .rf-row-remove,
+.cook-entry-del, .grocery-staple {
+  position: relative;
+}
+/* The card heart is already position:absolute; the header pill (.r-fav) is
+   static and already a comfortable 38px pill, so it's excluded. */
+.serving-step::before, .cook-font-btn::before, .plan-remove::before,
+.rf-row-remove::before, .cook-entry-del::before, .grocery-staple::before,
+.fav-toggle:not(.r-fav)::before {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; height: 100%; min-width: 44px; min-height: 44px;
+}
+/* Adjacent segmented toggle: grow the target vertically only (no overlap). */
+.plan-serv-opt { display: inline-flex; align-items: center; min-height: 32px; padding: 6px 12px; }

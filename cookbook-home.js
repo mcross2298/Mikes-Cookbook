@@ -169,6 +169,26 @@
     return t == null ? null : Math.floor((Date.now() - t) / 86400000);
   }
 
+  /* ── Pantry staples (items you always have → off the buy list) ─────────
+     mc-cookbook:pantry → array of normalized item names. Keyed by item name
+     (not category) so "salt" is a staple everywhere. Part of the mc-cookbook:
+     namespace, so it rides along in Home's backup export/import. */
+  var PANTRY_KEY = "mc-cookbook:pantry";
+  function loadPantry() {
+    try { return new Set(JSON.parse(localStorage.getItem(PANTRY_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function savePantry(set) {
+    try { localStorage.setItem(PANTRY_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+  }
+  function pantryKey(item) { return (item || "").trim().toLowerCase(); }
+  function togglePantry(item) {
+    var set = loadPantry(), k = pantryKey(item);
+    if (set.has(k)) set.delete(k); else set.add(k);
+    savePantry(set);
+    return set.has(k);
+  }
+
   /* ── Quantity math (parse → sum → pretty) for the merged grocery list ─ */
   // Parses integers, decimals, and simple/mixed fractions ("1", "0.75",
   // "1/2", "1 1/2"). Non-numeric amounts ("to taste") return null and are
@@ -312,7 +332,10 @@
     });
   }
   function groceryItemCount() {
-    return buildGrocery().reduce(function (n, c) { return n + c.rows.length; }, 0);
+    var pantry = loadPantry();   // count only what you'd actually buy
+    return buildGrocery().reduce(function (n, c) {
+      return n + c.rows.filter(function (row) { return !pantry.has(pantryKey(row.item)); }).length;
+    }, 0);
   }
 
   /* ── Dish-type categories ─────────────────────────────────────────── */
@@ -876,7 +899,7 @@
   // Three sub-views (Plan / Grocery / Recipes). The Plan view itself toggles
   // between a flat List (default) and a 7-day × Breakfast/Lunch/Dinner
   // Schedule. The same meal set feeds all three views.
-  var plannerState = { view: "plan", planView: "list" };
+  var plannerState = { view: "plan", planView: "list", pantryOpen: false };
   function refresh() { renderPlanner(); }
 
   // Segmented control reusing the recipe page's .servings / .serving-opt look.
@@ -1072,9 +1095,11 @@
     }
   }
 
-  function groceryRow(row, checked) {
+  function groceryRow(row, checked, opts) {
+    opts = opts || {};
     var isDone = checked.has(row.key);
-    var el2 = el("div", "check-row grocery-row" + (isDone ? " done" : ""));
+    var el2 = el("div", "check-row grocery-row" + (isDone ? " done" : "") +
+      (opts.pantry ? " is-staple" : ""));
     el2.innerHTML =
       '<span class="check-box">' + CHECK_SVG + "</span>" +
       '<span class="grocery-qty">' + (row.qty ? esc(row.qty) : "") + "</span>" +
@@ -1085,7 +1110,42 @@
       else { set.add(row.key); el2.classList.add("done"); }
       saveGroc(set);
     });
+    // Staple toggle: lift an "always have" item off the buy list (or send a
+    // staple back to it). Stops propagation so it never toggles the check-off.
+    var pin = el("button", "grocery-staple" + (opts.pantry ? " on" : ""),
+      opts.pantry ? "↩" : "🧂");
+    pin.type = "button";
+    pin.setAttribute("aria-label", opts.pantry
+      ? "Move " + row.item + " back to the shopping list"
+      : "Mark " + row.item + " as a pantry staple");
+    pin.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      togglePantry(row.item);
+      refresh();
+    });
+    el2.appendChild(pin);
     return el2;
+  }
+
+  function pantryFooter(staples, checked) {
+    var wrap = el("div", "pantry-foot" + (plannerState.pantryOpen ? " open" : ""));
+    var head = el("button", "pantry-foot-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", plannerState.pantryOpen ? "true" : "false");
+    head.innerHTML =
+      '<span class="pantry-foot-title">🧂 Check your pantry</span>' +
+      '<span class="pantry-foot-count">' + staples.length + "</span>" +
+      '<span class="pantry-foot-chev">' + (plannerState.pantryOpen ? "▾" : "▸") + "</span>";
+    head.addEventListener("click", function () {
+      plannerState.pantryOpen = !plannerState.pantryOpen; refresh();
+    });
+    wrap.appendChild(head);
+    if (plannerState.pantryOpen) {
+      var list = el("div", "pantry-foot-list");
+      staples.forEach(function (row) { list.appendChild(groceryRow(row, checked, { pantry: true })); });
+      wrap.appendChild(list);
+    }
+    return wrap;
   }
 
   function renderGroceryPane(body) {
@@ -1097,14 +1157,30 @@
     }
     var cats = buildGrocery();
     var checked = loadGroc();
-    var total = cats.reduce(function (n, c) { return n + c.rows.length; }, 0);
+    var pantry = loadPantry();
+
+    // Split each category's rows into the active buy list vs. pantry staples.
+    var buyCats = [], staples = [];
+    cats.forEach(function (c) {
+      var buy = [];
+      c.rows.forEach(function (row) {
+        if (pantry.has(pantryKey(row.item))) staples.push(row);
+        else buy.push(row);
+      });
+      if (buy.length) buyCats.push({ category: c.category, rows: buy });
+    });
+    var total = buyCats.reduce(function (n, c) { return n + c.rows.length; }, 0);
 
     var card = el("div", "card grocery-card");
     card.appendChild(el("p", "card-label",
       "Shopping list · " + total + (total === 1 ? " item" : " items") +
       " · " + meals.length + (meals.length === 1 ? " meal" : " meals")));
 
-    cats.forEach(function (c) {
+    if (!total) {
+      card.appendChild(emptyState("🧂",
+        "Everything you need is a pantry staple.<br>Check your pantry below."));
+    }
+    buyCats.forEach(function (c) {
       var sec = el("div", "grocery-cat");
       sec.appendChild(el("div", "grocery-cat-head",
         '<span class="dot"></span>' + esc(c.category) +
@@ -1113,8 +1189,12 @@
       card.appendChild(sec);
     });
     body.appendChild(card);
+
+    if (staples.length) body.appendChild(pantryFooter(staples, checked));
+
     body.appendChild(el("p", "macro-foot",
-      "Quantities combine identical items across your planned meals."));
+      "Quantities combine identical items across your planned meals. " +
+      "Tap 🧂 to set aside a staple you always have."));
   }
 
   function renderRecipesPane(body) {
