@@ -3396,8 +3396,10 @@ const COLLECTIONS = [
    --------------------------------------------------------------------------
    This is DIFFERENT from a user's personal ❤ favorites (which live per-device
    in localStorage under mc-cookbook:favorites). This list is the canonical set
-   of recipes Mike has actually made and loved — it is the SAME for every
-   visitor because it ships in the repo and deploys via GitHub Pages.
+   of recipes Mike has loved — drawn from ACROSS the whole cookbook (any
+   collection or diet: Two Meals a Day, Kelli's, Carnivore, his own additions),
+   not just recipes he authored. It is the SAME for every visitor because it
+   ships in the repo and deploys via GitHub Pages.
 
    It drives:
      • the "Mike's Favorites" Home module + its dedicated screen, and

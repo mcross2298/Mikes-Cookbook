@@ -1117,8 +1117,8 @@
       function () { setTab("home"); }));
 
     s.appendChild(el("p", "mikes-intro",
-      "Recipes Mike has actually made and loved — a starting point for what works " +
-      "by diet and taste."));
+      "Mike's favorites from across the whole cookbook — every collection and diet. " +
+      "The recipes that actually worked, as a starting point for yours."));
 
     if (isOwner()) s.appendChild(ownerToolbar());
 
