@@ -109,6 +109,16 @@
     });
     card.appendChild(heart);
 
+    // "Mike's pick" star — the curated, shipped list (window.MIKES_FAVORITES)
+    // reads here too, so a visitor sees Mike's picks while browsing a collection.
+    if ((window.MIKES_FAVORITES || []).indexOf(r.recipe_id) >= 0) {
+      card.classList.add("mikes-pick");
+      var mb = el("span", "mikes-badge", "★");
+      mb.setAttribute("aria-label", "Mike's pick");
+      mb.title = "Mike's pick";
+      card.appendChild(mb);
+    }
+
     // User-authored recipes get a delete control so the personal library is
     // manageable. Removal updates the shared store + the live list.
     if (r.user && window.MCUser) {

@@ -3391,8 +3391,44 @@ const COLLECTIONS = [
   }
 ];
 
+/* ==========================================================================
+   MIKES_FAVORITES  —  Mike's curated, shipped-to-everyone favorites
+   --------------------------------------------------------------------------
+   This is DIFFERENT from a user's personal ❤ favorites (which live per-device
+   in localStorage under mc-cookbook:favorites). This list is the canonical set
+   of recipes Mike has loved — drawn from ACROSS the whole cookbook (any
+   collection or diet: Two Meals a Day, Kelli's, Carnivore, his own additions),
+   not just recipes he authored. It is the SAME for every visitor because it
+   ships in the repo and deploys via GitHub Pages.
+
+   It drives:
+     • the "Mike's Favorites" Home module + its dedicated screen, and
+     • a small "Mike's pick" star badge on those recipes' cards everywhere.
+
+   Editing the published list:
+     Mike can build it in-app with owner mode (unlock via ?owner=1 or tap the
+     "Mike's" title 5×, then double-tap recipe cards). That edits a LOCAL draft;
+     to publish it to all visitors, use the "Copy list" button on the Mike's
+     Favorites screen and paste the array below — or just hand it to the AI to
+     commit. Order here is the display order. Use exact recipe_id slugs.
+   ========================================================================== */
+const MIKES_FAVORITES = [
+  "jalapeno-chicken-bake",
+  "meat-lovers-pizza-skillet",
+  "asian-turkey-meatballs-spaghetti-squash",
+  "cilantro-lime-flank-steak-green-beans",
+  "chicken-divan",
+  "spring-vegetable-chicken-carbonara-skillet",
+  "spiced-fish-taco-bowl-avocado-lime-crema",
+  "dill-pickle-super-burgers",
+  "beef-taco-casserole",
+  "sisson-bigass-salad",
+  "hearty-farmers-market-breakfast-casserole"
+];
+
 /* Expose for both classic <script> include and any future module bundling. */
 if (typeof window !== "undefined") {
   window.RECIPES = RECIPES;
   window.COLLECTIONS = COLLECTIONS;
+  window.MIKES_FAVORITES = MIKES_FAVORITES;
 }
