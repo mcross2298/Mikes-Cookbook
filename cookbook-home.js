@@ -80,6 +80,98 @@
     return recipes().filter(function (r) { return r.recipe_id === id; })[0] || null;
   }
 
+  /* ── Mike's Favorites (curated, shipped to EVERYONE) ──────────────────
+     Distinct from personal ❤ favorites (per-device, mc-cookbook:favorites).
+     The published list ships in recipes-data.js (window.MIKES_FAVORITES) and
+     is identical for every visitor. Owner mode lets Mike edit a LOCAL DRAFT
+     that overlays the published list on his own device; "Copy list" emits the
+     array to paste back into the data file — that commit is the publish step. */
+  var MIKE_DRAFT_KEY = "mc-cookbook:mikesFavorites:draft";
+  function publishedMikes() { return (window.MIKES_FAVORITES || []).slice(); }
+  function loadMikeDraft() {
+    try {
+      var raw = localStorage.getItem(MIKE_DRAFT_KEY);
+      if (raw == null) return null;            // no draft → display the published list
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : null;
+    } catch (e) { return null; }
+  }
+  function saveMikeDraft(list) {
+    try { localStorage.setItem(MIKE_DRAFT_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  function clearMikeDraft() { try { localStorage.removeItem(MIKE_DRAFT_KEY); } catch (e) {} }
+  // The list to DISPLAY: an owner's in-progress draft overlays the published one.
+  function mikesList() {
+    var d = loadMikeDraft();
+    return d != null ? d : publishedMikes();
+  }
+  function isMikeFav(id) { return mikesList().indexOf(id) >= 0; }
+  function toggleMikeFav(id) {
+    var list = mikesList().slice();
+    var i = list.indexOf(id);
+    if (i >= 0) list.splice(i, 1); else list.push(id);
+    saveMikeDraft(list);
+    return list.indexOf(id) >= 0;
+  }
+  // "Dirty" = the local draft differs from what currently ships in the repo.
+  function mikeDraftDirty() {
+    var d = loadMikeDraft();
+    if (d == null) return false;
+    var pub = publishedMikes();
+    if (d.length !== pub.length) return true;
+    for (var i = 0; i < d.length; i++) if (d[i] !== pub[i]) return true;
+    return false;
+  }
+  // The exact JS snippet Mike pastes into recipes-data.js to publish his list.
+  function mikeExportText() {
+    var lines = mikesList().map(function (id) { return '  "' + id + '"'; }).join(",\n");
+    return "const MIKES_FAVORITES = [\n" + lines + "\n];";
+  }
+
+  /* ── Owner mode (hidden) ──────────────────────────────────────────────
+     A public site can't truly authenticate Mike, so owner mode is a quiet,
+     device-local unlock: visit with ?owner=1 (or tap the "Mike's" title 5×).
+     It only enables the curation UI on THIS device; visitors never see it. */
+  var OWNER_KEY = "mc-cookbook:owner";
+  function isOwner() {
+    try { return localStorage.getItem(OWNER_KEY) === "1"; } catch (e) { return false; }
+  }
+  function setOwner(on) {
+    try {
+      if (on) localStorage.setItem(OWNER_KEY, "1");
+      else localStorage.removeItem(OWNER_KEY);
+    } catch (e) {}
+  }
+  // Honor ?owner=1 / ?owner=0 in the URL — a shareable bookmark for Mike.
+  function syncOwnerFromUrl() {
+    var m = location.search.match(/[?&]owner=([01])(?:&|$)/);
+    if (m) setOwner(m[1] === "1");
+  }
+  // Hidden unlock: 5 quick taps on the "Mike's" eyebrow toggles owner mode.
+  function wireOwnerUnlock(node) {
+    var taps = 0, timer = null;
+    node.addEventListener("click", function () {
+      taps++;
+      clearTimeout(timer);
+      timer = setTimeout(function () { taps = 0; }, 1200);
+      if (taps >= 5) {
+        taps = 0;
+        var on = !isOwner();
+        setOwner(on);
+        window.alert(on
+          ? "Owner mode on. Double-tap recipe cards to curate Mike's Favorites."
+          : "Owner mode off.");
+        setTab("home");
+      }
+    });
+  }
+  function mikesBadge() {
+    var b = el("span", "mikes-badge", "★");
+    b.setAttribute("aria-label", "Mike's pick");
+    b.title = "Mike's pick";
+    return b;
+  }
+
   /* ══ WEEKLY MEAL PLANNER — data layer ═══════════════════════════════ */
   // The plan is a flat list of meal instances. Each instance is a chosen
   // recipe at a serving tier, optionally tagged with a day + meal-type slot.
@@ -415,6 +507,41 @@
       pop(heart);
     });
     card.appendChild(heart);
+
+    // "Mike's pick" star — visible to EVERYONE on a curated recipe, so Mike's
+    // taste reads across the whole app, not just inside the Mike's screen.
+    if (isMikeFav(r.recipe_id)) {
+      card.classList.add("mikes-pick");
+      card.appendChild(mikesBadge());
+    }
+
+    // Owner-only curation: double-tap a card to add/remove it from Mike's
+    // Favorites. Single tap still opens the recipe — but because the card is a
+    // link, in owner mode we hold navigation ~280ms to see if a second tap
+    // (the curate gesture) lands first. Visitors never enter this branch.
+    if (isOwner()) {
+      card.classList.add("owner-curatable");
+      var tapTimer = null;
+      card.addEventListener("click", function (e) {
+        if (e.defaultPrevented) return;          // heart (stopPropagation) handled it
+        e.preventDefault();
+        if (tapTimer) {                          // second tap → curate
+          clearTimeout(tapTimer); tapTimer = null;
+          var on = toggleMikeFav(r.recipe_id);
+          if (activeScreen() === "mikes") { renderMikes(); return; }
+          card.classList.toggle("mikes-pick", on);
+          var b = card.querySelector(".mikes-badge");
+          if (on && !b) card.appendChild(mikesBadge());
+          else if (!on && b) card.removeChild(b);
+          pop(card);
+        } else {                                 // first tap → maybe a single tap
+          tapTimer = setTimeout(function () {
+            tapTimer = null;
+            window.location.href = card.href;    // confirmed single tap → navigate
+          }, 280);
+        }
+      });
+    }
     return card;
   }
 
@@ -642,6 +769,9 @@
       "Heirloom hand-me-downs & performance plates.");
     bar.appendChild(el("p", "home-premise",
       "Whole-food, low-carb cooking — built around a two-meals-a-day rhythm."));
+    // Hidden owner unlock lives on the "Mike's" eyebrow (5 quick taps).
+    var eyebrow = $(".shell-eyebrow", bar);
+    if (eyebrow) wireOwnerUnlock(eyebrow);
     s.appendChild(bar);
 
     // Safety-net nudge: stale backup + data worth protecting.
@@ -689,6 +819,16 @@
       icon: "📖", title: "Recipes", accent: "#D9A05B",
       sub: collections().length + " collections · " + recipes().length + " recipes",
       onTap: function () { setTab("recipes"); }
+    }));
+    // Mike's Favorites — the curated, shipped-to-everyone shortlist of recipes
+    // Mike has actually made and loved. Distinct from the personal ❤ below.
+    var mikeCount = mikesList().length;
+    browse.appendChild(homeModule({
+      icon: "⭐", title: "Mike's Favorites", accent: "#E0A458",
+      sub: mikeCount
+        ? mikeCount + (mikeCount === 1 ? " recipe Mike loves" : " recipes Mike loves")
+        : "Recipes Mike has made and loved",
+      onTap: function () { setTab("mikes"); }
     }));
     var favCount = loadFavs().size;
     browse.appendChild(homeModule({
@@ -892,6 +1032,105 @@
     }
     var grid = el("div", "col-grid");
     list.forEach(function (r) { grid.appendChild(recipeCard(r, { fav: true })); });
+    s.appendChild(grid);
+  }
+
+  /* ══ MIKE'S FAVORITES screen ════════════════════════════════════════
+     The curated, shipped-to-everyone shortlist. Read-only for visitors; in
+     owner mode it grows an owner toolbar (curation help + publish/discard). */
+  function ownerToolbar() {
+    var wrap = el("div", "owner-bar");
+
+    var head = el("div", "owner-bar-head");
+    head.appendChild(el("span", "owner-bar-tag", "🔑 Owner mode"));
+    var exit = el("button", "owner-bar-exit", "Exit");
+    exit.type = "button";
+    exit.setAttribute("aria-label", "Exit owner mode");
+    exit.addEventListener("click", function () { setOwner(false); setTab("mikes"); });
+    head.appendChild(exit);
+    wrap.appendChild(head);
+
+    wrap.appendChild(el("p", "owner-bar-help",
+      "Double-tap any recipe card to add or remove it. A single tap still opens the recipe."));
+
+    if (!mikeDraftDirty()) return wrap;
+
+    // Unpublished changes → offer Copy-list (publish) and Discard.
+    var pub = el("div", "owner-publish");
+    pub.appendChild(el("p", "owner-publish-msg",
+      "You have unpublished changes. Copy your list and commit it to recipes-data.js " +
+      "to publish it to everyone."));
+
+    var status = el("p", "owner-publish-status", "");
+    var ta = null;                              // lazily-shown copy-by-hand fallback
+    function showFallback(text) {
+      if (ta) { ta.focus(); ta.select(); return; }
+      ta = el("textarea", "owner-export-ta");
+      ta.readOnly = true; ta.rows = 6; ta.value = text;
+      pub.appendChild(ta);
+      ta.focus(); ta.select();
+    }
+
+    var copy = el("button", "owner-btn owner-copy", "⧉ Copy list");
+    copy.type = "button";
+    copy.addEventListener("click", function () {
+      var text = mikeExportText();
+      function ok() {
+        status.className = "owner-publish-status ok";
+        status.textContent = "Copied ✓ Paste it into recipes-data.js to publish.";
+      }
+      function fail() {
+        status.className = "owner-publish-status err";
+        status.textContent = "Couldn't copy automatically — select the text below:";
+        showFallback(text);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok, fail);
+      } else { fail(); }
+    });
+
+    var revert = el("button", "owner-btn owner-revert", "↩ Discard");
+    revert.type = "button";
+    revert.addEventListener("click", function () {
+      if (window.confirm("Discard your unpublished changes and revert to the published list?")) {
+        clearMikeDraft(); setTab("mikes");
+      }
+    });
+
+    var actions = el("div", "owner-publish-actions");
+    actions.appendChild(copy);
+    actions.appendChild(revert);
+    pub.appendChild(actions);
+    pub.appendChild(status);
+    wrap.appendChild(pub);
+    return wrap;
+  }
+
+  function renderMikes() {
+    var s = $("#screen-mikes");
+    s.innerHTML = "";
+
+    var list = mikesList().map(recipeById).filter(Boolean);
+
+    s.appendChild(backTopBar("‹ Home", "Mike's Favorites",
+      (list.length || "No") + (list.length === 1 ? " recipe Mike loves" : " recipes Mike loves"),
+      function () { setTab("home"); }));
+
+    s.appendChild(el("p", "mikes-intro",
+      "Recipes Mike has actually made and loved — a starting point for what works " +
+      "by diet and taste."));
+
+    if (isOwner()) s.appendChild(ownerToolbar());
+
+    if (!list.length) {
+      s.appendChild(emptyState("⭐",
+        isOwner()
+          ? "No favorites yet.<br>Double-tap any recipe card to add it to your list."
+          : "Mike hasn't picked any favorites yet.<br>Check back soon."));
+      return;
+    }
+    var grid = el("div", "col-grid");
+    list.forEach(function (r) { grid.appendChild(recipeCard(r, { mikes: true })); });
     s.appendChild(grid);
   }
 
@@ -1580,7 +1819,7 @@
   }
 
   /* ── Screen switching (hub-and-spoke; mirrored to location.hash) ──── */
-  var SCREENS = ["home", "planner", "categories", "recipes", "favorites"];
+  var SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes"];
   function setTab(name) {
     if (SCREENS.indexOf(name) < 0) name = "home";
     if (name === "categories") catState.open = null;  // re-entry → category grid
@@ -1596,6 +1835,7 @@
     if (name === "categories") renderCategories();
     if (name === "recipes") renderRecipes();
     if (name === "favorites") renderFavorites();
+    if (name === "mikes") renderMikes();
 
     history.replaceState(null, "", name === "home" ? location.pathname : "#" + name);
     window.scrollTo(0, 0);
@@ -1626,6 +1866,7 @@
 
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
+    syncOwnerFromUrl();
     wireFavSync();
     setTab((location.hash || "#home").slice(1));
   }
