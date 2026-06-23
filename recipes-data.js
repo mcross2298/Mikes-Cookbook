@@ -3414,9 +3414,16 @@ const COLLECTIONS = [
    ========================================================================== */
 const MIKES_FAVORITES = [
   "jalapeno-chicken-bake",
-  "broiled-salmon-asparagus",
-  "sesame-ginger-chicken-stir-fry",
-  "meat-lovers-pizza-skillet"
+  "meat-lovers-pizza-skillet",
+  "asian-turkey-meatballs-spaghetti-squash",
+  "cilantro-lime-flank-steak-green-beans",
+  "chicken-divan",
+  "spring-vegetable-chicken-carbonara-skillet",
+  "spiced-fish-taco-bowl-avocado-lime-crema",
+  "dill-pickle-super-burgers",
+  "beef-taco-casserole",
+  "sisson-bigass-salad",
+  "hearty-farmers-market-breakfast-casserole"
 ];
 
 /* Expose for both classic <script> include and any future module bundling. */
