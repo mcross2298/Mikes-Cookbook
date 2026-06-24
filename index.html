@@ -14,10 +14,7 @@
 </head>
 <body>
   <main class="app shell" data-tabbar="shell">
-    <!-- Home-hub shell: only the .active screen shows. There is no bottom tab
-         bar — Home is the hub and each spoke screen has a "‹ Home" anchor.
-         Spokes (This Week / Categories / Recipes / Favorites) are opened from
-         the Home modules in cookbook-home.js. -->
+    <!-- Screens: only .active is visible. cookbook-home.js drives setTab(). -->
     <section class="screen active" id="screen-home"></section>
     <section class="screen" id="screen-planner"></section>
     <section class="screen" id="screen-categories"></section>
@@ -25,6 +22,18 @@
     <section class="screen" id="screen-favorites"></section>
     <section class="screen" id="screen-mikes"></section>
     <section class="screen" id="screen-tracker"></section>
+
+    <!-- Persistent 2-tab bar: Cookbook ↔ Tracker -->
+    <nav class="tab-bar" id="app-tab-bar">
+      <button class="tab active" id="tab-cookbook" type="button">
+        <span class="tab-icon">📖</span>
+        Cookbook
+      </button>
+      <button class="tab" id="tab-tracker" type="button">
+        <span class="tab-icon">📊</span>
+        Tracker
+      </button>
+    </nav>
   </main>
 
   <script src="recipes-data.js"></script>
