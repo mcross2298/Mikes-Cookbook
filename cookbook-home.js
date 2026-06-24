@@ -805,11 +805,11 @@
     hero.appendChild(hc);
     s.appendChild(hero);
 
-    // Browse modules — the spokes. Each drills into a full-screen card view.
-    // Per-module accents keep the trio cohesive with the warm hero palette.
+    // Browse modules — two labeled sections keep the Home screen scannable.
     var browse = el("div", "home-browse");
-    browse.appendChild(el("div", "tier-label", "Browse"));
 
+    // — Explore section: browse the full recipe library —
+    browse.appendChild(el("div", "tier-label", "Explore"));
     browse.appendChild(homeModule({
       icon: "🍽️", title: "Categories", accent: "#C87A53",
       sub: presentCategories().length + " dish types",
@@ -820,24 +820,9 @@
       sub: collections().length + " collections · " + recipes().length + " recipes",
       onTap: function () { setTab("recipes"); }
     }));
-    // Macro Tracker — the standalone, in-cookbook day tracker (tracker.js).
-    browse.appendChild(homeModule({
-      icon: "📊", title: "Macro Tracker", accent: "#7D8C77",
-      sub: (function () {
-        try {
-          if (window.MCTrackerStore) {
-            var g = MCTrackerStore.getGoals();
-            var t = MCTrackerStore.totalsOf(MCTrackerStore.entriesFor(MCTrackerStore.todayKey()));
-            if (g) return t.kcal + " / " + g.kcal + " kcal today";
-            if (t.kcal) return t.kcal + " kcal logged today";
-          }
-        } catch (e) {}
-        return "Track calories & macros by the hour";
-      })(),
-      onTap: function () { setTab("tracker"); }
-    }));
-    // Mike's Favorites — the curated, shipped-to-everyone shortlist of recipes
-    // Mike has actually made and loved. Distinct from the personal ❤ below.
+
+    // — Your Library section: personal saves + custom recipes —
+    browse.appendChild(el("div", "tier-label", "Your Library"));
     var mikeCount = mikesList().length;
     browse.appendChild(homeModule({
       icon: "⭐", title: "Mike's Favorites", accent: "#E0A458",
@@ -853,9 +838,6 @@
                     : "Tap the heart on any recipe to save it",
       onTap: function () { setTab("favorites"); }
     }));
-    // Add Recipe — create your own (or add to your library). Saved recipes
-    // collect into the "My Recipes" card on the Recipes screen and behave like
-    // every built-in recipe (search, categories, planner, favorites).
     var userCount = (window.MCUser && window.MCUser.count()) || 0;
     browse.appendChild(homeModule({
       icon: "📝", title: "Add Recipe", accent: "#7D8C77",
@@ -864,8 +846,9 @@
         : "Create your own or add to your library",
       onTap: function () { openRecipeForm(); }
     }));
-    // Quick Tour — a 3-minute guided walkthrough of the whole cookbook
-    // (standalone page; also links through to the Executive Summary).
+
+    // — Help section —
+    browse.appendChild(el("div", "tier-label", "Help"));
     browse.appendChild(homeModule({
       icon: "🎬", title: "Quick Tour", accent: "#C87A53",
       sub: "3-min guided walkthrough of the app",
@@ -1879,6 +1862,8 @@
 
   /* ── Screen switching (hub-and-spoke; mirrored to location.hash) ──── */
   var SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes", "tracker"];
+  var COOKBOOK_SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes"];
+
   function setTab(name) {
     if (SCREENS.indexOf(name) < 0) name = "home";
     if (name === "categories") catState.open = null;  // re-entry → category grid
@@ -1896,6 +1881,13 @@
     if (name === "favorites") renderFavorites();
     if (name === "mikes") renderMikes();
     if (name === "tracker") renderTracker();
+
+    // Sync persistent tab bar
+    var tabCookbook = document.getElementById("tab-cookbook");
+    var tabTracker  = document.getElementById("tab-tracker");
+    var isTracker   = (name === "tracker");
+    if (tabCookbook) tabCookbook.classList.toggle("active", !isTracker);
+    if (tabTracker)  tabTracker.classList.toggle("active",  isTracker);
 
     history.replaceState(null, "", name === "home" ? location.pathname : "#" + name);
     window.scrollTo(0, 0);
@@ -1928,6 +1920,13 @@
   function init() {
     syncOwnerFromUrl();
     wireFavSync();
+
+    // Persistent tab bar: Cookbook tab → home; Tracker tab → tracker screen.
+    var tabCookbook = document.getElementById("tab-cookbook");
+    var tabTracker  = document.getElementById("tab-tracker");
+    if (tabCookbook) tabCookbook.addEventListener("click", function () { setTab("home"); });
+    if (tabTracker)  tabTracker.addEventListener("click",  function () { setTab("tracker"); });
+
     setTab((location.hash || "#home").slice(1));
   }
   if (document.readyState === "loading") {
