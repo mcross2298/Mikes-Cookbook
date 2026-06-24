@@ -864,6 +864,13 @@
         : "Create your own or add to your library",
       onTap: function () { openRecipeForm(); }
     }));
+    // Quick Tour — a 3-minute guided walkthrough of the whole cookbook
+    // (standalone page; also links through to the Executive Summary).
+    browse.appendChild(homeModule({
+      icon: "🎬", title: "Quick Tour", accent: "#C87A53",
+      sub: "3-min guided walkthrough of the app",
+      onTap: function () { location.href = "quick-tour.html"; }
+    }));
     s.appendChild(browse);
 
     s.appendChild(renderBackupSection());
