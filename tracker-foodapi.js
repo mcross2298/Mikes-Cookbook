@@ -22,7 +22,7 @@
   if (window.MCFoodAPI) return;
 
   var BASE = 'https://world.openfoodfacts.org';
-  var FIELDS = 'code,product_name,brands,nutriments,serving_size,nutrition_data_per';
+  var FIELDS = 'code,product_name,brands,nutriments,serving_size,serving_quantity,nutrition_data_per';
   var CACHE_KEY = 'mc_foodapi_cache_v1';
   var CACHE_MAX = 300;          // cap cached lookups
   var TIMEOUT_MS = 8000;
@@ -91,20 +91,38 @@
       brand: ((prod.brands || '').split(',')[0] || '').trim()
     };
 
+    // micronutrients + serving weight (grams), per the chosen basis, so the
+    // Nutrition Facts sheet can show fiber/sugar/cholesterol/sodium and convert
+    // between servings / grams / oz. Undefined when the product omits them.
+    function micros(sfx) {
+      var sodium = n['sodium' + sfx];
+      if (sodium == null && n['salt' + sfx] != null) sodium = num(n['salt' + sfx]) / 2.5;
+      return {
+        fiber: n['fiber' + sfx] != null ? +num(n['fiber' + sfx]).toFixed(1) : undefined,
+        sugar: n['sugars' + sfx] != null ? +num(n['sugars' + sfx]).toFixed(1) : undefined,
+        chol: n['cholesterol' + sfx] != null ? Math.round(num(n['cholesterol' + sfx]) * 1000) : undefined,
+        sodium: sodium != null ? Math.round(num(sodium) * 1000) : undefined
+      };
+    }
+
     if (hasServing) {
       item.basis = 'serving';
       item.servingLabel = String(prod.serving_size);
+      item.grams = prod.serving_quantity != null ? num(prod.serving_quantity) : undefined;
       item.kcal = Math.round(num(n['energy-kcal_serving']));
       item.p = Math.round(num(n.proteins_serving));
       item.f = Math.round(num(n.fat_serving));
       item.c = Math.round(num(n.carbohydrates_serving));
+      item.nutr = micros('_serving');
     } else {
       item.basis = '100g';
       item.servingLabel = '100 g';
+      item.grams = 100;
       item.kcal = Math.round(num(n['energy-kcal_100g']));
       item.p = Math.round(num(n.proteins_100g));
       item.f = Math.round(num(n.fat_100g));
       item.c = Math.round(num(n.carbohydrates_100g));
+      item.nutr = micros('_100g');
     }
     // a product with no usable energy value is useless for logging
     if (!item.kcal && !item.p && !item.f && !item.c) return null;
