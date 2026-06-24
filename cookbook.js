@@ -655,10 +655,11 @@
   function groceryRow(r, ing, idx, done) {
     var isDone = done.has(idx);
     var row = el("div", "check-row grocery-row" + (isDone ? " done" : ""));
-    var qty = [ing.quantity, ing.unit].filter(Boolean).join(" ");
+    // Phase 3 (§3.1): the grocery tab is a pure shopping list — you buy standard
+    // package sizes, not "8 oz of bacon". Exact quantities live in the Recipe
+    // tab's mise en place; here we show only the item to buy.
     row.innerHTML =
       '<span class="check-box">' + CHECK_SVG + "</span>" +
-      '<span class="grocery-qty">' + (qty ? esc(qty) : "") + "</span>" +
       '<span class="check-text">' + esc(ing.item) + "</span>";
     row.addEventListener("click", function () {
       var set = loadSet(r.recipe_id, state.serving, "grocery");

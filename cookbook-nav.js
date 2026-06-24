@@ -28,11 +28,31 @@
     return a;
   }
 
+  // Render (once) a fixed Back button — bottom-left mirror of the Home button.
+  // Goes back in history when there's somewhere to go, else falls back to Home
+  // so a directly-opened deep link still has a working exit.
+  function renderBackLink() {
+    var mount = document.querySelector("main.app");
+    if (!mount || mount.querySelector(".back-fab")) return null;
+    var b = document.createElement("button");
+    b.className = "back-fab";
+    b.type = "button";
+    b.setAttribute("aria-label", "Back");
+    b.innerHTML = '<span class="back-fab-icon">‹</span>Back';
+    b.addEventListener("click", function () {
+      if (history.length > 1 && document.referrer) history.back();
+      else window.location.href = "index.html";
+    });
+    mount.appendChild(b);
+    return b;
+  }
+
   // Deep pages opt in via data-tabbar; the shell ("shell") renders nothing.
   function autoInit() {
     var mount = document.querySelector("main.app[data-tabbar]");
     if (!mount || mount.getAttribute("data-tabbar") === "shell") return;
     renderHomeLink();
+    renderBackLink();
   }
 
   if (document.readyState === "loading") {
@@ -41,5 +61,5 @@
     autoInit();
   }
 
-  window.MCNav = { renderHomeLink: renderHomeLink };
+  window.MCNav = { renderHomeLink: renderHomeLink, renderBackLink: renderBackLink };
 })();

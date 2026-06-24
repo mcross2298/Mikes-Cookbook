@@ -918,6 +918,23 @@ body {
 }
 .home-fab:active { transform: scale(0.95); }
 .home-fab-icon { font-size: 16px; line-height: 1; }
+/* Phase 3 (§3.1): a Back affordance on deep pages, mirrored bottom-left so the
+   user is always one tap from where they came AND one tap from Home. */
+.back-fab {
+  position: fixed; left: 16px; z-index: 50;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 16px; border-radius: 999px; cursor: pointer;
+  background: rgba(30,32,34,0.96); color: var(--on-dark);
+  border: 1px solid var(--line-dark); font-family: inherit;
+  font-size: 13px; font-weight: 800; letter-spacing: 0.03em;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.40);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.back-fab:active { transform: scale(0.95); }
+.back-fab-icon { font-size: 16px; line-height: 1; }
+body.cooking .back-fab { display: none; }
 
 /* ═══════════════════════════════════════════════════════════════════
    FAVORITES screen + ❤️ toggle

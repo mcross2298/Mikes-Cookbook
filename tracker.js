@@ -69,9 +69,11 @@
     var actions = el("div", "ckt-toolbar-actions");
     var today = el("button", "ckt-ico", "◎"); today.title = "Jump to today";
     today.onclick = function () { selKey = S.todayKey(); render(); };
+    var fav = el("button", "ckt-ico", "★"); fav.title = "Favorite foods";
+    fav.onclick = function () { addSlotMs = defaultSlot(); openFavorites(); };
     var gear = el("button", "ckt-ico", "⚙"); gear.title = "Goals";
     gear.onclick = openCalculator;
-    actions.appendChild(today); actions.appendChild(gear);
+    actions.appendChild(today); actions.appendChild(fav); actions.appendChild(gear);
     bar.appendChild(actions);
     return bar;
   }
@@ -174,7 +176,7 @@
             '<b style="color:' + COL.kcal + '">🔥' + Math.round(num(per.kcal) * q) + "</b>  " +
             "P " + Math.round(num(per.p) * q) + "  F " + Math.round(num(per.f) * q) + "  C " + Math.round(num(per.c) * q) +
           "</div>";
-        (function (id) { card.onclick = function () { openEdit(id); }; })(e.id);
+        (function (entry) { card.onclick = function () { openFacts(foodFromEntry(entry), { entryId: entry.id, qty: num(entry.qty, 1) }); }; })(e);
         body.appendChild(card);
       });
       row.appendChild(body);
@@ -389,10 +391,7 @@
               '<div class="ckt-result-sub">' + (it.brand ? esc(it.brand) + " · " : "") + "per " + esc(it.servingLabel) + "</div>" +
             "</div>" +
             '<div class="ckt-result-kcal">' + it.kcal + "<span>kcal</span></div>";
-          row.onclick = function () {
-            S.addEntry({ name: it.name + (it.brand ? " (" + it.brand + ")" : ""), source: "search", unit: it.basis, qty: 1, per: { kcal: it.kcal, p: it.p, f: it.f, c: it.c } }, addSlotMs);
-            addSlotMs = null; s.close(); render();
-          };
+          row.onclick = function () { s.close(); openFacts(foodFromItem(it), {}); };
           results.appendChild(row);
         });
       });
@@ -410,7 +409,7 @@
       MCFoodAPI.lookup(code).then(function (it) {
         s.close();
         if (it) {
-          openManual({ source: "barcode", name: it.name + (it.brand ? " (" + it.brand + ")" : ""), kcal: it.kcal, p: it.p, f: it.f, c: it.c, note: "Found via barcode · per " + it.servingLabel + " — adjust if needed." });
+          openFacts(foodFromItem({ name: it.name, brand: it.brand, basis: it.basis, servingLabel: it.servingLabel, grams: it.grams, kcal: it.kcal, p: it.p, f: it.f, c: it.c, nutr: it.nutr, source: "barcode", code: it.code }), {});
         } else {
           openManual({ source: "barcode", note: "No match for barcode " + code + ". Enter its macros manually." });
         }
@@ -463,6 +462,218 @@
     var del = el("button", "ckt-btn ckt-btn-danger", "Remove from log");
     del.onclick = function () { S.removeEntry(selKey, id); s.close(); render(); };
     s.sh.appendChild(save); s.sh.appendChild(del);
+  }
+
+  // ====================================================================== //
+  //  NUTRITION FACTS SHEET  (Phase 3 — UOM toggle · keypad · micronutrients) //
+  // ====================================================================== //
+  var OZ_G = 28.3495;
+  function foodFromItem(it) {
+    return {
+      name: it.name + (it.brand ? " (" + it.brand + ")" : ""), brand: it.brand || "",
+      basis: it.basis || "serving", servingLabel: it.servingLabel || "serving",
+      grams: (it.grams && it.grams > 0) ? it.grams : null,
+      per: { kcal: it.kcal, p: it.p, f: it.f, c: it.c }, nutr: it.nutr || {},
+      source: it.source || "search", code: it.code || ""
+    };
+  }
+  function foodFromEntry(e) {
+    return {
+      name: e.name, brand: "", basis: e.unit || "serving",
+      servingLabel: e.unit === "100g" ? "100 g" : "serving",
+      grams: (e.grams && e.grams > 0) ? e.grams : null,
+      per: e.per || {}, nutr: e.nutr || {}, source: e.source || "manual", code: e.code || ""
+    };
+  }
+  function baseGramsOf(food) {
+    if (food.basis === "100g") return 100;
+    return (food.grams && food.grams > 0) ? food.grams : null;
+  }
+  function fmt(n, dp) { var v = num(n, 0); return dp ? (+v.toFixed(dp)) : Math.round(v); }
+
+  // ---- favorites (lives inside the tracker store) --------------------------
+  function favKey(food) { return food.code ? ("c:" + food.code) : ("n:" + String(food.name).toLowerCase()); }
+  function getFavs() { var d = S.read(); return d.favorites || []; }
+  function isFav(food) { var k = favKey(food); return getFavs().some(function (f) { return favKey(f) === k; }); }
+  function toggleFav(food) {
+    var d = S.read(); d.favorites = d.favorites || [];
+    var k = favKey(food), i = -1;
+    d.favorites.forEach(function (f, idx) { if (favKey(f) === k) i = idx; });
+    if (i >= 0) { d.favorites.splice(i, 1); }
+    else {
+      d.favorites.unshift({
+        name: food.name, brand: food.brand, basis: food.basis, servingLabel: food.servingLabel,
+        grams: food.grams, per: food.per, nutr: food.nutr, code: food.code,
+        source: food.source || "fav", kind: food.kind || "food"
+      });
+    }
+    S.write(d); return i < 0;
+  }
+
+  function openFacts(food, opts) {
+    opts = opts || {};
+    var editId = opts.entryId || null;
+    var baseG = baseGramsOf(food);
+    var unit = (opts.unit === "g" || opts.unit === "oz") && baseG ? opts.unit : "base";
+    var qty = (opts.qty != null) ? String(opts.qty) : "1";
+    var goals = S.getGoals();
+
+    var s = sheet(food.name, (food.brand ? esc(food.brand) + " · " : "") + "Nutrition facts");
+    var body = el("div", "ckt-facts");
+    s.sh.appendChild(body);
+
+    function multBase() {
+      var q = num(qty, 0);
+      if (unit === "base" || !baseG) return q;
+      var grams = unit === "oz" ? q * OZ_G : q;
+      return grams / baseG;
+    }
+    function pct(have, goal) { return goal ? Math.min(999, Math.round((have / goal) * 100)) : null; }
+    function ringTile(lbl, val, suf, color, p) {
+      return '<div class="ckt-ring" style="--rc:' + color + '">' +
+        '<div class="ckt-ring-dot"></div>' +
+        '<div class="ckt-ring-val">' + val + "<span>" + suf + "</span></div>" +
+        '<div class="ckt-ring-lbl">' + lbl + "</div>" +
+        '<div class="ckt-ring-pct">' + (p == null ? "" : p + "%") + "</div></div>";
+    }
+    function nutrRow(lbl, val, suf) {
+      var has = val !== "" && val != null;
+      return '<div class="ckt-nrow"><span>' + lbl + "</span><b>" + (has ? val + " " + suf : "—") + "</b></div>";
+    }
+    function keypadHtml() {
+      var keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "⌫"];
+      return '<div class="ckt-keypad" id="cktPad">' + keys.map(function (k) {
+        return '<button data-k="' + k + '">' + k + "</button>";
+      }).join("") + "</div>";
+    }
+    function refresh() {
+      var m = multBase(), per = food.per || {}, nu = food.nutr || {};
+      var kcal = fmt(per.kcal * m), p = fmt(per.p * m), f = fmt(per.f * m), c = fmt(per.c * m);
+      var fav = isFav(food);
+      body.innerHTML =
+        '<div class="ckt-rings">' +
+          ringTile("Cal", kcal, "", COL.kcal, pct(kcal, goals && goals.kcal)) +
+          ringTile("Protein", p, "g", COL.p, pct(p, goals && goals.p)) +
+          ringTile("Fat", f, "g", COL.f, pct(f, goals && goals.f)) +
+          ringTile("Carbs", c, "g", COL.c, pct(c, goals && goals.c)) +
+        "</div>" +
+        '<div class="ckt-nutrients"><div class="ckt-nutrients-h">Nutrients</div>' +
+          nutrRow("Fiber", nu.fiber != null ? fmt(nu.fiber * m, 1) : "", "g") +
+          nutrRow("Sugars", nu.sugar != null ? fmt(nu.sugar * m, 1) : "", "g") +
+          nutrRow("Cholesterol", nu.chol != null ? fmt(nu.chol * m) : "", "mg") +
+          nutrRow("Sodium", nu.sodium != null ? fmt(nu.sodium * m) : "", "mg") +
+        "</div>" +
+        '<div class="ckt-uomrow"><div class="ckt-uom" id="cktUom">' +
+            '<button data-u="base"' + (unit === "base" ? ' class="on"' : "") + ">" + esc(food.servingLabel || "serving") + "</button>" +
+            (baseG ? '<button data-u="g"' + (unit === "g" ? ' class="on"' : "") + ">grams</button>" +
+                     '<button data-u="oz"' + (unit === "oz" ? ' class="on"' : "") + ">oz</button>" : "") +
+          "</div>" +
+          '<div class="ckt-qty"><span id="cktQty">' + esc(qty) + "</span><small>" + (unit === "base" ? "×" : unit) + "</small></div>" +
+        "</div>" +
+        keypadHtml() +
+        '<div class="ckt-facts-btns">' +
+          '<button class="ckt-fav' + (fav ? " on" : "") + '" id="cktFav">' + (fav ? "★" : "☆") + "</button>" +
+          '<button class="ckt-btn ckt-btn-accent" id="cktLog">' + (editId ? "Update" : "Log Food") + "</button>" +
+        "</div>" +
+        (editId ? '<button class="ckt-btn ckt-btn-danger" id="cktDel">Remove from log</button>' : "");
+      wire();
+    }
+    function refreshNumbers() {
+      var m = multBase(), per = food.per || {}, nu = food.nutr || {};
+      var rings = s.sh.querySelectorAll(".ckt-ring-val");
+      if (rings.length === 4) {
+        rings[0].innerHTML = fmt(per.kcal * m) + "<span></span>";
+        rings[1].innerHTML = fmt(per.p * m) + "<span>g</span>";
+        rings[2].innerHTML = fmt(per.f * m) + "<span>g</span>";
+        rings[3].innerHTML = fmt(per.c * m) + "<span>g</span>";
+      }
+      var goalsArr = [goals && goals.kcal, goals && goals.p, goals && goals.f, goals && goals.c];
+      var vals = [fmt(per.kcal * m), fmt(per.p * m), fmt(per.f * m), fmt(per.c * m)];
+      var pcts = s.sh.querySelectorAll(".ckt-ring-pct");
+      pcts.forEach(function (e, i) { var pc = pct(vals[i], goalsArr[i]); e.textContent = pc == null ? "" : pc + "%"; });
+      var nrows = s.sh.querySelectorAll(".ckt-nrow b");
+      if (nrows.length === 4) {
+        nrows[0].textContent = nu.fiber != null ? fmt(nu.fiber * m, 1) + " g" : "—";
+        nrows[1].textContent = nu.sugar != null ? fmt(nu.sugar * m, 1) + " g" : "—";
+        nrows[2].textContent = nu.chol != null ? fmt(nu.chol * m) + " mg" : "—";
+        nrows[3].textContent = nu.sodium != null ? fmt(nu.sodium * m) + " mg" : "—";
+      }
+    }
+    function press(k) {
+      if (k === "⌫") { qty = qty.length > 1 ? qty.slice(0, -1) : "0"; }
+      else if (k === ".") { if (qty.indexOf(".") < 0) qty += "."; }
+      else { qty = (qty === "0") ? k : (qty.length < 6 ? qty + k : qty); }
+      $("#cktQty", s.sh).textContent = qty;
+      refreshNumbers();
+    }
+    function setUnit(u) {
+      if (u === unit) return;
+      var curMult = multBase();
+      if (u === "base") { qty = String(+curMult.toFixed(2)); }
+      else { var grams = curMult * baseG; qty = String(u === "oz" ? +(grams / OZ_G).toFixed(1) : Math.round(grams)); }
+      unit = u; refresh();
+    }
+    function wire() {
+      $("#cktPad", s.sh).onclick = function (e) { var b = e.target.closest("[data-k]"); if (b) press(b.dataset.k); };
+      $("#cktUom", s.sh).onclick = function (e) { var b = e.target.closest("[data-u]"); if (b) setUnit(b.dataset.u); };
+      $("#cktFav", s.sh).onclick = function () { toggleFav(food); var on = isFav(food); this.textContent = on ? "★" : "☆"; this.classList.toggle("on", on); };
+      $("#cktLog", s.sh).onclick = function () {
+        var m = multBase(); if (!(m > 0)) return;
+        if (editId) { S.updateQty(selKey, editId, m); }
+        else { S.addEntry({ name: food.name, source: food.source || "manual", unit: food.basis, qty: m, per: food.per, nutr: food.nutr, grams: food.grams, code: food.code }, addSlotMs); addSlotMs = null; }
+        s.close(); render();
+      };
+      if (editId) $("#cktDel", s.sh).onclick = function () { S.removeEntry(selKey, editId); s.close(); render(); };
+    }
+    refresh();
+  }
+
+  // ====================================================================== //
+  //  FAVORITES LIBRARY  (Phase 3)                                            //
+  // ====================================================================== //
+  function openFavorites() {
+    addSlotMs = addSlotMs || defaultSlot();
+    var s = sheet("Favorite Foods", "Quick-log the foods you eat most.");
+    var tab = "food", pending = [];
+    var wrap = el("div", "ckt-fav-wrap"); s.sh.appendChild(wrap);
+    var bar = el("div", "ckt-fav-bar"); s.sh.appendChild(bar);
+    function favsOf(kind) { return getFavs().filter(function (f) { return (f.kind || "food") === kind; }); }
+    function paintBar() {
+      bar.innerHTML =
+        '<div class="ckt-fav-count">' + pending.length + " item" + (pending.length === 1 ? "" : "s") + " added</div>" +
+        '<button class="ckt-btn ckt-btn-accent ckt-fav-log"' + (pending.length ? "" : " disabled") + ">Log Food</button>";
+      var lg = bar.querySelector(".ckt-fav-log");
+      if (lg) lg.onclick = function () {
+        pending.forEach(function (f) { S.addEntry({ name: f.name, source: "favorite", unit: f.basis, qty: 1, per: f.per, nutr: f.nutr, grams: f.grams, code: f.code }, addSlotMs); });
+        addSlotMs = null; s.close(); render();
+      };
+    }
+    function paint() {
+      var favs = favsOf(tab);
+      wrap.innerHTML =
+        '<div class="ckt-seg ckt-fav-tabs">' +
+          '<button data-t="food"' + (tab === "food" ? ' class="on"' : "") + ">🍽 Foods</button>" +
+          '<button data-t="meal"' + (tab === "meal" ? ' class="on"' : "") + ">🥗 Meals</button>" +
+        "</div>" +
+        (favs.length ? '<div class="ckt-fav-list">' + favs.map(function (f, i) {
+          var per = f.per || {};
+          return '<div class="ckt-fav-row" data-i="' + i + '"><div class="ckt-fav-main">' +
+            '<div class="ckt-fav-name">' + esc(f.name) + "</div>" +
+            '<div class="ckt-fav-macros">🔥' + fmt(per.kcal) + " · P" + fmt(per.p) + " F" + fmt(per.f) + " C" + fmt(per.c) + "</div></div>" +
+            '<button class="ckt-fav-add" data-add="' + i + '">+</button></div>';
+        }).join("") + "</div>"
+        : '<div class="ckt-results-msg">No ' + (tab === "meal" ? "saved meals" : "favorite foods") + " yet. Tap ☆ on any food’s nutrition facts to save it here.</div>");
+      paintBar();
+    }
+    wrap.onclick = function (e) {
+      var t = e.target.closest("[data-t]");
+      if (t) { tab = t.dataset.t; pending = []; paint(); return; }
+      var add = e.target.closest("[data-add]");
+      if (add) { var f = favsOf(tab)[+add.dataset.add]; if (f) { pending.push(f); paintBar(); add.textContent = "✓"; setTimeout(function () { add.textContent = "+"; }, 700); } return; }
+      var row = e.target.closest(".ckt-fav-row");
+      if (row) { var ff = favsOf(tab)[+row.dataset.i]; if (ff) openFacts(ff, {}); }
+    };
+    paint();
   }
 
   // ====================================================================== //
@@ -563,6 +774,48 @@
       ".ckt-step-ctl{display:flex;align-items:center;gap:14px;}" +
       ".ckt-step-btn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-size:20px;font-weight:800;cursor:pointer;font-family:inherit;line-height:1;}" +
       ".ckt-step-val{min-width:54px;text-align:center;font-size:18px;font-weight:900;color:var(--ink);}" +
+      /* ── Nutrition Facts sheet (Phase 3) ── */
+      ".ckt-facts{display:flex;flex-direction:column;gap:14px;}" +
+      ".ckt-rings{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}" +
+      ".ckt-ring{position:relative;border:1.5px solid color-mix(in srgb, var(--rc) 55%, transparent);border-radius:var(--r-md);" +
+        "padding:12px 6px 9px;text-align:center;background:color-mix(in srgb, var(--rc) 10%, transparent);}" +
+      ".ckt-ring-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--rc);}" +
+      ".ckt-ring-val{font-size:19px;font-weight:900;color:var(--on-dark);line-height:1;}" +
+      ".ckt-ring-val span{font-size:11px;font-weight:800;color:var(--on-dark-dim);}" +
+      ".ckt-ring-lbl{font-size:10px;font-weight:800;color:var(--on-dark-dim);margin-top:5px;}" +
+      ".ckt-ring-pct{font-size:11px;font-weight:900;color:var(--rc);margin-top:3px;min-height:13px;}" +
+      ".ckt-nutrients{border:1px solid var(--line-dark);border-radius:var(--r-md);padding:4px 14px;}" +
+      ".ckt-nutrients-h{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-dark-dim);padding:10px 0 4px;}" +
+      ".ckt-nrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line-dark);font-size:13px;font-weight:700;color:var(--on-dark-dim);}" +
+      ".ckt-nrow b{color:var(--on-dark);font-weight:800;}" +
+      ".ckt-uomrow{display:flex;align-items:center;gap:12px;}" +
+      ".ckt-uom{flex:1;display:flex;gap:6px;}" +
+      ".ckt-uom button{flex:1;padding:10px 4px;border-radius:10px;border:1px solid var(--line-dark);background:var(--bg-elev);" +
+        "color:var(--on-dark-dim);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+      ".ckt-uom button.on{background:var(--accent);border-color:var(--accent);color:#fff;}" +
+      ".ckt-qty{flex:0 0 auto;display:flex;align-items:baseline;gap:4px;font-size:26px;font-weight:900;color:var(--on-dark);min-width:74px;justify-content:flex-end;}" +
+      ".ckt-qty small{font-size:13px;font-weight:800;color:var(--on-dark-dim);}" +
+      ".ckt-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}" +
+      ".ckt-keypad button{padding:15px 0;border-radius:12px;border:1px solid var(--line-dark);background:var(--bg-elev);" +
+        "color:var(--on-dark);font-size:20px;font-weight:800;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}" +
+      ".ckt-keypad button:active{background:rgba(var(--accent-rgb),0.22);}" +
+      ".ckt-facts-btns{display:flex;gap:10px;align-items:stretch;}" +
+      ".ckt-fav{flex:0 0 52px;border-radius:13px;border:1px solid var(--line-dark);background:var(--bg-elev);" +
+        "color:var(--on-dark-dim);font-size:22px;cursor:pointer;font-family:inherit;}" +
+      ".ckt-fav.on{color:var(--accent);border-color:var(--accent);}" +
+      /* ── Favorites library (Phase 3) ── */
+      ".ckt-fav-tabs{margin-bottom:12px;}" +
+      ".ckt-fav-list{display:flex;flex-direction:column;gap:8px;max-height:54vh;overflow-y:auto;}" +
+      ".ckt-fav-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:11px 13px;cursor:pointer;}" +
+      ".ckt-fav-main{flex:1;min-width:0;}" +
+      ".ckt-fav-name{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+      ".ckt-fav-macros{font-size:11px;color:var(--ink-dim);font-weight:700;margin-top:2px;}" +
+      ".ckt-fav-add{flex:0 0 38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);" +
+        "color:var(--accent);font-size:20px;font-weight:800;cursor:pointer;font-family:inherit;line-height:1;}" +
+      ".ckt-fav-bar{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-dark);position:sticky;bottom:0;background:var(--bg-elev);}" +
+      ".ckt-fav-count{flex:1;font-size:13px;font-weight:800;color:var(--on-dark-dim);}" +
+      ".ckt-fav-log{width:auto;flex:0 0 auto;padding:13px 26px;}" +
+      ".ckt-fav-log:disabled{opacity:0.4;}" +
       "@media (prefers-reduced-motion: reduce){.ckt-overlay,.ckt-sheet,.ckt-met-fill{transition:none;}}";
     var st = document.createElement("style");
     st.id = "ckt-styles"; st.textContent = css;

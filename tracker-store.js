@@ -109,6 +109,7 @@
   window.MCTrackerStore = {
     KEY: KEY,
     num: num,
+    read: read, write: write, getDay: getDay,
     keyFromDate: keyFromDate, dateFromKey: dateFromKey, todayKey: todayKey,
     addDays: addDays, mondayOf: mondayOf, hourLabel: hourLabel, timeLabel: timeLabel, prettyDay: prettyDay,
     totalsOf: totalsOf, entriesFor: entriesFor,
