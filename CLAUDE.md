@@ -2,6 +2,14 @@
 
 Guidance for AI assistants (and humans) working in **Mike's Cookbook**.
 
+## Planning rule — executive summary required
+
+**Before implementing any non-trivial code change, invoke the `executive-summary`
+skill** (`.claude/skills/executive-summary/SKILL.md`) to produce a Word-style
+executive summary and wait for the owner's explicit approval ("approved" / "go")
+before writing or editing any file. See the skill for scope guidance on when this
+applies and when it can be skipped.
+
 ## What this is
 
 A premium, tactile **mobile cookbook PWA** that bridges cherished heirloom
