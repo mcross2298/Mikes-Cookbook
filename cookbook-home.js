@@ -178,8 +178,10 @@
   // The flat list is the default view; the day/slot tags drive the optional
   // Schedule view. The same meal set always feeds the grocery list + recipes,
   // so "structure" only changes how meals are organized, not what you buy.
-  var PLAN_KEY  = "mc-cookbook:mealplan";          // { meals: [ {uid,id,serving,day,slot} ] }
-  var GROC_KEY  = "mc-cookbook:mealplan:grocery";  // [ checked merge-keys ]
+  var PLAN_KEY    = "mc-cookbook:mealplan";          // { meals: [ {uid,id,serving,day,slot} ] }
+  var GROC_KEY    = "mc-cookbook:mealplan:grocery"; // [ checked merge-keys ]
+  var HISTORY_KEY = "mc-cookbook:mealplan:history"; // [ { savedAt, label, meals } ]
+  var CUSTOM_KEY  = "mc-cookbook:mealplan:custom";  // [ { uid, text, done } ]
   var DAYS      = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   var DAY_LONG  = {
     Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday",
@@ -260,6 +262,15 @@
     var t = lastCookedAt(id);
     return t == null ? null : Math.floor((Date.now() - t) / 86400000);
   }
+  function cookedLabel(id) {
+    var days = daysSinceCooked(id);
+    if (days == null) return null;
+    if (days <= 0) return "Last made: today";
+    if (days === 1) return "Last made: yesterday";
+    if (days < 7) return "Last made: " + days + "d ago";
+    var wks = Math.round(days / 7);
+    return "Last made: " + wks + (wks === 1 ? " wk ago" : " wks ago");
+  }
 
   /* ── Pantry staples (items you always have → off the buy list) ─────────
      mc-cookbook:pantry → array of normalized item names. Keyed by item name
@@ -279,6 +290,46 @@
     if (set.has(k)) set.delete(k); else set.add(k);
     savePantry(set);
     return set.has(k);
+  }
+
+  /* ── Week history — archive finished plans, restore with one tap ──────
+     Up to 8 weeks stored as { savedAt, label, meals[] }. "Clear week"
+     archives before wiping so meals are never lost. */
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveHistory(arr) {
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+  function archiveWeek() {
+    var meals = planMeals();
+    if (!meals.length) return;
+    var arr = loadHistory();
+    var now = new Date();
+    var label = "Week of " + now.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    arr.unshift({ savedAt: now.toISOString(), label: label, meals: meals });
+    if (arr.length > 8) arr = arr.slice(0, 8);
+    saveHistory(arr);
+  }
+
+  /* ── Custom grocery items — user-typed additions outside of recipes ── */
+  function loadCustom() {
+    try { return JSON.parse(localStorage.getItem(CUSTOM_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveCustom(arr) {
+    try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+
+  /* ── Macro goals bridge — reads goals set in MC Training's calculator ─
+     mc_macros_v1 is written by MC Training on the same github.io origin,
+     so this Cookbook can read it directly from localStorage. */
+  function loadMacroGoals() {
+    try {
+      var v = JSON.parse(localStorage.getItem("mc_macros_v1") || "null");
+      return (v && v.goals && v.goals.kcal) ? v.goals : null;
+    } catch (e) { return null; }
   }
 
   /* ── Quantity math (parse → sum → pretty) for the merged grocery list ─ */
@@ -482,12 +533,14 @@
     if (m.calories != null) macro.push(Math.round(m.calories / tier) + " cal");
     if (m.protein_g != null) macro.push(Math.round(m.protein_g / tier) + "g protein");
 
+    var lastMade = cookedLabel(r.recipe_id);
     card.innerHTML =
       '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
         (macro.length ? '<p class="rc-macro">' + macro.join(" · ") + "</p>" : "") +
+        (lastMade ? '<p class="rc-last-cooked">' + esc(lastMade) + "</p>" : "") +
       "</div>";
 
     // A heart in the card's upper-right corner — favorite straight from the
@@ -1180,7 +1233,7 @@
   // Three sub-views (Plan / Grocery / Recipes). The Plan view itself toggles
   // between a flat List (default) and a 7-day × Breakfast/Lunch/Dinner
   // Schedule. The same meal set feeds all three views.
-  var plannerState = { view: "plan", planView: "list", pantryOpen: false };
+  var plannerState = { view: "plan", planView: "list", pantryOpen: false, historyOpen: false };
   function refresh() { renderPlanner(); }
 
   // Segmented control reusing the recipe page's .servings / .serving-opt look.
@@ -1368,11 +1421,52 @@
       var clear = el("button", "plan-clear", "Clear week");
       clear.type = "button";
       clear.addEventListener("click", function () {
-        if (window.confirm("Clear all meals from this week?")) {
-          clearPlan(); saveGroc(new Set()); refresh();
+        if (window.confirm("Save this week to history and clear?")) {
+          archiveWeek(); clearPlan(); saveGroc(new Set()); refresh();
         }
       });
       body.appendChild(clear);
+    }
+
+    // C1: Past-weeks history — collapsible, each entry has a Reuse button
+    var history = loadHistory();
+    if (history.length) {
+      var histWrap = el("div", "plan-history");
+      var histHead = el("button", "plan-history-head");
+      histHead.type = "button";
+      histHead.setAttribute("aria-expanded", plannerState.historyOpen ? "true" : "false");
+      histHead.innerHTML =
+        '<span class="plan-history-title">Past weeks</span>' +
+        '<span class="plan-history-chev">' + (plannerState.historyOpen ? "▾" : "▸") + "</span>";
+      histHead.addEventListener("click", function () {
+        plannerState.historyOpen = !plannerState.historyOpen; refresh();
+      });
+      histWrap.appendChild(histHead);
+      if (plannerState.historyOpen) {
+        history.forEach(function (week) {
+          var row = el("div", "plan-history-week");
+          row.innerHTML =
+            '<span class="plan-history-label">' + esc(week.label) + "</span>" +
+            '<span class="plan-history-count">' +
+              week.meals.length + (week.meals.length === 1 ? " meal" : " meals") +
+            "</span>";
+          var reuseBtn = el("button", "plan-history-reuse", "Reuse");
+          reuseBtn.type = "button";
+          reuseBtn.addEventListener("click", function () {
+            if (window.confirm("Replace this week with “" + week.label + "”?")) {
+              savePlan({ meals: week.meals.map(function (m) {
+                return { uid: newUid(), id: m.id, serving: m.serving, day: m.day || null, slot: m.slot || null };
+              }) });
+              saveGroc(new Set());
+              plannerState.historyOpen = false;
+              refresh();
+            }
+          });
+          row.appendChild(reuseBtn);
+          histWrap.appendChild(row);
+        });
+      }
+      body.appendChild(histWrap);
     }
   }
 
@@ -1429,53 +1523,155 @@
     return wrap;
   }
 
+  /* ── C4: Sum the weekly planned macros from recipe data ──────────────
+     Uses serving_2 tier as the base (per-serving = calories/2) and scales
+     to the meal's planned serving count. Macros are constant per serving. */
+  function computeWeekMacros(meals) {
+    var kcal = 0, p = 0, f = 0, c = 0;
+    meals.forEach(function (meal) {
+      var r = recipeById(meal.id);
+      if (!r || !r.macro_profiles) return;
+      var m = r.macro_profiles["serving_2"] || {};
+      var scale = (meal.serving || 2) / 2;
+      kcal += (m.calories   || 0) * scale;
+      p    += (m.protein_g  || 0) * scale;
+      f    += (m.fat_g      || 0) * scale;
+      c    += (m.carbs_g    || 0) * scale;
+    });
+    return { kcal: Math.round(kcal), p: Math.round(p), f: Math.round(f), c: Math.round(c) };
+  }
+
+  function renderMacroGoalsBar(totals, goals) {
+    var weekGoal = { kcal: goals.kcal * 7, p: goals.p * 7, f: goals.f * 7, c: goals.c * 7 };
+    var card = el("div", "card macro-goals-card");
+    card.appendChild(el("p", "card-label", "Weekly nutrition · goals × 7 days"));
+    [
+      { label: "Calories", val: totals.kcal, goal: weekGoal.kcal, unit: "kcal" },
+      { label: "Protein",  val: totals.p,    goal: weekGoal.p,    unit: "g" },
+      { label: "Fat",      val: totals.f,    goal: weekGoal.f,    unit: "g" },
+      { label: "Carbs",    val: totals.c,    goal: weekGoal.c,    unit: "g" }
+    ].forEach(function (row) {
+      var pct = row.goal > 0 ? Math.min(100, Math.round(row.val / row.goal * 100)) : 0;
+      var r = el("div", "macro-goal-row");
+      r.innerHTML =
+        '<span class="macro-goal-label">' + esc(row.label) + "</span>" +
+        '<span class="macro-goal-nums">' + row.val + " / " + row.goal + " " + esc(row.unit) + "</span>" +
+        '<div class="macro-goal-bar-wrap"><div class="macro-goal-bar" style="width:' + pct + '%"></div></div>';
+      card.appendChild(r);
+    });
+    return card;
+  }
+
+  /* ── C2: Custom grocery items — user-typed additions outside recipes ── */
+  function customGrocSection() {
+    var items = loadCustom();
+    var wrap = el("div", "custom-groc");
+    wrap.appendChild(el("div", "custom-groc-head", "Extra items"));
+
+    var inputRow = el("div", "custom-groc-input-row");
+    var inp = document.createElement("input");
+    inp.className = "custom-groc-input";
+    inp.type = "text";
+    inp.placeholder = "Add an item…";
+    inp.setAttribute("aria-label", "Add a custom grocery item");
+    var addBtn = el("button", "custom-groc-add", "Add");
+    addBtn.type = "button";
+    addBtn.addEventListener("click", function () {
+      var text = inp.value.trim();
+      if (!text) return;
+      var arr = loadCustom();
+      arr.push({ uid: newUid(), text: text, done: false });
+      saveCustom(arr);
+      inp.value = "";
+      var updated = customGrocSection();
+      wrap.parentNode.replaceChild(updated, wrap);
+    });
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); addBtn.click(); }
+    });
+    inputRow.appendChild(inp);
+    inputRow.appendChild(addBtn);
+    wrap.appendChild(inputRow);
+
+    items.forEach(function (item) {
+      var row = el("div", "check-row grocery-row custom-item-row" + (item.done ? " done" : ""));
+      row.innerHTML =
+        '<span class="check-box">' + CHECK_SVG + "</span>" +
+        '<span class="check-text">' + esc(item.text) + "</span>";
+      var delBtn = el("button", "custom-item-del", "✕");
+      delBtn.type = "button";
+      delBtn.setAttribute("aria-label", "Remove " + item.text);
+      delBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        saveCustom(loadCustom().filter(function (x) { return x.uid !== item.uid; }));
+        row.parentNode.removeChild(row);
+      });
+      row.appendChild(delBtn);
+      row.addEventListener("click", function () {
+        var arr = loadCustom();
+        arr.forEach(function (x) { if (x.uid === item.uid) x.done = !x.done; });
+        saveCustom(arr);
+        row.classList.toggle("done");
+      });
+      wrap.appendChild(row);
+    });
+    return wrap;
+  }
+
   function renderGroceryPane(body) {
     var meals = planMeals();
+
     if (!meals.length) {
       body.appendChild(emptyState("🛒",
         "No meals planned yet.<br>Add meals and your combined grocery list builds itself."));
-      return;
-    }
-    var cats = buildGrocery();
-    var checked = loadGroc();
-    var pantry = loadPantry();
+    } else {
+      var cats = buildGrocery();
+      var checked = loadGroc();
+      var pantry = loadPantry();
 
-    // Split each category's rows into the active buy list vs. pantry staples.
-    var buyCats = [], staples = [];
-    cats.forEach(function (c) {
-      var buy = [];
-      c.rows.forEach(function (row) {
-        if (pantry.has(pantryKey(row.item))) staples.push(row);
-        else buy.push(row);
+      var buyCats = [], staples = [];
+      cats.forEach(function (c) {
+        var buy = [];
+        c.rows.forEach(function (row) {
+          if (pantry.has(pantryKey(row.item))) staples.push(row);
+          else buy.push(row);
+        });
+        if (buy.length) buyCats.push({ category: c.category, rows: buy });
       });
-      if (buy.length) buyCats.push({ category: c.category, rows: buy });
-    });
-    var total = buyCats.reduce(function (n, c) { return n + c.rows.length; }, 0);
+      var total = buyCats.reduce(function (n, c) { return n + c.rows.length; }, 0);
 
-    var card = el("div", "card grocery-card");
-    card.appendChild(el("p", "card-label",
-      "Shopping list · " + total + (total === 1 ? " item" : " items") +
-      " · " + meals.length + (meals.length === 1 ? " meal" : " meals")));
+      var card = el("div", "card grocery-card");
+      card.appendChild(el("p", "card-label",
+        "Shopping list · " + total + (total === 1 ? " item" : " items") +
+        " · " + meals.length + (meals.length === 1 ? " meal" : " meals")));
 
-    if (!total) {
-      card.appendChild(emptyState("🧂",
-        "Everything you need is a pantry staple.<br>Check your pantry below."));
+      if (!total) {
+        card.appendChild(emptyState("🧂",
+          "Everything you need is a pantry staple.<br>Check your pantry below."));
+      }
+      buyCats.forEach(function (c) {
+        var sec = el("div", "grocery-cat");
+        sec.appendChild(el("div", "grocery-cat-head",
+          '<span class="dot"></span>' + esc(c.category) +
+          '<span class="grocery-cat-count">' + c.rows.length + "</span>"));
+        c.rows.forEach(function (row) { sec.appendChild(groceryRow(row, checked)); });
+        card.appendChild(sec);
+      });
+      body.appendChild(card);
+
+      if (staples.length) body.appendChild(pantryFooter(staples, checked));
+
+      // C4: Macro goals bar — only when goals exist in MC Training's calculator
+      var goals = loadMacroGoals();
+      if (goals) body.appendChild(renderMacroGoalsBar(computeWeekMacros(meals), goals));
+
+      body.appendChild(el("p", "macro-foot",
+        "Quantities combine identical items across your planned meals. " +
+        "Tap 🧂 to set aside a staple you always have."));
     }
-    buyCats.forEach(function (c) {
-      var sec = el("div", "grocery-cat");
-      sec.appendChild(el("div", "grocery-cat-head",
-        '<span class="dot"></span>' + esc(c.category) +
-        '<span class="grocery-cat-count">' + c.rows.length + "</span>"));
-      c.rows.forEach(function (row) { sec.appendChild(groceryRow(row, checked)); });
-      card.appendChild(sec);
-    });
-    body.appendChild(card);
 
-    if (staples.length) body.appendChild(pantryFooter(staples, checked));
-
-    body.appendChild(el("p", "macro-foot",
-      "Quantities combine identical items across your planned meals. " +
-      "Tap 🧂 to set aside a staple you always have."));
+    // C2: Custom items always shown so users can add extras at any time
+    body.appendChild(customGrocSection());
   }
 
   function renderRecipesPane(body) {
