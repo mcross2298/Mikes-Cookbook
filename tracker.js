@@ -191,7 +191,8 @@
   function sheet(title, sub) {
     var ov = el("div", "ckt-overlay");
     var sh = el("div", "ckt-sheet");
-    sh.appendChild(el("div", "ckt-handle"));
+    var handle = el("div", "ckt-handle");
+    sh.appendChild(handle);
     sh.appendChild(el("div", "ckt-sheet-title", esc(title)));
     if (sub) sh.appendChild(el("div", "ckt-sheet-sub", esc(sub)));
     ov.appendChild(sh);
@@ -199,6 +200,30 @@
     document.body.appendChild(ov);
     requestAnimationFrame(function () { ov.classList.add("open"); });
     function close() { ov.classList.remove("open"); setTimeout(function () { ov.remove(); }, 200); }
+
+    // swipe-down to dismiss on the drag handle
+    var startY = 0;
+    handle.addEventListener("touchstart", function (e) {
+      startY = e.touches[0].clientY;
+      sh.style.transition = "none";
+    }, { passive: true });
+    handle.addEventListener("touchmove", function (e) {
+      var delta = e.touches[0].clientY - startY;
+      if (delta > 0 && sh.scrollTop === 0) {
+        sh.style.transform = "translateY(" + delta + "px)";
+      }
+    }, { passive: true });
+    handle.addEventListener("touchend", function (e) {
+      var delta = e.changedTouches[0].clientY - startY;
+      sh.style.transition = "";
+      if (delta >= 50) {
+        close();
+      } else {
+        sh.style.transform = "";
+      }
+    });
+    handle.addEventListener("click", function () { close(); });
+
     return { ov: ov, sh: sh, close: close };
   }
 
@@ -744,7 +769,7 @@
       ".ckt-overlay.open{opacity:1;}" +
       ".ckt-sheet{width:100%;max-width:560px;background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:14px 18px calc(28px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;transform:translateY(16px);transition:transform 0.2s;}" +
       ".ckt-overlay.open .ckt-sheet{transform:translateY(0);}" +
-      ".ckt-handle{width:36px;height:4px;background:rgba(0,0,0,0.15);border-radius:2px;margin:0 auto 16px;}" +
+      ".ckt-handle{width:36px;height:4px;background:rgba(0,0,0,0.15);border-radius:2px;margin:0 auto 16px;padding:12px 0;box-sizing:content-box;cursor:pointer;-webkit-tap-highlight-color:transparent;}" +
       ".ckt-sheet-title{font-size:19px;font-weight:900;color:var(--ink);font-family:var(--serif);}" +
       ".ckt-sheet-sub{font-size:13px;color:var(--ink-dim);margin:4px 0 16px;line-height:1.5;}" +
       ".ckt-form{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}" +
