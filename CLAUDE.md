@@ -10,6 +10,20 @@ executive summary and wait for the owner's explicit approval ("approved" / "go")
 before writing or editing any file. See the skill for scope guidance on when this
 applies and when it can be skipped.
 
+## Active Development Plan — workout_cookbook_dev_plan_v2
+
+### Phase 1 — Polish & Stability ✅ Complete (merged to main)
+- `tracker.js`: swipe-to-dismiss gesture on bottom-sheet handle (touchstart/move/end, 50 px threshold, scrollTop guard); handle tap-to-close
+
+### Phase 2 — Search & Nutrition UX ✅ Complete (PR #33, merged to main)
+- `tracker.js`: `tokenFilter()` client-side multi-keyword AND scoring post-API; `showEmpty()` always-visible prompt; backspace clears immediately without debounce
+- `tracker.js`: nutrition sheet contrast — `.ckt-ring-lbl` + `.ckt-nrow` upgraded from `var(--on-dark-dim)` → `var(--on-dark)`, font-weight 700→800
+
+### Phase 3
+Not applicable — all Phase 3 tasks are in `4-Weeks-to-Open-` (exercise intelligence).
+
+---
+
 ## What this is
 
 A premium, tactile **mobile cookbook PWA** that bridges cherished heirloom
