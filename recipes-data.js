@@ -4886,6 +4886,225 @@ const RECIPES = [
           "Divide the rice among containers, top with the honey buffalo chicken, add the slaw, and drizzle with the honey buffalo sauce."
       }
     ]
+  },
+
+  {
+    recipe_id: "pumpkin-cheesecake-delight",
+    title: "Pumpkin Cheesecake Delight",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🎃",
+    tags: ["No-Bake", "Icebox Cake", "Fall"],
+    dish_category: "Desserts",
+    description:
+      "A no-bake icebox cake layering a graham cracker crust, no-bake cheesecake filling, and a spiced pumpkin-vanilla pudding, finished with whipped topping — an easy make-ahead fall showstopper.",
+    prep_time_mins: 20,
+    cook_time_mins: 0,
+    native_serving: 12,
+    accent: "#D2691E",
+
+    macro_profiles: {
+      serving_12: { calories: 330, protein_g: 4, fat_g: 19, carbs_g: 36 }
+    },
+
+    scaling_options: [12],
+
+    ingredients_by_serving: {
+      serving_12: [
+        { item: "Graham cracker crumbs", prep: "crushed", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Butter", prep: "melted", quantity: "1", unit: "stick", category: "Dairy" },
+        { item: "No-bake cheesecake filling", prep: "", quantity: "1", unit: "container", category: "Dairy" },
+        { item: "Pumpkin purée", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Instant vanilla or French vanilla pudding mix", prep: "", quantity: "1", unit: "(3.5-oz) box", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1.5", unit: "cups", category: "Dairy" },
+        { item: "Pumpkin pie spice", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Vanilla bean paste", prep: "optional", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Whipped topping (Cool Whip)", prep: "", quantity: "1", unit: "container", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the crust",
+        detail:
+          "Combine the graham cracker crumbs and melted butter in a bowl, mix, then press into the bottom of a 13x9 dish. Refrigerate 15 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Add the cheesecake layer",
+        detail:
+          "Spread the no-bake cheesecake filling evenly over the chilled graham cracker crust."
+      },
+      {
+        step_number: 3,
+        title: "Make the pumpkin layer",
+        detail:
+          "In a bowl, whisk together the pudding mix and milk. Fold in the pumpkin purée, pumpkin pie spice, and vanilla bean paste. Once combined, carefully spread over the cheesecake layer."
+      },
+      {
+        step_number: 4,
+        title: "Top & garnish",
+        detail:
+          "Spread the whipped topping over the pumpkin layer and garnish with a dusting of pumpkin pie spice."
+      },
+      {
+        step_number: 5,
+        title: "Chill & serve",
+        detail:
+          "Let chill in the refrigerator for 1-3 hours before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "million-dollar-banana-pudding",
+    title: "Million Dollar Banana Pudding",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍌",
+    tags: ["No-Bake", "Trifle", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A layered banana pudding trifle — cream cheese and sweetened condensed milk folded into vanilla pudding, layered with Nilla Wafers, bananas, and caramel, then finished with a mountain of homemade whipped cream.",
+    prep_time_mins: 25,
+    cook_time_mins: 0,
+    native_serving: 12,
+    accent: "#D9A441",
+
+    macro_profiles: {
+      serving_12: { calories: 680, protein_g: 7, fat_g: 38, carbs_g: 75 }
+    },
+
+    scaling_options: [12],
+
+    ingredients_by_serving: {
+      serving_12: [
+        { item: "Cream cheese", prep: "softened to room temperature", quantity: "1", unit: "(8-oz) block", category: "Dairy" },
+        { item: "Sweetened condensed milk", prep: "", quantity: "1", unit: "(14-oz) can", category: "Dairy" },
+        { item: "Instant vanilla pudding mix", prep: "", quantity: "1", unit: "(5-oz) box", category: "Pantry" },
+        { item: "Milk", prep: "2% or whole", quantity: "3", unit: "cups", category: "Dairy" },
+        { item: "Vanilla extract", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Nilla Wafers", prep: "divided", quantity: "1", unit: "(11-oz) box", category: "Pantry" },
+        { item: "Bananas", prep: "peeled and sliced", quantity: "5-7", unit: "", category: "Produce" },
+        { item: "Caramel sauce", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Heavy whipping cream", prep: "for the whipped cream", quantity: "3", unit: "cups", category: "Dairy" },
+        { item: "Powdered sugar", prep: "for the whipped cream", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Vanilla bean paste", prep: "for the whipped cream", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the whipped cream",
+        detail:
+          "In a large chilled mixing bowl, combine the heavy whipping cream, powdered sugar, and vanilla bean paste. Beat with a hand or stand mixer until stiff peaks form, then refrigerate until ready to use."
+      },
+      {
+        step_number: 2,
+        title: "Make the pudding base",
+        detail:
+          "Beat the softened cream cheese until smooth and fluffy, then mix in the sweetened condensed milk until fully combined."
+      },
+      {
+        step_number: 3,
+        title: "Thicken & combine the pudding",
+        detail:
+          "In a separate bowl, whisk the instant vanilla pudding mix with the milk for about 2 minutes until it begins to thicken. Add it and the vanilla extract to the cream cheese mixture and mix until smooth, then fold in about half of the whipped cream until fully incorporated."
+      },
+      {
+        step_number: 4,
+        title: "Layer the pudding",
+        detail:
+          "In a 9x13-inch baking dish or large trifle bowl, arrange a layer of Nilla Wafers on the bottom, then a layer of sliced bananas and a drizzle of caramel sauce. Spread half the pudding mixture over the bananas."
+      },
+      {
+        step_number: 5,
+        title: "Repeat & top",
+        detail:
+          "Repeat the layers with more Nilla Wafers, bananas, and the remaining pudding mixture, then spread the remaining whipped cream evenly over the top. Garnish with crushed wafers, whole wafers, caramel sauce, or additional banana slices if desired."
+      },
+      {
+        step_number: 6,
+        title: "Chill & serve",
+        detail:
+          "Cover and refrigerate for at least 4 hours, preferably overnight, before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "smores-protein-ice-cream-bars",
+    title: "High-Protein S'mores Ice Cream Bars",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "Frozen Greek yogurt and Cool Whip bars swirled with protein powder over a graham cracker base, finished with a dark chocolate drizzle — a lower-calorie, higher-protein take on s'mores, ready in under 20 minutes of active prep.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 9,
+    accent: "#6B4226",
+
+    macro_profiles: {
+      serving_9: { calories: 167, protein_g: 12, fat_g: 6, carbs_g: 16 }
+    },
+
+    scaling_options: [9],
+
+    ingredients_by_serving: {
+      serving_9: [
+        { item: "Fat-free Greek yogurt", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Whipped topping (Cool Whip)", prep: "light", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Sweetener", prep: "any", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Protein powder", prep: "French vanilla", quantity: "2", unit: "scoops", category: "Pantry" },
+        { item: "Graham cracker squares", prep: "", quantity: "18", unit: "", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "melted", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the pan",
+        detail:
+          "Line a small baking dish or loaf pan with parchment paper and arrange half of the graham cracker squares in a single layer on the bottom."
+      },
+      {
+        step_number: 2,
+        title: "Mix the base",
+        detail:
+          "In a large bowl, whisk together the Greek yogurt, Cool Whip, sweetener, and protein powder until smooth and well combined."
+      },
+      {
+        step_number: 3,
+        title: "Fill the pan",
+        detail:
+          "Pour half of the yogurt mixture over the graham cracker layer, spreading evenly."
+      },
+      {
+        step_number: 4,
+        title: "Add the top layer",
+        detail:
+          "Arrange the remaining graham cracker squares on top, then pour the remaining yogurt mixture over them and smooth the top."
+      },
+      {
+        step_number: 5,
+        title: "Freeze",
+        detail:
+          "Cover and freeze for at least 4 hours, or until firm."
+      },
+      {
+        step_number: 6,
+        title: "Drizzle & cut",
+        detail:
+          "Melt the dark chocolate chips with the coconut oil and drizzle over the frozen bars. Cut into 9 bars and serve."
+      }
+    ]
   }
 ];
 
@@ -4973,6 +5192,19 @@ const COLLECTIONS = [
     icon: "🍱",
     status: "live",
     source_match: "High-Protein Meal Prep"
+  },
+  {
+    id: "desserts",
+    title: "Desserts",
+    tag: "★ Collection · Sweet Treats",
+    blurb:
+      "No-bake icebox cakes, trifles, and other make-ahead sweets worth " +
+      "saving room for.",
+    designer: "📖 Saved From Around the Web",
+    accent: "#C9738B",          // dusty rose
+    icon: "🍰",
+    status: "live",
+    source_match: "Desserts"
   }
 ];
 
