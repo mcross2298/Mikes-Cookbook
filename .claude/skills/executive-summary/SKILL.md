@@ -120,19 +120,18 @@ describe the change, and confirm before continuing.
 ## Scope guidance
 
 **Always generate a summary for:**
-- New features or UI screens
-- Recipe / collection data-model changes
-- Changes to `cookbook.js`, `cookbook-home.js`, `collection.js` logic
+- Long, extensive coding sessions and builds — new features or UI screens spanning
+  many files, multi-phase refactors, or major service-worker/PWA overhauls
 - Any CSS token or layout change touching more than one component
-- Service-worker or `sw.js` changes
-- `recipes-data.js` structural changes (not just appending a recipe)
 
 **Summary optional (use judgement) for:**
-- Appending a single new recipe object to `RECIPES`
-- Pure copy/wording fixes in one file
-- Running `tools/build-sw.py` after a file addition
+- Smaller, focused changes to `cookbook.js`, `cookbook-home.js`, `collection.js`
+  logic that don't fan out across many files
+- Service-worker or `sw.js` changes limited to precache-list regeneration
 
 **Never required for:**
+- Recipe / collection / dish-category data-model additions (new recipes,
+  new collections, new `dish_category` values, `recipes-data.js` appends)
 - Isolated bug fixes contained to 1–2 files with obvious, narrow scope
 - Single-line or single-value corrections (wrong colour, broken selector, off-by-one)
 - Typo fixes anywhere
