@@ -5105,6 +5105,374 @@ const RECIPES = [
           "Melt the dark chocolate chips with the coconut oil and drizzle over the frozen bars. Cut into 9 bars and serve."
       }
     ]
+  },
+
+  {
+    recipe_id: "pesto-chicken-caesar-pasta-salad",
+    title: "Pesto Chicken Caesar Pasta Salad",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥗",
+    tags: ["Pasta Salad", "Meal-Prep", "Make-Ahead"],
+    dish_category: "Salads & Slaws",
+    description:
+      "A summer-ready pasta salad made with pesto-coated chicken, crisp romaine, toasted panko, Parmesan, fresh basil, pasta, and a creamy pesto Caesar dressing. Garlicky, herby, crunchy, and perfect for entertaining or make-ahead lunches.",
+    prep_time_mins: 20,
+    cook_time_mins: 15,
+    native_serving: 6,
+    accent: "#6F8F3E",
+
+    macro_profiles: {
+      serving_6: { calories: 610, protein_g: 38, fat_g: 32, carbs_g: 46 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Shellbows pasta (or short-cut pasta of choice)", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Boneless, skinless chicken breasts", prep: "thinly sliced into cutlets", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Kosher salt & black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Extra-virgin olive oil", prep: "divided", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Pesto", prep: "for the chicken", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Panko breadcrumbs", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Romaine lettuce", prep: "chopped", quantity: "6", unit: "cups", category: "Produce" },
+        { item: "Parmigiano-Reggiano cheese", prep: "grated, for the salad", quantity: "1/3", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil leaves", prep: "chopped or torn", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Plain full-fat Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Mayonnaise", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Extra-virgin olive oil", prep: "for the dressing", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Pesto", prep: "for the dressing", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Parmigiano-Reggiano cheese", prep: "grated, for the dressing", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Anchovy fillets", prep: "minced", quantity: "3", unit: "", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cracked black pepper & kosher salt", prep: "to taste, for the dressing", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail:
+          "Bring a large pot of salted water to a boil. Cook the pasta until al dente, then drain and let cool slightly."
+      },
+      {
+        step_number: 2,
+        title: "Season & sear the chicken",
+        detail:
+          "Season the chicken cutlets with kosher salt and pepper, then toss with the pesto. Heat 2 tablespoons of the olive oil in a skillet over medium-high heat and sear the chicken until golden and cooked through, about 3-4 minutes per side. Let rest, then slice."
+      },
+      {
+        step_number: 3,
+        title: "Toast the panko",
+        detail:
+          "Toast the panko breadcrumbs in a dry skillet over medium heat, stirring often, until golden and crisp, 2-3 minutes. Set aside, reserving a little for topping."
+      },
+      {
+        step_number: 4,
+        title: "Make the pesto Caesar dressing",
+        detail:
+          "Whisk together the Greek yogurt, mayonnaise, remaining olive oil, pesto, lemon juice, Parmigiano-Reggiano, anchovies, garlic, and Worcestershire sauce until smooth. Season with cracked black pepper and kosher salt to taste."
+      },
+      {
+        step_number: 5,
+        title: "Toss the salad",
+        detail:
+          "In a large bowl, toss the cooled pasta and romaine with the dressing until well coated. Fold in most of the toasted panko, Parmigiano-Reggiano, and basil. Top with the sliced chicken."
+      },
+      {
+        step_number: 6,
+        title: "Finish & serve",
+        detail:
+          "Sprinkle the reserved toasted panko over the top just before serving so the salad keeps its crispy Caesar-style crunch."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-lemon-parmesan-chicken-hasselback-potatoes",
+    title: "Creamy Lemon Parmesan Chicken & Hasselback Potatoes",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥔",
+    tags: ["Meal-Prep", "Creamy", "Lemon-Garlic"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Golden chicken in a creamy lemon garlic Parmesan sauce with crispy Hasselback potatoes and grilled greens. Cozy, flavorful, and perfect for an easy dinner.",
+    prep_time_mins: 15,
+    cook_time_mins: 50,
+    native_serving: 4,
+    accent: "#D9A62E",
+
+    macro_profiles: {
+      serving_4: { calories: 690, protein_g: 45, fat_g: 40, carbs_g: 42 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken breasts", prep: "", quantity: "3", unit: "", category: "Meat" },
+        { item: "Salt", prep: "to taste, for the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "to taste, for the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Paprika", prep: "to taste, for the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "to taste, for the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Chili flakes", prep: "to taste, for the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Oregano", prep: "to taste, for the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Olive oil", prep: "for cooking the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "300", unit: "ml", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "finely grated", quantity: "50", unit: "g", category: "Dairy" },
+        { item: "Lemon", prep: "zest of 1 + juice of 1/2", quantity: "1", unit: "", category: "Produce" },
+        { item: "Chili flakes", prep: "for the sauce", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chicken broth", prep: "", quantity: "60", unit: "ml", category: "Pantry" },
+        { item: "Salt & black pepper", prep: "to taste, for the sauce", quantity: "", unit: "", category: "Pantry" },
+        { item: "Lemon slices", prep: "for finishing the sauce", quantity: "", unit: "", category: "Produce" },
+        { item: "Medium potatoes", prep: "", quantity: "6-8", unit: "", category: "Produce" },
+        { item: "Butter", prep: "melted", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Olive oil", prep: "for the potatoes", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt & black pepper", prep: "to taste, for the potatoes", quantity: "", unit: "", category: "Pantry" },
+        { item: "Paprika", prep: "for the potatoes", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Zucchini or asparagus", prep: "for grilling", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potatoes",
+        detail:
+          "Cut the potatoes Hasselback-style and brush with the melted butter, olive oil, salt, pepper, and paprika. Roast at 220°C (425°F) for 30 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail:
+          "Slice the chicken breasts in half horizontally, season with salt, pepper, paprika, garlic powder, chili flakes, and oregano, and cook in olive oil until golden. Set aside."
+      },
+      {
+        step_number: 3,
+        title: "Crisp the potatoes",
+        detail:
+          "Brush the potatoes again with the butter mixture and roast for another 20-25 minutes, until crispy."
+      },
+      {
+        step_number: 4,
+        title: "Deglaze the pan",
+        detail:
+          "In the chicken pan, cook the minced garlic, then add the chicken broth and scrape up the browned bits."
+      },
+      {
+        step_number: 5,
+        title: "Make the sauce",
+        detail:
+          "Add the heavy cream, lemon zest, chili flakes, and Parmesan. Simmer until thickened."
+      },
+      {
+        step_number: 6,
+        title: "Finish the chicken",
+        detail:
+          "Return the chicken to the sauce with the lemon juice and lemon slices, and simmer until creamy."
+      },
+      {
+        step_number: 7,
+        title: "Grill the sides",
+        detail:
+          "Grill the zucchini or asparagus with olive oil, salt, and pepper."
+      },
+      {
+        step_number: 8,
+        title: "Plate & serve",
+        detail:
+          "Plate the chicken and potatoes and spoon the sauce over the top."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "grilled-hot-honey-chicken-peach-salsa",
+    title: "Grilled Hot Honey Chicken with Peach Salsa",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍑",
+    tags: ["Meal-Prep", "Grilled", "Sweet & Spicy"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "The perfect sweet, spicy, and savory summer dinner: grilled hot honey chicken topped with fresh peach salsa, served alongside grilled lemon asparagus.",
+    prep_time_mins: 20,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#E2833F",
+
+    macro_profiles: {
+      serving_4: { calories: 610, protein_g: 44, fat_g: 18, carbs_g: 62 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless, skinless chicken thighs or chicken breasts", prep: "", quantity: "1 1/2", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "to brush over the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Smoked paprika", prep: "to season the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cumin", prep: "to season the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Salt", prep: "to season the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "to season the chicken", quantity: "", unit: "", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the hot honey sauce", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the hot honey sauce", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Peaches", prep: "diced", quantity: "3-4", unit: "large", category: "Produce" },
+        { item: "Jalapeño", prep: "deseeded and finely diced", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced, or more to taste", quantity: "1", unit: "", category: "Produce" },
+        { item: "Asparagus", prep: "ends trimmed", quantity: "1", unit: "bundle", category: "Produce" },
+        { item: "Avocado oil or olive oil", prep: "for the asparagus", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic salt", prep: "to taste, for the asparagus", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "to taste, for the asparagus", quantity: "", unit: "", category: "Pantry" },
+        { item: "Lemon zest", prep: "to taste, for the asparagus", quantity: "", unit: "", category: "Produce" },
+        { item: "Steamed rice", prep: "for serving", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the peach salsa",
+        detail:
+          "Mix the diced peaches, jalapeño, red onion, and cilantro in a bowl. Squeeze the lime juice over the top, toss, taste, and adjust with more lime if needed. Refrigerate until serving."
+      },
+      {
+        step_number: 2,
+        title: "Make the hot honey sauce",
+        detail:
+          "Add the honey, garlic, red pepper flakes, smoked paprika, and salt to a small saucepan. Warm over low heat, stirring often, until runny and warm. Do not boil."
+      },
+      {
+        step_number: 3,
+        title: "Grill the chicken",
+        detail:
+          "Preheat a grill or grill pan to medium-high heat and lightly oil the grates. Brush the chicken with olive oil on both sides, then season with smoked paprika, cumin, salt, and black pepper. Grill for 5-6 minutes per side, or until it reaches 165°F inside."
+      },
+      {
+        step_number: 4,
+        title: "Glaze the chicken",
+        detail:
+          "During the last 2-3 minutes of grilling, brush the hot honey sauce over both sides of the chicken."
+      },
+      {
+        step_number: 5,
+        title: "Grill the asparagus",
+        detail:
+          "Toss the asparagus with oil, garlic salt, and black pepper. Grill for 3-5 minutes, until tender and slightly charred, then finish with lemon zest."
+      },
+      {
+        step_number: 6,
+        title: "Plate & serve",
+        detail:
+          "Serve the chicken over steamed rice with the peach salsa, grilled lemon asparagus, and extra hot honey sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-garlic-shrimp-alfredo",
+    title: "Lemon Garlic Shrimp Alfredo",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍤",
+    tags: ["Meal-Prep", "Creamy", "Shrimp"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "An easy under-30-minute dinner made with juicy shrimp, a silky lemon Parmesan cream sauce, and pappardelle pasta. Creamy, garlicky, bright, and perfect for a cozy restaurant-style pasta night at home.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#C2A46B",
+
+    macro_profiles: {
+      serving_2: { calories: 950, protein_g: 42, fat_g: 58, carbs_g: 74 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Shrimp", prep: "peeled and deveined", quantity: "200", unit: "g", category: "Meat" },
+        { item: "Butter", prep: "for the shrimp", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced, for the shrimp", quantity: "2", unit: "", category: "Produce" },
+        { item: "Salt & black pepper", prep: "to taste, for the shrimp", quantity: "", unit: "", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon zest", prep: "for the shrimp", quantity: "1/2", unit: "lemon", category: "Produce" },
+        { item: "Honey", prep: "optional", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pappardelle pasta", prep: "", quantity: "200", unit: "g", category: "Pantry" },
+        { item: "Butter", prep: "for the sauce", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced, for the sauce", quantity: "3", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "250", unit: "ml", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "freshly grated", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Pasta water", prep: "reserved", quantity: "50-100", unit: "ml", category: "Pantry" },
+        { item: "Lemon zest", prep: "for the sauce", quantity: "1/2", unit: "lemon", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1-2", unit: "tsp", category: "Produce" },
+        { item: "Salt, black pepper & chili flakes", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail:
+          "Cook the pappardelle until al dente, reserving some pasta water before draining."
+      },
+      {
+        step_number: 2,
+        title: "Season & sear the shrimp",
+        detail:
+          "Pat the shrimp dry and season with salt, pepper, paprika, lemon zest, and honey if using. Melt the butter in a pan and cook the shrimp for 60-90 seconds per side until pink and golden."
+      },
+      {
+        step_number: 3,
+        title: "Finish the shrimp",
+        detail:
+          "Add the garlic and toss for 20-30 seconds, then set the shrimp aside."
+      },
+      {
+        step_number: 4,
+        title: "Start the sauce",
+        detail:
+          "In the same pan, melt the remaining butter and cook the garlic for 30 seconds."
+      },
+      {
+        step_number: 5,
+        title: "Add the cream",
+        detail:
+          "Pour in the heavy cream and simmer for 2-3 minutes."
+      },
+      {
+        step_number: 6,
+        title: "Season the sauce",
+        detail:
+          "Stir in the Parmesan, reserved pasta water, lemon zest, and lemon juice."
+      },
+      {
+        step_number: 7,
+        title: "Toss the pasta",
+        detail:
+          "Toss the pasta in the sauce until creamy and glossy."
+      },
+      {
+        step_number: 8,
+        title: "Serve",
+        detail:
+          "Top with the shrimp, extra lemon zest, parsley, and black pepper. Add pasta water slowly so the Alfredo sauce turns silky rather than greasy."
+      }
+    ]
   }
 ];
 
