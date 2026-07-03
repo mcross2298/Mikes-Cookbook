@@ -3754,6 +3754,577 @@ const RECIPES = [
           "Squeeze lime over the top right before serving."
       }
     ]
+  },
+
+  {
+    recipe_id: "honey-bbq-chicken-mac-n-cheese",
+    title: "Honey BBQ Chicken Mac N Cheese",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🧀",
+    tags: ["Meal-Prep", "High-Protein", "Sweet & Smoky"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Sweet-smoky honey BBQ chicken cubes plated beside a blender-quick, high-protein mac and cheese — cottage cheese and Greek yogurt sneak in the protein while whole-wheat elbows keep it comforting.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_2: { calories: 511, protein_g: 50, fat_g: 15, carbs_g: 40 },
+      serving_4: { calories: 511, protein_g: 50, fat_g: 15, carbs_g: 40 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "cut into bite-sized cubes", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "BBQ sauce", prep: "sugar-free or low-calorie", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Elbow macaroni", prep: "whole wheat or high-protein", quantity: "4", unit: "oz", category: "Pantry" },
+        { item: "Cottage cheese", prep: "low-fat", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Cheddar cheese", prep: "shredded, reduced-fat", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Mozzarella cheese", prep: "shredded", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic powder", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "for garnish, optional", quantity: "", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "cut into bite-sized cubes", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "BBQ sauce", prep: "sugar-free or low-calorie", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Elbow macaroni", prep: "whole wheat or high-protein", quantity: "8", unit: "oz", category: "Pantry" },
+        { item: "Cottage cheese", prep: "low-fat", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Cheddar cheese", prep: "shredded, reduced-fat", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Mozzarella cheese", prep: "shredded", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "for garnish, optional", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail:
+          "Bring a large pot of salted water to a boil. Add the macaroni and cook according to package directions until al dente. Drain and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Season & sear the chicken",
+        detail:
+          "Toss the chicken cubes with olive oil, salt, pepper, and smoked paprika until evenly coated. Heat a large skillet over medium-high heat and sauté for 6-8 minutes until golden brown and cooked through."
+      },
+      {
+        step_number: 3,
+        title: "Make the honey BBQ sauce",
+        detail:
+          "Whisk together the BBQ sauce, honey, apple cider vinegar, and garlic powder. Pour over the cooked chicken and simmer for 2-3 minutes until the sauce thickens and coats the chicken."
+      },
+      {
+        step_number: 4,
+        title: "Blend the mac n cheese sauce",
+        detail:
+          "In a blender, combine the cottage cheese, Greek yogurt, cheddar, mozzarella, garlic powder, paprika, salt, and pepper. Blend until smooth and creamy."
+      },
+      {
+        step_number: 5,
+        title: "Combine pasta & sauce",
+        detail:
+          "Pour the sauce over the warm cooked macaroni and stir until fully coated and creamy."
+      },
+      {
+        step_number: 6,
+        title: "Assemble & serve",
+        detail:
+          "Divide the mac n cheese into containers, add the honey BBQ chicken beside it, and garnish with chopped parsley if desired."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cheesy-beef-taco-potato-bowls",
+    title: "Cheesy Beef Taco Potato Bowls",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌮",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Crispy sheet-pan potatoes topped with seasoned taco beef, fresh pico de gallo, and a drizzle of cheesy taco sauce — a build-your-own bowl that reheats like a dream.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#C0392B",
+
+    macro_profiles: {
+      serving_2: { calories: 522, protein_g: 54, fat_g: 18, carbs_g: 42 },
+      serving_4: { calories: 522, protein_g: 54, fat_g: 18, carbs_g: 42 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Russet or gold potatoes", prep: "diced into bite-sized cubes", quantity: "3/4", unit: "lb", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Ground beef", prep: "extra lean, 93% or leaner", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Onion", prep: "finely chopped", quantity: "1/4", unit: "medium", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Taco seasoning", prep: "low-sodium, or homemade", quantity: "1/2", unit: "packet", category: "Pantry" },
+        { item: "Beef broth", prep: "low-sodium", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Tomatoes", prep: "diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "small", category: "Produce" },
+        { item: "Jalapeño", prep: "finely chopped", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cheddar cheese", prep: "reduced-fat, shredded", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Milk", prep: "low-fat", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Hot sauce", prep: "optional", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Russet or gold potatoes", prep: "diced into bite-sized cubes", quantity: "1.5", unit: "lbs", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Ground beef", prep: "extra lean, 93% or leaner", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Onion", prep: "finely chopped", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Taco seasoning", prep: "low-sodium, or homemade", quantity: "1", unit: "packet", category: "Pantry" },
+        { item: "Beef broth", prep: "low-sodium", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Tomatoes", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Jalapeño", prep: "finely chopped", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cheddar cheese", prep: "reduced-fat, shredded", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Milk", prep: "low-fat", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Hot sauce", prep: "optional", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potatoes",
+        detail:
+          "Preheat the oven to 425°F. Toss the diced potatoes with olive oil, paprika, garlic powder, salt, and black pepper. Spread on a parchment-lined baking sheet and bake 25-30 minutes, flipping halfway, until crispy and golden."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail:
+          "Heat a large skillet over medium-high heat. Add the ground beef and cook 5-6 minutes, breaking it apart. Add the chopped onion and garlic and cook another 2-3 minutes until soft and fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Season the meat",
+        detail:
+          "Stir in the taco seasoning and beef broth. Simmer 3-4 minutes until the liquid reduces and the mixture thickens. Adjust seasoning with salt and pepper."
+      },
+      {
+        step_number: 4,
+        title: "Make the pico de gallo",
+        detail:
+          "Combine the diced tomatoes, red onion, jalapeño, cilantro, lime juice, and salt in a bowl. Toss and refrigerate until ready to serve."
+      },
+      {
+        step_number: 5,
+        title: "Make the cheesy sauce",
+        detail:
+          "In a small saucepan over low heat, whisk together the cheddar, Greek yogurt, milk, hot sauce, paprika, and a pinch of salt. Stir constantly until smooth and creamy."
+      },
+      {
+        step_number: 6,
+        title: "Assemble the bowls",
+        detail:
+          "Divide the roasted potatoes among containers, add the taco beef, then a scoop of pico de gallo. Drizzle the cheesy taco sauce over the beef and potatoes."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "korean-beef-fried-rice",
+    title: "Korean Beef Fried Rice",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍚",
+    tags: ["Meal-Prep", "High-Protein", "Spicy"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Gochujang-glazed ground beef tossed with chilled-rice fried rice, scrambled egg, and crunchy vegetables, finished with a sriracha-mayo drizzle and toasted sesame seeds.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B33951",
+
+    macro_profiles: {
+      serving_2: { calories: 547, protein_g: 51, fat_g: 18, carbs_g: 45 },
+      serving_4: { calories: 547, protein_g: 51, fat_g: 18, carbs_g: 45 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground beef", prep: "extra lean, 93% or leaner", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1 1/2", unit: "cloves", category: "Produce" },
+        { item: "Fresh ginger", prep: "grated", quantity: "1 1/2", unit: "tsp", category: "Produce" },
+        { item: "Soy sauce", prep: "low-sodium", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Gochujang", prep: "Korean chili paste", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Light mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "to thin, if needed", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cooked jasmine or basmati rice", prep: "chilled overnight", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion", prep: "finely diced", quantity: "1/2", unit: "small", category: "Produce" },
+        { item: "Shredded carrots", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Green onions", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Eggs", prep: "lightly beaten", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Soy sauce", prep: "low-sodium", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Toasted sesame seeds", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Green onions", prep: "sliced thin, for garnish", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Ground beef", prep: "extra lean, 93% or leaner", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Fresh ginger", prep: "grated", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Soy sauce", prep: "low-sodium", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Gochujang", prep: "Korean chili paste", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Light mayonnaise", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "to thin, if needed", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cooked jasmine or basmati rice", prep: "chilled overnight", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "finely diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Shredded carrots", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Green onions", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Eggs", prep: "lightly beaten", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Soy sauce", prep: "low-sodium", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Toasted sesame seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Green onions", prep: "sliced thin, for garnish", quantity: "2", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the beef",
+        detail:
+          "Heat olive oil in a large skillet over medium-high heat. Add the ground beef and cook 5-6 minutes, breaking it apart until browned. Add the garlic and ginger and sauté 1 minute."
+      },
+      {
+        step_number: 2,
+        title: "Make the sauce",
+        detail:
+          "Whisk together the soy sauce, gochujang, brown sugar, rice vinegar, sesame oil, and black pepper. Pour over the cooked beef and simmer 2-3 minutes until thickened. Set aside."
+      },
+      {
+        step_number: 3,
+        title: "Cook the fried rice base",
+        detail:
+          "In another large skillet or wok, heat olive oil over medium heat. Add the diced onion and shredded carrots and cook 2-3 minutes until softened."
+      },
+      {
+        step_number: 4,
+        title: "Add the eggs",
+        detail:
+          "Push the vegetables to one side, pour the beaten eggs into the pan, and scramble until just cooked, then mix together."
+      },
+      {
+        step_number: 5,
+        title: "Add rice & seasoning",
+        detail:
+          "Add the chilled rice to the pan with the soy sauce and sesame oil. Stir-fry 3-4 minutes until evenly coated and hot."
+      },
+      {
+        step_number: 6,
+        title: "Combine & make the drizzle",
+        detail:
+          "Add the Korean beef mixture into the rice and toss together until well mixed. Stir in the chopped green onions. Separately, whisk the mayonnaise, sriracha, rice vinegar, garlic powder, and water until smooth."
+      },
+      {
+        step_number: 7,
+        title: "Assemble the bowls",
+        detail:
+          "Divide the fried rice among containers, drizzle with the spicy mayo, and top with sesame seeds and green onions."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-butter-chicken-creamy-potatoes",
+    title: "Garlic Butter Chicken & Creamy Potatoes",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🧈",
+    tags: ["Meal-Prep", "High-Protein", "Garlic Butter"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Seared garlic-butter chicken bites alongside sheet-pan roasted potatoes tossed in a tangy Greek yogurt-Dijon cream sauce.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#D4A017",
+
+    macro_profiles: {
+      serving_2: { calories: 547, protein_g: 51, fat_g: 18, carbs_g: 45 },
+      serving_4: { calories: 547, protein_g: 51, fat_g: 18, carbs_g: 45 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "cut into bite-sized chunks", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "optional", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Unsalted butter", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "1 1/2", unit: "cloves", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped, optional", quantity: "1/2", unit: "tbsp", category: "Produce" },
+        { item: "Baby red or gold potatoes", prep: "diced into small cubes", quantity: "3/4", unit: "lb", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Milk", prep: "low-fat", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Dijon mustard", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1 1/2", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "cut into bite-sized chunks", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "optional", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Unsalted butter", prep: "", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped, optional", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Baby red or gold potatoes", prep: "diced into small cubes", quantity: "1.5", unit: "lbs", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Milk", prep: "low-fat", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potatoes",
+        detail:
+          "Preheat the oven to 425°F. Toss the diced potatoes with olive oil, salt, pepper, garlic powder, and paprika. Spread on a parchment-lined baking sheet and roast 25-30 minutes, flipping halfway, until golden and crispy."
+      },
+      {
+        step_number: 2,
+        title: "Season & sear the chicken",
+        detail:
+          "Toss the chicken pieces with olive oil, salt, pepper, smoked paprika, and cayenne (if using). Heat a large skillet over medium-high heat and sear 5-7 minutes until cooked through and slightly golden. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Make the garlic butter",
+        detail:
+          "In the same skillet, lower the heat and add the butter. Once melted, stir in the minced garlic and cook 30 seconds until fragrant. Return the chicken to the skillet and toss to coat, then sprinkle with fresh parsley."
+      },
+      {
+        step_number: 4,
+        title: "Make the creamy sauce",
+        detail:
+          "In a small saucepan, combine the Greek yogurt, cream cheese, milk, Dijon mustard, garlic powder, onion powder, salt, and pepper. Stir over low heat until smooth and creamy."
+      },
+      {
+        step_number: 5,
+        title: "Coat the potatoes",
+        detail:
+          "Once the potatoes finish roasting, transfer them to a large bowl and toss with the creamy sauce until well coated. Mix in the chopped parsley."
+      },
+      {
+        step_number: 6,
+        title: "Assemble & serve",
+        detail:
+          "Divide the creamy potatoes and garlic butter chicken evenly among containers. Garnish with a sprinkle of parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-butter-steak-bites-crispy-potatoes",
+    title: "Garlic Butter Steak Bites & Crispy Potatoes",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥩",
+    tags: ["Meal-Prep", "High-Protein", "Garlic Butter"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Seared garlic-butter steak bites over crispy sheet-pan potatoes, finished with a bright sriracha-lime mayo drizzle.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#A0522D",
+
+    macro_profiles: {
+      serving_2: { calories: 480, protein_g: 50, fat_g: 17, carbs_g: 32 },
+      serving_4: { calories: 480, protein_g: 50, fat_g: 17, carbs_g: 32 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sirloin or top round steak", prep: "cut into 1-inch cubes", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Unsalted butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "1 1/2", unit: "cloves", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped, optional", quantity: "1/2", unit: "tbsp", category: "Produce" },
+        { item: "Gold or russet potatoes", prep: "diced into bite-sized cubes", quantity: "3/4", unit: "lb", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped, for garnish", quantity: "1/2", unit: "tbsp", category: "Produce" },
+        { item: "Light mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "to thin, if needed", quantity: "1 1/2", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Sirloin or top round steak", prep: "cut into 1-inch cubes", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Unsalted butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped, optional", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Gold or russet potatoes", prep: "diced into bite-sized cubes", quantity: "1.5", unit: "lbs", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped, for garnish", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Light mayonnaise", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "to thin, if needed", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potatoes",
+        detail:
+          "Preheat the oven to 425°F. Toss the diced potatoes with olive oil, paprika, garlic powder, onion powder, salt, and pepper. Spread evenly on a parchment-lined baking sheet and roast 25-30 minutes, flipping halfway, until crispy and golden. Garnish with parsley once done."
+      },
+      {
+        step_number: 2,
+        title: "Prep & sear the steak",
+        detail:
+          "Pat the steak cubes dry and toss with olive oil, salt, pepper, garlic powder, and smoked paprika. Heat a large skillet over medium-high heat and sear the steak in a single layer (in batches if needed) for 2 minutes per side until browned and cooked to your liking. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Make the garlic butter sauce",
+        detail:
+          "Reduce the heat to low. In the same skillet, add the butter and minced garlic and sauté 30 seconds until fragrant. Return the steak bites to the pan and toss to coat, then sprinkle with chopped parsley."
+      },
+      {
+        step_number: 4,
+        title: "Make the spicy drizzle",
+        detail:
+          "Whisk together the mayonnaise, sriracha, garlic powder, and lime juice, adding a splash of water if needed for drizzling consistency."
+      },
+      {
+        step_number: 5,
+        title: "Assemble & serve",
+        detail:
+          "Divide the crispy potatoes and garlic butter steak bites evenly among containers. Drizzle with the spicy mayo sauce and sprinkle with parsley."
+      }
+    ]
   }
 ];
 
@@ -3828,6 +4399,19 @@ const COLLECTIONS = [
     icon: "🌶️",
     status: "live",
     source_match: "Chipotle Copycats"
+  },
+  {
+    id: "high-protein-meal-prep",
+    title: "High-Protein Meal Prep",
+    tag: "★ Collection · Meal Prep",
+    blurb:
+      "Macro-counted, container-ready bowls built for batch cooking — big " +
+      "protein, balanced carbs, zero guesswork.",
+    designer: "📖 From Eating Healthy Today",
+    accent: "#4E8B65",          // fresh green
+    icon: "🍱",
+    status: "live",
+    source_match: "High-Protein Meal Prep"
   }
 ];
 
