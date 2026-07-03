@@ -3327,6 +3327,433 @@ const RECIPES = [
           "Transfer the sausage back into the pot and cover with the broth. Bring to a boil, then reduce the heat to a simmer. Add the spinach and stir just to wilt. Remove from the heat, add the grated Parmesan, and serve hot."
       }
     ]
+  },
+
+  {
+    recipe_id: "chipotle-chicken-burrito-bowl",
+    title: "Chipotle Chicken Burrito Bowl",
+    category: "Comfort Food",
+    source: "Chipotle Copycats",
+    icon: "🍚",
+    tags: ["Spicy", "Meal-Prep", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "A smoky, char-charred take on the drive-thru favorite — blackened chipotle-lime chicken piled over cilantro-lime jasmine rice with black beans, blistered peppers and corn, and a double dose of chipotle crema.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#D97B3F",
+
+    macro_profiles: {
+      serving_2: { calories: 580, protein_g: 42, fat_g: 18, carbs_g: 62 },
+      serving_4: { calories: 580, protein_g: 42, fat_g: 18, carbs_g: 62 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken thighs", prep: "marinated in blended chipotle, oil, and lime, then seared and chopped", quantity: "2", unit: "", category: "Meat" },
+        { item: "Jasmine rice", prep: "cooked, folded with cilantro and lime", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Black beans", prep: "drained and warmed", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Bell pepper", prep: "sliced and blistered", quantity: "1", unit: "", category: "Produce" },
+        { item: "Corn kernels", prep: "blistered", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Chipotle peppers in adobo", prep: "blended into marinade and sauce", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Sour cream", prep: "whipped with chipotle and lime", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken thighs", prep: "marinated in blended chipotle, oil, and lime, then seared and chopped", quantity: "4", unit: "", category: "Meat" },
+        { item: "Jasmine rice", prep: "cooked, folded with cilantro and lime", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Black beans", prep: "drained and warmed", quantity: "2", unit: "cans", category: "Pantry" },
+        { item: "Bell pepper", prep: "sliced and blistered", quantity: "2", unit: "", category: "Produce" },
+        { item: "Corn kernels", prep: "blistered", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Chipotle peppers in adobo", prep: "blended into marinade and sauce", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Sour cream", prep: "whipped with chipotle and lime", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lime", prep: "juiced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "4", unit: "tbsp", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the chicken",
+        detail:
+          "Blend the chipotle peppers with oil, lime, and salt, then coat the thighs and let them sit while you prep."
+      },
+      {
+        step_number: 2,
+        title: "Char it up",
+        detail:
+          "Sear the chicken hard in a hot pan until blackened at the edges and cooked through, then rest and chop."
+      },
+      {
+        step_number: 3,
+        title: "Make the rice",
+        detail:
+          "Fold chopped cilantro and a squeeze of lime through the warm jasmine rice."
+      },
+      {
+        step_number: 4,
+        title: "Warm the sides",
+        detail:
+          "Heat the black beans, and blister the peppers and corn in the same pan you cooked the chicken."
+      },
+      {
+        step_number: 5,
+        title: "Whip the sauce",
+        detail:
+          "Stir leftover chipotle into the sour cream with a little lime for the creamy drizzle."
+      },
+      {
+        step_number: 6,
+        title: "Build the bowl",
+        detail:
+          "Layer rice, chicken, beans, peppers, and corn, then finish with the chipotle sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-chipotle-chicken-wraps",
+    title: "Honey Chipotle Chicken Wraps",
+    category: "Comfort Food",
+    source: "Chipotle Copycats",
+    icon: "🌯",
+    tags: ["Sweet & Spicy", "Handheld", "Quick"],
+    dish_category: "Sandwiches",
+    description:
+      "Sticky honey-chipotle glazed chicken piled into a tortilla with crisp lettuce, tomato, and cheese, then toasted seam-side down until golden and crisp, with a creamy chipotle drizzle on top.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#CB9A3D",
+
+    macro_profiles: {
+      serving_2: { calories: 540, protein_g: 40, fat_g: 22, carbs_g: 44 },
+      serving_4: { calories: 540, protein_g: 40, fat_g: 22, carbs_g: 44 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breasts", prep: "cubed", quantity: "2", unit: "", category: "Meat" },
+        { item: "Large flour tortillas", prep: "", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Honey", prep: "blended into glaze", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "blended into glaze", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Shredded lettuce", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Sour cream", prep: "mixed with leftover glaze", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Shredded cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken breasts", prep: "cubed", quantity: "4", unit: "", category: "Meat" },
+        { item: "Large flour tortillas", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Honey", prep: "blended into glaze", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "blended into glaze", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Shredded lettuce", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Sour cream", prep: "mixed with leftover glaze", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Shredded cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Lime", prep: "juiced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the glaze",
+        detail:
+          "Blend the chipotle peppers with the honey and a squeeze of lime into a sticky, smoky sauce."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail:
+          "Sear the cubes in the oil until golden, then toss them in half the glaze until coated and sticky."
+      },
+      {
+        step_number: 3,
+        title: "Mix the drizzle",
+        detail:
+          "Stir the remaining glaze into the sour cream for the creamy chipotle sauce on top."
+      },
+      {
+        step_number: 4,
+        title: "Load the wrap",
+        detail:
+          "Pile chicken, lettuce, tomato, and cheese into each tortilla and drizzle with the sauce."
+      },
+      {
+        step_number: 5,
+        title: "Toast and fold",
+        detail:
+          "Wrap tight and toast seam-side down in a dry pan until golden and crisp."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "steak-fajita-quesadilla",
+    title: "Steak Fajita Quesadilla",
+    category: "Comfort Food",
+    source: "Chipotle Copycats",
+    icon: "🧀",
+    tags: ["Cheesy", "Handheld", "Copycat"],
+    dish_category: "Sandwiches",
+    description:
+      "A double-cheese steak fajita quesadilla griddled until the cheese glues it shut and the first wedge pulls apart molten — seared steak, blistered peppers and onion, and two layers of melty cheese, served with sour cream for dunking.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_2: { calories: 620, protein_g: 40, fat_g: 34, carbs_g: 38 },
+      serving_4: { calories: 620, protein_g: 40, fat_g: 34, carbs_g: 38 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Steak", prep: "thinly sliced, seared with fajita seasoning", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Large flour tortillas", prep: "", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Bell pepper", prep: "sliced and blistered", quantity: "1", unit: "", category: "Produce" },
+        { item: "Onion", prep: "sliced and blistered", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Shredded Monterey Jack cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Shredded cheddar cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fajita seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Sour cream", prep: "for dunking", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "", quantity: "", unit: "to taste", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Steak", prep: "thinly sliced, seared with fajita seasoning", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Large flour tortillas", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Bell pepper", prep: "sliced and blistered", quantity: "2", unit: "", category: "Produce" },
+        { item: "Onion", prep: "sliced and blistered", quantity: "1", unit: "", category: "Produce" },
+        { item: "Shredded Monterey Jack cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Shredded cheddar cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fajita seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Sour cream", prep: "for dunking", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "", quantity: "", unit: "to taste", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the steak",
+        detail:
+          "Cook the sliced steak hot and fast with the fajita seasoning until browned, then set aside."
+      },
+      {
+        step_number: 2,
+        title: "Char the fajitas",
+        detail:
+          "In the same pan, blister the peppers and onion until softened and smoky at the edges."
+      },
+      {
+        step_number: 3,
+        title: "Layer the quesadilla",
+        detail:
+          "Cover half a tortilla with cheese, steak, peppers, and onion, then more cheese, and fold it over."
+      },
+      {
+        step_number: 4,
+        title: "Griddle it golden",
+        detail:
+          "Cook in the pan, pressing gently, until each side turns deep golden and the cheese melts through."
+      },
+      {
+        step_number: 5,
+        title: "Slice and serve",
+        detail:
+          "Cut into wedges and serve with sour cream for dunking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chipotle-pineapple-pot-roast-bowl",
+    title: "Chipotle Pineapple Pot Roast Bowl",
+    category: "Comfort Food",
+    source: "Chipotle Copycats",
+    icon: "🍍",
+    tags: ["Slow-Cooked", "Sweet & Spicy", "Meal-Prep"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "A low-and-slow chipotle pot roast bowl finished with caramelized pineapple over cilantro jasmine rice — the kind of Sunday braise that makes the whole house smell like something all afternoon.",
+    prep_time_mins: 20,
+    cook_time_mins: 180,
+    native_serving: 4,
+    accent: "#E0A458",
+
+    macro_profiles: {
+      serving_2: { calories: 640, protein_g: 46, fat_g: 26, carbs_g: 58 },
+      serving_4: { calories: 640, protein_g: 46, fat_g: 26, carbs_g: 58 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Beef chuck roast", prep: "seared and braised until it shreds", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Jasmine rice", prep: "cooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Pineapple", prep: "diced and caramelized", quantity: "3/4", unit: "cup", category: "Produce" },
+        { item: "Chipotle peppers in adobo", prep: "", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Ground cumin", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Beef broth", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Beef chuck roast", prep: "seared and braised until it shreds", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Jasmine rice", prep: "cooked", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Pineapple", prep: "diced and caramelized", quantity: "1 1/2", unit: "cups", category: "Produce" },
+        { item: "Chipotle peppers in adobo", prep: "", quantity: "3", unit: "", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Ground cumin", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Beef broth", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the roast",
+        detail:
+          "Brown the chuck hard on every side in the oil to lock in a deep, savory crust."
+      },
+      {
+        step_number: 2,
+        title: "Start the braise",
+        detail:
+          "Add the onion, garlic, chipotle, cumin, and broth, then cover and cook low and slow."
+      },
+      {
+        step_number: 3,
+        title: "Cook till tender",
+        detail:
+          "Let it go until the beef pulls apart effortlessly, a few hours low and slow."
+      },
+      {
+        step_number: 4,
+        title: "Shred and reduce",
+        detail:
+          "Pull the beef apart and stir it back into the liquid, simmering to concentrate."
+      },
+      {
+        step_number: 5,
+        title: "Caramelize the pineapple",
+        detail:
+          "Sear the diced pineapple in a dry pan until golden and jammy at the edges."
+      },
+      {
+        step_number: 6,
+        title: "Build the bowl",
+        detail:
+          "Spoon the beef over rice, add the pineapple, and finish with fresh cilantro."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "copycat-chipotle-barbacoa-bowl",
+    title: "Copycat Chipotle Barbacoa Bowl",
+    category: "Comfort Food",
+    source: "Chipotle Copycats",
+    icon: "🌶️",
+    tags: ["Slow-Cooked", "Copycat", "Meal-Prep"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "A slow-braised copycat barbacoa bowl built bigger than the counter ever would — smoky shredded beef over cilantro-lime rice with corn, pico, cheese, and double the guacamole, no upcharge.",
+    prep_time_mins: 15,
+    cook_time_mins: 150,
+    native_serving: 4,
+    accent: "#A65A3A",
+
+    macro_profiles: {
+      serving_2: { calories: 660, protein_g: 44, fat_g: 30, carbs_g: 60 },
+      serving_4: { calories: 660, protein_g: 44, fat_g: 30, carbs_g: 60 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Beef chuck", prep: "cut into chunks, braised and shredded", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Cilantro-lime rice", prep: "cooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Corn kernels", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Pico de gallo", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Shredded cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Guacamole", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Chipotle peppers in adobo", prep: "", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Ground cumin", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Beef chuck", prep: "cut into chunks, braised and shredded", quantity: "2", unit: "lb", category: "Meat" },
+        { item: "Cilantro-lime rice", prep: "cooked", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Corn kernels", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Pico de gallo", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Shredded cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Guacamole", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Chipotle peppers in adobo", prep: "", quantity: "3", unit: "", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Ground cumin", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Braise the beef",
+        detail:
+          "Simmer the chuck low with chipotle, oregano, cumin, and a splash of broth until it shreds at a touch."
+      },
+      {
+        step_number: 2,
+        title: "Shred it down",
+        detail:
+          "Pull the beef apart and fold it back through its smoky braising liquid."
+      },
+      {
+        step_number: 3,
+        title: "Build the base",
+        detail:
+          "Spoon the cilantro-lime rice into bowls as the foundation."
+      },
+      {
+        step_number: 4,
+        title: "Load it up",
+        detail:
+          "Pile on the barbacoa, then arrange corn, pico, cheese, and guacamole in sections."
+      },
+      {
+        step_number: 5,
+        title: "Finish bright",
+        detail:
+          "Squeeze lime over the top right before serving."
+      }
+    ]
   }
 ];
 
@@ -3388,6 +3815,19 @@ const COLLECTIONS = [
     icon: "🥩",
     status: "coming-soon",
     source_match: null
+  },
+  {
+    id: "chipotle-copycats",
+    title: "Chipotle Copycats",
+    tag: "★ Collection · Comfort Food",
+    blurb:
+      "Smoky, cheesy, chipotle-loaded copycat bowls, wraps, and quesadillas — " +
+      "drive-thru favorites made bigger and better at home.",
+    designer: "📖 Copycat Comfort Classics",
+    accent: "#CC6A3D",          // chipotle orange
+    icon: "🌶️",
+    status: "live",
+    source_match: "Chipotle Copycats"
   }
 ];
 
