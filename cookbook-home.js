@@ -491,7 +491,8 @@
     "Casseroles & Bakes",
     "Skillets & Stir-Fries",
     "Grilled & Sheet-Pan",
-    "Sandwiches"
+    "Sandwiches",
+    "Desserts"
   ];
   var CATEGORY_META = {
     "Breakfast":             { icon: "🍳", accent: "#E0A458", blurb: "Eggs, hashes, and morning plates to start the day strong." },
@@ -500,7 +501,8 @@
     "Casseroles & Bakes":    { icon: "🧀", accent: "#C87A53", blurb: "Bubbling, golden, oven-baked one-dish dinners." },
     "Skillets & Stir-Fries": { icon: "🥘", accent: "#B5894E", blurb: "Fast, high-heat one-pan meals." },
     "Grilled & Sheet-Pan":   { icon: "🔥", accent: "#A65A3A", blurb: "Char, smoke, and hands-off sheet-pan roasts." },
-    "Sandwiches":            { icon: "🥪", accent: "#B98A4B", blurb: "Stacked, handheld, low-carb-friendly bites." }
+    "Sandwiches":            { icon: "🥪", accent: "#B98A4B", blurb: "Stacked, handheld, low-carb-friendly bites." },
+    "Desserts":              { icon: "🍰", accent: "#C9738B", blurb: "Icebox cakes, trifles, and sweet make-ahead treats." }
   };
   function presentCategories() {
     return CATEGORY_ORDER.filter(function (c) {
