@@ -4325,6 +4325,567 @@ const RECIPES = [
           "Divide the crispy potatoes and garlic butter steak bites evenly among containers. Drizzle with the spicy mayo sauce and sprinkle with parsley."
       }
     ]
+  },
+
+  {
+    recipe_id: "hot-honey-chipotle-bowl",
+    title: "Hot Honey Chipotle Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🔥",
+    tags: ["Meal-Prep", "High-Protein", "Spicy"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Air-fried sweet potato and seasoned beef piled into a bowl with crisp raw vegetables and a blended hot honey chipotle yogurt sauce — sweet, smoky, and no oven required.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#E67E22",
+
+    macro_profiles: {
+      serving_2: { calories: 690, protein_g: 38, fat_g: 27, carbs_g: 76 },
+      serving_4: { calories: 690, protein_g: 38, fat_g: 27, carbs_g: 76 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground beef", prep: "", quantity: "200", unit: "g", category: "Meat" },
+        { item: "Sweet potato", prep: "cut into small cubes", quantity: "450", unit: "g", category: "Produce" },
+        { item: "Red capsicum (bell pepper)", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cucumber", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Chives", prep: "chopped, for topping", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Sesame seeds", prep: "for topping", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "for the sauce", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Paprika", prep: "for the sauce", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Lime", prep: "juiced, for the sauce", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Garlic powder", prep: "for the sauce", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "for the sauce", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "for the sauce", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Ground beef", prep: "", quantity: "400", unit: "g", category: "Meat" },
+        { item: "Sweet potato", prep: "cut into small cubes", quantity: "900", unit: "g", category: "Produce" },
+        { item: "Red capsicum (bell pepper)", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Cucumber", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Chives", prep: "chopped, for topping", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Sesame seeds", prep: "for topping", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "for the sauce", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Paprika", prep: "for the sauce", quantity: "8", unit: "tbsp", category: "Pantry" },
+        { item: "Lime", prep: "juiced, for the sauce", quantity: "1", unit: "", category: "Produce" },
+        { item: "Garlic powder", prep: "for the sauce", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "for the sauce", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "for the sauce", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Air-fry the sweet potato",
+        detail:
+          "Cut the sweet potato into small cubes and air fry for 20 minutes at 200°C (400°F), until tender and lightly crisped."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail:
+          "Cook the ground beef in a skillet over medium-high heat, breaking it apart, and season to taste."
+      },
+      {
+        step_number: 3,
+        title: "Prep the vegetables",
+        detail:
+          "Dice the red onion and capsicum, and slice the cucumber."
+      },
+      {
+        step_number: 4,
+        title: "Blend the sauce",
+        detail:
+          "Blend the Greek yogurt, paprika, lime juice, garlic powder, honey, and salt and pepper until smooth."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowl",
+        detail:
+          "Once the sweet potato is cooked, add it to a bowl along with the beef and prepped vegetables."
+      },
+      {
+        step_number: 6,
+        title: "Finish & serve",
+        detail:
+          "Top with the chives and sesame seeds, then drizzle with the hot honey chipotle sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-shrimp-fried-rice",
+    title: "Garlic Shrimp Fried Rice",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍤",
+    tags: ["Meal-Prep", "High-Protein", "Garlic"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Garlic-marinated shrimp seared until caramelized, tossed with veggie fried rice and scrambled egg, finished with a sriracha-mayo drizzle and green onions.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#4A90A4",
+
+    macro_profiles: {
+      serving_2: { calories: 503, protein_g: 46, fat_g: 15, carbs_g: 42 },
+      serving_4: { calories: 503, protein_g: 46, fat_g: 15, carbs_g: 42 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Large raw shrimp", prep: "peeled and deveined", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Cooked jasmine or basmati rice", prep: "chilled overnight", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion", prep: "finely chopped", quantity: "1/2", unit: "small", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Mixed vegetables", prep: "carrots, peas, and corn", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Eggs", prep: "lightly beaten", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Soy sauce", prep: "low-sodium", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Oyster sauce", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "optional", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Green onions", prep: "chopped", quantity: "1", unit: "", category: "Produce" },
+        { item: "Light mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "to thin, as needed", quantity: "1 1/2", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Large raw shrimp", prep: "peeled and deveined", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cooked jasmine or basmati rice", prep: "chilled overnight", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "finely chopped", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Mixed vegetables", prep: "carrots, peas, and corn", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Eggs", prep: "lightly beaten", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Soy sauce", prep: "low-sodium", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Oyster sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "optional", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Green onions", prep: "chopped", quantity: "2", unit: "", category: "Produce" },
+        { item: "Light mayonnaise", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "to thin, as needed", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss the shrimp with olive oil, soy sauce, garlic powder, paprika, and black pepper. Let marinate 10-15 minutes while prepping other ingredients."
+      },
+      {
+        step_number: 2,
+        title: "Sear the shrimp",
+        detail:
+          "Heat a large skillet or wok over medium-high heat. Add the shrimp and cook 2-3 minutes per side until pink and lightly caramelized. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Cook the vegetables",
+        detail:
+          "In the same pan, add olive oil, chopped onion, and minced garlic. Sauté 2 minutes until fragrant, then add the mixed vegetables and cook another 3-4 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Scramble the eggs",
+        detail:
+          "Push the vegetables to one side of the pan. Pour the beaten eggs onto the empty side and scramble until just cooked, then mix into the vegetables."
+      },
+      {
+        step_number: 5,
+        title: "Add the rice & sauce",
+        detail:
+          "Add the chilled rice to the pan. Stir in the soy sauce, oyster sauce, sesame oil, and chili flakes. Toss everything together until evenly coated and heated through."
+      },
+      {
+        step_number: 6,
+        title: "Combine shrimp & rice",
+        detail:
+          "Return the cooked shrimp to the pan and mix well. Taste and adjust seasoning if needed."
+      },
+      {
+        step_number: 7,
+        title: "Make the spicy garlic drizzle",
+        detail:
+          "Whisk together the mayonnaise, sriracha, garlic powder, and lime juice. Add water as needed until smooth and drizzle-able."
+      },
+      {
+        step_number: 8,
+        title: "Serve",
+        detail:
+          "Divide the fried rice into containers, drizzle with the spicy garlic sauce, and top with chopped green onions."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-spicy-chipotle-chicken-pasta",
+    title: "Creamy Spicy Chipotle Chicken Pasta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍝",
+    tags: ["Meal-Prep", "High-Protein", "Spicy"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Seared chicken and whole-wheat penne tossed in a smoky chipotle cream sauce built from Greek yogurt, cream cheese, and Parmesan — rich without the guilt.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#9B4B3E",
+
+    macro_profiles: {
+      serving_2: { calories: 533, protein_g: 55, fat_g: 16, carbs_g: 45 },
+      serving_4: { calories: 533, protein_g: 55, fat_g: 16, carbs_g: 45 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "cut into bite-sized pieces", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Penne pasta", prep: "whole wheat or high-protein", quantity: "4", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Adobo sauce", prep: "from the can", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chipotle peppers in adobo sauce", prep: "finely chopped", quantity: "1", unit: "", category: "Pantry" },
+        { item: "Chicken broth", prep: "low-sodium", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Cream cheese", prep: "low-fat", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Paprika", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley or cilantro", prep: "chopped, for garnish", quantity: "", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "cut into bite-sized pieces", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Penne pasta", prep: "whole wheat or high-protein", quantity: "8", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Adobo sauce", prep: "from the can", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chipotle peppers in adobo sauce", prep: "finely chopped", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Chicken broth", prep: "low-sodium", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Cream cheese", prep: "low-fat", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley or cilantro", prep: "chopped, for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail:
+          "Bring a large pot of salted water to a boil. Add the penne and cook according to package instructions until al dente. Drain and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Season & cook the chicken",
+        detail:
+          "Toss the chicken with olive oil, salt, pepper, smoked paprika, and garlic powder. Heat a large skillet over medium-high heat and cook the chicken 6-8 minutes until golden brown and cooked through. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Make the sauce base",
+        detail:
+          "In the same skillet, add olive oil and minced garlic. Sauté 30 seconds until fragrant, then add the chopped chipotle peppers and adobo sauce, stirring for another 30 seconds."
+      },
+      {
+        step_number: 4,
+        title: "Add liquids & creaminess",
+        detail:
+          "Pour in the chicken broth and stir to loosen any bits from the pan. Lower the heat and whisk in the cream cheese until smooth and melted, then stir in the Greek yogurt, Parmesan, and paprika until creamy."
+      },
+      {
+        step_number: 5,
+        title: "Combine everything",
+        detail:
+          "Return the cooked chicken and pasta to the skillet and toss until fully coated in the chipotle cream sauce. Adjust seasoning with salt and pepper."
+      },
+      {
+        step_number: 6,
+        title: "Serve & garnish",
+        detail:
+          "Divide the pasta among containers and sprinkle chopped parsley or cilantro on top before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cheesy-garlic-parmesan-chicken-potatoes",
+    title: "Cheesy Garlic Parmesan Chicken & Potatoes",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🧄",
+    tags: ["Meal-Prep", "High-Protein", "Cheesy"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Roasted garlic-seasoned potatoes and seared chicken finished in a rich light evaporated-milk Parmesan sauce with melted cheddar — comfort food with a macro-friendly twist.",
+    prep_time_mins: 15,
+    cook_time_mins: 35,
+    native_serving: 4,
+    accent: "#9C7A3C",
+
+    macro_profiles: {
+      serving_2: { calories: 556, protein_g: 75, fat_g: 16, carbs_g: 30 },
+      serving_4: { calories: 556, protein_g: 75, fat_g: 16, carbs_g: 30 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Potatoes", prep: "peeled and diced", quantity: "1", unit: "lb", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the potatoes", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Italian herb seasoning", prep: "for the potatoes", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion & garlic powder", prep: "for the potatoes", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the potatoes", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chicken breast", prep: "diced", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Salt", prep: "for the chicken", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Italian herb seasoning", prep: "for the chicken", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion & garlic powder", prep: "for the chicken", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the chicken", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cooking oil spray", prep: "for the pan", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2-3", unit: "cloves", category: "Produce" },
+        { item: "Lemon juice", prep: "a squeeze", quantity: "", unit: "", category: "Produce" },
+        { item: "Mozzarella or cheddar cheese", prep: "shredded, light", quantity: "6", unit: "tbsp", category: "Dairy" },
+        { item: "Dried parsley", prep: "optional topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Light evaporated milk", prep: "", quantity: "2/3", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "freshly grated", quantity: "2 1/2", unit: "tbsp", category: "Dairy" },
+        { item: "Chili flakes", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Italian herb seasoning", prep: "for the sauce", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Light cream cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" }
+      ],
+      serving_4: [
+        { item: "Potatoes", prep: "peeled and diced", quantity: "2", unit: "lbs", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the potatoes", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Italian herb seasoning", prep: "for the potatoes", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion & garlic powder", prep: "for the potatoes", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the potatoes", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chicken breast", prep: "diced", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Salt", prep: "for the chicken", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Italian herb seasoning", prep: "for the chicken", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion & garlic powder", prep: "for the chicken", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the chicken", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cooking oil spray", prep: "for the pan", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "5", unit: "cloves", category: "Produce" },
+        { item: "Lemon juice", prep: "a squeeze", quantity: "", unit: "", category: "Produce" },
+        { item: "Mozzarella or cheddar cheese", prep: "shredded, light", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Dried parsley", prep: "optional topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Light evaporated milk", prep: "", quantity: "1 2/3", unit: "cups", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "freshly grated", quantity: "1/3", unit: "cup", category: "Dairy" },
+        { item: "Chili flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Italian herb seasoning", prep: "for the sauce", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Light cream cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potatoes",
+        detail:
+          "Toss the diced potatoes with olive oil, salt, Italian herb seasoning, onion & garlic powder, and smoked paprika. Roast at 200°C (400°F) for 25-30 minutes until golden and tender."
+      },
+      {
+        step_number: 2,
+        title: "Season & cook the chicken",
+        detail:
+          "Toss the diced chicken with the same seasoning blend used for the potatoes. Spray a large skillet with cooking oil and cook the chicken over medium-high heat until browned and cooked through."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the garlic",
+        detail:
+          "Add the minced garlic to the skillet and sauté 30 seconds until fragrant, then squeeze in the lemon juice."
+      },
+      {
+        step_number: 4,
+        title: "Make the parmesan sauce",
+        detail:
+          "In a saucepan, warm the light evaporated milk, then whisk in the Parmesan, chili flakes, onion powder, and Italian herb seasoning until smooth. Stir in the cream cheese until melted and creamy."
+      },
+      {
+        step_number: 5,
+        title: "Combine",
+        detail:
+          "Toss the roasted potatoes and cooked chicken with the parmesan sauce, then fold in the shredded mozzarella or cheddar until melted."
+      },
+      {
+        step_number: 6,
+        title: "Serve",
+        detail:
+          "Divide among containers and top with dried parsley, if desired."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-buffalo-chicken-rice-bowls",
+    title: "High-Protein Honey Buffalo Chicken Rice Bowls",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍯",
+    tags: ["Meal-Prep", "High-Protein", "Sweet & Spicy"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Butter-seared honey buffalo chicken bites over rice with a tangy honey-buffalo drizzle and a crunchy cabbage-carrot slaw for contrast.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#E0A458",
+
+    macro_profiles: {
+      serving_2: { calories: 528, protein_g: 44, fat_g: 16, carbs_g: 49 },
+      serving_4: { calories: 528, protein_g: 44, fat_g: 16, carbs_g: 49 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "cubed", quantity: "14", unit: "oz", category: "Meat" },
+        { item: "Garlic", prep: "minced", quantity: "2-3", unit: "cloves", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Butter", prep: "grass-fed, for cooking", quantity: "3/4", unit: "tbsp", category: "Dairy" },
+        { item: "Honey", prep: "for the chicken", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Buffalo sauce", prep: "for the chicken", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Light mayonnaise", prep: "for the sauce", quantity: "2 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Buffalo hot sauce", prep: "for the sauce", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "for the sauce", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1/8", unit: "lemon", category: "Produce" },
+        { item: "Garlic powder", prep: "for the sauce", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the sauce", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the sauce", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Red cabbage", prep: "thinly sliced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Carrots", prep: "grated", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Green onion", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Light mayonnaise", prep: "for the slaw", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "for the slaw", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the slaw", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the slaw", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cooked white rice", prep: "", quantity: "1 1/2", unit: "cups", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "cubed", quantity: "1.75", unit: "lbs", category: "Meat" },
+        { item: "Garlic", prep: "minced", quantity: "4-5", unit: "cloves", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Butter", prep: "grass-fed, for cooking", quantity: "1 1/2", unit: "tbsp", category: "Dairy" },
+        { item: "Honey", prep: "for the chicken", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Buffalo sauce", prep: "for the chicken", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Light mayonnaise", prep: "for the sauce", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Buffalo hot sauce", prep: "for the sauce", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "for the sauce", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1/4", unit: "lemon", category: "Produce" },
+        { item: "Garlic powder", prep: "for the sauce", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the sauce", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the sauce", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Red cabbage", prep: "thinly sliced", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Carrots", prep: "grated", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Green onion", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Light mayonnaise", prep: "for the slaw", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "for the slaw", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the slaw", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the slaw", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cooked white rice", prep: "", quantity: "3", unit: "cups", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the chicken",
+        detail:
+          "Toss the cubed chicken with the minced garlic, black pepper, onion powder, smoked paprika, salt, and olive oil."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail:
+          "Melt the butter in a large skillet over medium-high heat. Add the chicken and cook until browned and cooked through."
+      },
+      {
+        step_number: 3,
+        title: "Glaze the chicken",
+        detail:
+          "Stir the honey and buffalo sauce into the skillet and toss to coat the chicken, simmering until glossy."
+      },
+      {
+        step_number: 4,
+        title: "Make the honey buffalo sauce",
+        detail:
+          "Whisk together the mayonnaise, buffalo hot sauce, honey, lemon juice, garlic powder, smoked paprika, and black pepper."
+      },
+      {
+        step_number: 5,
+        title: "Make the crunchy slaw",
+        detail:
+          "Toss the red cabbage, carrots, green onion, and cilantro with the mayonnaise, honey, salt, and pepper."
+      },
+      {
+        step_number: 6,
+        title: "Assemble the bowls",
+        detail:
+          "Divide the rice among containers, top with the honey buffalo chicken, add the slaw, and drizzle with the honey buffalo sauce."
+      }
+    ]
   }
 ];
 
