@@ -1378,6 +1378,14 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .smw-confirm-btn { margin: 0; }
 .smw-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ── Macro Smart Generator: mode toggle + per-day fit readout ─────────── */
+.smw-mode-bar { padding: 0 20px 10px; }
+.smw-macro-fit {
+  display: inline-block; margin: -4px 0 8px; padding: 3px 9px; border-radius: 999px;
+  background: rgba(var(--accent-rgb), 0.12); color: var(--accent);
+  font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
+}
+
 /* ── Save Week Block prompt (final-meal completion / day-7 boot check) ── */
 .swp-body { padding-top: 4px; }
 .swp-copy { padding: 4px 20px 14px; font-size: 14px; color: var(--on-dark-dim); line-height: 1.5; margin: 0; }
