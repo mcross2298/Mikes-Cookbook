@@ -5108,6 +5108,1801 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "chocolate-espresso-protein-ice-cream",
+    title: "Chocolate Espresso Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍨",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "A thick, creamy blender ice cream made from Greek yogurt, chocolate protein powder, and instant espresso — a rich mocha treat with none of the added sugar of the scoop-shop version.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#4A2E23",
+
+    macro_profiles: {
+      serving_2: { calories: 157, protein_g: 22, fat_g: 2, carbs_g: 7 },
+      serving_4: { calories: 157, protein_g: 22, fat_g: 2, carbs_g: 7 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "120", unit: "ml", category: "Dairy" },
+        { item: "Instant espresso powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Sugar-free chocolate pudding mix", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Ice cubes", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "240", unit: "ml", category: "Dairy" },
+        { item: "Instant espresso powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Sugar-free chocolate pudding mix", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Ice cubes", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend",
+        detail:
+          "Blend all ingredients together until thick and creamy."
+      },
+      {
+        step_number: 2,
+        title: "Transfer",
+        detail:
+          "Transfer the mixture to a container."
+      },
+      {
+        step_number: 3,
+        title: "Freeze",
+        detail:
+          "Freeze for 20 to 30 minutes for a firmer, scoopable texture."
+      },
+      {
+        step_number: 4,
+        title: "Scoop & serve",
+        detail:
+          "Scoop and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "strawberry-shortcake-protein-mousse",
+    title: "Strawberry Shortcake Protein Mousse",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍓",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A quick no-bake mousse swirling Greek yogurt, vanilla protein powder, and fresh strawberries, finished with a dusting of graham cracker crumbs for that shortcake crunch.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D67E8C",
+
+    macro_profiles: {
+      serving_2: { calories: 149, protein_g: 19, fat_g: 1, carbs_g: 11 },
+      serving_4: { calories: 149, protein_g: 19, fat_g: 1, carbs_g: 11 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Strawberries", prep: "diced, divided", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Graham crackers", prep: "crushed", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "50", unit: "g", category: "Pantry" },
+        { item: "Strawberries", prep: "diced, divided", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Graham crackers", prep: "crushed", quantity: "16", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "20", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Mix the Greek yogurt, protein powder, and maple syrup until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Fold in strawberries",
+        detail:
+          "Fold in half of the diced strawberries."
+      },
+      {
+        step_number: 3,
+        title: "Divide & top",
+        detail:
+          "Divide into serving cups and top with the remaining strawberries and graham cracker crumbs."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail:
+          "Chill for 20 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-coconut-protein-truffles",
+    title: "Chocolate Coconut Protein Truffles",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Bite-Size"],
+    dish_category: "Desserts",
+    description:
+      "No-bake truffles made from chocolate protein powder, Greek yogurt, cocoa, and shredded coconut, rolled with dark chocolate chips — a rich bite-size treat that chills up firm enough to hold its shape.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#5C3A21",
+
+    macro_profiles: {
+      serving_4: { calories: 83, protein_g: 9, fat_g: 3, carbs_g: 5 },
+      serving_2: { calories: 83, protein_g: 9, fat_g: 3, carbs_g: 5 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chocolate protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Unsweetened shredded coconut", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "finely chopped", quantity: "10", unit: "g", category: "Pantry" }
+      ],
+      serving_2: [
+        { item: "Chocolate protein powder", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "40", unit: "g", category: "Dairy" },
+        { item: "Unsweetened shredded coconut", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "finely chopped", quantity: "5", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Combine",
+        detail:
+          "Combine all ingredients in a bowl."
+      },
+      {
+        step_number: 2,
+        title: "Chill",
+        detail:
+          "Refrigerate for 15 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Roll",
+        detail:
+          "Roll into 8 equal truffles."
+      },
+      {
+        step_number: 4,
+        title: "Chill again & serve",
+        detail:
+          "Chill for another 30 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "apple-pie-protein-parfait",
+    title: "Apple Pie Protein Parfait",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍎",
+    tags: ["High-Protein", "Make-Ahead", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "Cinnamon-stewed apples layered over a vanilla Greek yogurt protein base and topped with oats — a warm-spiced parfait that tastes like apple pie in a glass.",
+    prep_time_mins: 10,
+    cook_time_mins: 5,
+    native_serving: 2,
+    accent: "#C1793A",
+
+    macro_profiles: {
+      serving_2: { calories: 176, protein_g: 21, fat_g: 2, carbs_g: 16 },
+      serving_4: { calories: 176, protein_g: 21, fat_g: 2, carbs_g: 16 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Apple", prep: "diced", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Cinnamon", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Quick oats", prep: "", quantity: "15", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Apple", prep: "diced", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Cinnamon", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Quick oats", prep: "", quantity: "30", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the apple",
+        detail:
+          "Cook the diced apple with cinnamon and maple syrup in a pan for 4 to 5 minutes, until softened."
+      },
+      {
+        step_number: 2,
+        title: "Mix the yogurt base",
+        detail:
+          "Mix the Greek yogurt and protein powder in a bowl."
+      },
+      {
+        step_number: 3,
+        title: "Layer",
+        detail:
+          "Layer the yogurt mixture and cooked apples into serving glasses."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail:
+          "Top with oats and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-peanut-butter-cheesecake-cups",
+    title: "Chocolate Peanut Butter Cheesecake Cups",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥜",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A rich no-bake cheesecake cup blending Greek yogurt, light cream cheese, chocolate protein powder, and powdered peanut butter, studded with mini chocolate chips.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8B5A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 184, protein_g: 23, fat_g: 6, carbs_g: 9 },
+      serving_4: { calories: 184, protein_g: 23, fat_g: 6, carbs_g: 9 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Mini chocolate chips", prep: "", quantity: "5", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "160", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "50", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Mini chocolate chips", prep: "", quantity: "10", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Mix the Greek yogurt and cream cheese until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Add flavor",
+        detail:
+          "Add the protein powder, powdered peanut butter, and maple syrup. Stir until fully combined."
+      },
+      {
+        step_number: 3,
+        title: "Fold in chips",
+        detail:
+          "Fold in the mini chocolate chips."
+      },
+      {
+        step_number: 4,
+        title: "Divide & chill",
+        detail:
+          "Divide into serving cups and chill for 30 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "vanilla-cake-batter-protein-popsicles",
+    title: "Vanilla Cake Batter Protein Popsicles",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍭",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "Birthday-cake-flavored popsicles made from Greek yogurt, vanilla protein powder, and rainbow sprinkles, finished with a melted white chocolate drizzle — a make-ahead freezer treat with real protein folded in.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 6,
+    accent: "#D98FC0",
+
+    macro_profiles: {
+      serving_6: { calories: 120, protein_g: 12, fat_g: 3, carbs_g: 9 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Milk of choice", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "2", unit: "scoops", category: "Pantry" },
+        { item: "Sugar-free vanilla pudding mix", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Rainbow sprinkles", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "White chocolate chips", prep: "melted, to drizzle", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the base",
+        detail:
+          "Whisk the Greek yogurt, milk, protein powder, pudding mix, and vanilla together until completely smooth and pourable."
+      },
+      {
+        step_number: 2,
+        title: "Let it thicken",
+        detail:
+          "Let the mix sit for a couple of minutes so the pudding starts to thicken it slightly, which helps the sprinkles stay suspended."
+      },
+      {
+        step_number: 3,
+        title: "Stir in sprinkles",
+        detail:
+          "Stir in the rainbow sprinkles quickly, working fast so the colors do not bleed into the batter."
+      },
+      {
+        step_number: 4,
+        title: "Fill the molds",
+        detail:
+          "Pour the mixture into popsicle molds and tap them on the counter to knock out any air bubbles."
+      },
+      {
+        step_number: 5,
+        title: "Freeze",
+        detail:
+          "Push in the sticks and freeze overnight until solid all the way through."
+      },
+      {
+        step_number: 6,
+        title: "Release & drizzle",
+        detail:
+          "Run the molds under warm water to release the pops, then drizzle with the melted white chocolate right before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pistachio-chocolate-dipped-yogurt-bars",
+    title: "Pistachio Chocolate-Dipped Yogurt Bars",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "Frozen Greek yogurt bars dipped in a dark chocolate shell and finished with warmed pistachio butter and chopped pistachios — a snappy, creamy freezer treat ready whenever the craving hits.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#7C9A4E",
+
+    macro_profiles: {
+      serving_2: { calories: 210, protein_g: 9, fat_g: 11, carbs_g: 19 },
+      serving_4: { calories: 210, protein_g: 9, fat_g: 11, carbs_g: 19 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Shelled pistachios", prep: "chopped", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pistachio butter", prep: "for drizzling", quantity: "1/2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "1 1/2", unit: "cups", category: "Dairy" },
+        { item: "Honey or maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Shelled pistachios", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Pistachio butter", prep: "for drizzling", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Fill the molds",
+        detail:
+          "Stir the Greek yogurt, honey, and vanilla together until smooth, then spoon it into popsicle bar molds and freeze overnight until solid."
+      },
+      {
+        step_number: 2,
+        title: "Melt the chocolate",
+        detail:
+          "Melt the chocolate chips with the coconut oil in short bursts, stirring between each one, until it pours in a smooth ribbon."
+      },
+      {
+        step_number: 3,
+        title: "Dip the bars",
+        detail:
+          "Pop the bars out of the molds and dip or spoon the chocolate over each one, letting it set on contact with the frozen yogurt."
+      },
+      {
+        step_number: 4,
+        title: "Finish & freeze",
+        detail:
+          "Drizzle with the warmed pistachio butter, scatter the chopped pistachios over the top, and return to the freezer until ready to eat."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "passionfruit-mango-cheesecake-cups",
+    title: "Passionfruit & Mango Cheesecake Cups",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥭",
+    tags: ["No-Bake", "Make-Ahead", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "A no-bake cheesecake cup with a graham cracker crust, a mango-swirled cream cheese and Greek yogurt filling, and a glossy layer of fresh passionfruit pulp — a cool, tropical treat that needs no oven.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#EFA24A",
+
+    macro_profiles: {
+      serving_2: { calories: 290, protein_g: 8, fat_g: 15, carbs_g: 32 },
+      serving_4: { calories: 290, protein_g: 8, fat_g: 15, carbs_g: 32 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Graham cracker crumbs", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Butter", prep: "melted", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Cream cheese", prep: "softened", quantity: "4", unit: "oz", category: "Dairy" },
+        { item: "Plain Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Powdered sugar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Mango puree", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh passionfruit", prep: "pulp scooped", quantity: "2", unit: "", category: "Produce" },
+        { item: "Mango", prep: "diced, to top", quantity: "1/4", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Graham cracker crumbs", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Butter", prep: "melted", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Cream cheese", prep: "softened", quantity: "8", unit: "oz", category: "Dairy" },
+        { item: "Plain Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Powdered sugar", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Mango puree", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh passionfruit", prep: "pulp scooped", quantity: "4", unit: "", category: "Produce" },
+        { item: "Mango", prep: "diced, to top", quantity: "1/2", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Press the crust",
+        detail:
+          "Stir the graham crumbs and melted butter together until they look like wet sand, then press them firmly into the bottom of small serving glasses."
+      },
+      {
+        step_number: 2,
+        title: "Beat the filling",
+        detail:
+          "Beat the cream cheese, Greek yogurt, powdered sugar, and vanilla until completely smooth with no lumps hiding in there."
+      },
+      {
+        step_number: 3,
+        title: "Fold & spoon",
+        detail:
+          "Fold the mango puree through the cream until the whole thing turns a soft sunset yellow, then spoon it over the bases."
+      },
+      {
+        step_number: 4,
+        title: "Top with passionfruit",
+        detail:
+          "Tap each glass gently on the counter so the filling settles flat, then spoon the passionfruit pulp over the top in a glossy layer."
+      },
+      {
+        step_number: 5,
+        title: "Chill & finish",
+        detail:
+          "Chill for at least 2 hours so it sets, then finish with the diced mango right before you serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-peanut-butter-freezer-bark",
+    title: "Dark Chocolate Peanut Butter Freezer Bark",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "A protein-rich peanut butter and oat base topped with melted dark chocolate and flaky sea salt, frozen and sliced into bark squares — a satisfying make-ahead treat for the freezer.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#3C2A1E",
+
+    macro_profiles: {
+      serving_2: { calories: 310, protein_g: 14, fat_g: 18, carbs_g: 24 },
+      serving_4: { calories: 310, protein_g: 14, fat_g: 18, carbs_g: 24 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Natural peanut butter", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Rolled oats", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Peanuts", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1/2", unit: "scoop", category: "Pantry" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate (85%)", prep: "melted", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Flaky sea salt", prep: "to finish", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Natural peanut butter", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Peanuts", prep: "chopped", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate (85%)", prep: "melted", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Flaky sea salt", prep: "to finish", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Stir the peanut butter, oats, chopped peanuts, protein powder, and honey together until thick and sticky."
+      },
+      {
+        step_number: 2,
+        title: "Press and layer",
+        detail:
+          "Press the mixture firmly into a parchment-lined tin in an even layer."
+      },
+      {
+        step_number: 3,
+        title: "Top with chocolate",
+        detail:
+          "Melt the dark chocolate with the coconut oil and pour it over the base, spreading to the edges."
+      },
+      {
+        step_number: 4,
+        title: "Freeze and cut",
+        detail:
+          "Sprinkle with flaky salt, freeze until firm, then slice into squares."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "blackberry-pistachio-protein-pot",
+    title: "Blackberry Pistachio Protein Pot",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🫐",
+    tags: ["High-Protein", "Make-Ahead", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "A layered single-serving pot of soaked oats, jammy blackberry compote, and a whipped Greek yogurt protein base, topped with crushed pistachios, fresh mint, and blackberries.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#5C3A6E",
+
+    macro_profiles: {
+      serving_1: { calories: 440, protein_g: 38, fat_g: 15, carbs_g: 40 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "dairy or unsweetened almond", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt or Skyr", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Blackberries", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Crushed pistachios", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh mint and a few blackberries", prep: "to garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Soak the oats",
+        detail:
+          "Stir the oats, milk, chia seeds, and vanilla together. Chill until thick and creamy (overnight is best, 30 minutes minimum)."
+      },
+      {
+        step_number: 2,
+        title: "Whip the base",
+        detail:
+          "Beat the Greek yogurt, cream cheese, protein powder, and honey together until thick and smooth."
+      },
+      {
+        step_number: 3,
+        title: "Make the compote",
+        detail:
+          "Mash the blackberries and let them sit 10 minutes until thickened and jammy."
+      },
+      {
+        step_number: 4,
+        title: "Layer it up",
+        detail:
+          "Spoon the soaked oats into a glass, then the blackberry compote, then the whipped protein base, and finish with the crushed pistachios."
+      },
+      {
+        step_number: 5,
+        title: "Garnish",
+        detail:
+          "Finish with a few fresh blackberries and a sprig of mint."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pb-berry-yogurt-crunch-bowl",
+    title: "PB Berry Yogurt Crunch Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥣",
+    tags: ["High-Protein", "No-Bake", "Quick"],
+    dish_category: "Desserts",
+    description:
+      "A layered Greek yogurt bowl with crunchy granola, fresh blueberries and raspberries, a warm peanut butter drizzle, and dark chocolate chunks — a fast, balanced sweet snack with protein, fiber, and healthy fats.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#B5786B",
+
+    macro_profiles: {
+      serving_1: { calories: 410, protein_g: 27, fat_g: 18, carbs_g: 32 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Granola", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Peanut butter", prep: "warmed slightly", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Blueberries", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Raspberries", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Dark chocolate chunks", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Build the yogurt base",
+        detail:
+          "Spoon the Greek yogurt into a bowl and smooth it evenly."
+      },
+      {
+        step_number: 2,
+        title: "Add crunch",
+        detail:
+          "Scatter the granola generously over the yogurt."
+      },
+      {
+        step_number: 3,
+        title: "Layer the fruit",
+        detail:
+          "Add the blueberries and raspberries evenly across the bowl."
+      },
+      {
+        step_number: 4,
+        title: "Drizzle peanut butter",
+        detail:
+          "Warm the peanut butter slightly before drizzling so it spreads beautifully."
+      },
+      {
+        step_number: 5,
+        title: "Finish the bowl",
+        detail:
+          "Top with the dark chocolate chunks and a dusting of cinnamon."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-pistachio-protein-pot",
+    title: "Dark Chocolate Pistachio Protein Pot",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Quick"],
+    dish_category: "Desserts",
+    description:
+      "A two-layer Greek yogurt pot — vanilla-honey on the bottom, cocoa swirled on top — finished with chopped pistachios. Tastes like a chocolate dessert but is mostly high-protein yogurt.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#5A4632",
+
+    macro_profiles: {
+      serving_1: { calories: 280, protein_g: 28, fat_g: 9, carbs_g: 22 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pistachios", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Milk", prep: "splash, to loosen", quantity: "", unit: "", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the vanilla layer",
+        detail:
+          "Whisk half the yogurt with the protein powder and honey until smooth and thick, loosening with a splash of milk if needed."
+      },
+      {
+        step_number: 2,
+        title: "Make the chocolate layer",
+        detail:
+          "Stir the cocoa into the other half of the yogurt to make the chocolate layer."
+      },
+      {
+        step_number: 3,
+        title: "Layer the base",
+        detail:
+          "Spoon the vanilla layer into a pot or glass as the base."
+      },
+      {
+        step_number: 4,
+        title: "Add the chocolate layer",
+        detail:
+          "Spoon the chocolate layer over the top and smooth it flat."
+      },
+      {
+        step_number: 5,
+        title: "Top & chill",
+        detail:
+          "Scatter the chopped pistachios across the surface and chill until ready to eat."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crispy-apple-pie-turnovers",
+    title: "Crispy Apple Pie Turnovers",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥟",
+    tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Air-fried low-carb tortilla pockets stuffed with cinnamon apple pie filling and finished with a protein icing drizzle — a crisp, portable take on apple turnovers made in the air fryer.",
+    prep_time_mins: 15,
+    cook_time_mins: 5,
+    native_serving: 8,
+    accent: "#9C5A28",
+
+    macro_profiles: {
+      serving_8: { calories: 86, protein_g: 2, fat_g: 2, carbs_g: 15 }
+    },
+
+    scaling_options: [8],
+
+    ingredients_by_serving: {
+      serving_8: [
+        { item: "No sugar added apple pie filling", prep: "", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Low-carb tortillas", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Ground cinnamon", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cinnamon", prep: "for the brown sugar topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "for the brown sugar topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Vanilla whey/casein protein powder", prep: "for the icing", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Powdered sugar", prep: "for the icing", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "for the icing", quantity: "4", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the filling",
+        detail:
+          "Add the apple pie filling and cinnamon to a bowl. Use a knife to cut the apples into smaller pieces."
+      },
+      {
+        step_number: 2,
+        title: "Cut the tortillas",
+        detail:
+          "Cut each tortilla in half to form 8 cone-shaped pockets."
+      },
+      {
+        step_number: 3,
+        title: "Fill the pockets",
+        detail:
+          "Add 1/8 of the pie filling to each tortilla cone. Repeat for all 8 pockets."
+      },
+      {
+        step_number: 4,
+        title: "Air fry",
+        detail:
+          "Spray both sides with non-stick cooking spray and air fry at 400°F for 3 to 5 minutes until golden."
+      },
+      {
+        step_number: 5,
+        title: "Make the icing & finish",
+        detail:
+          "Make the protein icing by mixing the dry ingredients, then slowly add cold water until it reaches icing consistency. If too thin, refrigerate to thicken, then drizzle over the turnovers and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "reeses-uncrustable-protein-pop-tarts",
+    title: "Reese's Uncrustable Protein Pop Tarts",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥧",
+    tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Low-calorie bread sealed around a protein peanut butter filling, air-fried until golden, then topped with chocolate protein frosting, mini Reese's cups, and crushed Reese's Puffs.",
+    prep_time_mins: 20,
+    cook_time_mins: 5,
+    native_serving: 4,
+    accent: "#6E4A2E",
+
+    macro_profiles: {
+      serving_4: { calories: 270, protein_g: 23, fat_g: 6, carbs_g: 31 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Low-calorie bread of choice", prep: "", quantity: "8", unit: "slices", category: "Pantry" },
+        { item: "Egg whites", prep: "for sealing", quantity: "50", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein protein powder", prep: "for the PB filling", quantity: "45", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Chocolate whey/casein protein powder", prep: "for the frosting", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Unsweetened baking cocoa", prep: "for the frosting", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Mini Reese's cups", prep: "for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Reese's Puffs cereal", prep: "crushed, for topping", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the PB filling",
+        detail:
+          "Mix the vanilla protein powder, powdered peanut butter, sweetener, and salt. Slowly add cold water until thick, then place in the fridge to chill."
+      },
+      {
+        step_number: 2,
+        title: "Make the chocolate frosting",
+        detail:
+          "Mix the chocolate protein powder and cocoa the same way — add cold water until thick and smooth, then place in the fridge."
+      },
+      {
+        step_number: 3,
+        title: "Fill the first side",
+        detail:
+          "Lay one slice of bread flat and brush egg whites around the edges. Add 1/4 of the PB filling to the center."
+      },
+      {
+        step_number: 4,
+        title: "Seal",
+        detail:
+          "Take a second slice, brush egg whites on the bottom edges, place on top, then brush the top edges and press down firmly to seal."
+      },
+      {
+        step_number: 5,
+        title: "Trim & repeat",
+        detail:
+          "Trim the crusts and crimp the edges with a fork. Repeat for all 4 pop tarts."
+      },
+      {
+        step_number: 6,
+        title: "Air fry",
+        detail:
+          "Air fry at 400°F for 4 to 5 minutes, spraying the tops lightly and flipping once golden."
+      },
+      {
+        step_number: 7,
+        title: "Top & serve",
+        detail:
+          "Top with the chocolate frosting, mini Reese's cups, and crushed Reese's Puffs. Enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "oreo-cookies-and-cream-protein-ice-cream",
+    title: "Oreo Cookies & Cream Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍪",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A blended vanilla protein base spun into soft-serve texture in a Creami-style ice cream maker, then mixed with crushed Oreo Thins for an oversized single-pint cookies-and-cream treat.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#4A4A52",
+
+    macro_profiles: {
+      serving_1: { calories: 390, protein_g: 37, fat_g: 10, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Fat-free milk", prep: "", quantity: "225", unit: "g", category: "Dairy" },
+        { item: "Unsweetened vanilla almond milk", prep: "", quantity: "225", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Sugar-free white chocolate pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Oreo Thins", prep: "for mix-in", quantity: "4", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the base",
+        detail:
+          "Add all ingredients except the Oreos into your ice cream maker pint. Use a small hand blender and mix until completely smooth, with no clumps at the bottom or sides."
+      },
+      {
+        step_number: 2,
+        title: "Freeze solid",
+        detail:
+          "Add the pint to the freezer and freeze until completely solid — overnight works well."
+      },
+      {
+        step_number: 3,
+        title: "Spin",
+        detail:
+          "Once frozen solid, process the pint on the machine's \"Lite Ice Cream\" function. One spin is usually enough to get it nice and creamy."
+      },
+      {
+        step_number: 4,
+        title: "Add the mix-in",
+        detail:
+          "Use a spoon to make a hole down the center of the ice cream and add the Oreo Thins so they get evenly distributed."
+      },
+      {
+        step_number: 5,
+        title: "Mix in & serve",
+        detail:
+          "Process the pint again on the \"Mix-In\" function to break everything up and mix it throughout, then it's ready to enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "fruity-pebbles-protein-cheesecake-frosting",
+    title: "Fruity Pebbles Protein Cheesecake Frosting",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌈",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A blended cream cheese and Greek yogurt frosting swirled with crushed Fruity Pebbles — a spoonable, spreadable protein topping that thickens up overnight in the fridge.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 16,
+    accent: "#8E6BC9",
+
+    macro_profiles: {
+      serving_16: { calories: 40, protein_g: 5, fat_g: 0.25, carbs_g: 4 }
+    },
+
+    scaling_options: [16],
+
+    ingredients_by_serving: {
+      serving_16: [
+        { item: "Fat-free cream cheese", prep: "", quantity: "220", unit: "g", category: "Dairy" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "227", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Fruity Pebbles cereal", prep: "crushed", quantity: "56", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the base",
+        detail:
+          "Add the cream cheese, Greek yogurt, protein powder, and sweetener into a blender and blend until everything is completely smooth — take your time so it comes out creamy and thick with no chunks or graininess."
+      },
+      {
+        step_number: 2,
+        title: "Crush the cereal",
+        detail:
+          "Grab the Fruity Pebbles and crush them into smaller pieces in a ziplock bag with your hands or a rolling pin — smaller pieces give better texture and little pops of crunch."
+      },
+      {
+        step_number: 3,
+        title: "Mix it in",
+        detail:
+          "Mix the crushed cereal into the frosting and stir it through so it's evenly distributed in every bite."
+      },
+      {
+        step_number: 4,
+        title: "Chill",
+        detail:
+          "Pour the mixture into jars or containers, smooth out the top, and seal them up. Place in the fridge overnight so everything sets and thickens properly."
+      },
+      {
+        step_number: 5,
+        title: "Serve",
+        detail:
+          "By the next day it'll be thicker, colder, and way better texture-wise. Grab a spoon and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "nutter-butter-protein-dessert-cups",
+    title: "Nutter Butter Protein Dessert Cups",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥜",
+    tags: ["High-Protein", "No-Bake", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "Layered cups of peanut butter protein pudding and crushed Nutter Butter cookies — a quick, chilled dessert that doubles easily for a week of meal prep.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 3,
+    accent: "#B8895C",
+
+    macro_profiles: {
+      serving_3: { calories: 167, protein_g: 8, fat_g: 3.5, carbs_g: 16 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "40", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "12", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "6", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "big pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "150", unit: "g", category: "Dairy" },
+        { item: "Nutter Butter cookies", prep: "cream removed, crushed", quantity: "3", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the dry base",
+        detail:
+          "Add the protein powder, powdered peanut butter, pudding mix, sweetener, and sea salt into a bowl and mix thoroughly so everything is evenly combined with no clumps."
+      },
+      {
+        step_number: 2,
+        title: "Add water",
+        detail:
+          "Slowly add cold water a little at a time while mixing, until you reach a smooth, icing-like consistency."
+      },
+      {
+        step_number: 3,
+        title: "Add the yogurt",
+        detail:
+          "Add in the Greek yogurt and mix it all together until it thickens up into a creamy, pudding-like texture."
+      },
+      {
+        step_number: 4,
+        title: "Crush the cookies",
+        detail:
+          "Take the cream out of the Nutter Butters and toss the cookie pieces into a ziplock bag. Crush them up into small chunks, some fine, some a little bigger for texture."
+      },
+      {
+        step_number: 5,
+        title: "Layer",
+        detail:
+          "Add a layer of the PB protein pudding, then a layer of crushed cookies. Repeat for about 3 layers per cup."
+      },
+      {
+        step_number: 6,
+        title: "Chill & serve",
+        detail:
+          "Pop the cups in the fridge for a bit to chill and thicken, then they're good to go."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "protein-chocolate-chip-cookie-dough",
+    title: "Protein Chocolate Chip Cookie Dough",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍪",
+    tags: ["High-Protein", "No-Bake", "Quick"],
+    dish_category: "Desserts",
+    description:
+      "An edible, no-bake cookie dough whipped from vegan protein powder and powdered peanut butter, loaded with mini chocolate chips, cacao nibs, and marshmallow bits, then chilled to a scoopable texture.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#A9793F",
+
+    macro_profiles: {
+      serving_1: { calories: 431, protein_g: 41, fat_g: 13, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Vegan vanilla protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Ground cinnamon", prep: "dash", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cookie butter emulsion", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Mini chocolate chips", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Cacao nibs", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Marshmallow bits", prep: "", quantity: "5", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the dry ingredients",
+        detail:
+          "Add all the dry powdered ingredients into a bowl and mix thoroughly so everything is evenly combined and you don't get any clumping."
+      },
+      {
+        step_number: 2,
+        title: "Add water",
+        detail:
+          "Slowly add cold water a little at a time while mixing. Keep stirring until you reach a thick, smooth, frosting-like consistency."
+      },
+      {
+        step_number: 3,
+        title: "Stir in the mix-ins",
+        detail:
+          "Once the base is ready, stir in the chocolate chips and cacao nibs, but leave out the marshmallow bits for now since they'll get soggy if added too early."
+      },
+      {
+        step_number: 4,
+        title: "Chill",
+        detail:
+          "Place the bowl in the freezer for about an hour, or until the edges start to firm up. This helps thicken the dough and gives it a better texture."
+      },
+      {
+        step_number: 5,
+        title: "Finish & serve",
+        detail:
+          "Take it out of the freezer, add in the marshmallow bits, and give it one final mix. Then it's ready to go."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "strawberry-shortcake-ice-cream-bars",
+    title: "Strawberry Shortcake Ice Cream Bars",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍓",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Frozen strawberry protein bars folded with Cool Whip and freeze-dried strawberries, coated in a crushed golden Oreo and freeze-dried strawberry shortcake crumb — a fruity, creamy freezer treat.",
+    prep_time_mins: 20,
+    cook_time_mins: 0,
+    native_serving: 10,
+    accent: "#D97A6B",
+
+    macro_profiles: {
+      serving_10: { calories: 94, protein_g: 5.5, fat_g: 1.5, carbs_g: 16.5 }
+    },
+
+    scaling_options: [10],
+
+    ingredients_by_serving: {
+      serving_10: [
+        { item: "Fresh strawberries", prep: "diced", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "big pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Strawberry emulsion", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Fat-free Cool Whip", prep: "frozen", quantity: "1", unit: "container (~215g)", category: "Dairy" },
+        { item: "Freeze-dried strawberries", prep: "crushed, for the bars", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Golden Oreo Thins", prep: "cream removed, crushed, for coating", quantity: "8", unit: "", category: "Pantry" },
+        { item: "Freeze-dried strawberries", prep: "crushed, for coating", quantity: "8", unit: "g", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Macerate the strawberries",
+        detail:
+          "Dice the fresh strawberries and add them to a bowl with the zero-cal sweetener and a pinch of sea salt. Mix and let sit for about 10 minutes — this pulls out the natural juices so the bars don't get icy."
+      },
+      {
+        step_number: 2,
+        title: "Blend",
+        detail:
+          "Add the strawberries along with all that liquid into a blender. Toss in the protein powder and pudding mix, then blend until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Fold in the Cool Whip",
+        detail:
+          "Pour into a bowl and gently fold in the frozen fat-free Cool Whip. Don't overmix — just combine it."
+      },
+      {
+        step_number: 4,
+        title: "Add texture",
+        detail:
+          "Add the crushed freeze-dried strawberries and mix those in for extra flavor and texture."
+      },
+      {
+        step_number: 5,
+        title: "Fill the molds",
+        detail:
+          "Pour evenly into ice cream bar molds. If you've got extra, pour it into cupcake molds or whatever you have."
+      },
+      {
+        step_number: 6,
+        title: "Freeze",
+        detail:
+          "Freeze for at least 3 to 4 hours until fully set."
+      },
+      {
+        step_number: 7,
+        title: "Coat & serve",
+        detail:
+          "Crush the golden Oreo Thins and freeze-dried strawberries together into fine crumbs. Pop the bars out of the molds and roll each one in the crumb mixture to coat before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cheesecake-stuffed-cosmic-brownie",
+    title: "Cheesecake Stuffed Cosmic Brownie",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌌",
+    tags: ["High-Protein", "Air Fryer", "Quick"],
+    dish_category: "Desserts",
+    description:
+      "A single-serving air-fried brownie stuffed with a fat-free cheesecake center, topped with a chocolate protein icing and rainbow candy-coated brownie bits.",
+    prep_time_mins: 15,
+    cook_time_mins: 8,
+    native_serving: 1,
+    accent: "#4B3220",
+
+    macro_profiles: {
+      serving_1: { calories: 232, protein_g: 14, fat_g: 6, carbs_g: 24 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Oat flour", prep: "for the cake layer", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Unsweetened baking cocoa", prep: "for the cake layer", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free chocolate pudding mix", prep: "for the cake layer", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Light brown sugar", prep: "", quantity: "6", unit: "g", category: "Pantry" },
+        { item: "Swerve brown sugar", prep: "", quantity: "6", unit: "g", category: "Pantry" },
+        { item: "Baking powder", prep: "", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Baking soda", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Sea salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Canned pumpkin", prep: "", quantity: "38", unit: "g", category: "Pantry" },
+        { item: "Egg whites", prep: "", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Light butter", prep: "melted", quantity: "5", unit: "g", category: "Dairy" },
+        { item: "Vanilla extract", prep: "for the cake layer", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Fat-free cream cheese", prep: "for the cheesecake layer", quantity: "28", unit: "g", category: "Dairy" },
+        { item: "Zero-calorie sweetener", prep: "for the cheesecake layer", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Vanilla extract", prep: "for the cheesecake layer", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Cosmic brownie candy bits", prep: "for topping", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Chocolate whey/casein protein powder", prep: "for the icing", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Powdered sugar", prep: "for the icing", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Swerve zero-cal powdered sugar", prep: "for the icing", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Chocolate sugar-free pudding mix", prep: "for the icing", quantity: "2", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the cake layer",
+        detail:
+          "Mix the dry cake layer ingredients in one bowl to avoid clumping. In another bowl, mix the wet ingredients (pumpkin, egg whites, melted butter, vanilla). Fold the dry into the wet, being careful not to overmix."
+      },
+      {
+        step_number: 2,
+        title: "Mix the cheesecake layer",
+        detail:
+          "Mix the cream cheese layer ingredients until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Assemble",
+        detail:
+          "Add the brownie batter into a 4-inch mini cheesecake pan, then add the cream cheese layer to the middle."
+      },
+      {
+        step_number: 4,
+        title: "Air fry",
+        detail:
+          "Air fry at 320°F for 8 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Make the icing",
+        detail:
+          "While that's cooking, mix the chocolate protein icing ingredients together with cold water — it gets a better consistency the more you mix it."
+      },
+      {
+        step_number: 6,
+        title: "Cool, top & serve",
+        detail:
+          "Once the brownie is done, let it set until the cheesecake pan is cool enough to touch. Take out the brownie, top with the icing and cosmic brownie bits, and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "frosted-flakes-cereal-milk-protein-ice-cream",
+    title: "Frosted Flakes Cereal Milk Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥣",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A Creami-style protein ice cream made from Frosted Flakes cereal milk, spun to soft-serve texture and mixed with a scoop of the cereal for crunch — a nostalgic cereal-milk treat in a single oversized pint.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#CBA135",
+
+    macro_profiles: {
+      serving_1: { calories: 284, protein_g: 36, fat_g: 4, carbs_g: 26 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Fat-free milk", prep: "for the cereal milk", quantity: "240", unit: "g", category: "Dairy" },
+        { item: "Unsweetened vanilla almond milk", prep: "", quantity: "240", unit: "g", category: "Dairy" },
+        { item: "Frosted Flakes cereal", prep: "for steeping", quantity: "56", unit: "g", category: "Pantry" },
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "40", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fat-free milk", prep: "to top off the pint", quantity: "100", unit: "g", category: "Dairy" },
+        { item: "Frosted Flakes cereal", prep: "for mix-in", quantity: "21", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the cereal milk",
+        detail:
+          "Add the fat-free milk and almond milk to a bowl with the Frosted Flakes. Mix well and refrigerate for 6 to 7 hours to soak and create the cereal milk. Once done, strain out the cereal to get the cereal milk."
+      },
+      {
+        step_number: 2,
+        title: "Mix & freeze",
+        detail:
+          "Add the extra fat-free milk to the pint to make up for what was absorbed, then add the rest of the dry ingredients. Mix until smooth using a hand milk frother, then freeze until solid — preferably overnight."
+      },
+      {
+        step_number: 3,
+        title: "Spin",
+        detail:
+          "Once frozen, add the pint to your ice cream maker and run the \"Ice Cream\" function once. That's all you need."
+      },
+      {
+        step_number: 4,
+        title: "Mix in & serve",
+        detail:
+          "Make a hole in the middle for the Frosted Flakes mix-ins, add them in, then run the \"Mix-Ins\" function. Top it off and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cherry-pie-turnovers",
+    title: "Cherry Pie Turnovers",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍒",
+    tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Air-fried low-carb tortilla pockets stuffed with no-sugar-added cherry pie filling and finished with a protein icing drizzle — a crisp, portable turnover made in the air fryer.",
+    prep_time_mins: 15,
+    cook_time_mins: 5,
+    native_serving: 10,
+    accent: "#A3324A",
+
+    macro_profiles: {
+      serving_10: { calories: 75, protein_g: 3, fat_g: 2, carbs_g: 14 }
+    },
+
+    scaling_options: [10],
+
+    ingredients_by_serving: {
+      serving_10: [
+        { item: "No sugar added cherry pie filling", prep: "", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Low-carb tortillas", prep: "", quantity: "5", unit: "", category: "Pantry" },
+        { item: "Vanilla whey/casein protein powder", prep: "for the icing", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Powdered sugar", prep: "for the icing", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "for the icing", quantity: "4", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the filling",
+        detail:
+          "Add the whole can of cherry pie filling into a bowl."
+      },
+      {
+        step_number: 2,
+        title: "Cut the tortillas",
+        detail:
+          "Cut each tortilla in half to form 10 cone-shaped pockets."
+      },
+      {
+        step_number: 3,
+        title: "Fill the pockets",
+        detail:
+          "Add 1/10th of your pie filling to each tortilla cone. Repeat for all 10 pockets."
+      },
+      {
+        step_number: 4,
+        title: "Air fry",
+        detail:
+          "Once all 10 pockets are made, spray both sides with non-stick cooking spray and air fry at 400°F for 3 to 5 minutes until golden."
+      },
+      {
+        step_number: 5,
+        title: "Make the icing & finish",
+        detail:
+          "Make the protein icing by adding all the dry ingredients into a bowl and mixing, then add cold water and mix until you have an icing. Be careful not to add too much water — it thickens up fast in the fridge. Drizzle over the turnovers and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pretzel-milk-toffee-crunch-protein-ice-cream",
+    title: "Pretzel Milk Toffee Crunch Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥨",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A Creami-style protein ice cream steeped from pretzel-infused milk, mixed with dark chocolate chips, toffee bits, and crushed pretzels, then finished with a low-calorie caramel drizzle.",
+    prep_time_mins: 20,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#8C6239",
+
+    macro_profiles: {
+      serving_1: { calories: 449, protein_g: 52, fat_g: 10, carbs_g: 35 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Unsweetened almond milk", prep: "", quantity: "240", unit: "g", category: "Dairy" },
+        { item: "Fat-free milk", prep: "for steeping the pretzels", quantity: "240", unit: "g", category: "Dairy" },
+        { item: "Pretzels", prep: "for infusing", quantity: "56", unit: "g", category: "Pantry" },
+        { item: "Fat-free milk", prep: "to bring the base to 450g", quantity: "150", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein protein powder", prep: "", quantity: "45", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Butter extract", prep: "", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "for mix-in", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Heath toffee bits", prep: "for mix-in", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Pretzels", prep: "crushed, for mix-in", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Sugar-free pancake syrup", prep: "for the caramel", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Biscoff cookie butter", prep: "melted, for the caramel", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Caramel emulsion", prep: "1 drop, for the caramel", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Steep the pretzels",
+        detail:
+          "Add the almond milk, 240g of fat-free milk, and the pretzels to a container. Press the pretzels into the milk so they're fully submerged, then cover and refrigerate overnight."
+      },
+      {
+        step_number: 2,
+        title: "Strain",
+        detail:
+          "The next day, strain the mixture through a fine mesh strainer or cheesecloth. You should have about 300g of pretzel-infused milk. Discard the soaked pretzels."
+      },
+      {
+        step_number: 3,
+        title: "Blend",
+        detail:
+          "Add 150g more fat-free milk to bring the total milk base to 450g. Add the protein powder, pudding mix, sweetener, butter extract, and vanilla extract. Blend until completely smooth."
+      },
+      {
+        step_number: 4,
+        title: "Freeze",
+        detail:
+          "Pour into a pint and freeze overnight, leaving the lid off to help prevent a hump from forming."
+      },
+      {
+        step_number: 5,
+        title: "Spin",
+        detail:
+          "Spin on the Ice Cream setting. It will look dry and crumbly at first — that's normal and helps create a thicker final texture."
+      },
+      {
+        step_number: 6,
+        title: "Mix in",
+        detail:
+          "Make a small well in the center, add the chocolate chips, toffee bits, and crushed pretzels, then run the Mix-In cycle."
+      },
+      {
+        step_number: 7,
+        title: "Drizzle & serve",
+        detail:
+          "Whisk together the pancake syrup, melted Biscoff, and caramel emulsion, then top with a drizzle of the low-calorie caramel and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "funfetti-protein-cheesecake-cannolis",
+    title: "Funfetti Protein Cheesecake Cannolis",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🎉",
+    tags: ["High-Protein", "No-Bake", "Party"],
+    dish_category: "Desserts",
+    description:
+      "Crisp pizzelle shells shaped into cannoli tubes and piped with a whipped cream cheese and Greek yogurt cheesecake filling, finished with sprinkles at each end.",
+    prep_time_mins: 30,
+    cook_time_mins: 0,
+    native_serving: 20,
+    accent: "#B85C9E",
+
+    macro_profiles: {
+      serving_20: { calories: 57, protein_g: 4, fat_g: 1, carbs_g: 8 }
+    },
+
+    scaling_options: [20],
+
+    ingredients_by_serving: {
+      serving_20: [
+        { item: "Vanilla pizzelles", prep: "", quantity: "20", unit: "", category: "Pantry" },
+        { item: "Fat-free cream cheese", prep: "", quantity: "220", unit: "g", category: "Dairy" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "227", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Fat-free Cool Whip", prep: "", quantity: "100", unit: "g", category: "Dairy" },
+        { item: "Sprinkles", prep: "", quantity: "50", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the filling",
+        detail:
+          "Add the cream cheese, Greek yogurt, protein powder, pudding mix, and zero-cal sweetener to a small blender. Blend until silky smooth."
+      },
+      {
+        step_number: 2,
+        title: "Fold in Cool Whip",
+        detail:
+          "Add to a bowl and fold in the fat-free Cool Whip."
+      },
+      {
+        step_number: 3,
+        title: "Chill",
+        detail:
+          "Place the mixture in the fridge to cool and thicken up."
+      },
+      {
+        step_number: 4,
+        title: "Shape the shells",
+        detail:
+          "Take one pizzelle at a time and cover each side in a paper towel. Microwave for 20 seconds, then immediately form into a cannoli shape — they harden within seconds. Repeat for all 20."
+      },
+      {
+        step_number: 5,
+        title: "Pipe the filling",
+        detail:
+          "Once the filling has cooled, add it to a ziplock bag, cut the tip, and pipe it into each cannoli shell."
+      },
+      {
+        step_number: 6,
+        title: "Chill & garnish",
+        detail:
+          "Repeat for all 20, then refrigerate for at least an hour to cool. Add sprinkles to the outside ends and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cosmic-brownie-ice-cream-bars",
+    title: "Cosmic Brownie Ice Cream Bars",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌌",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A black cocoa protein base folded with Cool Whip, frozen into bars, and coated in crushed Fiber One Brownies and Cosmic Brownie chips for a crunchy, chocolatey shell.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 10,
+    accent: "#241812",
+
+    macro_profiles: {
+      serving_10: { calories: 123, protein_g: 5.5, fat_g: 3.5, carbs_g: 20 }
+    },
+
+    scaling_options: [10],
+
+    ingredients_by_serving: {
+      serving_10: [
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "45", unit: "g", category: "Pantry" },
+        { item: "Black cocoa powder", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "big pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fat-free Cool Whip", prep: "frozen", quantity: "1", unit: "container (~215g)", category: "Dairy" },
+        { item: "Fiber One brownies", prep: "crushed, for coating", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Cosmic Brownie chips", prep: "for coating", quantity: "40", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Add the dry powdered ingredients into a bowl and mix. Slowly add cold water and mix until you get a runny, icing-like consistency."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the Cool Whip",
+        detail:
+          "Fold in the frozen fat-free Cool Whip, trying not to overmix."
+      },
+      {
+        step_number: 3,
+        title: "Fill the molds",
+        detail:
+          "Evenly divide the mixture into 10 ice cream bar molds. If you run short on molds, use mini cupcake molds for the extra."
+      },
+      {
+        step_number: 4,
+        title: "Freeze",
+        detail:
+          "Add to the freezer until frozen, at least 3 to 4 hours."
+      },
+      {
+        step_number: 5,
+        title: "Coat & serve",
+        detail:
+          "Crush the Fiber One brownies and Cosmic Brownie chips together into a coating. Once the bars are frozen, take them out of the molds and roll each one in the coating before serving."
+      }
+    ]
+  },
+
+  {
     recipe_id: "pesto-chicken-caesar-pasta-salad",
     title: "Pesto Chicken Caesar Pasta Salad",
     category: "Meal Prep",
