@@ -1533,6 +1533,11 @@
     smart.addEventListener("click", openSmartWeek);
     body.appendChild(smart);
 
+    var timeCheck = el("button", "plan-time-btn", "⏱️&nbsp;&nbsp;Time Check");
+    timeCheck.type = "button";
+    timeCheck.addEventListener("click", openBandwidthQuiz);
+    body.appendChild(timeCheck);
+
     if (meals.length) {
       var clear = el("button", "plan-clear", "Clear week");
       clear.type = "button";
@@ -2022,6 +2027,183 @@
       actions.appendChild(confirm);
       body.appendChild(actions);
     }
+    paint();
+
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
+  /* ── Bandwidth Quiz: match suggestions to how much cook time each day
+     actually has, instead of grouping by shared ingredients (Smart Week's
+     job). The cook answers "how many days this week are Quick / Standard /
+     No rush", then gets recipe suggestions bucketed by prep+cook time —
+     purely a suggestion list; tapping a card adds it to This Week
+     unassigned, same as the "Add a meal" picker, and the cook places it on
+     a day/slot afterward. Answers are session-only, not persisted. ──── */
+  var BWQ_BUCKETS = [
+    { key: "quick", emoji: "⚡", label: "Quick nights", sub: "Under 30 minutes",
+      match: function (t) { return t > 0 && t <= 30; } },
+    { key: "standard", emoji: "🕐", label: "Standard nights", sub: "About an hour",
+      match: function (t) { return t > 30 && t <= 60; } },
+    { key: "none", emoji: "♾️", label: "No rush", sub: "No time limit",
+      match: function (t) { return t === 0 || t > 60; } }
+  ];
+  function bwqTotalTime(r) { return (r.prep_time_mins || 0) + (r.cook_time_mins || 0); }
+  // Candidates for a bucket, preferring recipes not already in the week
+  // (unless that would empty the bucket), fastest-first.
+  function bwqCandidates(bucket) {
+    var planned = planRecipeIds();
+    var all = recipes().filter(function (r) { return bucket.match(bwqTotalTime(r)); });
+    var pool = all.filter(function (r) { return planned.indexOf(r.recipe_id) < 0; });
+    if (!pool.length) pool = all;
+    return pool.slice().sort(function (a, b) {
+      return (bwqTotalTime(a) || 9999) - (bwqTotalTime(b) || 9999);
+    });
+  }
+  function closeBandwidthQuiz() {
+    var ov = document.querySelector(".bwq-overlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+  function openBandwidthQuiz() {
+    closeBandwidthQuiz();
+
+    var counts = { quick: 0, standard: 0, none: 0 };
+    var phase = "quiz";  // "quiz" | "results"
+    var pools = null;    // per-bucket candidate lists, frozen when quiz is submitted
+    var added = {};      // recipe_id -> true, this quiz session only
+
+    var ov = el("div", "picker bwq-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "⏱ Time Check"));
+    var done = el("button", "picker-close", "Done");
+    done.type = "button";
+    done.addEventListener("click", function () { closeBandwidthQuiz(); refresh(); });
+    top.appendChild(done);
+    ov.appendChild(top);
+
+    var body = el("div", "picker-results bwq-body");
+    ov.appendChild(body);
+
+    function bwqRow(b) {
+      var row = el("div", "bwq-row");
+      row.innerHTML =
+        '<span class="bwq-row-label">' +
+          '<span class="bwq-row-emoji">' + b.emoji + "</span>" +
+          '<span class="bwq-row-text"><b>' + esc(b.label) + "</b><br>" +
+            '<span class="bwq-row-sub">' + esc(b.sub) + "</span></span>" +
+        "</span>";
+      var stepper = el("span", "bwq-stepper");
+      var minus = el("button", "bwq-step", "−");
+      minus.type = "button";
+      minus.setAttribute("aria-label", "Fewer " + b.label + " days");
+      var countEl = el("span", "bwq-count", String(counts[b.key]));
+      var plus = el("button", "bwq-step", "+");
+      plus.type = "button";
+      plus.setAttribute("aria-label", "More " + b.label + " days");
+      function sync() {
+        countEl.textContent = String(counts[b.key]);
+        minus.disabled = counts[b.key] <= 0;
+        plus.disabled = counts[b.key] >= 7;
+      }
+      minus.addEventListener("click", function () { counts[b.key] = Math.max(0, counts[b.key] - 1); sync(); });
+      plus.addEventListener("click", function () { counts[b.key] = Math.min(7, counts[b.key] + 1); sync(); });
+      stepper.appendChild(minus);
+      stepper.appendChild(countEl);
+      stepper.appendChild(plus);
+      row.appendChild(stepper);
+      return row;
+    }
+
+    function paintQuiz() {
+      body.innerHTML = "";
+      body.appendChild(el("p", "bwq-intro",
+        "How many days this week fall into each bucket? We'll suggest recipes to match."));
+      BWQ_BUCKETS.forEach(function (b) { body.appendChild(bwqRow(b)); });
+
+      var cta = el("button", "cook-start bwq-continue-btn", "Show me recipes →");
+      cta.type = "button";
+      cta.addEventListener("click", function () {
+        pools = {};
+        BWQ_BUCKETS.forEach(function (b) { pools[b.key] = bwqCandidates(b); });
+        phase = "results";
+        paint();
+      });
+      body.appendChild(cta);
+    }
+
+    function bwqCard(r) {
+      var isAdded = !!added[r.recipe_id];
+      var card = el("button", "rc rc-pick bwq-card" + (isAdded ? " is-added" : ""));
+      card.type = "button";
+      card.disabled = isAdded;
+      card.style.setProperty("--rc-accent", r.accent || "#C87A53");
+      card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
+      var totalTime = bwqTotalTime(r);
+      var meta = [];
+      if (r.dish_category) meta.push(esc(r.dish_category));
+      if (totalTime) meta.push(totalTime + " min");
+      card.innerHTML =
+        '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+        '<div class="rc-body">' +
+          '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
+          '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
+          '<p class="rc-macro">' + (isAdded ? "✓ Added" : "＋ Add to week") + "</p>" +
+        "</div>";
+      var days = daysSinceCooked(r.recipe_id);
+      if (!isAdded && days != null && days <= 14) {
+        card.appendChild(el("span", "rc-cooked-badge",
+          days <= 0 ? "Cooked today" : "Cooked " + days + "d ago"));
+      }
+      if (!isAdded) {
+        card.addEventListener("click", function () {
+          addMeal(r.recipe_id, { serving: 2 });
+          added[r.recipe_id] = true;
+          paintResults();
+        });
+      }
+      return card;
+    }
+
+    function paintResults() {
+      body.innerHTML = "";
+
+      var back = el("button", "picker-sort-btn bwq-back-btn", "‹ Back to quiz");
+      back.type = "button";
+      back.addEventListener("click", function () { phase = "quiz"; paint(); });
+      body.appendChild(back);
+
+      var any = BWQ_BUCKETS.some(function (b) { return counts[b.key] > 0; });
+      if (!any) {
+        body.appendChild(emptyState("🤔",
+          "No buckets set yet.<br>Go back and set at least one day's time budget."));
+        return;
+      }
+
+      BWQ_BUCKETS.forEach(function (b) {
+        if (!counts[b.key]) return;
+        var list = pools[b.key] || [];
+        var pickedCount = list.filter(function (r) { return added[r.recipe_id]; }).length;
+
+        var section = el("div", "bwq-section");
+        section.innerHTML =
+          '<div class="bwq-section-head">' +
+            '<span class="bwq-section-title">' + b.emoji + " " + esc(b.label) + "</span>" +
+            '<span class="bwq-section-progress">' + pickedCount + " of " + counts[b.key] + " picked</span>" +
+          "</div>";
+        body.appendChild(section);
+
+        if (!list.length) {
+          section.appendChild(emptyState("🧊", "No recipes match this bucket yet."));
+          return;
+        }
+        var grid = el("div", "col-grid bwq-grid");
+        list.forEach(function (r) { grid.appendChild(bwqCard(r)); });
+        section.appendChild(grid);
+      });
+    }
+
+    function paint() { if (phase === "quiz") paintQuiz(); else paintResults(); }
     paint();
 
     document.body.appendChild(ov);
