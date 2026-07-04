@@ -12209,6 +12209,1980 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "buffalo-garlic-chicken-marinade",
+    title: "Buffalo Garlic Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🔥",
+    tags: ["No-Cook", "Spicy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A tangy, garlicky buffalo marinade that builds a bold, vinegary crust on grilled or baked chicken.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C0392B",
+
+    macro_profiles: {
+      serving_2: { calories: 66, protein_g: 0, fat_g: 7, carbs_g: 1 },
+      serving_4: { calories: 66, protein_g: 0, fat_g: 7, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Hot sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Hot sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the hot sauce, olive oil, garlic, and paprika."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "smoky-chipotle-chicken-marinade",
+    title: "Smoky Chipotle Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌶️",
+    tags: ["No-Cook", "Smoky", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Chipotle powder and smoked paprika in olive oil give chicken a deep, smoky char without any heat from the grill.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#A24B2A",
+
+    macro_profiles: {
+      serving_2: { calories: 127, protein_g: 0, fat_g: 14, carbs_g: 2 },
+      serving_4: { calories: 127, protein_g: 0, fat_g: 14, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Smoked paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, chipotle powder, garlic, and smoked paprika."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "hot-honey-chili-chicken-marinade",
+    title: "Hot Honey Chili Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Sweet-Heat", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Honey and hot sauce with a hit of chili flakes — sweet heat that caramelizes beautifully under the broiler or grill.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D4A017",
+
+    macro_profiles: {
+      serving_2: { calories: 70, protein_g: 0, fat_g: 0, carbs_g: 18 },
+      serving_4: { calories: 70, protein_g: 0, fat_g: 0, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Hot sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Honey", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Hot sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the honey, hot sauce, chili flakes, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cajun-lime-chicken-marinade",
+    title: "Cajun Lime Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍋",
+    tags: ["No-Cook", "Zesty", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Bright lime juice and Cajun seasoning make a punchy marinade that's great for tacos or a hot skillet sear.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#7A9A3D",
+
+    macro_profiles: {
+      serving_2: { calories: 69, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 69, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cajun seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Lime juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Cajun seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lime juice, olive oil, cajun seasoning, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or pan-searing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-dill-chicken-marinade",
+    title: "Lemon Dill Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌿",
+    tags: ["No-Cook", "Fresh", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A light, fresh lemon and dill marinade that keeps chicken juicy without overpowering it.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#5F8B5A",
+
+    macro_profiles: {
+      serving_2: { calories: 66, protein_g: 0, fat_g: 7, carbs_g: 1 },
+      serving_4: { calories: 66, protein_g: 0, fat_g: 7, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried dill", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lemon juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried dill", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lemon juice, olive oil, dried dill, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "greek-yogurt-garlic-chicken-marinade",
+    title: "Greek Yogurt Garlic Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥣",
+    tags: ["No-Cook", "Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A yogurt-based marinade — the mild acidity tenderizes chicken while garlic and oregano build a Mediterranean crust.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#B7AF95",
+
+    macro_profiles: {
+      serving_2: { calories: 16, protein_g: 1, fat_g: 0, carbs_g: 2 },
+      serving_4: { calories: 16, protein_g: 1, fat_g: 0, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Stir it together",
+        detail:
+          "In a small bowl, stir together the greek yogurt, lemon juice, garlic, and dried oregano."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Coat chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours (up to overnight) in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "herb-vinaigrette-chicken-marinade",
+    title: "Herb Vinaigrette Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🫒",
+    tags: ["No-Cook", "Herby", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A simple oil-and-vinegar marinade brightened with parsley and garlic — an easy everyday go-to.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#708250",
+
+    macro_profiles: {
+      serving_2: { calories: 124, protein_g: 0, fat_g: 14, carbs_g: 1 },
+      serving_4: { calories: 124, protein_g: 0, fat_g: 14, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "White vinegar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "White vinegar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, white vinegar, dried parsley, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "orange-herb-chicken-marinade",
+    title: "Orange Herb Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍊",
+    tags: ["No-Cook", "Fresh", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Fresh orange juice and thyme give chicken a light citrus lift that's perfect for a spring or summer grill night.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D98E3F",
+
+    macro_profiles: {
+      serving_2: { calories: 70, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 70, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Orange juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried thyme", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Orange juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried thyme", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the orange juice, olive oil, dried thyme, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-mustard-chicken-marinade",
+    title: "Honey Mustard Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Sweet-Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Dijon and honey build a glossy, tangy-sweet glaze that caramelizes fast under the broiler.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9A441",
+
+    macro_profiles: {
+      serving_2: { calories: 109, protein_g: 1, fat_g: 8, carbs_g: 9 },
+      serving_4: { calories: 109, protein_g: 1, fat_g: 8, carbs_g: 9 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Dijon mustard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Dijon mustard", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the dijon mustard, honey, olive oil, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "maple-garlic-chicken-marinade",
+    title: "Maple Garlic Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍁",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Maple syrup and soy sauce build a sweet-savory glaze with a deep garlicky backbone.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#A9762F",
+
+    macro_profiles: {
+      serving_2: { calories: 59, protein_g: 0, fat_g: 0, carbs_g: 14 },
+      serving_4: { calories: 59, protein_g: 0, fat_g: 0, carbs_g: 14 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Maple syrup", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the maple syrup, soy sauce, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-ranch-herb-chicken-marinade",
+    title: "Creamy Ranch Herb Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥗",
+    tags: ["No-Cook", "Creamy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A quick ranch-seasoned yogurt marinade that keeps chicken tender and packs in easy weeknight flavor.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C7B299",
+
+    macro_profiles: {
+      serving_2: { calories: 73, protein_g: 1, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 73, protein_g: 1, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Ranch seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Ranch seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Stir it together",
+        detail:
+          "In a small bowl, stir together the greek yogurt, olive oil, ranch seasoning, and dried parsley."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Coat chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-butter-chicken-marinade",
+    title: "Lemon Butter Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🧈",
+    tags: ["No-Cook", "Rich", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Melted butter and lemon juice make a rich, simple marinade that bastes chicken as it cooks.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#E0B04D",
+
+    macro_profiles: {
+      serving_2: { calories: 106, protein_g: 0, fat_g: 12, carbs_g: 0 },
+      serving_4: { calories: 106, protein_g: 0, fat_g: 12, carbs_g: 0 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "melted", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "melted", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the butter, lemon juice, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or pan-searing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-lime-cilantro-chicken-marinade",
+    title: "Honey Lime Cilantro Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌿",
+    tags: ["No-Cook", "Fresh", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Honey, lime, and fresh cilantro give chicken a bright, taco-truck-style edge.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8FBF6B",
+
+    macro_profiles: {
+      serving_2: { calories: 128, protein_g: 0, fat_g: 7, carbs_g: 18 },
+      serving_4: { calories: 128, protein_g: 0, fat_g: 7, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Honey", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the honey, lime juice, olive oil, garlic, and cilantro."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pesto-garlic-chicken-marinade",
+    title: "Pesto Garlic Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌱",
+    tags: ["No-Cook", "Herby", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Basil pesto loosened with olive oil and a splash of lemon — an easy shortcut to big herb flavor.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#5B7C4B",
+
+    macro_profiles: {
+      serving_2: { calories: 142, protein_g: 1, fat_g: 15, carbs_g: 1 },
+      serving_4: { calories: 142, protein_g: 1, fat_g: 15, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Basil pesto", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "splash", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Basil pesto", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "splash", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the basil pesto, olive oil, garlic, lemon juice, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "spicy-ranch-chicken-marinade",
+    title: "Spicy Ranch Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌶️",
+    tags: ["No-Cook", "Spicy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A quick hot-sauce-spiked ranch yogurt marinade — creamy with a real kick.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C1543A",
+
+    macro_profiles: {
+      serving_2: { calories: 17, protein_g: 1, fat_g: 0, carbs_g: 3 },
+      serving_4: { calories: 17, protein_g: 1, fat_g: 0, carbs_g: 3 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Ranch seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Hot sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Ranch seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Hot sauce", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Stir it together",
+        detail:
+          "In a small bowl, stir together the greek yogurt, ranch seasoning, hot sauce, garlic powder, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Coat chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "maple-bbq-chicken-marinade",
+    title: "Maple BBQ Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍖",
+    tags: ["No-Cook", "Smoky-Sweet", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "BBQ sauce and maple syrup with smoked paprika — a sticky, smoky-sweet marinade built for the grill.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8A4B2E",
+
+    macro_profiles: {
+      serving_2: { calories: 61, protein_g: 0, fat_g: 0, carbs_g: 16 },
+      serving_4: { calories: 61, protein_g: 0, fat_g: 0, carbs_g: 16 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "BBQ sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "BBQ sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the bBQ sauce, maple syrup, smoked paprika, garlic powder, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-garlic-chicken-marinade",
+    title: "Honey Garlic Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "The classic — honey, soy sauce, and garlic build a glossy, caramelized crust on grilled chicken.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9A441",
+
+    macro_profiles: {
+      serving_2: { calories: 71, protein_g: 1, fat_g: 0, carbs_g: 18 },
+      serving_4: { calories: 71, protein_g: 1, fat_g: 0, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "splash", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Honey", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "splash", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the honey, soy sauce, garlic, and lemon juice."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sweet-chili-chicken-marinade",
+    title: "Sweet Chili Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌶️",
+    tags: ["No-Cook", "Sweet-Heat", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Sweet chili sauce and sesame oil make a quick glaze with just enough heat for weeknight grilling.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C0392B",
+
+    macro_profiles: {
+      serving_2: { calories: 59, protein_g: 0, fat_g: 2, carbs_g: 11 },
+      serving_4: { calories: 59, protein_g: 0, fat_g: 2, carbs_g: 11 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sweet chili sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Sweet chili sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the sweet chili sauce, soy sauce, garlic, and sesame oil."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-herb-chicken-marinade",
+    title: "Lemon Herb Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍋",
+    tags: ["No-Cook", "Fresh", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "An everyday lemon, parsley, and oregano marinade — bright, simple, and always reliable.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#B7C15A",
+
+    macro_profiles: {
+      serving_2: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lemon juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lemon juice, olive oil, dried parsley, dried oregano, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-parmesan-chicken-marinade",
+    title: "Garlic Parmesan Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🧀",
+    tags: ["No-Cook", "Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "Olive oil and grated parmesan build a savory, cheesy crust that's great baked or pan-seared.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9C27E",
+
+    macro_profiles: {
+      serving_2: { calories: 143, protein_g: 2, fat_g: 16, carbs_g: 1 },
+      serving_4: { calories: 143, protein_g: 2, fat_g: 16, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Parmesan", prep: "grated", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Parmesan", prep: "grated", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, parmesan, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before baking or pan-searing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "miso-ginger-salmon-marinade",
+    title: "Miso Ginger Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍣",
+    tags: ["No-Cook", "Umami", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "White miso and ginger build a deep, savory glaze that caramelizes beautifully on broiled or pan-seared salmon.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8B5E3C",
+
+    macro_profiles: {
+      serving_2: { calories: 69, protein_g: 2, fat_g: 3, carbs_g: 9 },
+      serving_4: { calories: 69, protein_g: 2, fat_g: 3, carbs_g: 9 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "White miso", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Ginger", prep: "grated", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "White miso", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Stir it together",
+        detail:
+          "In a small bowl, stir together the white miso, soy sauce, ginger, sesame oil, and brown sugar."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "brown-sugar-soy-salmon-marinade",
+    title: "Brown Sugar Soy Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥢",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Soy sauce and brown sugar make a sticky, sweet-savory glaze that caramelizes into a deep crust on salmon.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#6B4A2E",
+
+    macro_profiles: {
+      serving_2: { calories: 57, protein_g: 1, fat_g: 2, carbs_g: 8 },
+      serving_4: { calories: 57, protein_g: 1, fat_g: 2, carbs_g: 8 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Soy sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the soy sauce, brown sugar, garlic, sesame oil, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "orange-teriyaki-salmon-marinade",
+    title: "Orange Teriyaki Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍊",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Orange juice brightens a quick teriyaki glaze finished with sesame seeds — great on broiled or grilled salmon.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9782E",
+
+    macro_profiles: {
+      serving_2: { calories: 32, protein_g: 1, fat_g: 1, carbs_g: 5 },
+      serving_4: { calories: 32, protein_g: 1, fat_g: 1, carbs_g: 5 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Orange juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Teriyaki sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Ginger", prep: "grated", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Sesame seeds", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Orange juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Teriyaki sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Sesame seeds", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the orange juice, teriyaki sauce, garlic, ginger, and sesame seeds."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-pepper-dill-salmon-marinade",
+    title: "Lemon Pepper Dill Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🐟",
+    tags: ["No-Cook", "Fresh", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Lemon juice, dill, and lemon zest keep salmon light and fresh — a classic pairing that never misses.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C9D6A8",
+
+    macro_profiles: {
+      serving_2: { calories: 63, protein_g: 0, fat_g: 7, carbs_g: 1 },
+      serving_4: { calories: 63, protein_g: 0, fat_g: 7, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried dill", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon zest", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lemon juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried dill", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon zest", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lemon juice, olive oil, dried dill, lemon zest, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-sriracha-shrimp-marinade",
+    title: "Honey Sriracha Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍤",
+    tags: ["No-Cook", "Sweet-Heat", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Honey and sriracha with a squeeze of lime — a fast, sweet-hot glaze for shrimp skewers or a hot skillet.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9622E",
+
+    macro_profiles: {
+      serving_2: { calories: 71, protein_g: 0, fat_g: 0, carbs_g: 18 },
+      serving_4: { calories: 71, protein_g: 0, fat_g: 0, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Honey", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the honey, sriracha, lime juice, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "coconut-curry-shrimp-marinade",
+    title: "Coconut Curry Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥥",
+    tags: ["No-Cook", "Aromatic", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Coconut milk and curry powder with a pinch of turmeric — a fragrant, fast marinade for a hot skillet or skewers.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9B66B",
+
+    macro_profiles: {
+      serving_2: { calories: 35, protein_g: 0, fat_g: 3, carbs_g: 2 },
+      serving_4: { calories: 35, protein_g: 0, fat_g: 3, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Coconut milk", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Curry powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Ginger", prep: "grated", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Turmeric", prep: "", quantity: "1", unit: "pinch", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Coconut milk", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Curry powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Turmeric", prep: "", quantity: "2", unit: "pinch", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the coconut milk, curry powder, garlic, ginger, and turmeric."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "old-bay-lemon-shrimp-marinade",
+    title: "Old Bay Lemon Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🦐",
+    tags: ["No-Cook", "Savory", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Melted butter, Old Bay, and lemon juice — a classic coastal marinade for a fast shrimp sauté.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#E0B04D",
+
+    macro_profiles: {
+      serving_2: { calories: 108, protein_g: 0, fat_g: 12, carbs_g: 1 },
+      serving_4: { calories: 108, protein_g: 0, fat_g: 12, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "melted", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Old Bay seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "melted", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Old Bay seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the butter, old Bay seasoning, lemon juice, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "ginger-soy-shrimp-marinade",
+    title: "Ginger Soy Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🧄",
+    tags: ["No-Cook", "Savory", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Soy sauce, ginger, and a pinch of chili flakes — a fast Asian-inspired marinade for shrimp skewers or a wok.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#5C6B47",
+
+    macro_profiles: {
+      serving_2: { calories: 31, protein_g: 1, fat_g: 2, carbs_g: 2 },
+      serving_4: { calories: 31, protein_g: 1, fat_g: 2, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Ginger", prep: "grated", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "", quantity: "1", unit: "pinch", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Soy sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "", quantity: "2", unit: "pinch", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the soy sauce, ginger, garlic, sesame oil, and chili flakes."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-butter-shrimp-marinade",
+    title: "Garlic Butter Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🧈",
+    tags: ["No-Cook", "Rich", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Melted butter, garlic, and parsley — the simplest, most reliable shrimp marinade there is.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#E0B04D",
+
+    macro_profiles: {
+      serving_2: { calories: 104, protein_g: 0, fat_g: 12, carbs_g: 0 },
+      serving_4: { calories: 104, protein_g: 0, fat_g: 12, carbs_g: 0 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Butter", prep: "melted", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "splash", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Butter", prep: "melted", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "splash", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the butter, garlic, dried parsley, and lemon juice."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then sauté or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chili-lime-shrimp-marinade",
+    title: "Chili Lime Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌶️",
+    tags: ["No-Cook", "Zesty", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Lime juice and chili flakes in olive oil — a bright, punchy marinade great for shrimp tacos.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8FBF3D",
+
+    macro_profiles: {
+      serving_2: { calories: 69, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 69, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Lime juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lime juice, chili flakes, olive oil, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-cajun-shrimp-marinade",
+    title: "Honey Cajun Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Sweet-Spicy", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Honey and Cajun seasoning make a fast, sticky-sweet glaze with a little kick — great on shrimp skewers.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C1543A",
+
+    macro_profiles: {
+      serving_2: { calories: 129, protein_g: 0, fat_g: 7, carbs_g: 18 },
+      serving_4: { calories: 129, protein_g: 0, fat_g: 7, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Cajun seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Honey", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Cajun seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the honey, cajun seasoning, olive oil, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-herb-shrimp-marinade",
+    title: "Lemon Herb Shrimp Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍋",
+    tags: ["No-Cook", "Fresh", "Quick-Cook"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Lemon juice, parsley, and oregano — a simple, bright marinade for a fast shrimp sauté or skewers.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#B7C15A",
+
+    macro_profiles: {
+      serving_2: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lemon juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lemon juice, olive oil, dried parsley, dried oregano, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the shrimp",
+        detail:
+          "Toss with peeled, deveined shrimp in a bowl or bag and marinate 15 to 20 minutes in the fridge, then skewer, sauté, or grill hot and fast."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-garlic-salmon-marinade",
+    title: "Honey Garlic Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Honey, soy sauce, and garlic build a glossy, caramelized glaze that's just as good on salmon as it is on chicken.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9A441",
+
+    macro_profiles: {
+      serving_2: { calories: 71, protein_g: 1, fat_g: 0, carbs_g: 18 },
+      serving_4: { calories: 71, protein_g: 1, fat_g: 0, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "splash", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Honey", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "splash", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the honey, soy sauce, garlic, and lemon juice."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sweet-chili-salmon-marinade",
+    title: "Sweet Chili Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌶️",
+    tags: ["No-Cook", "Sweet-Heat", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Sweet chili sauce and sesame oil make a quick glaze with just enough heat for broiled or pan-seared salmon.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C0392B",
+
+    macro_profiles: {
+      serving_2: { calories: 59, protein_g: 0, fat_g: 2, carbs_g: 11 },
+      serving_4: { calories: 59, protein_g: 0, fat_g: 2, carbs_g: 11 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sweet chili sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Sweet chili sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the sweet chili sauce, soy sauce, garlic, and sesame oil."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-herb-salmon-marinade",
+    title: "Lemon Herb Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍋",
+    tags: ["No-Cook", "Fresh", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Lemon juice, dill, and parsley in olive oil — a light, herby marinade that lets salmon's flavor lead.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#B7C15A",
+
+    macro_profiles: {
+      serving_2: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried dill", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Lemon juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried dill", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lemon juice, olive oil, dried dill, dried parsley, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "maple-dijon-salmon-marinade",
+    title: "Maple Dijon Salmon Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍁",
+    tags: ["No-Cook", "Sweet-Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Seafood",
+    description:
+      "Maple syrup and Dijon mustard build a glossy, tangy-sweet glaze that caramelizes fast under the broiler.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C79A3D",
+
+    macro_profiles: {
+      serving_2: { calories: 62, protein_g: 0, fat_g: 1, carbs_g: 14 },
+      serving_4: { calories: 62, protein_g: 0, fat_g: 1, carbs_g: 14 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Maple syrup", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "0.5", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the maple syrup, dijon mustard, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the salmon",
+        detail:
+          "Pour over salmon fillets in a shallow dish and marinate 15 to 30 minutes in the fridge, then pat dry and bake, broil, or pan-sear."
+      }
+    ]
+  },
+
+  {
     recipe_id: "chick-fil-a-chicken-smash-sandwich",
     title: "Chick-fil-A Chicken Smash Sandwich",
     category: "Macro-Friendly",
