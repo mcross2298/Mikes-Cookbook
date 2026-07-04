@@ -189,6 +189,40 @@
   };
   var SLOTS     = ["Breakfast", "Lunch", "Dinner"];
 
+  /* ── Meal-slot classifier (feeds Smart Week generation) ──────────────
+     Maps a recipe's dish_category to the SLOTS it's eligible to fill.
+     Condiment/component categories (Desserts, Marinades, Salsas & Dips,
+     Sauces) aren't standalone meals, so they map to no slots and are never
+     picked by Smart Week. A quick Skillets & Stir-Fries recipe (<=20 min
+     total) also flexes into Lunch on top of its Dinner base. */
+  var MEAL_SLOT_MAP = {
+    "Breakfast":             ["Breakfast"],
+    "Sandwiches":            ["Lunch"],
+    "Salads & Slaws":        ["Lunch", "Dinner"],
+    "Soups, Stews & Chilis": ["Lunch", "Dinner"],
+    "Casseroles & Bakes":    ["Dinner"],
+    "Skillets & Stir-Fries": ["Dinner"],
+    "Grilled & Sheet-Pan":   ["Dinner"]
+  };
+  var QUICK_LUNCH_MAX_MINS = 20;
+  function totalTimeMins(r) { return (r && (r.prep_time_mins || 0) + (r.cook_time_mins || 0)) || 0; }
+  function classifyMealSlots(r) {
+    var base = MEAL_SLOT_MAP[r && r.dish_category];
+    if (!base) return [];
+    var slots = base.slice();
+    if (slots.indexOf("Dinner") >= 0 && slots.indexOf("Lunch") < 0) {
+      var t = totalTimeMins(r);
+      if (t > 0 && t <= QUICK_LUNCH_MAX_MINS) slots.push("Lunch");
+    }
+    return slots;
+  }
+  function isMealEligible(r, slot) {
+    return classifyMealSlots(r).indexOf(slot) >= 0;
+  }
+  function mealEligibleRecipes(slot) {
+    return recipes().filter(function (r) { return isMealEligible(r, slot); });
+  }
+
   function loadPlan() {
     try {
       var p = JSON.parse(localStorage.getItem(PLAN_KEY) || "{}") || {};
