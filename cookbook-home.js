@@ -751,6 +751,110 @@
     saveGroc(new Set());
   }
 
+  /* ── Macro Smart Generator (msg* namespace) ───────────────────────────
+     Deliberately decoupled from Smart Week's smw* scoring above — same
+     grid shape ({ day, slot, id }) and the same slot-eligibility +
+     SMW_HARD_EXCLUDE_DAYS repeat-avoidance, but picks each slot to fit the
+     remaining share of the day's macro goal (loadMacroGoals — the same
+     mc_macros_v1 bridge the Grocery tab's macro-goals bar reads) instead
+     of optimizing for dish-category variety. Only ever invoked when goals
+     exist; Smart Week's default "Balanced" path never calls into this. A
+     greedy per-slot best-fit, not a true optimizer, matching Balanced
+     mode's complexity. */
+  var MSG_PROTEIN_WEIGHT = 2; // protein fit matters ~2x as much as calorie fit
+  function msgMacroFit(r) {
+    var mp = (r && r.macro_profiles && r.macro_profiles.serving_2) || {};
+    return { kcal: mp.calories || 0, p: mp.protein_g || 0 };
+  }
+  function msgScoreCandidate(r, usedIds, budget) {
+    var score = 0;
+    if (usedIds.has(r.recipe_id)) score -= 1000;
+    var m = msgMacroFit(r);
+    var kcalErr = budget.kcal > 0 ? Math.abs(m.kcal - budget.kcal) / budget.kcal : 0;
+    var pErr = budget.p > 0 ? Math.abs(m.p - budget.p) / budget.p : 0;
+    score -= (kcalErr + pErr * MSG_PROTEIN_WEIGHT) * 100;
+    score += Math.random() * 2; // small jitter so Regenerate still varies, without swamping macro fit
+    return score;
+  }
+  function msgPickForSlot(slot, usedIds, budget, excludeId) {
+    var pool = mealEligibleRecipes(slot);
+    if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
+    if (!pool.length) return null;
+    var fresh = pool.filter(function (r) {
+      var days = daysSinceCooked(r.recipe_id);
+      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
+    });
+    var candidates = fresh.length ? fresh : pool;
+    var best = null, bestScore = -Infinity;
+    candidates.forEach(function (r) {
+      var s = msgScoreCandidate(r, usedIds, budget);
+      if (s > bestScore) { bestScore = s; best = r; }
+    });
+    return best;
+  }
+  // Sum of this day's already-picked slots' macro fit, optionally excluding
+  // one slot (used to find what's left for that slot when regenerating it).
+  function msgDayConsumed(grid, day, excludeSlot) {
+    return grid.filter(function (g) { return g.day === day && g.slot !== excludeSlot; })
+      .reduce(function (acc, g) {
+        var m = msgMacroFit(recipeById(g.id));
+        acc.kcal += m.kcal; acc.p += m.p;
+        return acc;
+      }, { kcal: 0, p: 0 });
+  }
+  // Full 7-day grid for a scope, same shape as smwGenerateWeek's. Walks each
+  // day's slots in order, giving each an equal share of whatever's left of
+  // that day's kcal/protein goal after earlier slots in the same day.
+  function msgGenerateWeek(scopeKey) {
+    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+    var goals = loadMacroGoals();
+    var usedIds = new Set();
+    var grid = [];
+    DAYS.forEach(function (day) {
+      scope.slots.forEach(function (slot, i) {
+        var consumed = msgDayConsumed(grid, day, null);
+        var remaining = {
+          kcal: (goals ? goals.kcal : 0) - consumed.kcal,
+          p:    (goals ? goals.p    : 0) - consumed.p
+        };
+        var slotsLeft = scope.slots.length - i;
+        var budget = { kcal: remaining.kcal / slotsLeft, p: remaining.p / slotsLeft };
+        var pick = msgPickForSlot(slot, usedIds, budget, null);
+        if (pick) {
+          usedIds.add(pick.recipe_id);
+          grid.push({ day: day, slot: slot, id: pick.recipe_id });
+        }
+      });
+    });
+    return { scope: scope, grid: grid };
+  }
+  // Re-pick a single day+slot against what's left of that day's goal once
+  // its other slots are accounted for.
+  function msgRegenerateSlot(grid, day, slot, scopeKey) {
+    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+    var goals = loadMacroGoals();
+    var usedIds = new Set();
+    grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
+    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
+    var consumed = msgDayConsumed(grid, day, slot);
+    var remaining = {
+      kcal: (goals ? goals.kcal : 0) - consumed.kcal,
+      p:    (goals ? goals.p    : 0) - consumed.p
+    };
+    var otherFilled = grid.filter(function (g) { return g.day === day && g.slot !== slot; }).length;
+    var slotsLeft = Math.max(1, scope.slots.length - otherFilled);
+    var budget = { kcal: remaining.kcal / slotsLeft, p: remaining.p / slotsLeft };
+    var pick = msgPickForSlot(slot, usedIds, budget, current ? current.id : null);
+    return pick ? pick.recipe_id : null;
+  }
+  // Whole-day protein fit vs. goal, for the preview's "~92% of daily
+  // protein goal" readout. Null when there's no goal to compare against.
+  function msgDayFitPct(grid, day, goals) {
+    if (!goals || !goals.p) return null;
+    var got = msgDayConsumed(grid, day, null).p;
+    return Math.round((got / goals.p) * 100);
+  }
+
   /* ── RecipeEquivalenceEngine (Smart Replacement) ──────────────────────
      Deliberately decoupled from Smart Week's generation/scoring above —
      this only ever answers "what could replace THIS one meal", using its
@@ -2269,7 +2373,15 @@
     closeSmartWeek();
 
     var scopeKey = "all";
-    var grid = smwGenerateWeek(scopeKey).grid;
+    // Macro-Targeted is only ever offered when the user has real goals set
+    // (via MC Training's calculator) — with no goals, this stays "balanced"
+    // and the mode toggle never renders, so casual users see no change.
+    var macroGoals = loadMacroGoals();
+    var mode = "balanced"; // "balanced" | "macro"
+    function currentGrid() {
+      return (mode === "macro" && macroGoals) ? msgGenerateWeek(scopeKey).grid : smwGenerateWeek(scopeKey).grid;
+    }
+    var grid = currentGrid();
 
     var ov = el("div", "picker smw-overlay");
     var top = el("div", "picker-top");
@@ -2289,18 +2401,36 @@
     scopeSel.value = scopeKey;
     scopeSel.addEventListener("change", function () {
       scopeKey = scopeSel.value;
-      grid = smwGenerateWeek(scopeKey).grid;
+      grid = currentGrid();
       paint();
     });
     scopeBar.appendChild(scopeSel);
     var regenAll = el("button", "picker-sort-btn smw-regen-all-btn", "🔀 Regenerate");
     regenAll.type = "button";
     regenAll.addEventListener("click", function () {
-      grid = smwGenerateWeek(scopeKey).grid;
+      grid = currentGrid();
       paint();
     });
     scopeBar.appendChild(regenAll);
     ov.appendChild(scopeBar);
+
+    var modeBar = el("div", "smw-mode-bar");
+    function paintMode() {
+      modeBar.innerHTML = "";
+      modeBar.appendChild(segControl("smw-modetoggle", [
+        { value: "balanced", label: "Balanced" },
+        { value: "macro", label: "Macro-Targeted" }
+      ], mode, function (v) {
+        mode = v;
+        grid = currentGrid();
+        paintMode();
+        paint();
+      }));
+    }
+    if (macroGoals) {
+      paintMode();
+      ov.appendChild(modeBar);
+    }
 
     var body = el("div", "picker-results smw-body");
     ov.appendChild(body);
@@ -2334,6 +2464,13 @@
           if (!entries.length) return;
           var dayBlock = el("div", "plan-day smw-day");
           dayBlock.appendChild(el("div", "plan-day-head", esc(DAY_LONG[day])));
+          if (mode === "macro" && macroGoals) {
+            var fitPct = msgDayFitPct(grid, day, macroGoals);
+            if (fitPct != null) {
+              dayBlock.appendChild(el("div", "smw-macro-fit",
+                "~" + fitPct + "% of daily protein goal"));
+            }
+          }
           scope.slots.forEach(function (slot) {
             var entry = entries.filter(function (g) { return g.slot === slot; })[0];
             if (!entry) return;
@@ -2350,7 +2487,9 @@
             regen.type = "button";
             regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
             regen.addEventListener("click", function () {
-              var newId = smwRegenerateSlot(grid, day, slot);
+              var newId = (mode === "macro" && macroGoals)
+                ? msgRegenerateSlot(grid, day, slot, scopeKey)
+                : smwRegenerateSlot(grid, day, slot);
               if (!newId) { pop(regen); return; }
               grid = grid.map(function (g) {
                 return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
