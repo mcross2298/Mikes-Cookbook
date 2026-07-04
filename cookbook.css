@@ -1288,6 +1288,24 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .plan-remove:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
 .plan-remove:active { transform: scale(0.9); }
 
+/* "Mark Completed" toggle — check-box look shared with grocery rows. */
+.plan-complete {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--line-dark); background: transparent;
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.plan-complete svg { width: 13px; height: 13px; opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+.plan-complete.is-done { background: var(--sage); border-color: var(--sage); }
+.plan-complete.is-done svg { opacity: 1; }
+
+/* Completed meal: dim + strike-through, matching the grocery check-off look. */
+.plan-meal.is-done, .plan-chip.is-done { opacity: 0.55; }
+.plan-meal.is-done .plan-meal-title, .plan-chip.is-done .plan-chip-title {
+  color: var(--on-dark-dim); text-decoration: line-through;
+}
+
 /* Add / clear actions. .plan-add reuses .cook-start (accent block button). */
 .plan-add { margin: 6px 0 0; }
 .plan-clear {
@@ -1770,6 +1788,28 @@ body.picking { overflow: hidden; }
 .pantry-foot-chev { margin-left: auto; font-size: 13px; color: var(--ink-dim); }
 .pantry-foot-list { padding: 0 16px 8px; }
 .pantry-foot-list .grocery-row { opacity: 0.85; }
+
+/* "Already made" collapsible footer — split-trip collapse for items whose
+   contributing meals are all marked Completed. Mirrors .pantry-foot. */
+.made-foot {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); overflow: hidden; margin-bottom: 14px;
+}
+.made-foot-head {
+  appearance: none; cursor: pointer; font-family: var(--sans);
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 14px 16px; background: transparent; border: 0; text-align: left;
+  font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: var(--ink);
+}
+.made-foot-title { flex: 0 1 auto; }
+.made-foot-count {
+  font-size: 11px; font-weight: 700; color: var(--ink-dim);
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 999px; min-width: 20px; text-align: center; padding: 1px 7px;
+}
+.made-foot-chev { margin-left: auto; font-size: 13px; color: var(--ink-dim); }
+.made-foot-list { padding: 0 16px 8px; }
+.made-foot-list .grocery-row { opacity: 0.85; }
 
 /* ═══════════════════════════════════════════════════════════════════
    PHASE 3 — Accessibility & mobile-use pass
