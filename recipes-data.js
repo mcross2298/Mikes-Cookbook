@@ -10148,6 +10148,797 @@ const RECIPES = [
         detail: "Drizzle generously with the chipotle lime sauce, or pack it separately if storing."
       }
     ]
+  },
+
+  {
+    recipe_id: "cheesy-cajun-chicken-pasta-bowls",
+    title: "Cheesy Cajun Chicken Pasta Bowls",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌶️",
+    tags: ["Meal-Prep", "High-Protein", "Cajun"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Blackened chicken strips over creamy Cajun three-cheese fusilli with sautéed peppers and onion — a spicy, cheesy meal-prep bowl finished with parmesan and parsley.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B3452E",
+
+    macro_profiles: {
+      serving_4: { calories: 535, protein_g: 48, fat_g: 16, carbs_g: 46 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Blackened chicken strips", prep: "Tyson", quantity: "24", unit: "oz", category: "Meat" },
+        { item: "Fusilli pasta", prep: "al dente, dry", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Mini sweet peppers", prep: "diced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Sweet onion", prep: "chopped", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Fresh parsley", prep: "for garnish", quantity: "", unit: "", category: "Produce" },
+        { item: "Lite shredded mozzarella cheese", prep: "", quantity: "2 1/2", unit: "oz", category: "Dairy" },
+        { item: "Lite shredded 3-cheese blend", prep: "", quantity: "2", unit: "oz", category: "Dairy" },
+        { item: "Laughing Cow Light cheese wedges", prep: "", quantity: "4", unit: "wedges", category: "Dairy" },
+        { item: "Reduced-fat cream cheese", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "freshly grated, reserve some for topping", quantity: "1/2", unit: "oz", category: "Dairy" },
+        { item: "Vegetable stock", prep: "fat-free", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "2/3", unit: "cup", category: "Dairy" },
+        { item: "Onion powder", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Cajun seasoning", prep: "or any Cajun seasoning", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Red seasoning blend", prep: "Dak's Original", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "dash", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the fusilli according to package directions until al dente. Drain and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Air-fry the chicken",
+        detail: "Preheat the air fryer to 400°F (200°C). Cook the blackened chicken strips for 11 minutes, shaking halfway through. Rest, then cut into bite-sized pieces."
+      },
+      {
+        step_number: 3,
+        title: "Prep the veggies",
+        detail: "While the pasta and chicken cook, dice the peppers and chop the onion."
+      },
+      {
+        step_number: 4,
+        title: "Blend the sauce",
+        detail: "In a blender, combine the mozzarella, 3-cheese blend, Laughing Cow wedges, cream cheese, parmesan, vegetable stock, almond milk, and all the seasonings. Blend until smooth and creamy."
+      },
+      {
+        step_number: 5,
+        title: "Combine",
+        detail: "Return the drained pasta to the pot. Add the diced peppers, onion, and blended sauce. Mix over low heat until the sauce thickens and coats the pasta evenly."
+      },
+      {
+        step_number: 6,
+        title: "Assemble the bowls",
+        detail: "Divide the pasta evenly among 4 meal prep containers. Top each with the chopped blackened chicken, a sprinkle of parmesan, and fresh parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-pepper-chicken-mac-and-cheese",
+    title: "Honey Pepper Chicken Mac and Cheese",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍯",
+    tags: ["Meal-Prep", "High-Protein", "Sweet & Spicy"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Air-fried chicken thighs glazed in a sweet-spicy honey pepper sauce over a rich, three-cheese mac and cheese — a meal-prep favorite with real kick.",
+    prep_time_mins: 20,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#C9902E",
+
+    macro_profiles: {
+      serving_4: { calories: 544, protein_g: 45, fat_g: 21, carbs_g: 40 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken thighs", prep: "boneless, skinless, cut into bite-sized pieces", quantity: "450", unit: "g", category: "Meat" },
+        { item: "Honey substitute", prep: "or regular honey", quantity: "180", unit: "ml", category: "Pantry" },
+        { item: "Pineapple juice", prep: "100%", quantity: "60", unit: "ml", category: "Pantry" },
+        { item: "Soy sauce", prep: "light", quantity: "60", unit: "ml", category: "Pantry" },
+        { item: "Brown sugar substitute", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Apple cider vinegar", prep: "", quantity: "45", unit: "ml", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Elbow macaroni", prep: "or high-protein pasta, dry", quantity: "225", unit: "g", category: "Pantry" },
+        { item: "Lite shredded mozzarella cheese", prep: "", quantity: "45", unit: "g", category: "Dairy" },
+        { item: "Lite shredded 3-cheese blend", prep: "", quantity: "45", unit: "g", category: "Dairy" },
+        { item: "Laughing Cow Light cheese wedges", prep: "", quantity: "2", unit: "wedges", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "10", unit: "g", category: "Dairy" },
+        { item: "Velveeta cheese", prep: "torn into small pieces", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Evaporated milk", prep: "fat-free", quantity: "120", unit: "ml", category: "Dairy" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the chicken",
+        detail: "Place the chicken in a bowl. Whisk together the honey substitute, pineapple juice, soy sauce, brown sugar, apple cider vinegar, black pepper, garlic powder, onion powder, and cayenne in a saucepan; bring to a quick boil, then remove from heat. Pour a little less than half over the chicken, mix, and refrigerate 15-30 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Prep the cheese",
+        detail: "While the chicken marinates, grate the parmesan, measure the shredded cheeses, unwrap the Laughing Cow wedges, and tear the Velveeta into small pieces."
+      },
+      {
+        step_number: 3,
+        title: "Air-fry the chicken",
+        detail: "Cook in two batches at 400°F (200°C) for 15 minutes each, shaking halfway through. Transfer to a clean bowl."
+      },
+      {
+        step_number: 4,
+        title: "Cook the pasta",
+        detail: "While the chicken cooks, boil salted water and cook the pasta until al dente. Drain and return to the pot."
+      },
+      {
+        step_number: 5,
+        title: "Make the cheese sauce",
+        detail: "Add the evaporated milk, all the cheeses, and black pepper to the hot pasta. Stir over low heat until the cheeses are fully melted and creamy."
+      },
+      {
+        step_number: 6,
+        title: "Glaze the chicken",
+        detail: "Reheat the remaining sauce briefly, pour over the cooked chicken, and toss until fully coated and glossy."
+      },
+      {
+        step_number: 7,
+        title: "Assemble",
+        detail: "Divide the mac and cheese evenly into 4 meal prep containers, then add the honey pepper chicken to each. Garnish with parsley if desired."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-chicken-bowls-cauliflower-garlic-rice",
+    title: "Buffalo Chicken Bowls with Cauliflower Garlic Rice",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🔥",
+    tags: ["Meal-Prep", "High-Protein", "Spicy"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Grilled buffalo-marinated chicken over cauliflower-studded garlic rice with cucumber, cherry tomatoes, and a cooling dill or ranch dip.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#A83A2E",
+
+    macro_profiles: {
+      serving_4: { calories: 480, protein_g: 42, fat_g: 14, carbs_g: 38 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken breast", prep: "thin-sliced", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Buffalo or hot sauce", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "White rice", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Riced cauliflower", prep: "fresh or frozen", quantity: "12", unit: "oz", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1-2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cucumber", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cherry tomatoes", prep: "halved", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Dill dip or ranch dressing", prep: "to serve", quantity: "", unit: "", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the chicken",
+        detail: "Combine the chicken, hot sauce, honey, garlic powder, paprika, salt, onion powder, and pepper in a bag. Refrigerate 30 minutes to 2 hours."
+      },
+      {
+        step_number: 2,
+        title: "Cook the rice",
+        detail: "Cook the white rice according to package directions."
+      },
+      {
+        step_number: 3,
+        title: "Roast the cauliflower",
+        detail: "Spread the cauliflower rice on a sheet pan, drizzle with olive oil and salt, and roast at 425°F (220°C) for 20-30 minutes until browned. Stir into the cooked rice."
+      },
+      {
+        step_number: 4,
+        title: "Grill the chicken",
+        detail: "Heat a grill pan over high heat. Cook the marinated chicken a few minutes per side until browned and cooked through. Rest, then slice."
+      },
+      {
+        step_number: 5,
+        title: "Assemble",
+        detail: "Divide the rice and chicken into 4 containers. Pack the cucumber, tomato, and dip separately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-meatball-pasta",
+    title: "Creamy Meatball Pasta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍝",
+    tags: ["Meal-Prep", "High-Protein", "Comfort Food"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Tender homemade meatballs simmered in a creamy tomato sauce lightened with Greek yogurt, tossed with protein pasta — comfort food built for batch cooking.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#B5452E",
+
+    macro_profiles: {
+      serving_4: { calories: 580, protein_g: 48, fat_g: 18, carbs_g: 52 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Protein pasta or chickpea pasta", prep: "", quantity: "8", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow onion", prep: "finely diced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Tomato sauce or passata", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "or blended cottage cheese", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Low-fat milk", prep: "or pasta water", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley or basil", prep: "for garnish", quantity: "", unit: "", category: "Produce" },
+        { item: "Ground beef or turkey", prep: "93% lean", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Breadcrumbs", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Egg", prep: "", quantity: "1", unit: "large", category: "Dairy" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prepare the meatballs",
+        detail: "In a large bowl, mix the ground meat, breadcrumbs, egg, garlic powder, Italian seasoning, salt, and black pepper until just combined. Shape into 12-16 even meatballs."
+      },
+      {
+        step_number: 2,
+        title: "Cook the meatballs",
+        detail: "Heat the olive oil in a large skillet over medium-high heat. Cook the meatballs 6-8 minutes, turning occasionally, until browned and cooked through. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Boil the pasta",
+        detail: "While the meatballs cook, bring a large pot of salted water to a boil and cook the pasta until al dente. Reserve about 1/2 cup of the pasta water before draining."
+      },
+      {
+        step_number: 4,
+        title: "Make the creamy sauce",
+        detail: "In the same skillet, lower the heat to medium. Add the onion and cook 3-4 minutes until softened. Stir in the garlic and cook 1 more minute. Add the tomato paste, tomato sauce, and oregano, and simmer 3 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Combine & serve",
+        detail: "Reduce the heat to low. Stir in the Greek yogurt (or blended cottage cheese) and milk until smooth and creamy. Add the pasta and meatballs back into the skillet, tossing to coat. Thin with reserved pasta water if needed. Garnish with parsley or basil."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "marry-me-chicken-and-gnocchi",
+    title: "Marry Me Chicken and Gnocchi",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "💍",
+    tags: ["Meal-Prep", "High-Protein", "Creamy"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Seared chicken and pillowy gnocchi in a sun-dried tomato Parmesan cream sauce with wilted spinach and a splash of lemon — the viral flavor combo in a meal-prep bowl.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#8B4A3A",
+
+    macro_profiles: {
+      serving_4: { calories: 680, protein_g: 52, fat_g: 30, carbs_g: 45 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken breasts", prep: "boneless, skinless, cut into bite-size pieces", quantity: "680", unit: "g", category: "Meat" },
+        { item: "Italian seasoning", prep: "", quantity: "3/4", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Chicken broth", prep: "", quantity: "3/4", unit: "cup", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Gnocchi", prep: "shelf-stable", quantity: "450", unit: "g", category: "Pantry" },
+        { item: "Sun-dried tomatoes in oil", prep: "julienne-cut", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Parmesan cheese", prep: "freshly grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Baby spinach", prep: "roughly chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Lemon", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Fresh basil", prep: "chopped, optional for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Extra parmesan", prep: "grated, optional for topping", quantity: "", unit: "", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the chicken",
+        detail: "Season the chicken with salt, black pepper, Italian seasoning, and paprika."
+      },
+      {
+        step_number: 2,
+        title: "Sear the chicken",
+        detail: "Heat a large skillet over medium-high heat with 2 tbsp olive oil. Cook the chicken in a single layer 3-4 minutes per side until golden and cooked through. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the garlic",
+        detail: "In the same skillet, melt the butter with the remaining 1 tbsp olive oil over medium heat. Stir in the garlic and sauté 40-60 seconds until fragrant."
+      },
+      {
+        step_number: 4,
+        title: "Build the sauce",
+        detail: "Add the heavy cream, chicken broth, tomato paste, salt, and pepper. Stir and bring to a gentle simmer."
+      },
+      {
+        step_number: 5,
+        title: "Cook the gnocchi",
+        detail: "Stir in the gnocchi and sun-dried tomatoes. Cover and cook about 4 minutes until the gnocchi is tender."
+      },
+      {
+        step_number: 6,
+        title: "Combine",
+        detail: "Add the spinach, parmesan, and cooked chicken. Stir in the lemon juice and toss until combined and the spinach wilts."
+      },
+      {
+        step_number: 7,
+        title: "Serve",
+        detail: "Top with fresh basil and extra parmesan before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "steak-boursin-cheese-pasta-roasted-asparagus",
+    title: "Steak and Boursin Cheese Pasta with Roasted Asparagus",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥩",
+    tags: ["Meal-Prep", "High-Protein", "Creamy"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
+    description:
+      "Seared sirloin sliced over rich Boursin garlic-herb pasta, served alongside parmesan-roasted asparagus — a restaurant-style steak dinner built for meal prep.",
+    prep_time_mins: 20,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#8B5A3C",
+
+    macro_profiles: {
+      serving_4: { calories: 680, protein_g: 52, fat_g: 30, carbs_g: 45 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Rigatoni or penne pasta", prep: "", quantity: "10", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Low-sodium chicken broth", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Boursin cheese", prep: "garlic & fine herbs", quantity: "1", unit: "package (5.2 oz)", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "for garnish", quantity: "", unit: "", category: "Produce" },
+        { item: "Sirloin or ribeye steak", prep: "", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Unsalted butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Asparagus", prep: "trimmed", quantity: "1", unit: "bunch (about 14 oz)", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Parmesan cheese", prep: "grated, optional", quantity: "1", unit: "tbsp", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the steak",
+        detail: "Pat the steak dry and season both sides with salt, pepper, garlic powder, and smoked paprika. Heat a cast-iron skillet over medium-high heat, add olive oil, and sear 3-4 minutes per side for medium-rare (or to preference). Add butter during the last minute and spoon over the steak. Rest 10 minutes before slicing."
+      },
+      {
+        step_number: 2,
+        title: "Roast the asparagus",
+        detail: "Preheat the oven to 400°F (200°C). Toss the asparagus with olive oil, salt, pepper, and garlic powder. Spread on a baking sheet and roast 12-15 minutes until tender and lightly charred. Sprinkle with parmesan if desired."
+      },
+      {
+        step_number: 3,
+        title: "Cook the pasta",
+        detail: "Bring a large pot of salted water to a boil. Cook the pasta until al dente, drain, and reserve 1/2 cup of pasta water."
+      },
+      {
+        step_number: 4,
+        title: "Make the Boursin sauce",
+        detail: "Heat olive oil in a skillet over medium heat. Sauté the garlic 30 seconds until fragrant. Stir in the chicken broth, milk, and cream, then bring to a gentle simmer. Add the Boursin cheese and whisk until smooth. Stir in the parmesan and season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Combine",
+        detail: "Add the cooked pasta to the sauce and toss until evenly coated, adding reserved pasta water as needed."
+      },
+      {
+        step_number: 6,
+        title: "Assemble",
+        detail: "Divide the Boursin pasta among bowls. Arrange sliced steak on top, drizzle with pan juices, and serve alongside the roasted asparagus. Garnish with parsley and extra parmesan."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mac-n-cheese-hot-honey-chicken-tenders",
+    title: "Mac N Cheese with Hot Honey Chicken Tenders",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍗",
+    tags: ["Meal-Prep", "High-Protein", "Sweet & Spicy"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Crispy breaded chicken tenders tossed in a hot honey glaze over a rich stovetop sharp cheddar mac and cheese — sweet, spicy, and endlessly reheatable.",
+    prep_time_mins: 20,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#CB8A3A",
+
+    macro_profiles: {
+      serving_4: { calories: 710, protein_g: 46, fat_g: 30, carbs_g: 58 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken tenders or boneless chicken breast strips", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "All-purpose flour", prep: "for dredging", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Egg", prep: "beaten", quantity: "1", unit: "large", category: "Dairy" },
+        { item: "Panko breadcrumbs", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cooking spray or oil", prep: "for air frying/pan frying", quantity: "", unit: "", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Hot sauce", prep: "e.g. Frank's RedHot or sriracha", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Butter", prep: "melted", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Elbow macaroni", prep: "", quantity: "250", unit: "g", category: "Pantry" },
+        { item: "Unsalted butter", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "All-purpose flour", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Half and half", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Sharp cheddar cheese", prep: "shredded", quantity: "1 1/2", unit: "cups", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Mozzarella cheese", prep: "shredded", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Chives or parsley", prep: "chopped, for garnish", quantity: "1", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the macaroni in salted water until al dente. Drain and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Make the cheese sauce",
+        detail: "Melt the butter in a saucepan over medium heat. Add the flour and whisk 1 minute. Slowly pour in the milk and half and half, whisking until smooth and thickened. Stir in the cheddar, mozzarella, paprika, salt, and pepper until creamy. Add the cooked pasta and mix to coat."
+      },
+      {
+        step_number: 3,
+        title: "Optional bake",
+        detail: "Transfer the mac and cheese to a baking dish and broil 3-4 minutes until golden and bubbly, if desired."
+      },
+      {
+        step_number: 4,
+        title: "Bread the chicken",
+        detail: "Dredge each chicken tender in flour, dip in beaten egg, then coat with panko seasoned with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Cook the chicken",
+        detail: "Air-fry at 400°F (200°C) for 12-14 minutes, or pan-fry in oil 3-4 minutes per side until golden and cooked through."
+      },
+      {
+        step_number: 6,
+        title: "Make the hot honey sauce",
+        detail: "Combine the honey, hot sauce, melted butter, and garlic powder. Toss the cooked chicken in the sauce until fully coated."
+      },
+      {
+        step_number: 7,
+        title: "Assemble",
+        detail: "Add a serving of mac and cheese to each container and top with hot honey chicken tenders. Sprinkle with chives."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "korean-sticky-chicken-skewers-rice",
+    title: "Korean Sticky Chicken Skewers and Rice",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍢",
+    tags: ["Meal-Prep", "High-Protein", "Asian-Inspired"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Air-fried Korean-style sticky chicken skewers glazed in a sweet chili-ginger sauce, served over rice with caramelized pineapple and sesame seeds.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#CC6633",
+
+    macro_profiles: {
+      serving_4: { calories: 520, protein_g: 47, fat_g: 14, carbs_g: 45 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken breast", prep: "trimmed and thinly sliced", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Hot sauce", prep: "Frank's RedHot", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Sweet chili sauce", prep: "sugar-free, G Hughes", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "lite", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Brown sugar substitute", prep: "Swerve", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Scallions or green onions", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Ginger paste", prep: "or fresh equivalent", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced or paste", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Rice wine vinegar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Keto honey", prep: "Wholesome Yum", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado oil spray", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Rice", prep: "cooked, white or jasmine", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Pineapple chunks", prep: "fresh", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "White sesame seeds", prep: "for garnish", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Green onions", prep: "extra chopped, for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the chicken",
+        detail: "Combine the sliced chicken, hot sauce, sweet chili sauce, and half the chopped green onions in a bowl. Marinate in the fridge at least 1 hour."
+      },
+      {
+        step_number: 2,
+        title: "Prepare the sauce",
+        detail: "Whisk together the soy sauce, brown sugar substitute, ginger paste, garlic, red pepper flakes, rice wine vinegar, and keto honey. Set aside."
+      },
+      {
+        step_number: 3,
+        title: "Assemble the skewers",
+        detail: "Thread the marinated chicken onto skewers. Preheat the air fryer to 400°F (200°C) and spray the basket lightly with avocado oil."
+      },
+      {
+        step_number: 4,
+        title: "Cook the chicken",
+        detail: "Place the skewers in the air fryer, leaving space between each. Cook 25 minutes, turning and brushing with sauce every 5-6 minutes, until fully cooked and caramelized."
+      },
+      {
+        step_number: 5,
+        title: "Cook the pineapple",
+        detail: "Once the chicken is done, add the pineapple chunks to the air fryer and cook at 400°F (200°C) for 4 minutes, stirring halfway."
+      },
+      {
+        step_number: 6,
+        title: "Assemble the meal prep",
+        detail: "Divide the rice evenly among 4 containers. Add pineapple on the side, then top each with two skewers. Brush with any remaining sauce and garnish with sesame seeds and green onions."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "big-mac-tacos",
+    title: "Big Mac Tacos",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌮",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
+    description:
+      "Smashed beef tacos seasoned like a classic burger, melted with cheese, and drizzled with a tangy homemade Big Mac sauce — griddled tortilla-side up for a crisp finish.",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C25C3A",
+
+    macro_profiles: {
+      serving_4: { calories: 420, protein_g: 38, fat_g: 18, carbs_g: 24 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Light mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dill pickles or relish", prep: "finely chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Sugar-free ketchup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Rice vinegar or pickle juice", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Ground beef", prep: "93% lean", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Low-carb tortillas", prep: "like La Banderita", quantity: "8", unit: "small", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Reduced-fat American or cheddar cheese", prep: "sliced, halved", quantity: "4", unit: "slices", category: "Dairy" },
+        { item: "Iceberg lettuce", prep: "shredded", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "White onion", prep: "finely diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Dill pickle slices", prep: "", quantity: "1/4", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the Big Mac sauce",
+        detail: "Whisk together the Greek yogurt, mayonnaise, pickles, ketchup, mustard, rice vinegar, garlic powder, onion powder, and black pepper. Refrigerate to let the flavors meld."
+      },
+      {
+        step_number: 2,
+        title: "Prep the beef",
+        detail: "Divide the ground beef into 8 equal portions and roll each into a ball."
+      },
+      {
+        step_number: 3,
+        title: "Smash the tacos",
+        detail: "Heat a large skillet or griddle over medium-high heat and lightly spray with nonstick spray. Place a beef ball onto a tortilla and press flat until it covers most of the tortilla. Season the beef side with salt, pepper, and garlic powder."
+      },
+      {
+        step_number: 4,
+        title: "Cook the tacos",
+        detail: "Place the tortillas beef-side down onto the hot skillet. Cook 2-3 minutes until the beef is browned, then flip so the tortilla side is down."
+      },
+      {
+        step_number: 5,
+        title: "Melt the cheese",
+        detail: "Turn the heat to medium-low. Place half a slice of cheese on top of the beef on each taco. Cover for about 1 minute until melted and the tortilla is slightly crispy."
+      },
+      {
+        step_number: 6,
+        title: "Assemble",
+        detail: "Remove from the skillet. Top each taco with shredded lettuce, diced onion, pickle slices, and a generous drizzle of the Big Mac sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crispy-honey-soy-chicken-sesame-noodles",
+    title: "Crispy Honey Soy Chicken with Sesame Noodles",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥢",
+    tags: ["Meal-Prep", "High-Protein", "Asian-Inspired"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Crispy fried chicken thighs glazed in a sweet-savory honey soy sauce, tossed over sesame egg noodles with julienned carrot and spring onion.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#6E8C6A",
+
+    macro_profiles: {
+      serving_4: { calories: 670, protein_g: 44, fat_g: 22, carbs_g: 74 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken thighs", prep: "", quantity: "1", unit: "kg", category: "Meat" },
+        { item: "Plain flour", prep: "", quantity: "80", unit: "g", category: "Pantry" },
+        { item: "Eggs", prep: "large, beaten", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "4", unit: "cloves", category: "Produce" },
+        { item: "Egg noodles", prep: "dry", quantity: "400", unit: "g", category: "Pantry" },
+        { item: "Carrot", prep: "julienned", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Spring onions", prep: "sliced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Sesame seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Coat",
+        detail: "Toss the chicken in flour, then dip in beaten egg."
+      },
+      {
+        step_number: 2,
+        title: "Fry",
+        detail: "Heat the olive oil in a pan and fry the chicken until golden and crispy. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Make the glaze",
+        detail: "In the same pan, add the garlic, soy sauce, and honey. Simmer until slightly thickened."
+      },
+      {
+        step_number: 4,
+        title: "Toss",
+        detail: "Return the chicken to the pan and toss until evenly coated in the glaze."
+      },
+      {
+        step_number: 5,
+        title: "Cook the noodles",
+        detail: "Cook the noodles according to package instructions. Drain and toss with the carrot and spring onions."
+      },
+      {
+        step_number: 6,
+        title: "Serve",
+        detail: "Plate the noodles, top with the crispy chicken, and sprinkle with sesame seeds."
+      }
+    ]
   }
 ];
 
