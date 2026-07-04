@@ -1386,6 +1386,20 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
   font-size: 11px; font-weight: 800; letter-spacing: 0.02em;
 }
 
+/* ── Batch-prep day suggestion: dismissible callout, advisory only ────── */
+.smw-prep-callout {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 20px 14px; padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb),0.16), rgba(0,0,0,0.18)), var(--bg-elev);
+  border: 1px solid rgba(var(--accent-rgb),0.34); border-radius: 14px;
+}
+.smw-prep-text { flex: 1; font-size: 12.5px; line-height: 1.4; color: var(--on-dark); }
+.smw-prep-dismiss {
+  flex: 0 0 auto; appearance: none; cursor: pointer; font-family: inherit;
+  background: transparent; border: 0; color: var(--on-dark-dim);
+  font-size: 15px; line-height: 1; padding: 4px 2px;
+}
+
 /* ── Save Week Block prompt (final-meal completion / day-7 boot check) ── */
 .swp-body { padding-top: 4px; }
 .swp-copy { padding: 4px 20px 14px; font-size: 14px; color: var(--on-dark-dim); line-height: 1.5; margin: 0; }
