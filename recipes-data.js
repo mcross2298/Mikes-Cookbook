@@ -8106,6 +8106,687 @@ const RECIPES = [
           "Stir the shrimp back into the sauce, then add the remaining 1 tablespoon of cold butter and the lemon juice. Serve over warm rice."
       }
     ]
+  },
+
+  {
+    recipe_id: "chicken-enchilada-quinoa",
+    title: "Chicken Enchilada Quinoa",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🌯",
+    tags: ["Crockpot", "High-Protein", "Meal-Prep"],
+    dish_category: "Soups, Stews & Chilis",
+    description:
+      "A set-and-forget crockpot dinner — shredded chicken, quinoa, black beans, and corn simmered in enchilada sauce and finished with melted cheddar and fresh cilantro.",
+    prep_time_mins: 10,
+    cook_time_mins: 400,
+    native_serving: 6,
+    accent: "#B5652E",
+
+    macro_profiles: {
+      serving_6: { calories: 484, protein_g: 48, fat_g: 7, carbs_g: 39 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Chicken breast", prep: "", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Quinoa", prep: "uncooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Enchilada sauce", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Chicken broth", prep: "low sodium", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Black beans", prep: "drained", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Corn", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Reduced fat cheddar cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Load the crockpot",
+        detail:
+          "Add chicken, enchilada sauce, broth, onion, beans, corn, cumin, and chili powder to the crockpot."
+      },
+      {
+        step_number: 2,
+        title: "Cook & shred",
+        detail: "Cook on LOW for 6 hours, then remove and shred the chicken."
+      },
+      {
+        step_number: 3,
+        title: "Stir in the quinoa",
+        detail:
+          "Stir the uncooked quinoa into the crockpot and cook another 30 to 40 minutes until the quinoa is tender."
+      },
+      {
+        step_number: 4,
+        title: "Finish & serve",
+        detail:
+          "Return the chicken to the crockpot and stir in the cheese. Garnish with cilantro before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crockpot-pizza-chicken-bowls",
+    title: "Crockpot Pizza Chicken Bowls",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🍕",
+    tags: ["Crockpot", "High-Protein", "Kid-Friendly"],
+    dish_category: "Casseroles & Bakes",
+    description:
+      "All the flavor of a pepperoni pizza in a crockpot chicken bowl — shredded chicken, rice, and turkey pepperoni simmered in pizza sauce and topped with melted mozzarella.",
+    prep_time_mins: 10,
+    cook_time_mins: 370,
+    native_serving: 6,
+    accent: "#C25C3A",
+
+    macro_profiles: {
+      serving_6: { calories: 452, protein_g: 50, fat_g: 5, carbs_g: 27 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Chicken breast", prep: "", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Rice", prep: "cooked", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Pizza sauce", prep: "", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Bell peppers", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Turkey pepperoni", prep: "", quantity: "1/2", unit: "cup", category: "Meat" },
+        { item: "Reduced fat mozzarella cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Mushrooms", prep: "sliced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh basil", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Load the crockpot",
+        detail:
+          "Add chicken, pizza sauce, peppers, mushrooms, garlic powder, and Italian seasoning to the crockpot."
+      },
+      {
+        step_number: 2,
+        title: "Cook & shred",
+        detail: "Cook on LOW for 6 hours, then shred the chicken."
+      },
+      {
+        step_number: 3,
+        title: "Stir in rice & pepperoni",
+        detail: "Stir in the cooked rice and turkey pepperoni."
+      },
+      {
+        step_number: 4,
+        title: "Melt & serve",
+        detail:
+          "Top with mozzarella cheese, cover until melted, and garnish with basil before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-cajun-chicken-potatoes",
+    title: "Creamy Cajun Chicken & Potatoes",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🥔",
+    tags: ["Crockpot", "Creamy", "High-Protein"],
+    dish_category: "Casseroles & Bakes",
+    description:
+      "Baby potatoes and peppers slow-cook under Cajun-seasoned chicken, then everything gets stirred into a creamy Greek yogurt, cream cheese, and Parmesan sauce.",
+    prep_time_mins: 10,
+    cook_time_mins: 400,
+    native_serving: 5,
+    accent: "#C48A3D",
+
+    macro_profiles: {
+      serving_5: { calories: 489, protein_g: 51, fat_g: 4, carbs_g: 34 }
+    },
+
+    scaling_options: [5],
+
+    ingredients_by_serving: {
+      serving_5: [
+        { item: "Chicken breast", prep: "", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Baby potatoes", prep: "halved", quantity: "700", unit: "g", category: "Produce" },
+        { item: "Low fat Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Chicken broth", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Red bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Onion", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cajun seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Parmesan cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh parsley", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Layer the crockpot",
+        detail: "Add potatoes, peppers, and onion to the crockpot."
+      },
+      {
+        step_number: 2,
+        title: "Season & top with chicken",
+        detail:
+          "Place chicken on top and season with Cajun seasoning and garlic powder, then pour broth over everything."
+      },
+      {
+        step_number: 3,
+        title: "Cook & shred",
+        detail: "Cook on LOW for 6 to 7 hours, then shred the chicken."
+      },
+      {
+        step_number: 4,
+        title: "Stir in the creamy sauce",
+        detail:
+          "Stir in the Greek yogurt, cream cheese, and Parmesan. Mix until creamy and fully combined, then garnish with parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-garlic-chicken-rice",
+    title: "Honey Garlic Chicken Rice",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🍯",
+    tags: ["Crockpot", "Asian-Inspired", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Shredded chicken and jasmine rice simmered in a honey garlic sauce with ginger, soy, and bell peppers, finished with broccoli and melted mozzarella.",
+    prep_time_mins: 10,
+    cook_time_mins: 380,
+    native_serving: 6,
+    accent: "#CB8A3A",
+
+    macro_profiles: {
+      serving_6: { calories: 478, protein_g: 49, fat_g: 3, carbs_g: 41 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Jasmine rice", prep: "uncooked", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Chicken broth", prep: "low sodium", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Sugar free honey garlic sauce", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Broccoli florets", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Ginger", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Low sodium soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Reduced fat mozzarella cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Green onions", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Load the crockpot",
+        detail:
+          "Add chicken, broth, honey garlic sauce, garlic, ginger, soy sauce, and peppers to the crockpot."
+      },
+      {
+        step_number: 2,
+        title: "Cook & shred",
+        detail: "Cook on LOW for 6 hours. Remove the chicken and shred."
+      },
+      {
+        step_number: 3,
+        title: "Cook the rice",
+        detail:
+          "Stir the uncooked rice into the crockpot and cook another 45 to 60 minutes until tender, adding the broccoli during the final 20 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Finish & serve",
+        detail:
+          "Stir the shredded chicken back in with the mozzarella cheese. Garnish with green onions before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crispy-hot-honey-chicken-bowls",
+    title: "Crispy Hot Honey Chicken Bowls",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🔥",
+    tags: ["Skillet", "Spicy-Sweet", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Cornstarch-coated chicken bites pan-seared until golden and crispy, then tossed in a sweet-and-spicy honey hot sauce and served over jasmine rice with green beans.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#BF5A2E",
+
+    macro_profiles: {
+      serving_4: { calories: 499, protein_g: 53, fat_g: 11, carbs_g: 42 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "diced", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Jasmine rice", prep: "cooked", quantity: "450", unit: "g", category: "Pantry" },
+        { item: "Green beans", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Hot sauce", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Cornstarch", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "10", unit: "ml", category: "Pantry" },
+        { item: "Salt, pepper & garlic powder", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Coat the chicken",
+        detail: "Coat the diced chicken lightly with cornstarch and seasonings."
+      },
+      {
+        step_number: 2,
+        title: "Sear until crispy",
+        detail: "Cook in olive oil until golden and crispy."
+      },
+      {
+        step_number: 3,
+        title: "Make the sauce & toss",
+        detail: "Mix the honey and hot sauce together, then toss the chicken in the sauce."
+      },
+      {
+        step_number: 4,
+        title: "Serve",
+        detail: "Serve over rice with green beans, divided into 4 servings."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "bbq-chicken-mac-cheese-bowl",
+    title: "BBQ Chicken Mac & Cheese Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🧀",
+    tags: ["High-Protein", "Comfort Food", "Quick"],
+    dish_category: "Casseroles & Bakes",
+    description:
+      "High-protein macaroni tossed with seared chicken, steamed broccoli, and a smooth BBQ cheese sauce made with light cheddar and almond milk.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#A8522E",
+
+    macro_profiles: {
+      serving_4: { calories: 497, protein_g: 52, fat_g: 11, carbs_g: 43 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "High-protein macaroni", prep: "dry", quantity: "240", unit: "g", category: "Pantry" },
+        { item: "Light cheddar cheese", prep: "shredded", quantity: "120", unit: "g", category: "Dairy" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "250", unit: "ml", category: "Dairy" },
+        { item: "Sugar-free BBQ sauce", prep: "", quantity: "80", unit: "g", category: "Pantry" },
+        { item: "Broccoli florets", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Cornstarch", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta & chicken",
+        detail:
+          "Cook the pasta according to package directions. Cook the chicken, season lightly, and dice."
+      },
+      {
+        step_number: 2,
+        title: "Steam the broccoli",
+        detail: "Steam the broccoli until tender."
+      },
+      {
+        step_number: 3,
+        title: "Make the cheese sauce",
+        detail:
+          "Heat the almond milk, cheese, and cornstarch until smooth, then stir in the BBQ sauce."
+      },
+      {
+        step_number: 4,
+        title: "Toss & serve",
+        detail: "Toss the pasta, broccoli, and chicken with the cheese sauce, divided into 4 servings."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-taco-rice-skillet",
+    title: "Chicken Taco Rice Skillet",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🌮",
+    tags: ["Skillet", "Tex-Mex", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Taco-seasoned chicken, sautéed peppers and onions, rice, black beans, and salsa come together in one skillet, topped with melted cheese.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#C1622E",
+
+    macro_profiles: {
+      serving_4: { calories: 497, protein_g: 52, fat_g: 11, carbs_g: 43 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Rice", prep: "cooked", quantity: "500", unit: "g", category: "Pantry" },
+        { item: "Black beans", prep: "drained", quantity: "200", unit: "g", category: "Pantry" },
+        { item: "Bell peppers", prep: "diced", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Onion", prep: "diced", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Salsa", prep: "", quantity: "120", unit: "g", category: "Pantry" },
+        { item: "Light shredded cheese", prep: "", quantity: "60", unit: "g", category: "Dairy" },
+        { item: "Taco seasoning", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "10", unit: "ml", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Cook the chicken with taco seasoning, then remove and slice."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the vegetables",
+        detail: "Sauté the peppers and onions in olive oil."
+      },
+      {
+        step_number: 3,
+        title: "Combine & heat through",
+        detail: "Add the rice, beans, salsa, and chicken, and heat through."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail: "Top with cheese before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cajun-blackened-crab-stuffed-salmon",
+    title: "Cajun Blackened Crab Stuffed Salmon over Jasmine Rice & Broccolini",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🦀",
+    tags: ["Seafood", "Date-Night", "High-Protein"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Cajun-seared salmon fillets stuffed with a creamy Parmesan crab filling, served over jasmine rice with roasted broccolini and a squeeze of lemon.",
+    prep_time_mins: 20,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#B0524A",
+
+    macro_profiles: {
+      serving_4: { calories: 720, protein_g: 52, fat_g: 34, carbs_g: 42 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Salmon fillets", prep: "skin-on, about 170g each (680g total)", quantity: "4", unit: "", category: "Meat" },
+        { item: "Cajun seasoning", prep: "for the salmon", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "for the salmon", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste, for the salmon", quantity: "", unit: "", category: "Pantry" },
+        { item: "Lump crab meat", prep: "", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Light cream cheese", prep: "softened", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Green onion", prep: "finely chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Cajun seasoning", prep: "for the crab stuffing", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Broccolini", prep: "", quantity: "1", unit: "lb", category: "Produce" },
+        { item: "Olive oil", prep: "for the broccolini", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "for the broccolini", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the broccolini", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Jasmine rice", prep: "uncooked", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Water or chicken broth", prep: "", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Salt", prep: "for the rice", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon", prep: "cut into wedges, for serving", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh parsley", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prepare the rice",
+        detail:
+          "Rinse the jasmine rice until the water runs clear. In a saucepan, combine rice, water or broth, and salt. Bring to a boil, reduce to low, cover, and simmer for 15 minutes. Remove from heat and let sit covered for 5 minutes, then fluff with a fork."
+      },
+      {
+        step_number: 2,
+        title: "Roast the broccolini",
+        detail:
+          "Preheat the oven to 400°F (200°C). Toss broccolini with olive oil, salt, and pepper. Roast on a sheet pan for 12–15 minutes until tender-crisp."
+      },
+      {
+        step_number: 3,
+        title: "Make the crab stuffing",
+        detail:
+          "In a bowl, mix the crab meat, cream cheese, mayonnaise, Parmesan, green onion, Cajun seasoning, and lemon juice until combined."
+      },
+      {
+        step_number: 4,
+        title: "Stuff the salmon",
+        detail:
+          "Pat the salmon dry. With a sharp knife, cut a slit lengthwise in the center of each fillet to create a pocket (do not cut all the way through). Stuff with the crab mixture."
+      },
+      {
+        step_number: 5,
+        title: "Cook the salmon",
+        detail:
+          "Brush the salmon with olive oil and coat generously with Cajun seasoning. Heat a cast-iron skillet over medium-high heat, sear skin-side down for 3–4 minutes, flip gently, then transfer the skillet to the oven. Bake at 400°F (200°C) for 8–10 minutes, until the salmon is cooked through and the stuffing is hot."
+      },
+      {
+        step_number: 6,
+        title: "Assemble the plate",
+        detail:
+          "Serve the salmon over jasmine rice with the roasted broccolini on the side. Garnish with lemon wedges and fresh parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-lemon-chicken-orzo",
+    title: "Creamy Lemon Chicken Orzo",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🍋",
+    tags: ["Skillet", "One-Pan", "Comfort Food"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Seared chicken thighs nestled into a creamy lemon-Parmesan orzo with wilted spinach, all made in one pan.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_4: { calories: 540, protein_g: 42, fat_g: 22, carbs_g: 46 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken thighs", prep: "", quantity: "1.75", unit: "lb", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "or Italian seasoning", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "for searing the chicken", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dry orzo pasta", prep: "", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Yellow onion", prep: "finely diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Chicken broth", prep: "low-sodium", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Nonfat Greek yogurt", prep: "or light cream", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lemon zest", prep: "", quantity: "1", unit: "lemon", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "large lemon", category: "Produce" },
+        { item: "Fresh spinach", prep: "", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the chicken",
+        detail:
+          "Pat the chicken dry and season evenly with salt, pepper, garlic powder, and oregano."
+      },
+      {
+        step_number: 2,
+        title: "Sear the chicken",
+        detail:
+          "Heat olive oil in a large skillet over medium-high heat, add the chicken, and cook 4 to 5 minutes per side until deeply golden and cooked through. Remove and set aside."
+      },
+      {
+        step_number: 3,
+        title: "Cook the aromatics",
+        detail:
+          "In the same pan, add the onion and cook for 2 to 3 minutes until softened, then add the garlic and cook for 30 seconds."
+      },
+      {
+        step_number: 4,
+        title: "Toast the orzo",
+        detail: "Stir in the dry orzo and cook for 1 minute to lightly toast."
+      },
+      {
+        step_number: 5,
+        title: "Simmer the orzo",
+        detail:
+          "Pour in the chicken broth, bring to a gentle simmer, and cook for 8 to 10 minutes, stirring occasionally, until the orzo is tender and creamy."
+      },
+      {
+        step_number: 6,
+        title: "Make it creamy",
+        detail:
+          "Lower the heat and stir in the Greek yogurt, lemon zest, lemon juice, and Parmesan until smooth."
+      },
+      {
+        step_number: 7,
+        title: "Add the spinach",
+        detail: "Fold in the spinach and let it wilt into the orzo."
+      },
+      {
+        step_number: 8,
+        title: "Finish the dish",
+        detail:
+          "Nestle the chicken back into the pan and simmer for 2 to 3 minutes to warm through and absorb flavor."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "marry-me-steak-sandwich",
+    title: "Marry Me Steak Sandwich",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🥪",
+    tags: ["Sandwich", "Date-Night", "Steak"],
+    dish_category: "Sandwiches",
+    description:
+      "Seared New York strip steak and balsamic-caramelized onions piled on toasted ciabatta with lemon herb aioli and peppery arugula.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 2,
+    accent: "#8B4A3A",
+
+    macro_profiles: {
+      serving_2: { calories: 720, protein_g: 45, fat_g: 38, carbs_g: 48 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "New York strip steaks", prep: "", quantity: "2", unit: "", category: "Meat" },
+        { item: "Yellow onions", prep: "thinly sliced", quantity: "2", unit: "large", category: "Produce" },
+        { item: "Balsamic glaze", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon herb aioli", prep: "Stonewall Kitchen brand recommended, or homemade", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh arugula", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Ciabatta loaf", prep: "cut into 4 sandwich-sized pieces", quantity: "1", unit: "large", category: "Pantry" },
+        { item: "Butter", prep: "optional", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Bring the steaks to temp",
+        detail:
+          "Remove the steaks from the refrigerator 1 hour before cooking to bring them to room temperature. Season all sides generously with salt and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Sear the steaks",
+        detail:
+          "Heat a large skillet over medium-high heat and add the olive oil. Place the steaks fat cap side down for about 1 minute to render some fat, then cook 2–3 minutes per side, or until they reach your preferred doneness. If using butter, add it during the last flip and baste the steaks with the melted butter. Remove and let rest for 5 minutes before slicing thinly."
+      },
+      {
+        step_number: 3,
+        title: "Caramelize the onions",
+        detail:
+          "In the same skillet, add the sliced onions with 1 teaspoon of salt. Cook over medium heat, stirring occasionally, for 10–15 minutes until soft and golden. Add 1 tablespoon of balsamic glaze, stir, and cook another 1–2 minutes until deeply caramelized. Remove and set aside."
+      },
+      {
+        step_number: 4,
+        title: "Toast the ciabatta",
+        detail:
+          "Slice the ciabatta loaf into sandwich-sized pieces. Toast each piece in a skillet, grill pan, or toaster until golden and crisp."
+      },
+      {
+        step_number: 5,
+        title: "Assemble",
+        detail:
+          "Spread lemon herb aioli evenly on the bottom halves of the toasted ciabatta. Layer with fresh arugula, sliced steak, caramelized onions, and a drizzle of balsamic glaze. Top with the remaining ciabatta halves."
+      },
+      {
+        step_number: 6,
+        title: "Serve",
+        detail: "Slice the sandwiches in half and serve warm."
+      }
+    ]
   }
 ];
 
