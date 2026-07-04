@@ -1300,7 +1300,7 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .plan-clear:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.4); }
 .plan-clear:active { transform: scale(0.99); }
 
-/* ── Smart Week: ingredient-overlap suggestion button + preview overlay ── */
+/* ── Smart Week: scope-driven 7-day generator button + preview overlay ── */
 .plan-smart-btn {
   appearance: none; display: block; width: 100%; margin: 10px 0 0; cursor: pointer;
   padding: 12px; background: rgba(var(--accent-rgb), 0.10); border: 1px solid rgba(var(--accent-rgb), 0.4);
@@ -1312,12 +1312,42 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .plan-smart-btn:active { transform: scale(0.99); }
 
 .smw-body { padding-top: 4px; }
-.smw-summary { padding: 4px 20px 8px; }
-.smw-summary-line { font-size: 14px; font-weight: 700; color: var(--on-dark); line-height: 1.4; margin: 0 0 4px; }
-.smw-summary-tags { font-size: 12.5px; color: var(--accent); font-weight: 700; margin: 0; }
-.smw-card-shares { font-size: 12px; color: var(--ink-dim); line-height: 1.4; margin: 4px 0 0; }
+.smw-scope-bar { display: flex; gap: 8px; padding: 4px 20px 10px; }
+.smw-scope-select {
+  flex: 1 1 auto; min-width: 0; appearance: none; -webkit-appearance: none;
+  font-family: inherit; font-size: 13px; font-weight: 700; color: var(--on-dark);
+  background-color: var(--bg); border: 1px solid var(--line-dark); border-radius: var(--r-sm);
+  padding: 9px 28px 9px 12px; cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA0A2' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.smw-scope-select:focus { outline: none; border-color: rgba(var(--accent-rgb), 0.5); }
+.smw-regen-all-btn { flex: 0 0 auto; }
+
+.smw-trim-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 10px; }
+.smw-trim-btn {
+  appearance: none; cursor: pointer; padding: 6px 11px;
+  border: 1px solid var(--line-dark); border-radius: 999px; background: transparent;
+  color: var(--on-dark-dim); font-family: var(--sans); font-size: 12px; font-weight: 700;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.smw-trim-btn:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
+
+.smw-day { padding: 0 20px; }
+.smw-chip-regen, .smw-chip-remove {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 26px; height: 26px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-dark); background: transparent;
+  color: var(--on-dark-dim); font-size: 13px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.smw-chip-regen:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
+.smw-chip-remove:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
+.smw-chip-regen:active, .smw-chip-remove:active { transform: scale(0.9); }
+
 .smw-actions { display: flex; flex-direction: column; gap: 10px; padding: 4px 20px calc(20px + env(safe-area-inset-bottom)); }
 .smw-confirm-btn { margin: 0; }
+.smw-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Time Check: bandwidth quiz button + bucketed suggestion overlay ──── */
 .plan-time-btn {

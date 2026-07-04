@@ -515,111 +515,87 @@
     }, 0);
   }
 
-  /* ── Smart Week grouping ──────────────────────────────────────────────
-     Suggests 5 recipes whose grocery lists overlap heavily, so perishables
-     (Produce/Meat/Dairy) get used up across the week instead of accumulating
-     in the fridge. Reuses buildGrocery's item key (category + lowercased
-     item name) so "shared" here always matches what actually merges on the
-     grocery list. Pantry staples count toward overlap too, just at a lower
-     weight — they're not the spoilage problem, but two recipes calling for
-     the same rare pantry item is still a real signal. */
-  var SMW_PANTRY_WEIGHT = 0.25;
-  function smwItemKey(cat, item) { return (cat || "Other") + "|" + item.toLowerCase(); }
-  function smwItemWeight(cat) { return cat === "Pantry" ? SMW_PANTRY_WEIGHT : 1; }
-  // recipe_id -> { key: weight }, using whichever authored tier exists.
-  function smwBuildItemMaps(labels) {
-    var maps = {};
-    recipes().forEach(function (r) {
-      var tiers = r.ingredients_by_serving || {};
-      var list = tiers.serving_2 || tiers.serving_4 || [];
-      var map = {};
-      list.forEach(function (ing) {
-        var item = (ing.item || "").trim();
-        if (!item) return;
-        var cat = ing.category || "Other";
-        var key = smwItemKey(cat, item);
-        map[key] = smwItemWeight(cat);
-        if (!labels[key]) labels[key] = { item: item, category: cat };
-      });
-      maps[r.recipe_id] = map;
-    });
-    return maps;
-  }
-  function smwPairScore(mapA, mapB) {
+  /* ── Smart Week generation ────────────────────────────────────────────
+     Scope-driven 7-day generator: pick a scope (All / Breakfast / Lunch /
+     Dinner / Breakfast+Dinner / Lunch+Dinner), fill every day for the
+     slots in that scope from classifyMealSlots' eligible pools. Selection
+     favors recipes not yet used elsewhere in the generated week, avoids
+     repeating the same dish_category on consecutive days within a slot,
+     and deprioritizes recipes cooked recently (via the cook log). */
+  var SMART_SCOPES = [
+    { key: "all",           label: "All",                slots: ["Breakfast", "Lunch", "Dinner"] },
+    { key: "breakfast",     label: "Breakfast",          slots: ["Breakfast"] },
+    { key: "lunch",         label: "Lunch",              slots: ["Lunch"] },
+    { key: "dinner",        label: "Dinner",             slots: ["Dinner"] },
+    { key: "bfast_dinner",  label: "Breakfast + Dinner", slots: ["Breakfast", "Dinner"] },
+    { key: "lunch_dinner",  label: "Lunch + Dinner",     slots: ["Lunch", "Dinner"] }
+  ];
+  var SMW_RECENCY_CAP_DAYS = 60;   // never-cooked / long-ago treated as equally "fresh"
+  var SMW_REPEAT_CATEGORY_PENALTY = 15;
+  function smwScoreCandidate(r, usedIds, prevCategory) {
     var score = 0;
-    for (var key in mapA) {
-      if (mapB[key] != null) score += mapA[key];
-    }
+    if (usedIds.has(r.recipe_id)) score -= 1000;
+    var days = daysSinceCooked(r.recipe_id);
+    score += (days == null) ? SMW_RECENCY_CAP_DAYS : Math.min(days, SMW_RECENCY_CAP_DAYS);
+    if (prevCategory && r.dish_category === prevCategory) score -= SMW_REPEAT_CATEGORY_PENALTY;
+    score += Math.random() * 10; // jitter so Regenerate actually varies
     return score;
   }
-  function smwGroupScore(ids, itemMaps) {
-    var score = 0;
-    for (var i = 0; i < ids.length; i++) {
-      for (var j = i + 1; j < ids.length; j++) score += smwPairScore(itemMaps[ids[i]], itemMaps[ids[j]]);
-    }
-    return score;
+  function smwPickForSlot(slot, usedIds, prevCategory, excludeId) {
+    var pool = mealEligibleRecipes(slot);
+    if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
+    if (!pool.length) return null;
+    var best = null, bestScore = -Infinity;
+    pool.forEach(function (r) {
+      var s = smwScoreCandidate(r, usedIds, prevCategory);
+      if (s > bestScore) { bestScore = s; best = r; }
+    });
+    return best;
   }
-  // Greedily grow a seed pair to `size` recipes: each step adds whichever
-  // remaining candidate shares the most (weighted) with the group so far.
-  function smwGrow(seed, poolIds, itemMaps, size) {
-    var group = seed.slice();
-    var remaining = poolIds.filter(function (id) { return group.indexOf(id) < 0; });
-    while (group.length < size && remaining.length) {
-      var bestId = null, bestScore = -1;
-      remaining.forEach(function (id) {
-        var score = 0;
-        group.forEach(function (gid) { score += smwPairScore(itemMaps[id], itemMaps[gid]); });
-        if (score > bestScore) { bestScore = score; bestId = id; }
+  // Full 7-day grid for a scope: [{ day, slot, id }], best-effort no-repeat.
+  function smwGenerateWeek(scopeKey) {
+    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+    var usedIds = new Set();
+    var prevCategoryBySlot = {};
+    var grid = [];
+    DAYS.forEach(function (day) {
+      scope.slots.forEach(function (slot) {
+        var pick = smwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null);
+        if (pick) {
+          usedIds.add(pick.recipe_id);
+          prevCategoryBySlot[slot] = pick.dish_category;
+          grid.push({ day: day, slot: slot, id: pick.recipe_id });
+        }
       });
-      if (bestId == null) break;
-      group.push(bestId);
-      remaining.splice(remaining.indexOf(bestId), 1);
-    }
-    return group;
-  }
-  // Top-scoring recipe pairs across the pool, used as seeds for candidate groups.
-  function smwTopSeedPairs(poolIds, itemMaps, limit) {
-    var pairs = [];
-    for (var i = 0; i < poolIds.length; i++) {
-      for (var j = i + 1; j < poolIds.length; j++) {
-        var score = smwPairScore(itemMaps[poolIds[i]], itemMaps[poolIds[j]]);
-        if (score > 0) pairs.push({ ids: [poolIds[i], poolIds[j]], score: score });
-      }
-    }
-    pairs.sort(function (a, b) { return b.score - a.score; });
-    return pairs.slice(0, limit);
-  }
-  // Returns several distinct 5-recipe combos, best (most shared-ingredient
-  // weight) first, drawn from poolIds. Each combo: { ids, score }.
-  function smwCombos(poolIds, size) {
-    size = size || 5;
-    if (poolIds.length < size) return [];
-    var labels = {};
-    var itemMaps = smwBuildItemMaps(labels);
-    var seeds = smwTopSeedPairs(poolIds, itemMaps, 10);
-    var combos = [], seen = {};
-    seeds.forEach(function (seedPair) {
-      var group = smwGrow(seedPair.ids, poolIds, itemMaps, size);
-      if (group.length < size) return;
-      var sig = group.slice().sort().join(",");
-      if (seen[sig]) return;
-      seen[sig] = true;
-      combos.push({ ids: group, score: smwGroupScore(group, itemMaps) });
     });
-    combos.sort(function (a, b) { return b.score - a.score; });
-    return { combos: combos, itemMaps: itemMaps, labels: labels };
+    return { scope: scope, grid: grid };
   }
-  // Item keys shared by 2+ recipes within a combo, most-shared first.
-  function smwSharedKeys(ids, itemMaps) {
-    var counts = {};
-    ids.forEach(function (id) {
-      var map = itemMaps[id];
-      for (var key in map) counts[key] = (counts[key] || 0) + 1;
+  // Re-pick a single day+slot, excluding its current recipe so the tap
+  // always changes something (when an alternative exists).
+  function smwRegenerateSlot(grid, day, slot) {
+    var usedIds = new Set();
+    grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
+    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
+    var dayIdx = DAYS.indexOf(day);
+    var prevEntry = dayIdx > 0
+      ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
+      : null;
+    var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
+    var pick = smwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null);
+    return pick ? pick.recipe_id : null;
+  }
+  // Commits a generated grid into the plan: replaces any existing meals in
+  // the scope's slots (any day), then adds the new 7-day grid. Meals in
+  // slots outside the scope (or unscheduled/slot-less) are left untouched,
+  // so a narrow scope like Dinner-only never disturbs Breakfast/Lunch.
+  function commitSmartWeek(grid, scopeSlots) {
+    var p = loadPlan();
+    p.meals = p.meals.filter(function (m) { return scopeSlots.indexOf(m.slot) < 0; });
+    grid.forEach(function (g) {
+      p.meals.push({ uid: newUid(), id: g.id, serving: 2, day: g.day, slot: g.slot });
     });
-    return Object.keys(counts)
-      .filter(function (k) { return counts[k] >= 2; })
-      .sort(function (a, b) { return counts[b] - counts[a]; })
-      .map(function (k) { return { key: k, count: counts[k] }; });
+    savePlan(p);
+    saveGroc(new Set());
   }
 
   /* ── Dish-type categories ─────────────────────────────────────────── */
@@ -1973,7 +1949,7 @@
     document.body.classList.add("picking");
   }
 
-  /* ── Smart Week overlay: preview 5 ingredient-overlapping recipes ──── */
+  /* ── Smart Week overlay: scope → 7-day preview → commit ─────────────── */
   function closeSmartWeek() {
     var ov = document.querySelector(".smw-overlay");
     if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
@@ -1982,16 +1958,8 @@
   function openSmartWeek() {
     closeSmartWeek();
 
-    // Suggest from recipes not already in the week, so Smart Week complements
-    // the plan instead of duplicating it — unless the catalog is too small.
-    var planned = planRecipeIds();
-    var allIds = recipes().map(function (r) { return r.recipe_id; });
-    var pool = allIds.filter(function (id) { return planned.indexOf(id) < 0; });
-    if (pool.length < 5) pool = allIds;
-
-    var built = smwCombos(pool, 5);
-    var combos = built.combos || [], itemMaps = built.itemMaps || {}, labels = built.labels || {};
-    var index = 0;
+    var scopeKey = "all";
+    var grid = smwGenerateWeek(scopeKey).grid;
 
     var ov = el("div", "picker smw-overlay");
     var top = el("div", "picker-top");
@@ -2002,61 +1970,107 @@
     top.appendChild(close);
     ov.appendChild(top);
 
+    var scopeBar = el("div", "smw-scope-bar");
+    var scopeSel = el("select", "smw-scope-select");
+    scopeSel.setAttribute("aria-label", "Smart Week scope");
+    scopeSel.innerHTML = SMART_SCOPES.map(function (s) {
+      return '<option value="' + s.key + '">' + esc(s.label) + "</option>";
+    }).join("");
+    scopeSel.value = scopeKey;
+    scopeSel.addEventListener("change", function () {
+      scopeKey = scopeSel.value;
+      grid = smwGenerateWeek(scopeKey).grid;
+      paint();
+    });
+    scopeBar.appendChild(scopeSel);
+    var regenAll = el("button", "picker-sort-btn smw-regen-all-btn", "🔀 Regenerate");
+    regenAll.type = "button";
+    regenAll.addEventListener("click", function () {
+      grid = smwGenerateWeek(scopeKey).grid;
+      paint();
+    });
+    scopeBar.appendChild(regenAll);
+    ov.appendChild(scopeBar);
+
     var body = el("div", "picker-results smw-body");
     ov.appendChild(body);
 
+    function slotCount(slot) { return grid.filter(function (g) { return g.slot === slot; }).length; }
+
     function paint() {
       body.innerHTML = "";
-      if (!combos.length) {
-        body.appendChild(emptyState("🧊",
-          "Not enough shared ingredients yet.<br>Add a few more recipes and try again."));
-        return;
+      var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+
+      if (!grid.length) {
+        body.appendChild(emptyState("🧊", "No recipes available for this scope yet."));
+      } else {
+        if (scope.slots.length > 1) {
+          var trimRow = el("div", "smw-trim-row");
+          scope.slots.forEach(function (slot) {
+            if (!slotCount(slot)) return;
+            var trimBtn = el("button", "smw-trim-btn", "Skip all " + slot + " ×");
+            trimBtn.type = "button";
+            trimBtn.addEventListener("click", function () {
+              grid = grid.filter(function (g) { return g.slot !== slot; });
+              paint();
+            });
+            trimRow.appendChild(trimBtn);
+          });
+          if (trimRow.children.length) body.appendChild(trimRow);
+        }
+
+        DAYS.forEach(function (day) {
+          var entries = grid.filter(function (g) { return g.day === day; });
+          if (!entries.length) return;
+          var dayBlock = el("div", "plan-day smw-day");
+          dayBlock.appendChild(el("div", "plan-day-head", esc(DAY_LONG[day])));
+          scope.slots.forEach(function (slot) {
+            var entry = entries.filter(function (g) { return g.slot === slot; })[0];
+            if (!entry) return;
+            var r = recipeById(entry.id);
+            var slotEl = el("div", "plan-slot");
+            slotEl.appendChild(el("div", "plan-slot-label", esc(slot)));
+            var cell = el("div", "plan-slot-cell");
+            var chip = el("div", "plan-chip smw-chip");
+            chip.appendChild(el("span", "plan-chip-icon", esc(r ? (r.icon || "🍽️") : "🍽️")));
+            var titleEl = el("a", "plan-chip-title", esc(r ? r.title : entry.id));
+            if (r) titleEl.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
+            chip.appendChild(titleEl);
+            var regen = el("button", "smw-chip-regen", "↻");
+            regen.type = "button";
+            regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
+            regen.addEventListener("click", function () {
+              var newId = smwRegenerateSlot(grid, day, slot);
+              if (!newId) { pop(regen); return; }
+              grid = grid.map(function (g) {
+                return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
+              });
+              paint();
+            });
+            chip.appendChild(regen);
+            var rm = el("button", "smw-chip-remove", "×");
+            rm.type = "button";
+            rm.setAttribute("aria-label", "Remove " + slot + " for " + DAY_LONG[day]);
+            rm.addEventListener("click", function () {
+              grid = grid.filter(function (g) { return !(g.day === day && g.slot === slot); });
+              paint();
+            });
+            chip.appendChild(rm);
+            cell.appendChild(chip);
+            slotEl.appendChild(cell);
+            dayBlock.appendChild(slotEl);
+          });
+          body.appendChild(dayBlock);
+        });
       }
-      var combo = combos[index];
-      var shared = smwSharedKeys(combo.ids, itemMaps);
-
-      var summary = el("div", "smw-summary");
-      var topShared = shared.slice(0, 6).map(function (s) { return esc(labels[s.key].item); }).join(" · ");
-      summary.innerHTML =
-        '<p class="smw-summary-line">5 meals · ' + shared.length +
-        (shared.length === 1 ? " shared ingredient" : " shared ingredients") +
-        " — less perishable food left to spoil.</p>" +
-        (topShared ? '<p class="smw-summary-tags">' + topShared + "</p>" : "");
-      body.appendChild(summary);
-
-      var grid = el("div", "col-grid smw-grid");
-      combo.ids.forEach(function (id) {
-        var r = recipeById(id);
-        if (!r) return;
-        var mySet = itemMaps[id] || {};
-        var mine = shared
-          .filter(function (s) { return mySet[s.key] != null; })
-          .map(function (s) { return labels[s.key].item; });
-        var card = el("div", "rc smw-card");
-        card.style.setProperty("--rc-accent", r.accent || "#C87A53");
-        card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
-        card.innerHTML =
-          '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
-          '<div class="rc-body">' +
-            '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
-            '<p class="rc-meta">' + esc(r.dish_category || "") + "</p>" +
-            (mine.length ? '<p class="smw-card-shares">Shares ' + esc(mine.join(", ")) + "</p>" : "") +
-          "</div>";
-        grid.appendChild(card);
-      });
-      body.appendChild(grid);
 
       var actions = el("div", "smw-actions");
-      if (combos.length > 1) {
-        var shuffle = el("button", "picker-sort-btn smw-shuffle-btn", "🔀 Try another combo");
-        shuffle.type = "button";
-        shuffle.addEventListener("click", function () { index = (index + 1) % combos.length; paint(); });
-        actions.appendChild(shuffle);
-      }
-      var confirm = el("button", "cook-start smw-confirm-btn", "＋ Add these 5 to This Week");
+      var confirm = el("button", "cook-start smw-confirm-btn", "＋ Set Weekly Meal Plan");
       confirm.type = "button";
+      confirm.disabled = !grid.length;
       confirm.addEventListener("click", function () {
-        combo.ids.forEach(function (id) { addMeal(id, { serving: 2 }); });
+        var scope2 = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+        commitSmartWeek(grid, scope2.slots);
         closeSmartWeek();
         plannerState.view = "plan";
         refresh();
@@ -2072,8 +2086,8 @@
   }
 
   /* ── Bandwidth Quiz: match suggestions to how much cook time each day
-     actually has, instead of grouping by shared ingredients (Smart Week's
-     job). The cook answers "how many days this week are Quick / Standard /
+     actually has, instead of a full 7-day schedule (Smart Week's job). The
+     cook answers "how many days this week are Quick / Standard /
      No rush", then gets recipe suggestions bucketed by prep+cook time —
      purely a suggestion list; tapping a card adds it to This Week
      unassigned, same as the "Add a meal" picker, and the cook places it on
