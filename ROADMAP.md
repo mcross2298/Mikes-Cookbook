@@ -59,7 +59,7 @@ but it was explicitly **not** picked as this round's priority, so treat it as ba
 
 ---
 
-## Pillar B — Proactive Scheduling & Reminders
+## Pillar B — Proactive Scheduling & Reminders ✅ (tier 1 shipped)
 
 ### Problem
 Every smart feature in the app — Smart Week, the Macro Smart Generator, batch-prep suggestions,
@@ -94,12 +94,18 @@ Two tiers, in order of how soon they're buildable:
 - No app code changes required to ship this slice.
 - Mike can adjust or cancel the cadence without touching code (trigger update/delete).
 
+**Status:** ✅ **Shipped** — a weekly Claude Code Remote trigger ("Cookbook Sunday planning
+nudge") fires `0 18 * * 0` (cron, **UTC**) and sends a push notification varying its wording
+each week, per the acceptance criteria above. **Open item:** the cron clock is UTC and the
+trigger's local-evening time depends on Mike's actual timezone (unconfirmed) — 18:00 UTC lands
+midday-to-noon across US zones, not evening. Adjust via `update_trigger` once confirmed.
+
 **Effort:** Low (tier 1) / Med–High (tier 2, blocked on the data-bridge decision).
 **Impact:** Med–High.
 
 ---
 
-## Pillar C — Smarter, Proactive Meal Planning
+## Pillar C — Smarter, Proactive Meal Planning ✅ (auto-draft shipped, bias deferred)
 
 ### Problem
 Smart Week and the Macro Smart Generator are Mike's most differentiated features and they're
@@ -108,26 +114,32 @@ Macro history is already tracked (`mc-cookbook:mealplan:macrohistory`) but doesn
 generation automatically.
 
 ### Approach (client-side only — no backend needed for any of this)
-- **Auto-drafted week on Home.** If the planner is empty and it's the start of a new week, run
-  the existing Smart Week scoring path automatically and surface the result on Home as a
-  **draft to review/accept/discard**, instead of requiring Mike to find and tap the button first.
-  This is a UX trigger change on top of code that already exists (`smw*` scoring in
-  `cookbook-home.js`), not new generation logic.
-- **Macro-trend bias.** Read `mc-cookbook:mealplan:macrohistory` before generating and nudge the
-  Macro Smart Generator's targets if a trend is clear (e.g. protein consistently under goal →
-  bias selection toward higher-protein recipes next week). Surface *why* a recipe was picked
-  ("+protein vs. last week") so it doesn't feel like a black box.
-- **Pairs with Pillar B:** the tier-1 weekly reminder is a natural moment to tell Mike a draft is
-  ready to review, once this pillar ships.
+- **Auto-drafted week on Home.** ✅ **Shipped.** If the planner is empty (and the offer isn't on a
+  ~7-day dismissal cooldown), Home now runs the existing Smart Week scoring path automatically
+  and surfaces the result as a **draft to review/accept/discard** (Use this week / Regenerate /
+  Not now), instead of requiring Mike to find and tap the button first. A UX trigger change on
+  top of code that already existed (`smw*` scoring in `cookbook-home.js`), not new generation
+  logic. New `mc-cookbook:mealplan:autodraft-dismissed` key backs the cooldown; it clears the
+  moment a real plan is built.
+- **Macro-trend bias.** *Not started — deferred fast-follow.* Read
+  `mc-cookbook:mealplan:macrohistory` before generating and nudge the Macro Smart Generator's
+  targets if a trend is clear (e.g. protein consistently under goal → bias selection toward
+  higher-protein recipes next week). Surface *why* a recipe was picked ("+protein vs. last week")
+  so it doesn't feel like a black box. The auto-draft ships plain (Balanced only) until this
+  lands.
+- **Pairs with Pillar B:** the tier-1 weekly reminder (shipped) is a natural moment to tell Mike a
+  draft is ready to review — not yet wired together; the reminder is still generic copy today.
 
 ### Acceptance
 - Opening Home on/after the start of a new week with an empty plan shows a ready-to-review draft,
-  not an empty state.
+  not an empty state. ✅
 - Accepting a draft behaves like the existing "commit" flow; discarding it clears cleanly with no
-  orphaned state.
-- Any macro-trend bias is visible in the UI (a short reason string), not silent.
+  orphaned state. ✅ (verified in a headless-browser pass: accept/regenerate/dismiss/reload/re-empty
+  all behave as specified)
+- Any macro-trend bias is visible in the UI (a short reason string), not silent. — N/A until the
+  bias fast-follow ships.
 - No regression to the existing on-demand Smart Week / Macro Smart Generator flows — this adds an
-  automatic trigger for the same code path, it doesn't replace manual use.
+  automatic trigger for the same code path, it doesn't replace manual use. ✅
 
 **Effort:** Med · **Impact:** High (this is the app's most differentiated feature, currently
 under-surfaced because it's opt-in only).
@@ -138,11 +150,12 @@ under-surfaced because it's opt-in only).
 
 | Phase | Ticket | Why this order | Effort | Impact |
 |------:|--------|----------------|:------:|:------:|
-| **1** | This roadmap + `CLAUDE.md` refresh | Align before building (done as part of this pass) | — | — |
-| **2** | **Pillar B, tier 1** — dumb weekly reminder trigger | No app-code risk, ships immediately, gives fast feedback on whether reminders are actually useful before investing further | Low | Med–High |
-| **3** | **Pillar C** — auto-drafted week + macro-trend bias | Builds on code that already exists; biggest differentiation payoff | Med | High |
+| **1** | ✅ This roadmap + `CLAUDE.md` refresh | Align before building (done as part of this pass) | — | — |
+| **2** | ✅ **Pillar B, tier 1** — dumb weekly reminder trigger | No app-code risk, ships immediately, gives fast feedback on whether reminders are actually useful before investing further | Low | Med–High |
+| **3** | ✅ **Pillar C** — auto-drafted week (macro-trend bias not yet) | Builds on code that already exists; biggest differentiation payoff | Med | High |
 | **4** | **Pillar B, tier 2** — informed reminders | Only after the data-bridge design question is resolved; revisit once Phase 2/3 show reminders are worth deepening | Med–High | Med–High |
 | **Backlog** | **Pillar A** — data validation script | Not urgent, not user-visible; pick up opportunistically or once recipe-intake automation raises the stakes for bad data slipping through | Low–Med | Med |
+| **Backlog** | Macro-trend bias (Pillar C fast-follow) | Deferred by choice in Phase 3 — ship once the plain auto-draft has been used for a bit | Med | Med–High |
 
 **Already done (no work):** persistent nav, screen wake lock, Cooking Mode, arbitrary serving
 scaling, app-wide search, visual/motion polish (all v1 Pillars 1–4), Smart Week, Macro Smart
