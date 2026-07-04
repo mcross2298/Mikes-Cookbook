@@ -12206,6 +12206,999 @@ const RECIPES = [
           "Rub over steak and marinate 30 minutes to 2 hours in the fridge, then bring to room temperature before grilling."
       }
     ]
+  },
+
+  {
+    recipe_id: "chick-fil-a-chicken-smash-sandwich",
+    title: "Chick-fil-A Chicken Smash Sandwich",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥪",
+    tags: ["High-Protein", "Copycat", "Stovetop"],
+    dish_category: "Sandwiches",
+    description:
+      "A better-for-you copycat of the classic Chick-fil-A sandwich — seasoned minced chicken patties, smashed and seared, topped with a tangy low-cal Chick-fil-A-style sauce.",
+    prep_time_mins: 15,
+    cook_time_mins: 10,
+    native_serving: 4,
+    accent: "#B84C3C",
+
+    macro_profiles: {
+      serving_2: { calories: 430, protein_g: 53, fat_g: 9, carbs_g: 33 },
+      serving_4: { calories: 430, protein_g: 53, fat_g: 9, carbs_g: 33 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "flattened and finely minced", quantity: "12", unit: "oz", category: "Meat" },
+        { item: "Green onion", prep: "diced", quantity: "38", unit: "g", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "25", unit: "g", category: "Produce" },
+        { item: "Fresh parsley", prep: "finely chopped", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Sea salt", prep: "", quantity: "1 1/2", unit: "big pinches", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "big pinch", category: "Pantry" },
+        { item: "Brioche buns", prep: "toasted", quantity: "2", unit: "", category: "Pantry" },
+        { item: "2% Colby Jack cheese", prep: "", quantity: "42", unit: "g", category: "Dairy" },
+        { item: "Chicken broth", prep: "", quantity: "1", unit: "splash", category: "Pantry" },
+        { item: "Iceberg lettuce", prep: "", quantity: "2", unit: "leaves", category: "Produce" },
+        { item: "Tomato", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "sliced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "50", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "40", unit: "g", category: "Dairy" },
+        { item: "Sugar-free honey mustard", prep: "for the sauce", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free BBQ sauce", prep: "for the sauce", quantity: "13", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the sauce", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Pickle juice", prep: "for the sauce", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "for the sauce", quantity: "1", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "flattened and finely minced", quantity: "24", unit: "oz", category: "Meat" },
+        { item: "Green onion", prep: "diced", quantity: "75", unit: "g", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "50", unit: "g", category: "Produce" },
+        { item: "Fresh parsley", prep: "finely chopped", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "4", unit: "cloves", category: "Produce" },
+        { item: "Sea salt", prep: "", quantity: "3", unit: "big pinches", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "2", unit: "big pinches", category: "Pantry" },
+        { item: "Brioche buns", prep: "toasted", quantity: "4", unit: "", category: "Pantry" },
+        { item: "2% Colby Jack cheese", prep: "", quantity: "84", unit: "g", category: "Dairy" },
+        { item: "Chicken broth", prep: "", quantity: "1", unit: "splash", category: "Pantry" },
+        { item: "Iceberg lettuce", prep: "", quantity: "4", unit: "leaves", category: "Produce" },
+        { item: "Tomato", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "100", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Sugar-free honey mustard", prep: "for the sauce", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Sugar-free BBQ sauce", prep: "for the sauce", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the sauce", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Pickle juice", prep: "for the sauce", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "for the sauce", quantity: "2", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the sauce",
+        detail: "Add all sauce ingredients to a small blender and blend until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Prep the chicken",
+        detail: "Flatten the chicken breast, then finely chop into a mince (a knife gives better texture than a food processor)."
+      },
+      {
+        step_number: 3,
+        title: "Mix and form patties",
+        detail: "Add chicken to a bowl with green onion, red pepper, parsley, garlic, salt, and pepper. Mix and form into equal patties."
+      },
+      {
+        step_number: 4,
+        title: "Sear the patties",
+        detail: "Preheat a pan to 7/10 heat. Add a patty and press down with a burger press. Cook 3–4 minutes, then flip."
+      },
+      {
+        step_number: 5,
+        title: "Melt the cheese",
+        detail: "Add cheese, then a splash of chicken broth. Cover to help melt the cheese and keep the burger juicy."
+      },
+      {
+        step_number: 6,
+        title: "Build the sandwich",
+        detail: "Toasted brioche bun, sauce, lettuce, tomato, red onion, chicken patty, more sauce, top bun. Enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "big-ass-chicken-blt-pasta-salad",
+    title: "Big Ass Chicken BLT Pasta Salad",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍝",
+    tags: ["High-Protein", "Pasta Salad", "Meal Prep"],
+    dish_category: "Salads & Slaws",
+    description:
+      "A cold, creamy avocado-lime pasta salad loaded with blackened chicken, crispy bacon, romaine, and tomatoes — a big-bowl favorite built for meal prep.",
+    prep_time_mins: 20,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#6B8E4E",
+
+    macro_profiles: {
+      serving_2: { calories: 513, protein_g: 53, fat_g: 21, carbs_g: 32 },
+      serving_4: { calories: 513, protein_g: 53, fat_g: 21, carbs_g: 32 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Bowtie pasta", prep: "", quantity: "112", unit: "g", category: "Pantry" },
+        { item: "Chicken breast", prep: "blackened seasoning, air fried and sliced", quantity: "12", unit: "oz", category: "Meat" },
+        { item: "Center-cut bacon", prep: "baked and crumbled", quantity: "2 1/2", unit: "slices", category: "Meat" },
+        { item: "Romaine lettuce", prep: "chopped", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "halved", quantity: "1/2", unit: "pint", category: "Produce" },
+        { item: "Shaved parmesan", prep: "", quantity: "8", unit: "g", category: "Dairy" },
+        { item: "Red pepper flakes", prep: "optional", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Avocado", prep: "for the sauce", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Lime", prep: "juiced, for the sauce", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "57", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced, for the sauce", quantity: "13", unit: "g", category: "Produce" },
+        { item: "Fresh cilantro", prep: "for the sauce", quantity: "8", unit: "g", category: "Produce" },
+        { item: "Water", prep: "for the sauce, more as needed", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Sea salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Bowtie pasta", prep: "", quantity: "224", unit: "g", category: "Pantry" },
+        { item: "Chicken breast", prep: "blackened seasoning, air fried and sliced", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Center-cut bacon", prep: "baked and crumbled", quantity: "5", unit: "slices", category: "Meat" },
+        { item: "Romaine lettuce", prep: "chopped", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "halved", quantity: "1", unit: "pint", category: "Produce" },
+        { item: "Shaved parmesan", prep: "", quantity: "15", unit: "g", category: "Dairy" },
+        { item: "Red pepper flakes", prep: "optional", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Avocado", prep: "for the sauce", quantity: "1", unit: "medium (~136g)", category: "Produce" },
+        { item: "Lime", prep: "juiced, for the sauce", quantity: "1", unit: "", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced, for the sauce", quantity: "25", unit: "g", category: "Produce" },
+        { item: "Fresh cilantro", prep: "for the sauce", quantity: "15", unit: "g", category: "Produce" },
+        { item: "Water", prep: "for the sauce, more as needed", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Sea salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Cook the pasta according to package directions. Drain, rinse under cold water, and set aside to cool completely."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken and bacon",
+        detail: "Flatten the chicken, season with blackened seasoning, and air fry at 400°F for 9 minutes. At the same time, bake the bacon at 400°F for about 15 minutes until crispy, then crumble once cooled."
+      },
+      {
+        step_number: 3,
+        title: "Make the avocado lime sauce",
+        detail: "Add all sauce ingredients to a blender and blend until smooth, adding water as needed for your desired consistency."
+      },
+      {
+        step_number: 4,
+        title: "Toss and serve",
+        detail: "In a large bowl, combine chopped romaine, cooled pasta, sliced chicken, tomatoes, bacon, parmesan, and the avocado lime sauce. Add red pepper flakes if you want a kick. Toss until fully coated, then serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mediterranean-chicken-quinoa-power-salad",
+    title: "Mediterranean Chicken Quinoa Power Salad",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥙",
+    tags: ["High-Protein", "Mediterranean", "Meal Prep"],
+    dish_category: "Salads & Slaws",
+    description:
+      "Grilled chicken, quinoa, chickpeas, and crisp veggies with feta, olives, and a lemon-dill yogurt dressing — a filling, fiber-rich bowl built to curb afternoon cravings.",
+    prep_time_mins: 15,
+    cook_time_mins: 12,
+    native_serving: 2,
+    accent: "#4A7A8C",
+
+    macro_profiles: {
+      serving_2: { calories: 560, protein_g: 42, fat_g: 14, carbs_g: 58 },
+      serving_4: { calories: 560, protein_g: 42, fat_g: 14, carbs_g: 58 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "grilled", quantity: "300", unit: "g", category: "Meat" },
+        { item: "Quinoa", prep: "cooked", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Chickpeas", prep: "drained", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Cucumber", prep: "sliced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Cherry tomatoes", prep: "halved", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Feta cheese", prep: "", quantity: "40", unit: "g", category: "Dairy" },
+        { item: "Kalamata olives", prep: "", quantity: "8", unit: "", category: "Pantry" },
+        { item: "Fresh rocket (arugula)", prep: "", quantity: "2", unit: "handfuls", category: "Produce" },
+        { item: "Hummus", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dressing", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh dill", prep: "for the dressing, to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Lemon juice", prep: "for the dressing", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Garlic", prep: "for the dressing", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "grilled", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Quinoa", prep: "cooked", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Chickpeas", prep: "drained", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Cucumber", prep: "sliced", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Cherry tomatoes", prep: "halved", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Feta cheese", prep: "", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Kalamata olives", prep: "", quantity: "16", unit: "", category: "Pantry" },
+        { item: "Fresh rocket (arugula)", prep: "", quantity: "4", unit: "handfuls", category: "Produce" },
+        { item: "Hummus", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dressing", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh dill", prep: "for the dressing, to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Lemon juice", prep: "for the dressing", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Garlic", prep: "for the dressing", quantity: "4", unit: "cloves", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Grill the chicken",
+        detail: "Season the chicken on both sides and grill over medium-high heat for about 5 to 6 minutes a side, until golden with clear grill marks and cooked through. Rest 5 minutes before slicing."
+      },
+      {
+        step_number: 2,
+        title: "Cook the quinoa",
+        detail: "Cook the quinoa, then spread it on a plate to cool slightly so it doesn't wilt the salad."
+      },
+      {
+        step_number: 3,
+        title: "Prep the vegetables",
+        detail: "Halve the cherry tomatoes and slice the cucumber, then arrange the vegetables, chickpeas, and rocket around the bowl in sections."
+      },
+      {
+        step_number: 4,
+        title: "Assemble the bowl",
+        detail: "Add the cooled quinoa, slice the rested chicken across the grain, and lay it on top with the crumbled feta and olives."
+      },
+      {
+        step_number: 5,
+        title: "Add the hummus",
+        detail: "Spoon the hummus into the center as a creamy base to mix through."
+      },
+      {
+        step_number: 6,
+        title: "Dress and serve",
+        detail: "Whisk the dressing ingredients until smooth and drizzle over just before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-mustard-pretzel-chicken-tenders",
+    title: "Honey Mustard Pretzel Chicken Tenders",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍗",
+    tags: ["High-Protein", "Air Fryer", "Kid-Friendly"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Greek yogurt-marinated chicken tenders crusted in crushed pretzels and air-fried crisp, served with a smoky chipotle honey mustard dip.",
+    prep_time_mins: 40,
+    cook_time_mins: 10,
+    native_serving: 4,
+    accent: "#C98A3E",
+
+    macro_profiles: {
+      serving_2: { calories: 83, protein_g: 14, fat_g: 1, carbs_g: 4.5 },
+      serving_4: { calories: 83, protein_g: 14, fat_g: 1, carbs_g: 4.5 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken tenders", prep: "", quantity: "4", unit: "oz", category: "Meat" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the marinade", quantity: "14", unit: "g", category: "Dairy" },
+        { item: "Honey mustard", prep: "for the marinade", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Garlic powder", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Crushed pretzels", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dip", quantity: "14", unit: "g", category: "Dairy" },
+        { item: "Honey mustard", prep: "for the dip", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "for the dip", quantity: "1", unit: "small", category: "Pantry" },
+        { item: "Sea salt", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Water", prep: "for the dip", quantity: "4", unit: "ml", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken tenders", prep: "", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the marinade", quantity: "28", unit: "g", category: "Dairy" },
+        { item: "Honey mustard", prep: "for the marinade", quantity: "10.5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "1", unit: "big pinch", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Garlic powder", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Crushed pretzels", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dip", quantity: "28", unit: "g", category: "Dairy" },
+        { item: "Honey mustard", prep: "for the dip", quantity: "10.5", unit: "g", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "for the dip", quantity: "1", unit: "", category: "Pantry" },
+        { item: "Sea salt", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Water", prep: "for the dip", quantity: "8", unit: "ml", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the marinade",
+        detail: "Add all your chicken tender ingredients into a bowl, leaving out the pretzels and chicken for now. Mix until fully combined."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail: "Add the chicken tenders and toss so they're fully coated. Let it sit for about 30 minutes so it can really soak in."
+      },
+      {
+        step_number: 3,
+        title: "Coat in pretzels",
+        detail: "Crush the pretzels into small pieces, aiming for a mix of fine crumbs and small chunks. Coat each tender in the crushed pretzels, pressing them in so they stick well."
+      },
+      {
+        step_number: 4,
+        title: "Air fry",
+        detail: "Add the tenders to your air fryer and spray lightly with nonstick cooking spray. Air fry at 400°F for about 10 minutes total, flipping around the 6-minute mark."
+      },
+      {
+        step_number: 5,
+        title: "Make the dip",
+        detail: "While the chicken cooks, add all the chipotle honey mustard ingredients to a small blender and blend until smooth and creamy."
+      },
+      {
+        step_number: 6,
+        title: "Cool and serve",
+        detail: "Once the tenders are done, pull them out, let them cool slightly, then dip in the chipotle honey mustard and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "meatball-sub-sliders",
+    title: "Meatball Sub Sliders",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥖",
+    tags: ["High-Protein", "Game Day", "Cheesy"],
+    dish_category: "Sandwiches",
+    description:
+      "Hawaiian roll sliders stuffed with giant garlic-parmesan meatballs, simmered in pizza sauce and broiled with melted mozzarella — a cheesy, hand-held crowd-pleaser.",
+    prep_time_mins: 20,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#C77B3D",
+
+    macro_profiles: {
+      serving_2: { calories: 233, protein_g: 21, fat_g: 7.5, carbs_g: 12 },
+      serving_4: { calories: 233, protein_g: 21, fat_g: 7.5, carbs_g: 12 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "5.5", unit: "oz", category: "Meat" },
+        { item: "Yellow mustard", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan", prep: "", quantity: "5", unit: "g", category: "Dairy" },
+        { item: "Fresh parsley", prep: "", quantity: "3", unit: "g", category: "Produce" },
+        { item: "Fresh basil", prep: "", quantity: "1", unit: "g", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Sea salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "King's Hawaiian rolls", prep: "", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Part-skim mozzarella", prep: "", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Pizza sauce", prep: "", quantity: "33", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "10.5", unit: "oz", category: "Meat" },
+        { item: "Yellow mustard", prep: "", quantity: "17", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan", prep: "", quantity: "10", unit: "g", category: "Dairy" },
+        { item: "Fresh parsley", prep: "", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Fresh basil", prep: "", quantity: "1.5", unit: "g", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Sea salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "King's Hawaiian rolls", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Part-skim mozzarella", prep: "", quantity: "60", unit: "g", category: "Dairy" },
+        { item: "Pizza sauce", prep: "", quantity: "67", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Toast the rolls",
+        detail: "Hollow out the center of each Hawaiian roll to create a hole for the meatballs. Lightly spray with non-stick spray, season with a pinch of garlic powder, and bake at 375°F for 4–5 minutes until lightly toasted. Set aside."
+      },
+      {
+        step_number: 2,
+        title: "Mix and portion the meatballs",
+        detail: "In a large bowl, combine all the meatball ingredients and mix. Portion into meatballs, about 3.1oz each, one per roll."
+      },
+      {
+        step_number: 3,
+        title: "Sear the meatballs",
+        detail: "Preheat a stovetop pan to 7/10 heat. Sear each side of the meatballs for a nice crust."
+      },
+      {
+        step_number: 4,
+        title: "Simmer in sauce",
+        detail: "Once seared, add the pizza sauce and lower the heat to a simmer. Coat the meatballs in the sauce as they simmer so it infuses them with flavor and keeps them juicy."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the sliders",
+        detail: "Drop a meatball into each roll (you may have to wiggle it in). Add some warm pizza sauce from the pan on top, then mozzarella for the cheese pulls, then fresh chopped basil."
+      },
+      {
+        step_number: 6,
+        title: "Broil and serve",
+        detail: "Add back to the oven on broil to melt the cheese, then enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "big-ass-chicken-caesar-salad",
+    title: "Big Ass Chicken Caesar Salad",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥗",
+    tags: ["High-Protein", "Salad", "Meal Prep"],
+    dish_category: "Salads & Slaws",
+    description:
+      "Lemon-basil marinated, air-fried chicken over crisp romaine, peppers, cucumber, and tomatoes, tossed in a big-batch low-cal Caesar dressing loaded with parmesan and garlic.",
+    prep_time_mins: 15,
+    cook_time_mins: 10,
+    native_serving: 4,
+    accent: "#7C8B5B",
+
+    macro_profiles: {
+      serving_2: { calories: 456, protein_g: 66, fat_g: 10.5, carbs_g: 17 },
+      serving_4: { calories: 456, protein_g: 66, fat_g: 10.5, carbs_g: 17 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "weighed raw", quantity: "16", unit: "oz", category: "Meat" },
+        { item: "Romaine lettuce", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Yellow peppers", prep: "", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Orange peppers", prep: "", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Baby cucumbers", prep: "", quantity: "133", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "133", unit: "g", category: "Produce" },
+        { item: "Lemon", prep: "juiced, for the marinade", quantity: "2/3", unit: "", category: "Produce" },
+        { item: "Honey", prep: "for the marinade", quantity: "13", unit: "g", category: "Pantry" },
+        { item: "Yellow mustard", prep: "for the marinade", quantity: "13", unit: "g", category: "Pantry" },
+        { item: "Dried basil", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Sea salt", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "for the marinade", quantity: "1/3", unit: "tsp", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dressing", quantity: "151", unit: "g", category: "Dairy" },
+        { item: "Lemon", prep: "juiced, for the dressing", quantity: "1/3", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "for the dressing", quantity: "9", unit: "g", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "for the dressing", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the dressing", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan cheese", prep: "for the dressing", quantity: "16", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced, for the dressing", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Kosher salt", prep: "for the dressing", quantity: "1/8", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "weighed raw", quantity: "32", unit: "oz", category: "Meat" },
+        { item: "Romaine lettuce", prep: "", quantity: "400", unit: "g", category: "Produce" },
+        { item: "Yellow peppers", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Orange peppers", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Baby cucumbers", prep: "", quantity: "267", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "267", unit: "g", category: "Produce" },
+        { item: "Lemon", prep: "juiced, for the marinade", quantity: "1 1/3", unit: "", category: "Produce" },
+        { item: "Honey", prep: "for the marinade", quantity: "27", unit: "g", category: "Pantry" },
+        { item: "Yellow mustard", prep: "for the marinade", quantity: "27", unit: "g", category: "Pantry" },
+        { item: "Dried basil", prep: "for the marinade", quantity: "1 1/3", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "for the marinade", quantity: "1 1/3", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the marinade", quantity: "1 1/3", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "for the marinade", quantity: "1 1/3", unit: "tsp", category: "Pantry" },
+        { item: "Sea salt", prep: "for the marinade", quantity: "1 1/3", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the marinade", quantity: "1 1/3", unit: "tsp", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "for the marinade", quantity: "2/3", unit: "tsp", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dressing", quantity: "303", unit: "g", category: "Dairy" },
+        { item: "Lemon", prep: "juiced, for the dressing", quantity: "2/3", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "for the dressing", quantity: "19", unit: "g", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "for the dressing", quantity: "40", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the dressing", quantity: "13", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan cheese", prep: "for the dressing", quantity: "32", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced, for the dressing", quantity: "4", unit: "cloves", category: "Produce" },
+        { item: "Kosher salt", prep: "for the dressing", quantity: "1/3", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate and cook the chicken",
+        detail: "Flatten the chicken and add it to a ziplock with the lemon basil marinade. Make sure it's fully coated and let it marinate for at least an hour. Air fry at 400°F for 9 to 10 minutes or until fully cooked. Let it rest, then slice."
+      },
+      {
+        step_number: 2,
+        title: "Make the Caesar dressing",
+        detail: "Mix all the Caesar dressing ingredients in a bowl until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Toss and serve",
+        detail: "Add romaine, peppers, cucumber, tomatoes, and chicken to a large bowl. Toss with the dressing, top with parmesan, and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "taco-bell-fiesta-pasta-salad",
+    title: "Taco Bell Fiesta Pasta Salad",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🌮",
+    tags: ["High-Protein", "Pasta Salad", "Copycat"],
+    dish_category: "Salads & Slaws",
+    description:
+      "Taco-seasoned ground beef and fusilli tossed with romaine, corn, black beans, and cotija, finished with a creamy Taco Bell Fire Sauce dressing — meal-prep ready.",
+    prep_time_mins: 20,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C2603A",
+
+    macro_profiles: {
+      serving_2: { calories: 507, protein_g: 45, fat_g: 7.5, carbs_g: 62 },
+      serving_4: { calories: 507, protein_g: 45, fat_g: 7.5, carbs_g: 62 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Fusilli pasta", prep: "", quantity: "112", unit: "g", category: "Pantry" },
+        { item: "96/4 lean ground beef", prep: "", quantity: "227", unit: "g", category: "Meat" },
+        { item: "Taco seasoning", prep: "", quantity: "1/2", unit: "packet", category: "Pantry" },
+        { item: "Romaine lettuce", prep: "", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "50", unit: "g", category: "Produce" },
+        { item: "Red onion", prep: "", quantity: "38", unit: "g", category: "Produce" },
+        { item: "Bell pepper", prep: "", quantity: "38", unit: "g", category: "Produce" },
+        { item: "Corn", prep: "frozen, thawed or sautéed", quantity: "38", unit: "g", category: "Produce" },
+        { item: "Black beans", prep: "drained and rinsed", quantity: "38", unit: "g", category: "Pantry" },
+        { item: "Cotija cheese", prep: "", quantity: "8", unit: "g", category: "Dairy" },
+        { item: "Cilantro", prep: "", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "85", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "57", unit: "g", category: "Dairy" },
+        { item: "Taco Bell Fire Sauce", prep: "for the sauce", quantity: "57", unit: "g", category: "Pantry" },
+        { item: "Taco seasoning", prep: "for the sauce", quantity: "4", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Fusilli pasta", prep: "", quantity: "224", unit: "g", category: "Pantry" },
+        { item: "96/4 lean ground beef", prep: "", quantity: "454", unit: "g", category: "Meat" },
+        { item: "Taco seasoning", prep: "", quantity: "1", unit: "packet", category: "Pantry" },
+        { item: "Romaine lettuce", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Red onion", prep: "", quantity: "75", unit: "g", category: "Produce" },
+        { item: "Bell pepper", prep: "", quantity: "75", unit: "g", category: "Produce" },
+        { item: "Corn", prep: "frozen, thawed or sautéed", quantity: "75", unit: "g", category: "Produce" },
+        { item: "Black beans", prep: "drained and rinsed", quantity: "75", unit: "g", category: "Pantry" },
+        { item: "Cotija cheese", prep: "", quantity: "15", unit: "g", category: "Dairy" },
+        { item: "Cilantro", prep: "", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Taco Bell Fire Sauce", prep: "for the sauce", quantity: "113", unit: "g", category: "Pantry" },
+        { item: "Taco seasoning", prep: "for the sauce", quantity: "8", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Cook the pasta according to package directions. Drain, rinse under cold water, and set aside to cool completely."
+      },
+      {
+        step_number: 2,
+        title: "Brown the beef",
+        detail: "Heat a skillet over medium-high heat. Add the ground beef and cook until browned. Drain if needed, then stir in half the taco seasoning with a splash of water. Simmer briefly until thickened."
+      },
+      {
+        step_number: 3,
+        title: "Make the dressing",
+        detail: "Add all dressing ingredients into a small blender and blend until smooth and creamy. Chill until ready to use."
+      },
+      {
+        step_number: 4,
+        title: "Toss the salad",
+        detail: "In a large mixing bowl, combine the pasta, romaine, tomatoes, red onion, bell pepper, corn, black beans, cilantro, and all the dressing. Toss until evenly coated."
+      },
+      {
+        step_number: 5,
+        title: "Portion and top",
+        detail: "Divide the salad into bowls or meal-prep containers. Top each with the taco-seasoned ground beef and a sprinkle of cotija cheese."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "orange-chicken-ramen-stir-fry",
+    title: "Orange Chicken Ramen Stir Fry",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍜",
+    tags: ["High-Protein", "Stir-Fry", "Air Fryer"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Crispy air-fried chicken bites tossed in a fresh orange-ginger sauce with stir-fried veggies and ramen noodles — a lightened-up takeout favorite.",
+    prep_time_mins: 20,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#D98A3D",
+
+    macro_profiles: {
+      serving_2: { calories: 513, protein_g: 47, fat_g: 13, carbs_g: 52 },
+      serving_4: { calories: 513, protein_g: 47, fat_g: 13, carbs_g: 52 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sesame oil", prep: "for the sauce", quantity: "7.5", unit: "g", category: "Pantry" },
+        { item: "Garlic", prep: "minced, for the sauce", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Ginger", prep: "minced, for the sauce", quantity: "2.5", unit: "g", category: "Produce" },
+        { item: "Oranges", prep: "juiced, for the sauce", quantity: "1 1/2", unit: "", category: "Produce" },
+        { item: "Orange zest", prep: "for the sauce", quantity: "1/2", unit: "orange", category: "Produce" },
+        { item: "Reduced sodium soy sauce", prep: "for the sauce", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Rice vinegar", prep: "for the sauce", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Honey", prep: "for the sauce", quantity: "7.5", unit: "g", category: "Pantry" },
+        { item: "Water", prep: "for the sauce", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Cornstarch", prep: "for the sauce", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "for the sauce", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "for topping", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Chicken breast", prep: "cubed", quantity: "340", unit: "g", category: "Meat" },
+        { item: "Egg whites", prep: "", quantity: "23", unit: "g", category: "Dairy" },
+        { item: "AP flour", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Baking powder", prep: "", quantity: "2.5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Frozen stir fry veggies", prep: "", quantity: "125", unit: "g", category: "Produce" },
+        { item: "Maruchan ramen", prep: "seasoning packet discarded", quantity: "1", unit: "pack", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Sesame oil", prep: "for the sauce", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Garlic", prep: "minced, for the sauce", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Ginger", prep: "minced, for the sauce", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Oranges", prep: "juiced, for the sauce", quantity: "3", unit: "", category: "Produce" },
+        { item: "Orange zest", prep: "for the sauce", quantity: "1", unit: "orange", category: "Produce" },
+        { item: "Reduced sodium soy sauce", prep: "for the sauce", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Rice vinegar", prep: "for the sauce", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Honey", prep: "for the sauce", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Water", prep: "for the sauce", quantity: "120", unit: "g", category: "Pantry" },
+        { item: "Cornstarch", prep: "for the sauce", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "for the sauce", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "for topping", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Chicken breast", prep: "cubed", quantity: "680", unit: "g", category: "Meat" },
+        { item: "Egg whites", prep: "", quantity: "45", unit: "g", category: "Dairy" },
+        { item: "AP flour", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Baking powder", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Frozen stir fry veggies", prep: "", quantity: "250", unit: "g", category: "Produce" },
+        { item: "Maruchan ramen", prep: "seasoning packet discarded", quantity: "2", unit: "packs", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Coat and air fry the chicken",
+        detail: "Add cubed chicken breast to a bowl with the egg whites. In a separate bowl, mix the flour, baking powder, and seasonings, then coat the chicken. Air fry at 400°F for 9 minutes, working in batches if needed."
+      },
+      {
+        step_number: 2,
+        title: "Make the orange sauce",
+        detail: "Cook sesame oil, garlic, and ginger in a pan for 2–3 minutes. Lower the heat and add the remaining sauce ingredients, mixing the water and cornstarch separately first. Simmer for 5–7 minutes until thickened."
+      },
+      {
+        step_number: 3,
+        title: "Coat the chicken",
+        detail: "Add the cooked chicken to the sauce and coat well."
+      },
+      {
+        step_number: 4,
+        title: "Stir fry the veggies and ramen",
+        detail: "Sauté the frozen stir fry veggies separately, then add them to the pan. Add cooked ramen (without the seasoning packet), and combine everything together."
+      },
+      {
+        step_number: 5,
+        title: "Top and serve",
+        detail: "Top with sesame seeds and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "fold-over-pizzadillas",
+    title: "Fold Over Pizzadillas",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍕",
+    tags: ["High-Protein", "Air Fryer", "Quick"],
+    dish_category: "Sandwiches",
+    description:
+      "An egg-white-crusted tortilla folded into quarters with laughing cow, mozzarella, and turkey pepperoni, air-fried until golden and cheese-pulled — pizza night, macro-style.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#D9A441",
+
+    macro_profiles: {
+      serving_2: { calories: 541, protein_g: 52, fat_g: 21, carbs_g: 36 },
+      serving_4: { calories: 541, protein_g: 52, fat_g: 21, carbs_g: 36 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Large burrito tortillas", prep: "a low-carb tortilla lowers the calories", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Egg whites", prep: "", quantity: "300", unit: "g", category: "Dairy" },
+        { item: "Oregano", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Basil", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Light Laughing Cow cheese wedges", prep: "", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "", quantity: "4", unit: "g", category: "Dairy" },
+        { item: "Red pepper flakes", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Part-skim mozzarella", prep: "", quantity: "84", unit: "g", category: "Dairy" },
+        { item: "Turkey pepperonis", prep: "", quantity: "60", unit: "", category: "Meat" },
+        { item: "Pizza sauce", prep: "", quantity: "40", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Large burrito tortillas", prep: "a low-carb tortilla lowers the calories", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Egg whites", prep: "", quantity: "600", unit: "g", category: "Dairy" },
+        { item: "Oregano", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Basil", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Light Laughing Cow cheese wedges", prep: "", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "", quantity: "8", unit: "g", category: "Dairy" },
+        { item: "Red pepper flakes", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Part-skim mozzarella", prep: "", quantity: "168", unit: "g", category: "Dairy" },
+        { item: "Turkey pepperonis", prep: "", quantity: "120", unit: "", category: "Meat" },
+        { item: "Pizza sauce", prep: "", quantity: "80", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the egg base",
+        detail: "Preheat a stovetop pan to 5/10 heat. Add egg whites to the pan and season with oregano, basil, and garlic powder. Add the tortilla on top and press."
+      },
+      {
+        step_number: 2,
+        title: "Set and flip",
+        detail: "Cover the pan and cook until the egg whites are solid. Flip and immediately take the tortilla off the pan."
+      },
+      {
+        step_number: 3,
+        title: "Fill the quadrants",
+        detail: "Slit the tortilla about halfway across. Think of it as a 4-quadrant circle: fill one quadrant with laughing cow, parmesan, and red pepper flakes; the next with half the turkey pepperoni; the next with mozzarella; and the last with the remaining pepperoni."
+      },
+      {
+        step_number: 4,
+        title: "Fold and air fry",
+        detail: "Fold the tortilla into quarters. Add to the air fryer at 400°F for 8 minutes with something heavy on top to keep it sealed shut, flipping after 6 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Finish and serve",
+        detail: "Add pizza sauce on top and return to the oven or air fryer until golden. Enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "blackened-chicken-tenders-cane-sauce",
+    title: "Blackened Chicken Tenders w/ Cane Sauce",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍗",
+    tags: ["High-Protein", "Air Fryer", "Copycat"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Air-fried blackened chicken tenderloins served with a copycat low-cal Raising Cane's-style dipping sauce — smoky, tangy, and ready in under 20 minutes.",
+    prep_time_mins: 10,
+    cook_time_mins: 9,
+    native_serving: 4,
+    accent: "#8B3A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 45, protein_g: 10, fat_g: 0.5, carbs_g: 0 },
+      serving_4: { calories: 45, protein_g: 10, fat_g: 0.5, carbs_g: 0 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken tenderloins", prep: "", quantity: "4", unit: "oz", category: "Meat" },
+        { item: "Blackened seasoning", prep: "", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Avocado cooking spray", prep: "", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "28", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "19", unit: "g", category: "Dairy" },
+        { item: "Sugar-free ketchup", prep: "for the sauce", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Light mayo", prep: "for the sauce", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "for the sauce", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Black pepper", prep: "for the sauce", quantity: "1/6", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the sauce", quantity: "1/6", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "for the sauce", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Sea salt", prep: "for the sauce", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the sauce", quantity: "1", unit: "pinch", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken tenderloins", prep: "", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Blackened seasoning", prep: "", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Avocado cooking spray", prep: "", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "57", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "38", unit: "g", category: "Dairy" },
+        { item: "Sugar-free ketchup", prep: "for the sauce", quantity: "13", unit: "g", category: "Pantry" },
+        { item: "Light mayo", prep: "for the sauce", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "for the sauce", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Black pepper", prep: "for the sauce", quantity: "1/3", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the sauce", quantity: "1/3", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "for the sauce", quantity: "1/8", unit: "tsp", category: "Pantry" },
+        { item: "Sea salt", prep: "for the sauce", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the sauce", quantity: "1", unit: "pinch", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the Cane's sauce",
+        detail: "Add all the Cane's sauce ingredients to a blender and blend until smooth and creamy. Transfer to the fridge to chill while you prep the chicken."
+      },
+      {
+        step_number: 2,
+        title: "Season the chicken",
+        detail: "Pat the chicken tenders dry with a paper towel, then evenly coat with the blackened seasoning on all sides."
+      },
+      {
+        step_number: 3,
+        title: "Air fry",
+        detail: "Place the seasoned chicken tenders in the air fryer basket in a single layer and lightly spray with avocado oil. Air fry at 400°F for 9 minutes, flipping halfway if needed."
+      },
+      {
+        step_number: 4,
+        title: "Rest and serve",
+        detail: "Remove the chicken tenders from the air fryer and let them rest for 10 minutes to keep them juicy and tender. Serve with the chilled Cane's sauce."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "bang-bang-egg-roll-in-a-bowl",
+    title: "Bang Bang Egg Roll in a Bowl",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥡",
+    tags: ["High-Protein", "Stir-Fry", "Low-Carb"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Deconstructed egg rolls — savory ground beef, cabbage slaw, carrots, and ginger-garlic seared in a skillet, drizzled with a sweet-spicy bang bang yogurt sauce. Also known as \"crack slaw.\"",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#A13D3D",
+
+    macro_profiles: {
+      serving_2: { calories: 410, protein_g: 48, fat_g: 10, carbs_g: 28 },
+      serving_4: { calories: 410, protein_g: 48, fat_g: 10, carbs_g: 28 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "16", unit: "oz", category: "Meat" },
+        { item: "Sweet onion", prep: "diced", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Carrots", prep: "", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Ginger", prep: "minced", quantity: "3", unit: "g", category: "Produce" },
+        { item: "Coleslaw mix", prep: "", quantity: "350", unit: "g", category: "Produce" },
+        { item: "Chicken broth", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Power slaw mix", prep: "", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Reduced sodium soy sauce", prep: "", quantity: "35", unit: "g", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "3", unit: "big pinches", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "2", unit: "big pinches", category: "Pantry" },
+        { item: "Green onion", prep: "to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Sesame seeds", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Honey", prep: "for the sauce", quantity: "28", unit: "g", category: "Pantry" },
+        { item: "Sriracha", prep: "for the sauce", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Rice vinegar", prep: "for the sauce", quantity: "4", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "32", unit: "oz", category: "Meat" },
+        { item: "Sweet onion", prep: "diced", quantity: "400", unit: "g", category: "Produce" },
+        { item: "Carrots", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "6", unit: "cloves", category: "Produce" },
+        { item: "Ginger", prep: "minced", quantity: "6", unit: "g", category: "Produce" },
+        { item: "Coleslaw mix", prep: "", quantity: "700", unit: "g", category: "Produce" },
+        { item: "Chicken broth", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Power slaw mix", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Reduced sodium soy sauce", prep: "", quantity: "70", unit: "g", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "14", unit: "g", category: "Pantry" },
+        { item: "Toasted sesame oil", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "6", unit: "big pinches", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "4", unit: "big pinches", category: "Pantry" },
+        { item: "Green onion", prep: "to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Sesame seeds", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "226", unit: "g", category: "Dairy" },
+        { item: "Honey", prep: "for the sauce", quantity: "56", unit: "g", category: "Pantry" },
+        { item: "Sriracha", prep: "for the sauce", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Rice vinegar", prep: "for the sauce", quantity: "8", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the beef",
+        detail: "Preheat a stovetop pan to 7/10 heat. Cook the lean ground beef for 2–3 minutes until close to your preferred level of doneness. Add the sweet onion and cook until it starts to soften."
+      },
+      {
+        step_number: 2,
+        title: "Soften the slaw",
+        detail: "Add the carrots, garlic, ginger, and chicken broth and sauté for a few minutes. Add the coleslaw mix and power slaw mix, then cover to soften so it's easier to mix with the rest of the ingredients."
+      },
+      {
+        step_number: 3,
+        title: "Season and char",
+        detail: "Add the soy sauce, rice vinegar, sesame oil, salt, and black pepper. Mix until you start to get a nice char on the veggies."
+      },
+      {
+        step_number: 4,
+        title: "Serve",
+        detail: "Portion into bowls, top with green onion, sesame seeds, and a drizzle of bang bang sauce, then enjoy."
+      }
+    ]
   }
 ];
 
@@ -12365,6 +13358,19 @@ const COLLECTIONS = [
       { key: "Beef & Steak", label: "Beef & Steak" },
       { key: "Seafood", label: "Seafood" }
     ]
+  },
+  {
+    id: "flexible-dieting",
+    title: "Flexible Dieting Favorites",
+    tag: "★ Collection · Macro-Friendly",
+    blurb:
+      "Macro-counted remixes of drive-thru and comfort-food favorites — big " +
+      "protein, satisfying carbs, and sauces built to make the numbers work.",
+    designer: "📖 From The Flexible Dieting Lifestyle",
+    accent: "#3E7CB1",          // steel blue
+    icon: "💪",
+    status: "live",
+    source_match: "Flexible Dieting"
   }
 ];
 
