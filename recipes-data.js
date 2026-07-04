@@ -7268,6 +7268,554 @@ const RECIPES = [
           "Top with the shrimp, extra lemon zest, parsley, and black pepper. Add pasta water slowly so the Alfredo sauce turns silky rather than greasy."
       }
     ]
+  },
+
+  {
+    recipe_id: "cowboy-caviar-dip",
+    title: "Cowboy Caviar Dip",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🤠",
+    tags: ["No-Cook", "Make-Ahead", "Vegetarian"],
+    dish_category: "Salsas & Dips",
+    description:
+      "A colorful, chip-scooping bean salad — black beans, black-eyed peas, corn, bell pepper, and avocado tossed in a bright lime dressing. Make it ahead; it only gets better as it sits.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_2: { calories: 220, protein_g: 8, fat_g: 8, carbs_g: 30 },
+      serving_4: { calories: 220, protein_g: 8, fat_g: 8, carbs_g: 30 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Black beans", prep: "drained and rinsed", quantity: "1/2", unit: "can (7.5 oz)", category: "Pantry" },
+        { item: "Black-eyed peas", prep: "drained and rinsed", quantity: "1/2", unit: "can (7.5 oz)", category: "Pantry" },
+        { item: "Corn kernels", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Small red onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt & pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Black beans", prep: "drained and rinsed", quantity: "1", unit: "can (15 oz)", category: "Pantry" },
+        { item: "Black-eyed peas", prep: "drained and rinsed", quantity: "1", unit: "can (15 oz)", category: "Pantry" },
+        { item: "Corn kernels", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Small red onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt & pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the vegetables",
+        detail:
+          "Dice the bell pepper, onion, tomato, and avocado. Seed and mince the jalapeños, and chop the cilantro."
+      },
+      {
+        step_number: 2,
+        title: "Combine",
+        detail:
+          "In a large bowl, combine the black beans, black-eyed peas, corn, bell pepper, onion, jalapeños, tomato, and cilantro."
+      },
+      {
+        step_number: 3,
+        title: "Dress & toss",
+        detail:
+          "Add the lime juice, olive oil, salt, and pepper, then toss gently to coat."
+      },
+      {
+        step_number: 4,
+        title: "Fold in avocado & serve",
+        detail:
+          "Fold in the avocado last so it stays intact. Serve chilled with tortilla chips."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "strawberry-salsa",
+    title: "Strawberry Salsa",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🍓",
+    tags: ["No-Cook", "Fresh", "Sweet & Spicy"],
+    dish_category: "Salsas & Dips",
+    description:
+      "A sweet-and-spicy summer salsa — diced strawberries, jalapeño, red onion, and cilantro brightened with lime and a touch of honey. Great with cinnamon chips or spooned over grilled fish.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#D1495B",
+
+    macro_profiles: {
+      serving_2: { calories: 45, protein_g: 1, fat_g: 0, carbs_g: 11 },
+      serving_4: { calories: 45, protein_g: 1, fat_g: 0, carbs_g: 11 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Strawberries", prep: "hulled and diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "minced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Strawberries", prep: "hulled and diced", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "minced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Dice the strawberries",
+        detail:
+          "Hull the strawberries and dice into small, even pieces."
+      },
+      {
+        step_number: 2,
+        title: "Combine",
+        detail:
+          "In a bowl, combine the strawberries, jalapeño, red onion, and cilantro."
+      },
+      {
+        step_number: 3,
+        title: "Dress",
+        detail:
+          "Stir in the lime juice, honey, and salt to taste."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail:
+          "Let sit for 10 minutes so the flavors meld, then serve with cinnamon-sugar chips or grilled fish."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pineapple-mango-salsa",
+    title: "Pineapple Mango Salsa",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🍍",
+    tags: ["No-Cook", "Fresh", "Tropical"],
+    dish_category: "Salsas & Dips",
+    description:
+      "A juicy tropical salsa of pineapple, mango, and tomato with jalapeño heat and a squeeze of lime — built for tacos, grilled chicken, or straight-up chip dipping.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#E8A33D",
+
+    macro_profiles: {
+      serving_2: { calories: 70, protein_g: 1, fat_g: 0, carbs_g: 18 },
+      serving_4: { calories: 70, protein_g: 1, fat_g: 0, carbs_g: 18 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Pineapple", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Ripe mango", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Pineapple", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Ripe mango", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Large tomato", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Dice the fruit",
+        detail:
+          "Dice the pineapple and mango into small, even pieces."
+      },
+      {
+        step_number: 2,
+        title: "Combine",
+        detail:
+          "Add the diced tomato, red onion, jalapeños, and cilantro to the fruit."
+      },
+      {
+        step_number: 3,
+        title: "Dress & serve",
+        detail:
+          "Toss with lime juice and salt to taste. Serve immediately, or chill for 15 minutes to let the flavors meld."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "kiwi-mango-salsa",
+    title: "Kiwi Mango Salsa",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🥝",
+    tags: ["No-Cook", "Fresh", "Tropical"],
+    dish_category: "Salsas & Dips",
+    description:
+      "A bright green-and-gold salsa pairing tart kiwi with sweet mango, jalapeño, and lime — a fun twist on fruit salsa for fish tacos or a chip-dipping snack.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#8FAF3D",
+
+    macro_profiles: {
+      serving_2: { calories: 65, protein_g: 1, fat_g: 0, carbs_g: 16 },
+      serving_4: { calories: 65, protein_g: 1, fat_g: 0, carbs_g: 16 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Kiwis", prep: "peeled and diced", quantity: "1 1/2", unit: "", category: "Produce" },
+        { item: "Ripe mango", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Kiwis", prep: "peeled and diced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Ripe mango", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the fruit",
+        detail:
+          "Peel and dice the kiwis and mango."
+      },
+      {
+        step_number: 2,
+        title: "Combine",
+        detail:
+          "Toss the fruit with the red onion, jalapeño, and cilantro."
+      },
+      {
+        step_number: 3,
+        title: "Dress & serve",
+        detail:
+          "Add lime juice and salt to taste. Serve chilled."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pico-de-gallo",
+    title: "Pico de Gallo",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🍅",
+    tags: ["No-Cook", "Fresh", "Classic"],
+    dish_category: "Salsas & Dips",
+    description:
+      "The classic fresh salsa — diced tomato, onion, and jalapeño with cilantro and lime. Simple, bright, and endlessly versatile on tacos, eggs, or chips.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#B23A2E",
+
+    macro_profiles: {
+      serving_2: { calories: 25, protein_g: 1, fat_g: 0, carbs_g: 6 },
+      serving_4: { calories: 25, protein_g: 1, fat_g: 0, carbs_g: 6 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Tomatoes", prep: "diced", quantity: "1 1/2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Tomatoes", prep: "diced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Dice the vegetables",
+        detail:
+          "Dice the tomatoes, onion, and jalapeños into small, even pieces."
+      },
+      {
+        step_number: 2,
+        title: "Combine",
+        detail:
+          "Toss the tomatoes, onion, and jalapeños together with the cilantro."
+      },
+      {
+        step_number: 3,
+        title: "Dress & rest",
+        detail:
+          "Stir in the lime juice and salt, then let sit for 10 minutes before serving so the flavors meld."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mango-avocado-salsa",
+    title: "Mango Avocado Salsa",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🥑",
+    tags: ["No-Cook", "Fresh", "Creamy"],
+    dish_category: "Salsas & Dips",
+    description:
+      "Sweet mango and creamy avocado meet tomato, onion, and jalapeño in this rich, chunky salsa — great on grilled chicken or fish, or scooped up with chips.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#5B7F45",
+
+    macro_profiles: {
+      serving_2: { calories: 150, protein_g: 2, fat_g: 10, carbs_g: 15 },
+      serving_4: { calories: 150, protein_g: 2, fat_g: 10, carbs_g: 15 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ripe mango", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Avocados", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Ripe mango", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocados", prep: "diced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Dice the produce",
+        detail:
+          "Dice the mango, avocado, tomato, and red onion."
+      },
+      {
+        step_number: 2,
+        title: "Combine gently",
+        detail:
+          "In a bowl, gently combine the mango, avocado, onion, jalapeño, tomato, and cilantro."
+      },
+      {
+        step_number: 3,
+        title: "Dress & serve",
+        detail:
+          "Toss gently with lime juice and salt to taste. Serve right away so the avocado stays fresh."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "roasted-corn-salsa",
+    title: "Roasted Corn Salsa",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🌽",
+    tags: ["Quick", "Smoky", "Vegetarian"],
+    dish_category: "Salsas & Dips",
+    description:
+      "Charred, smoky corn kernels tossed with red onion, bell pepper, jalapeño, cilantro, and lime — a summery salsa that's just as good spooned over tacos as it is with chips.",
+    prep_time_mins: 10,
+    cook_time_mins: 8,
+    native_serving: 4,
+    accent: "#DDB94A",
+
+    macro_profiles: {
+      serving_2: { calories: 90, protein_g: 3, fat_g: 1, carbs_g: 20 },
+      serving_4: { calories: 90, protein_g: 3, fat_g: 1, carbs_g: 20 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Corn kernels", prep: "roasted", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Corn kernels", prep: "roasted", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the corn",
+        detail:
+          "Char the corn kernels in a dry skillet over high heat, or under the broiler, until lightly blackened in spots, about 5-8 minutes. Let cool."
+      },
+      {
+        step_number: 2,
+        title: "Combine",
+        detail:
+          "Toss the roasted corn with the red onion, jalapeño, bell pepper, and cilantro."
+      },
+      {
+        step_number: 3,
+        title: "Dress & serve",
+        detail:
+          "Stir in the lime juice and salt to taste. Serve warm or chilled."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "black-bean-corn-salsa",
+    title: "Black Bean Corn Salsa",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🫘",
+    tags: ["No-Cook", "Make-Ahead", "Vegetarian"],
+    dish_category: "Salsas & Dips",
+    description:
+      "A hearty, protein-packed salsa of black beans, corn, tomato, and avocado in a lime dressing — filling enough to eat as a side salad, not just a chip dip.",
+    prep_time_mins: 12,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#6B4C7A",
+
+    macro_profiles: {
+      serving_2: { calories: 180, protein_g: 7, fat_g: 6, carbs_g: 26 },
+      serving_4: { calories: 180, protein_g: 7, fat_g: 6, carbs_g: 26 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Black beans", prep: "drained and rinsed", quantity: "1/2", unit: "can (7.5 oz)", category: "Pantry" },
+        { item: "Corn kernels", prep: "", quantity: "3/4", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Black beans", prep: "drained and rinsed", quantity: "1", unit: "can (15 oz)", category: "Pantry" },
+        { item: "Corn kernels", prep: "", quantity: "1 1/2", unit: "cups", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Combine the base",
+        detail:
+          "In a bowl, combine the black beans, corn, red onion, tomato, and jalapeño."
+      },
+      {
+        step_number: 2,
+        title: "Dress",
+        detail:
+          "Stir in the lime juice and salt to taste."
+      },
+      {
+        step_number: 3,
+        title: "Fold in avocado & serve",
+        detail:
+          "Gently fold in the avocado just before serving with tortilla chips."
+      }
+    ]
   }
 ];
 
@@ -7368,6 +7916,19 @@ const COLLECTIONS = [
     icon: "🍰",
     status: "live",
     source_match: "Desserts"
+  },
+  {
+    id: "salsas",
+    title: "Salsas & Dips",
+    tag: "★ Collection · Fresh & No-Cook",
+    blurb:
+      "Fresh, no-cook salsas and dips — fruit salsas, pico, and bean-and-corn " +
+      "scoopers for chips, tacos, and grilled everything.",
+    designer: "📖 Saved From Around the Web",
+    accent: "#C1442E",          // tomato red
+    icon: "🌶️",
+    status: "live",
+    source_match: "Salsas"
   }
 ];
 
