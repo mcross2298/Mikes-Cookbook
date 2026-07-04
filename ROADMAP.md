@@ -95,10 +95,12 @@ Two tiers, in order of how soon they're buildable:
 - Mike can adjust or cancel the cadence without touching code (trigger update/delete).
 
 **Status:** ✅ **Shipped** — a weekly Claude Code Remote trigger ("Cookbook Sunday planning
-nudge") fires `0 18 * * 0` (cron, **UTC**) and sends a push notification varying its wording
-each week, per the acceptance criteria above. **Open item:** the cron clock is UTC and the
-trigger's local-evening time depends on Mike's actual timezone (unconfirmed) — 18:00 UTC lands
-midday-to-noon across US zones, not evening. Adjust via `update_trigger` once confirmed.
+nudge") fires `0 23 * * 0` (cron, UTC — 18:00 **EST**) and sends a push notification varying its
+wording each week, per the acceptance criteria above. Note: the cron clock is a fixed UTC offset,
+so it holds 18:00 EST (UTC−5) exactly but drifts to 19:00 during EDT (UTC−4, roughly
+mid-March–early November) since cron doesn't observe DST. Not corrected for automatically —
+nudge it another hour via `update_trigger` for the summer half of the year if that 1-hour drift
+matters.
 
 **Effort:** Low (tier 1) / Med–High (tier 2, blocked on the data-bridge decision).
 **Impact:** Med–High.
