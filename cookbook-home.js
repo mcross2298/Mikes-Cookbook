@@ -2806,33 +2806,102 @@
     document.body.classList.add("picking");
   }
 
-  /* ── Bandwidth Quiz: match suggestions to how much cook time each day
-     actually has, instead of a full 7-day schedule (Smart Week's job). The
-     cook answers "how many days this week are Quick / Standard /
-     No rush", then gets recipe suggestions bucketed by prep+cook time —
-     purely a suggestion list; tapping a card adds it to This Week
-     unassigned, same as the "Add a meal" picker, and the cook places it on
-     a day/slot afterward. Answers are session-only, not persisted. ──── */
+  /* ── Time Check: a precursor to Smart Week, not a separate suggestion
+     list. The cook assigns each day of the week a time budget (Quick /
+     Standard / No rush), picks which meal slots to fill (reusing Smart
+     Week's own scope selector, since not every household eats all three),
+     then Time Check generates a full day-by-day grid the same shape as
+     Smart Week's — each day's meals are pulled from that day's assigned
+     time bucket first. Day assignments + scope persist to localStorage so
+     reopening Time Check later starts from the prior week's plan. ──── */
   var BWQ_BUCKETS = [
-    { key: "quick", emoji: "⚡", label: "Quick nights", sub: "Under 30 minutes",
+    { key: "quick", emoji: "⚡", label: "Quick nights", short: "Quick", sub: "Under 30 minutes",
       match: function (t) { return t > 0 && t <= 30; } },
-    { key: "standard", emoji: "🕐", label: "Standard nights", sub: "About an hour",
+    { key: "standard", emoji: "🕐", label: "Standard nights", short: "Standard", sub: "About an hour",
       match: function (t) { return t > 30 && t <= 60; } },
-    { key: "none", emoji: "♾️", label: "No rush", sub: "No time limit",
+    { key: "none", emoji: "♾️", label: "No rush", short: "No rush", sub: "No time limit",
       match: function (t) { return t === 0 || t > 60; } }
   ];
   function bwqTotalTime(r) { return (r.prep_time_mins || 0) + (r.cook_time_mins || 0); }
-  // Candidates for a bucket, preferring recipes not already in the week
-  // (unless that would empty the bucket), fastest-first.
-  function bwqCandidates(bucket) {
-    var planned = planRecipeIds();
-    var all = recipes().filter(function (r) { return bucket.match(bwqTotalTime(r)); });
-    var pool = all.filter(function (r) { return planned.indexOf(r.recipe_id) < 0; });
-    if (!pool.length) pool = all;
-    return pool.slice().sort(function (a, b) {
-      return (bwqTotalTime(a) || 9999) - (bwqTotalTime(b) || 9999);
-    });
+
+  var TIME_CHECK_KEY = "mc-cookbook:timecheck"; // { scopeKey, days: { Mon: "quick", ... } }
+  function loadTimeCheck() {
+    try {
+      var v = JSON.parse(localStorage.getItem(TIME_CHECK_KEY) || "null");
+      if (!v || typeof v !== "object") return { scopeKey: "all", days: {} };
+      return { scopeKey: v.scopeKey || "all", days: v.days || {} };
+    } catch (e) { return { scopeKey: "all", days: {} }; }
   }
+  function saveTimeCheck(scopeKey, dayBuckets) {
+    try { localStorage.setItem(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets })); }
+    catch (e) {}
+  }
+
+  /* ── Time Check generation (tcw* namespace) ───────────────────────────
+     Deliberately decoupled from Smart Week's own smw* scoring above (see
+     that section's note) — same grid shape and the same recency +
+     dish-category-variety tie-break (smwScoreCandidate), but each day's
+     candidate pool is first narrowed to whatever fits that day's assigned
+     time bucket. A bucket with zero fits for a slot falls back to the
+     full eligible pool, so a day/slot never comes back empty just because
+     its budget was narrow. */
+  function tcwPickForSlot(slot, usedIds, prevCategory, excludeId, bucketKey) {
+    var pool = mealEligibleRecipes(slot);
+    if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
+    var bucket = BWQ_BUCKETS.filter(function (b) { return b.key === bucketKey; })[0];
+    if (bucket) {
+      var fit = pool.filter(function (r) { return bucket.match(bwqTotalTime(r)); });
+      if (fit.length) pool = fit;
+    }
+    if (!pool.length) return null;
+    var fresh = pool.filter(function (r) {
+      var days = daysSinceCooked(r.recipe_id);
+      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
+    });
+    var candidates = fresh.length ? fresh : pool;
+    var best = null, bestScore = -Infinity;
+    candidates.forEach(function (r) {
+      var s = smwScoreCandidate(r, usedIds, prevCategory);
+      if (s > bestScore) { bestScore = s; best = r; }
+    });
+    return best;
+  }
+  // Full 7-day grid, same shape as smwGenerateWeek's — days with no bucket
+  // assigned are skipped (the cook didn't tell us anything about them).
+  function tcwGenerateWeek(scopeKey, dayBuckets) {
+    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+    var usedIds = new Set();
+    var prevCategoryBySlot = {};
+    var grid = [];
+    DAYS.forEach(function (day) {
+      var bucketKey = dayBuckets[day];
+      if (!bucketKey) return;
+      scope.slots.forEach(function (slot) {
+        var pick = tcwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, bucketKey);
+        if (pick) {
+          usedIds.add(pick.recipe_id);
+          prevCategoryBySlot[slot] = pick.dish_category;
+          grid.push({ day: day, slot: slot, id: pick.recipe_id });
+        }
+      });
+    });
+    return { scope: scope, grid: grid };
+  }
+  // Re-pick a single day+slot against that day's assigned bucket, excluding
+  // its current recipe so the tap always changes something when possible.
+  function tcwRegenerateSlot(grid, day, slot, dayBuckets) {
+    var usedIds = new Set();
+    grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
+    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
+    var dayIdx = DAYS.indexOf(day);
+    var prevEntry = dayIdx > 0
+      ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
+      : null;
+    var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
+    var pick = tcwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, dayBuckets[day]);
+    return pick ? pick.recipe_id : null;
+  }
+
   function closeBandwidthQuiz() {
     var ov = document.querySelector(".bwq-overlay");
     if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
@@ -2841,10 +2910,13 @@
   function openBandwidthQuiz() {
     closeBandwidthQuiz();
 
-    var counts = { quick: 0, standard: 0, none: 0 };
+    var saved = loadTimeCheck();
+    var scopeKey = saved.scopeKey;
+    var dayBuckets = {};
+    DAYS.forEach(function (d) { dayBuckets[d] = saved.days[d] || null; });
     var phase = "quiz";  // "quiz" | "results"
-    var pools = null;    // per-bucket candidate lists, frozen when quiz is submitted
-    var added = {};      // recipe_id -> true, this quiz session only
+    var grid = [];
+    var scope = SMART_SCOPES[0];
 
     var ov = el("div", "picker bwq-overlay");
     var top = el("div", "picker-top");
@@ -2858,84 +2930,47 @@
     var body = el("div", "picker-results bwq-body");
     ov.appendChild(body);
 
-    function bwqRow(b) {
-      var row = el("div", "bwq-row");
-      row.innerHTML =
-        '<span class="bwq-row-label">' +
-          '<span class="bwq-row-emoji">' + b.emoji + "</span>" +
-          '<span class="bwq-row-text"><b>' + esc(b.label) + "</b><br>" +
-            '<span class="bwq-row-sub">' + esc(b.sub) + "</span></span>" +
-        "</span>";
-      var stepper = el("span", "bwq-stepper");
-      var minus = el("button", "bwq-step", "−");
-      minus.type = "button";
-      minus.setAttribute("aria-label", "Fewer " + b.label + " days");
-      var countEl = el("span", "bwq-count", String(counts[b.key]));
-      var plus = el("button", "bwq-step", "+");
-      plus.type = "button";
-      plus.setAttribute("aria-label", "More " + b.label + " days");
-      function sync() {
-        countEl.textContent = String(counts[b.key]);
-        minus.disabled = counts[b.key] <= 0;
-        plus.disabled = counts[b.key] >= 7;
-      }
-      minus.addEventListener("click", function () { counts[b.key] = Math.max(0, counts[b.key] - 1); sync(); });
-      plus.addEventListener("click", function () { counts[b.key] = Math.min(7, counts[b.key] + 1); sync(); });
-      stepper.appendChild(minus);
-      stepper.appendChild(countEl);
-      stepper.appendChild(plus);
-      row.appendChild(stepper);
-      return row;
+    function tcwDayBlock(day) {
+      var block = el("div", "tcw-day-block");
+      block.appendChild(el("div", "tcw-day-label", esc(DAY_LONG[day])));
+      var items = BWQ_BUCKETS.map(function (b) { return { value: b.key, label: b.emoji + " " + b.short }; });
+      block.appendChild(segControl("tcw-day-toggle", items, dayBuckets[day], function (v) {
+        dayBuckets[day] = v;
+        paintQuiz();
+      }));
+      return block;
     }
 
     function paintQuiz() {
       body.innerHTML = "";
       body.appendChild(el("p", "bwq-intro",
-        "How many days this week fall into each bucket? We'll suggest recipes to match."));
-      BWQ_BUCKETS.forEach(function (b) { body.appendChild(bwqRow(b)); });
+        "Which days need to move fast, and which have room to breathe? We'll build the week around it."));
 
-      var cta = el("button", "cook-start bwq-continue-btn", "Show me recipes →");
+      var scopeBar = el("div", "smw-scope-bar");
+      var scopeSel = el("select", "smw-scope-select");
+      scopeSel.setAttribute("aria-label", "Time Check meal slots");
+      scopeSel.innerHTML = SMART_SCOPES.map(function (s) {
+        return '<option value="' + s.key + '">' + esc(s.label) + "</option>";
+      }).join("");
+      scopeSel.value = scopeKey;
+      scopeSel.addEventListener("change", function () { scopeKey = scopeSel.value; });
+      scopeBar.appendChild(scopeSel);
+      body.appendChild(scopeBar);
+
+      DAYS.forEach(function (day) { body.appendChild(tcwDayBlock(day)); });
+
+      var cta = el("button", "cook-start bwq-continue-btn", "Generate my week →");
       cta.type = "button";
+      cta.disabled = !DAYS.some(function (d) { return !!dayBuckets[d]; });
       cta.addEventListener("click", function () {
-        pools = {};
-        BWQ_BUCKETS.forEach(function (b) { pools[b.key] = bwqCandidates(b); });
+        saveTimeCheck(scopeKey, dayBuckets);
+        var result = tcwGenerateWeek(scopeKey, dayBuckets);
+        grid = result.grid;
+        scope = result.scope;
         phase = "results";
         paint();
       });
       body.appendChild(cta);
-    }
-
-    function bwqCard(r) {
-      var isAdded = !!added[r.recipe_id];
-      var card = el("button", "rc rc-pick bwq-card" + (isAdded ? " is-added" : ""));
-      card.type = "button";
-      card.disabled = isAdded;
-      card.style.setProperty("--rc-accent", r.accent || "#C87A53");
-      card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
-      var totalTime = bwqTotalTime(r);
-      var meta = [];
-      if (r.dish_category) meta.push(esc(r.dish_category));
-      if (totalTime) meta.push(totalTime + " min");
-      card.innerHTML =
-        '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
-        '<div class="rc-body">' +
-          '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
-          '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
-          '<p class="rc-macro">' + (isAdded ? "✓ Added" : "＋ Add to week") + "</p>" +
-        "</div>";
-      var days = daysSinceCooked(r.recipe_id);
-      if (!isAdded && days != null && days <= 14) {
-        card.appendChild(el("span", "rc-cooked-badge",
-          days <= 0 ? "Cooked today" : "Cooked " + days + "d ago"));
-      }
-      if (!isAdded) {
-        card.addEventListener("click", function () {
-          addMeal(r.recipe_id, { serving: 2 });
-          added[r.recipe_id] = true;
-          paintResults();
-        });
-      }
-      return card;
     }
 
     function paintResults() {
@@ -2946,34 +2981,78 @@
       back.addEventListener("click", function () { phase = "quiz"; paint(); });
       body.appendChild(back);
 
-      var any = BWQ_BUCKETS.some(function (b) { return counts[b.key] > 0; });
-      if (!any) {
-        body.appendChild(emptyState("🤔",
-          "No buckets set yet.<br>Go back and set at least one day's time budget."));
-        return;
+      var regenAll = el("button", "picker-sort-btn smw-regen-all-btn", "🔀 Regenerate");
+      regenAll.type = "button";
+      regenAll.addEventListener("click", function () {
+        var result = tcwGenerateWeek(scopeKey, dayBuckets);
+        grid = result.grid;
+        scope = result.scope;
+        paint();
+      });
+      body.appendChild(regenAll);
+
+      if (!grid.length) {
+        body.appendChild(emptyState("🧊",
+          "No recipes available yet.<br>Go back and assign at least one day."));
+      } else {
+        DAYS.forEach(function (day) {
+          var entries = grid.filter(function (g) { return g.day === day; });
+          if (!entries.length) return;
+          var dayBlock = el("div", "plan-day smw-day");
+          dayBlock.appendChild(el("div", "plan-day-head", esc(DAY_LONG[day])));
+          scope.slots.forEach(function (slot) {
+            var entry = entries.filter(function (g) { return g.slot === slot; })[0];
+            if (!entry) return;
+            var r = recipeById(entry.id);
+            var slotEl = el("div", "plan-slot");
+            slotEl.appendChild(el("div", "plan-slot-label", esc(slot)));
+            var cell = el("div", "plan-slot-cell");
+            var chip = el("div", "plan-chip smw-chip");
+            chip.appendChild(el("span", "plan-chip-icon", esc(r ? (r.icon || "🍽️") : "🍽️")));
+            var titleEl = el("a", "plan-chip-title", esc(r ? r.title : entry.id));
+            if (r) titleEl.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
+            chip.appendChild(titleEl);
+            var regen = el("button", "smw-chip-regen", "↻");
+            regen.type = "button";
+            regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
+            regen.addEventListener("click", function () {
+              var newId = tcwRegenerateSlot(grid, day, slot, dayBuckets);
+              if (!newId) { pop(regen); return; }
+              grid = grid.map(function (g) {
+                return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
+              });
+              paint();
+            });
+            chip.appendChild(regen);
+            var rm = el("button", "smw-chip-remove", "×");
+            rm.type = "button";
+            rm.setAttribute("aria-label", "Remove " + slot + " for " + DAY_LONG[day]);
+            rm.addEventListener("click", function () {
+              grid = grid.filter(function (g) { return !(g.day === day && g.slot === slot); });
+              paint();
+            });
+            chip.appendChild(rm);
+            cell.appendChild(chip);
+            slotEl.appendChild(cell);
+            dayBlock.appendChild(slotEl);
+          });
+          body.appendChild(dayBlock);
+        });
       }
 
-      BWQ_BUCKETS.forEach(function (b) {
-        if (!counts[b.key]) return;
-        var list = pools[b.key] || [];
-        var pickedCount = list.filter(function (r) { return added[r.recipe_id]; }).length;
-
-        var section = el("div", "bwq-section");
-        section.innerHTML =
-          '<div class="bwq-section-head">' +
-            '<span class="bwq-section-title">' + b.emoji + " " + esc(b.label) + "</span>" +
-            '<span class="bwq-section-progress">' + pickedCount + " of " + counts[b.key] + " picked</span>" +
-          "</div>";
-        body.appendChild(section);
-
-        if (!list.length) {
-          section.appendChild(emptyState("🧊", "No recipes match this bucket yet."));
-          return;
-        }
-        var grid = el("div", "col-grid bwq-grid");
-        list.forEach(function (r) { grid.appendChild(bwqCard(r)); });
-        section.appendChild(grid);
+      var actions = el("div", "smw-actions");
+      var confirm = el("button", "cook-start smw-confirm-btn", "＋ Set Weekly Meal Plan");
+      confirm.type = "button";
+      confirm.disabled = !grid.length;
+      confirm.addEventListener("click", function () {
+        commitSmartWeek(grid, scope.slots);
+        closeBandwidthQuiz();
+        plannerState.view = "plan";
+        refresh();
+        window.scrollTo(0, 0);
       });
+      actions.appendChild(confirm);
+      body.appendChild(actions);
     }
 
     function paint() { if (phase === "quiz") paintQuiz(); else paintResults(); }
