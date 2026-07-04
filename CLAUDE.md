@@ -98,19 +98,28 @@ A `RECIPES` entry includes (see the file header for full notes):
   Categories screen.
 - `icon`, `accent` (per-recipe accent color, also themes the detail screen),
   `prep_time_mins`, `cook_time_mins`, `native_serving`, `scaling_options`.
-- `macro_profiles` — **per single serving**, identical across tiers (`serving_2`
-  / `serving_4` are equal copies). Macros never scale with serving count.
-- `ingredients_by_serving` — authored `serving_2` and `serving_4` tiers. Each
-  ingredient separates `item` (clean shopping-list name → Grocery tab) from
-  `prep` (mise-en-place instruction → Recipe tab only), plus `quantity`,
-  `unit`, and `category` (one of **Meat · Dairy · Produce · Pantry**, which
-  groups the grocery list).
+- `macro_profiles` — **per single serving**, identical across every tier a
+  recipe authors (all `serving_N` keys present are equal copies). Macros
+  never scale with serving count.
+- `ingredients_by_serving` — one or more authored `serving_N` tiers (see
+  "Serving ladder" below — not every recipe has both `serving_2` and
+  `serving_4`). Each ingredient separates `item` (clean shopping-list name →
+  Grocery tab) from `prep` (mise-en-place instruction → Recipe tab only),
+  plus `quantity`, `unit`, and `category` (one of **Meat · Dairy · Produce ·
+  Pantry**, which groups the grocery list).
 - `instructions` — array of `{ step_number, title, detail }`.
 
-**Serving ladder.** Recipes author a 2-serving and a 4-serving tier explicitly.
-Any other count (1–12, via the stepper in `cookbook.js`) is generated on the
-fly by scaling the native tier. Macros are constant per serving and never
-scale.
+**Serving ladder.** Most recipes (the 2-meals-a-day style) author a 2-serving
+and a 4-serving tier explicitly. **Batch-yield recipes don't** — a whole
+cheesecake or a single-tray dessert instead authors **one** `serving_N` tier
+matching its `native_serving`/`scaling_options` (e.g. `serving_12` only, for a
+12-serving cheesecake). `cookbook.js`'s `nativeServing()` / `ingredientsFor()`
+/ `macrosFor()` already read whichever `serving_N` keys exist generically —
+don't assume `serving_2`/`serving_4` are always both present. Any requested
+count without an authored tier (1–12, via the stepper in `cookbook.js`) is
+generated on the fly by scaling the nearest authored/native tier. Macros are
+constant per serving and never scale. `tools/validate-recipes.js` enforces
+this shape in CI (see `ROADMAP.md` Pillar A).
 
 **Categories** (`CATEGORY_ORDER` in `cookbook-home.js`, 11 total): Breakfast ·
 Salads & Slaws · Soups, Stews & Chilis · Casseroles & Bakes · Skillets &
