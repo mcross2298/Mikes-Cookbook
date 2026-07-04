@@ -3764,6 +3764,7 @@ const RECIPES = [
     icon: "🧀",
     tags: ["Meal-Prep", "High-Protein", "Sweet & Smoky"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
     description:
       "Sweet-smoky honey BBQ chicken cubes plated beside a blender-quick, high-protein mac and cheese — cottage cheese and Greek yogurt sneak in the protein while whole-wheat elbows keep it comforting.",
     prep_time_mins: 15,
@@ -3869,6 +3870,7 @@ const RECIPES = [
     icon: "🌮",
     tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
     description:
       "Crispy sheet-pan potatoes topped with seasoned taco beef, fresh pico de gallo, and a drizzle of cheesy taco sauce — a build-your-own bowl that reheats like a dream.",
     prep_time_mins: 15,
@@ -3986,6 +3988,7 @@ const RECIPES = [
     icon: "🍚",
     tags: ["Meal-Prep", "High-Protein", "Spicy"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
     description:
       "Gochujang-glazed ground beef tossed with chilled-rice fried rice, scrambled egg, and crunchy vegetables, finished with a sriracha-mayo drizzle and toasted sesame seeds.",
     prep_time_mins: 15,
@@ -4111,6 +4114,7 @@ const RECIPES = [
     icon: "🧈",
     tags: ["Meal-Prep", "High-Protein", "Garlic Butter"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
     description:
       "Seared garlic-butter chicken bites alongside sheet-pan roasted potatoes tossed in a tangy Greek yogurt-Dijon cream sauce.",
     prep_time_mins: 15,
@@ -4228,6 +4232,7 @@ const RECIPES = [
     icon: "🥩",
     tags: ["Meal-Prep", "High-Protein", "Garlic Butter"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
     description:
       "Seared garlic-butter steak bites over crispy sheet-pan potatoes, finished with a bright sriracha-lime mayo drizzle.",
     prep_time_mins: 15,
@@ -4335,6 +4340,7 @@ const RECIPES = [
     icon: "🔥",
     tags: ["Meal-Prep", "High-Protein", "Spicy"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
     description:
       "Air-fried sweet potato and seasoned beef piled into a bowl with crisp raw vegetables and a blended hot honey chipotle yogurt sauce — sweet, smoky, and no oven required.",
     prep_time_mins: 15,
@@ -4432,6 +4438,7 @@ const RECIPES = [
     icon: "🍤",
     tags: ["Meal-Prep", "High-Protein", "Garlic"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Seafood",
     description:
       "Garlic-marinated shrimp seared until caramelized, tossed with veggie fried rice and scrambled egg, finished with a sriracha-mayo drizzle and green onions.",
     prep_time_mins: 15,
@@ -4557,6 +4564,7 @@ const RECIPES = [
     icon: "🍝",
     tags: ["Meal-Prep", "High-Protein", "Spicy"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
     description:
       "Seared chicken and whole-wheat penne tossed in a smoky chipotle cream sauce built from Greek yogurt, cream cheese, and Parmesan — rich without the guilt.",
     prep_time_mins: 15,
@@ -4662,6 +4670,7 @@ const RECIPES = [
     icon: "🧄",
     tags: ["Meal-Prep", "High-Protein", "Cheesy"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
     description:
       "Roasted garlic-seasoned potatoes and seared chicken finished in a rich light evaporated-milk Parmesan sauce with melted cheddar — comfort food with a macro-friendly twist.",
     prep_time_mins: 15,
@@ -4775,6 +4784,7 @@ const RECIPES = [
     icon: "🍯",
     tags: ["Meal-Prep", "High-Protein", "Sweet & Spicy"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Butter-seared honey buffalo chicken bites over rice with a tangy honey-buffalo drizzle and a crunchy cabbage-carrot slaw for contrast.",
     prep_time_mins: 15,
@@ -4896,6 +4906,7 @@ const RECIPES = [
     icon: "🎃",
     tags: ["No-Bake", "Icebox Cake", "Fall"],
     dish_category: "Desserts",
+    subsection: "Indulgent Dessert",
     description:
       "A no-bake icebox cake layering a graham cracker crust, no-bake cheesecake filling, and a spiced pumpkin-vanilla pudding, finished with whipped topping — an easy make-ahead fall showstopper.",
     prep_time_mins: 20,
@@ -4965,6 +4976,7 @@ const RECIPES = [
     icon: "🍌",
     tags: ["No-Bake", "Trifle", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Indulgent Dessert",
     description:
       "A layered banana pudding trifle — cream cheese and sweetened condensed milk folded into vanilla pudding, layered with Nilla Wafers, bananas, and caramel, then finished with a mountain of homemade whipped cream.",
     prep_time_mins: 25,
@@ -5038,10 +5050,11 @@ const RECIPES = [
     recipe_id: "smores-protein-ice-cream-bars",
     title: "High-Protein S'mores Ice Cream Bars",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍫",
     tags: ["High-Protein", "No-Bake", "Frozen"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Frozen Greek yogurt and Cool Whip bars swirled with protein powder over a graham cracker base, finished with a dark chocolate drizzle — a lower-calorie, higher-protein take on s'mores, ready in under 20 minutes of active prep.",
     prep_time_mins: 15,
@@ -5111,10 +5124,11 @@ const RECIPES = [
     recipe_id: "chocolate-espresso-protein-ice-cream",
     title: "Chocolate Espresso Protein Ice Cream",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍨",
     tags: ["High-Protein", "No-Bake", "Frozen"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A thick, creamy blender ice cream made from Greek yogurt, chocolate protein powder, and instant espresso — a rich mocha treat with none of the added sugar of the scoop-shop version.",
     prep_time_mins: 5,
@@ -5180,10 +5194,11 @@ const RECIPES = [
     recipe_id: "strawberry-shortcake-protein-mousse",
     title: "Strawberry Shortcake Protein Mousse",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍓",
     tags: ["High-Protein", "No-Bake", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A quick no-bake mousse swirling Greek yogurt, vanilla protein powder, and fresh strawberries, finished with a dusting of graham cracker crumbs for that shortcake crunch.",
     prep_time_mins: 10,
@@ -5247,10 +5262,11 @@ const RECIPES = [
     recipe_id: "chocolate-coconut-protein-truffles",
     title: "Chocolate Coconut Protein Truffles",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍫",
     tags: ["High-Protein", "No-Bake", "Bite-Size"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "No-bake truffles made from chocolate protein powder, Greek yogurt, cocoa, and shredded coconut, rolled with dark chocolate chips — a rich bite-size treat that chills up firm enough to hold its shape.",
     prep_time_mins: 15,
@@ -5316,10 +5332,11 @@ const RECIPES = [
     recipe_id: "apple-pie-protein-parfait",
     title: "Apple Pie Protein Parfait",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍎",
     tags: ["High-Protein", "Make-Ahead", "Layered"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Cinnamon-stewed apples layered over a vanilla Greek yogurt protein base and topped with oats — a warm-spiced parfait that tastes like apple pie in a glass.",
     prep_time_mins: 10,
@@ -5385,10 +5402,11 @@ const RECIPES = [
     recipe_id: "chocolate-peanut-butter-cheesecake-cups",
     title: "Chocolate Peanut Butter Cheesecake Cups",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥜",
     tags: ["High-Protein", "No-Bake", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A rich no-bake cheesecake cup blending Greek yogurt, light cream cheese, chocolate protein powder, and powdered peanut butter, studded with mini chocolate chips.",
     prep_time_mins: 10,
@@ -5454,10 +5472,11 @@ const RECIPES = [
     recipe_id: "vanilla-cake-batter-protein-popsicles",
     title: "Vanilla Cake Batter Protein Popsicles",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍭",
     tags: ["High-Protein", "No-Bake", "Frozen"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Birthday-cake-flavored popsicles made from Greek yogurt, vanilla protein powder, and rainbow sprinkles, finished with a melted white chocolate drizzle — a make-ahead freezer treat with real protein folded in.",
     prep_time_mins: 10,
@@ -5527,10 +5546,11 @@ const RECIPES = [
     recipe_id: "pistachio-chocolate-dipped-yogurt-bars",
     title: "Pistachio Chocolate-Dipped Yogurt Bars",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍫",
     tags: ["High-Protein", "No-Bake", "Frozen"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Frozen Greek yogurt bars dipped in a dark chocolate shell and finished with warmed pistachio butter and chopped pistachios — a snappy, creamy freezer treat ready whenever the craving hits.",
     prep_time_mins: 15,
@@ -5598,10 +5618,11 @@ const RECIPES = [
     recipe_id: "passionfruit-mango-cheesecake-cups",
     title: "Passionfruit & Mango Cheesecake Cups",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥭",
     tags: ["No-Bake", "Make-Ahead", "Layered"],
     dish_category: "Desserts",
+    subsection: "Indulgent Dessert",
     description:
       "A no-bake cheesecake cup with a graham cracker crust, a mango-swirled cream cheese and Greek yogurt filling, and a glossy layer of fresh passionfruit pulp — a cool, tropical treat that needs no oven.",
     prep_time_mins: 15,
@@ -5679,10 +5700,11 @@ const RECIPES = [
     recipe_id: "dark-chocolate-peanut-butter-freezer-bark",
     title: "Dark Chocolate Peanut Butter Freezer Bark",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍫",
     tags: ["High-Protein", "No-Bake", "Frozen"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A protein-rich peanut butter and oat base topped with melted dark chocolate and flaky sea salt, frozen and sliced into bark squares — a satisfying make-ahead treat for the freezer.",
     prep_time_mins: 10,
@@ -5752,10 +5774,11 @@ const RECIPES = [
     recipe_id: "blackberry-pistachio-protein-pot",
     title: "Blackberry Pistachio Protein Pot",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🫐",
     tags: ["High-Protein", "Make-Ahead", "Layered"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A layered single-serving pot of soaked oats, jammy blackberry compote, and a whipped Greek yogurt protein base, topped with crushed pistachios, fresh mint, and blackberries.",
     prep_time_mins: 15,
@@ -5823,10 +5846,11 @@ const RECIPES = [
     recipe_id: "pb-berry-yogurt-crunch-bowl",
     title: "PB Berry Yogurt Crunch Bowl",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥣",
     tags: ["High-Protein", "No-Bake", "Quick"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A layered Greek yogurt bowl with crunchy granola, fresh blueberries and raspberries, a warm peanut butter drizzle, and dark chocolate chunks — a fast, balanced sweet snack with protein, fiber, and healthy fats.",
     prep_time_mins: 10,
@@ -5890,10 +5914,11 @@ const RECIPES = [
     recipe_id: "dark-chocolate-pistachio-protein-pot",
     title: "Dark Chocolate Pistachio Protein Pot",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍫",
     tags: ["High-Protein", "No-Bake", "Quick"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A two-layer Greek yogurt pot — vanilla-honey on the bottom, cocoa swirled on top — finished with chopped pistachios. Tastes like a chocolate dessert but is mostly high-protein yogurt.",
     prep_time_mins: 10,
@@ -5956,10 +5981,11 @@ const RECIPES = [
     recipe_id: "crispy-apple-pie-turnovers",
     title: "Crispy Apple Pie Turnovers",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥟",
     tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Air-fried low-carb tortilla pockets stuffed with cinnamon apple pie filling and finished with a protein icing drizzle — a crisp, portable take on apple turnovers made in the air fryer.",
     prep_time_mins: 15,
@@ -6024,10 +6050,11 @@ const RECIPES = [
     recipe_id: "reeses-uncrustable-protein-pop-tarts",
     title: "Reese's Uncrustable Protein Pop Tarts",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥧",
     tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Low-calorie bread sealed around a protein peanut butter filling, air-fried until golden, then topped with chocolate protein frosting, mini Reese's cups, and crushed Reese's Puffs.",
     prep_time_mins: 20,
@@ -6106,10 +6133,11 @@ const RECIPES = [
     recipe_id: "oreo-cookies-and-cream-protein-ice-cream",
     title: "Oreo Cookies & Cream Protein Ice Cream",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍪",
     tags: ["High-Protein", "Frozen", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Ninja Creami Recipes",
     description:
       "A blended vanilla protein base spun into soft-serve texture in a Creami-style ice cream maker, then mixed with crushed Oreo Thins for an oversized single-pint cookies-and-cream treat.",
     prep_time_mins: 10,
@@ -6173,10 +6201,11 @@ const RECIPES = [
     recipe_id: "fruity-pebbles-protein-cheesecake-frosting",
     title: "Fruity Pebbles Protein Cheesecake Frosting",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🌈",
     tags: ["High-Protein", "No-Bake", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A blended cream cheese and Greek yogurt frosting swirled with crushed Fruity Pebbles — a spoonable, spreadable protein topping that thickens up overnight in the fridge.",
     prep_time_mins: 15,
@@ -6238,10 +6267,11 @@ const RECIPES = [
     recipe_id: "nutter-butter-protein-dessert-cups",
     title: "Nutter Butter Protein Dessert Cups",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥜",
     tags: ["High-Protein", "No-Bake", "Layered"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Layered cups of peanut butter protein pudding and crushed Nutter Butter cookies — a quick, chilled dessert that doubles easily for a week of meal prep.",
     prep_time_mins: 15,
@@ -6311,10 +6341,11 @@ const RECIPES = [
     recipe_id: "protein-chocolate-chip-cookie-dough",
     title: "Protein Chocolate Chip Cookie Dough",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍪",
     tags: ["High-Protein", "No-Bake", "Quick"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "An edible, no-bake cookie dough whipped from vegan protein powder and powdered peanut butter, loaded with mini chocolate chips, cacao nibs, and marshmallow bits, then chilled to a scoopable texture.",
     prep_time_mins: 10,
@@ -6381,10 +6412,11 @@ const RECIPES = [
     recipe_id: "strawberry-shortcake-ice-cream-bars",
     title: "Strawberry Shortcake Ice Cream Bars",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍓",
     tags: ["High-Protein", "Frozen", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Frozen strawberry protein bars folded with Cool Whip and freeze-dried strawberries, coated in a crushed golden Oreo and freeze-dried strawberry shortcake crumb — a fruity, creamy freezer treat.",
     prep_time_mins: 20,
@@ -6463,10 +6495,11 @@ const RECIPES = [
     recipe_id: "cheesecake-stuffed-cosmic-brownie",
     title: "Cheesecake Stuffed Cosmic Brownie",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🌌",
     tags: ["High-Protein", "Air Fryer", "Quick"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A single-serving air-fried brownie stuffed with a fat-free cheesecake center, topped with a chocolate protein icing and rainbow candy-coated brownie bits.",
     prep_time_mins: 15,
@@ -6549,10 +6582,11 @@ const RECIPES = [
     recipe_id: "frosted-flakes-cereal-milk-protein-ice-cream",
     title: "Frosted Flakes Cereal Milk Protein Ice Cream",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥣",
     tags: ["High-Protein", "Frozen", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Ninja Creami Recipes",
     description:
       "A Creami-style protein ice cream made from Frosted Flakes cereal milk, spun to soft-serve texture and mixed with a scoop of the cereal for crunch — a nostalgic cereal-milk treat in a single oversized pint.",
     prep_time_mins: 15,
@@ -6612,10 +6646,11 @@ const RECIPES = [
     recipe_id: "cherry-pie-turnovers",
     title: "Cherry Pie Turnovers",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🍒",
     tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Air-fried low-carb tortilla pockets stuffed with no-sugar-added cherry pie filling and finished with a protein icing drizzle — a crisp, portable turnover made in the air fryer.",
     prep_time_mins: 15,
@@ -6677,10 +6712,11 @@ const RECIPES = [
     recipe_id: "pretzel-milk-toffee-crunch-protein-ice-cream",
     title: "Pretzel Milk Toffee Crunch Protein Ice Cream",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🥨",
     tags: ["High-Protein", "Frozen", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Ninja Creami Recipes",
     description:
       "A Creami-style protein ice cream steeped from pretzel-infused milk, mixed with dark chocolate chips, toffee bits, and crushed pretzels, then finished with a low-calorie caramel drizzle.",
     prep_time_mins: 20,
@@ -6764,10 +6800,11 @@ const RECIPES = [
     recipe_id: "funfetti-protein-cheesecake-cannolis",
     title: "Funfetti Protein Cheesecake Cannolis",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🎉",
     tags: ["High-Protein", "No-Bake", "Party"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "Crisp pizzelle shells shaped into cannoli tubes and piped with a whipped cream cheese and Greek yogurt cheesecake filling, finished with sprinkles at each end.",
     prep_time_mins: 30,
@@ -6838,10 +6875,11 @@ const RECIPES = [
     recipe_id: "cosmic-brownie-ice-cream-bars",
     title: "Cosmic Brownie Ice Cream Bars",
     category: "Meal Prep",
-    source: "High-Protein Meal Prep",
+    source: "Desserts",
     icon: "🌌",
     tags: ["High-Protein", "Frozen", "Make-Ahead"],
     dish_category: "Desserts",
+    subsection: "Protein Dessert",
     description:
       "A black cocoa protein base folded with Cool Whip, frozen into bars, and coated in crushed Fiber One Brownies and Cosmic Brownie chips for a crunchy, chocolatey shell.",
     prep_time_mins: 15,
@@ -6910,6 +6948,7 @@ const RECIPES = [
     icon: "🥗",
     tags: ["Pasta Salad", "Meal-Prep", "Make-Ahead"],
     dish_category: "Salads & Slaws",
+    subsection: "Pasta Dishes",
     description:
       "A summer-ready pasta salad made with pesto-coated chicken, crisp romaine, toasted panko, Parmesan, fresh basil, pasta, and a creamy pesto Caesar dressing. Garlicky, herby, crunchy, and perfect for entertaining or make-ahead lunches.",
     prep_time_mins: 20,
@@ -6995,6 +7034,7 @@ const RECIPES = [
     icon: "🥔",
     tags: ["Meal-Prep", "Creamy", "Lemon-Garlic"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
     description:
       "Golden chicken in a creamy lemon garlic Parmesan sauce with crispy Hasselback potatoes and grilled greens. Cozy, flavorful, and perfect for an easy dinner.",
     prep_time_mins: 15,
@@ -7095,6 +7135,7 @@ const RECIPES = [
     icon: "🍑",
     tags: ["Meal-Prep", "Grilled", "Sweet & Spicy"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
     description:
       "The perfect sweet, spicy, and savory summer dinner: grilled hot honey chicken topped with fresh peach salsa, served alongside grilled lemon asparagus.",
     prep_time_mins: 20,
@@ -7183,6 +7224,7 @@ const RECIPES = [
     icon: "🍤",
     tags: ["Meal-Prep", "Creamy", "Shrimp"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
     description:
       "An easy under-30-minute dinner made with juicy shrimp, a silky lemon Parmesan cream sauce, and pappardelle pasta. Creamy, garlicky, bright, and perfect for a cozy restaurant-style pasta night at home.",
     prep_time_mins: 10,
@@ -7821,11 +7863,12 @@ const RECIPES = [
   {
     recipe_id: "fajita-steak-loaded-sweet-potato-nachos",
     title: "Fajita Steak Loaded Sweet Potato Nachos",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🧀",
     tags: ["Sheet-Pan", "Steak", "Shareable"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
     description:
       "Crispy sweet potato \"chips\" loaded with fajita-seasoned steak, melted cheddar and mozzarella, caramelized onion and pepper, fresh tomato salsa, guacamole, and a drizzle of honey and chili flakes.",
     prep_time_mins: 15,
@@ -7973,6 +8016,7 @@ const RECIPES = [
     icon: "🍝",
     tags: ["Pasta Salad", "Vegetarian", "Make-Ahead"],
     dish_category: "Salads & Slaws",
+    subsection: "Pasta Dishes",
     description:
       "A fresh, make-ahead vegetarian pasta salad packed with chickpeas, cherry tomatoes, sweet peppers, pepperoncini, olives, spinach, Parmesan, and a zesty homemade Italian dressing. Colorful, tangy, and satisfying for weekday lunches, BBQs, or warm-weather entertaining.",
     prep_time_mins: 20,
@@ -8045,6 +8089,7 @@ const RECIPES = [
     icon: "🍤",
     tags: ["Meal-Prep", "Creamy", "Shrimp"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Seafood",
     description:
       "A rich, creamy shrimp dinner made with extra-jumbo shrimp, tomato paste, garlic, Cajun seasoning, heavy cream, chicken broth, butter, and lemon. Saucy, savory, restaurant-style, and perfect served over warm rice.",
     prep_time_mins: 10,
@@ -8111,11 +8156,12 @@ const RECIPES = [
   {
     recipe_id: "chicken-enchilada-quinoa",
     title: "Chicken Enchilada Quinoa",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🌯",
     tags: ["Crockpot", "High-Protein", "Meal-Prep"],
     dish_category: "Soups, Stews & Chilis",
+    subsection: "Chicken",
     description:
       "A set-and-forget crockpot dinner — shredded chicken, quinoa, black beans, and corn simmered in enchilada sauce and finished with melted cheddar and fresh cilantro.",
     prep_time_mins: 10,
@@ -8175,11 +8221,12 @@ const RECIPES = [
   {
     recipe_id: "crockpot-pizza-chicken-bowls",
     title: "Crockpot Pizza Chicken Bowls",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🍕",
     tags: ["Crockpot", "High-Protein", "Kid-Friendly"],
     dish_category: "Casseroles & Bakes",
+    subsection: "Chicken",
     description:
       "All the flavor of a pepperoni pizza in a crockpot chicken bowl — shredded chicken, rice, and turkey pepperoni simmered in pizza sauce and topped with melted mozzarella.",
     prep_time_mins: 10,
@@ -8237,11 +8284,12 @@ const RECIPES = [
   {
     recipe_id: "creamy-cajun-chicken-potatoes",
     title: "Creamy Cajun Chicken & Potatoes",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🥔",
     tags: ["Crockpot", "Creamy", "High-Protein"],
     dish_category: "Casseroles & Bakes",
+    subsection: "Chicken",
     description:
       "Baby potatoes and peppers slow-cook under Cajun-seasoned chicken, then everything gets stirred into a creamy Greek yogurt, cream cheese, and Parmesan sauce.",
     prep_time_mins: 10,
@@ -8300,11 +8348,12 @@ const RECIPES = [
   {
     recipe_id: "honey-garlic-chicken-rice",
     title: "Honey Garlic Chicken Rice",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🍯",
     tags: ["Crockpot", "Asian-Inspired", "High-Protein"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Shredded chicken and jasmine rice simmered in a honey garlic sauce with ginger, soy, and bell peppers, finished with broccoli and melted mozzarella.",
     prep_time_mins: 10,
@@ -8364,11 +8413,12 @@ const RECIPES = [
   {
     recipe_id: "crispy-hot-honey-chicken-bowls",
     title: "Crispy Hot Honey Chicken Bowls",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🔥",
     tags: ["Skillet", "Spicy-Sweet", "High-Protein"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Cornstarch-coated chicken bites pan-seared until golden and crispy, then tossed in a sweet-and-spicy honey hot sauce and served over jasmine rice with green beans.",
     prep_time_mins: 10,
@@ -8422,11 +8472,12 @@ const RECIPES = [
   {
     recipe_id: "bbq-chicken-mac-cheese-bowl",
     title: "BBQ Chicken Mac & Cheese Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🧀",
     tags: ["High-Protein", "Comfort Food", "Quick"],
     dish_category: "Casseroles & Bakes",
+    subsection: "Pasta Dishes",
     description:
       "High-protein macaroni tossed with seared chicken, steamed broccoli, and a smooth BBQ cheese sauce made with light cheddar and almond milk.",
     prep_time_mins: 10,
@@ -8482,11 +8533,12 @@ const RECIPES = [
   {
     recipe_id: "chicken-taco-rice-skillet",
     title: "Chicken Taco Rice Skillet",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🌮",
     tags: ["Skillet", "Tex-Mex", "High-Protein"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Taco-seasoned chicken, sautéed peppers and onions, rice, black beans, and salsa come together in one skillet, topped with melted cheese.",
     prep_time_mins: 10,
@@ -8541,11 +8593,12 @@ const RECIPES = [
   {
     recipe_id: "cajun-blackened-crab-stuffed-salmon",
     title: "Cajun Blackened Crab Stuffed Salmon over Jasmine Rice & Broccolini",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🦀",
     tags: ["Seafood", "Date-Night", "High-Protein"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Seafood",
     description:
       "Cajun-seared salmon fillets stuffed with a creamy Parmesan crab filling, served over jasmine rice with roasted broccolini and a squeeze of lemon.",
     prep_time_mins: 20,
@@ -8627,11 +8680,12 @@ const RECIPES = [
   {
     recipe_id: "creamy-lemon-chicken-orzo",
     title: "Creamy Lemon Chicken Orzo",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🍋",
     tags: ["Skillet", "One-Pan", "Comfort Food"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
     description:
       "Seared chicken thighs nestled into a creamy lemon-Parmesan orzo with wilted spinach, all made in one pan.",
     prep_time_mins: 15,
@@ -8718,11 +8772,12 @@ const RECIPES = [
   {
     recipe_id: "marry-me-steak-sandwich",
     title: "Marry Me Steak Sandwich",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🥪",
     tags: ["Sandwich", "Date-Night", "Steak"],
     dish_category: "Sandwiches",
+    subsection: "Beef & Steak",
     description:
       "Seared New York strip steak and balsamic-caramelized onions piled on toasted ciabatta with lemon herb aioli and peppery arugula.",
     prep_time_mins: 15,
@@ -8792,11 +8847,12 @@ const RECIPES = [
   {
     recipe_id: "chili-oil-caramelized-onion-shrimp-pasta",
     title: "Chili Oil Caramelized Onion Shrimp Pasta",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🍤",
     tags: ["Skillet", "Spicy", "High-Protein"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
     description:
       "Seared shrimp and deeply caramelized onions tossed with high-protein pasta in a creamy chili oil sauce, finished with Parmesan and chili flakes.",
     prep_time_mins: 15,
@@ -8883,11 +8939,12 @@ const RECIPES = [
   {
     recipe_id: "taco-beef-sweet-potato-bowl",
     title: "Taco Beef Sweet Potato Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🌮",
     tags: ["High-Protein", "High-Fiber", "Single-Serving"],
     dish_category: "Salads & Slaws",
+    subsection: "Beef & Steak",
     description:
       "A high-protein, high-fiber taco bowl — roasted sweet potato, browned lean ground beef, and avocado over shredded lettuce with a tangy Greek yogurt-lime crema.",
     prep_time_mins: 15,
@@ -8954,11 +9011,12 @@ const RECIPES = [
   {
     recipe_id: "buffalo-ranch-turkey-burrito-bowl",
     title: "Buffalo Ranch Turkey Burrito Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🦃",
     tags: ["Quick", "High-Protein", "Single-Serving"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Bowls & Other",
     description:
       "Buffalo-sauced ground turkey over rice and black beans with celery, carrots, ranch, and Greek yogurt — a quick, tangy single-bowl dinner.",
     prep_time_mins: 10,
@@ -9011,11 +9069,12 @@ const RECIPES = [
   {
     recipe_id: "chicken-fajita-sweet-potato-bowl",
     title: "Chicken Fajita Sweet Potato Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🫑",
     tags: ["Quick", "High-Protein", "Single-Serving"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Seasoned chicken breast, roasted sweet potato, and sautéed fajita peppers and onions over black beans, topped with Greek yogurt and lime.",
     prep_time_mins: 10,
@@ -9073,11 +9132,12 @@ const RECIPES = [
   {
     recipe_id: "chicken-meatball-quinoa-bowl",
     title: "Chicken Meatball Quinoa Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🧆",
     tags: ["Mediterranean", "High-Protein", "Meal-Prep"],
     dish_category: "Salads & Slaws",
+    subsection: "Chicken",
     description:
       "A high-protein Mediterranean bowl of pan-fried chicken meatballs, quinoa, cherry tomatoes, cucumber, kalamata olives, and feta with tzatziki.",
     prep_time_mins: 15,
@@ -9144,11 +9204,12 @@ const RECIPES = [
   {
     recipe_id: "philly-cheesesteak-burrito-bowl",
     title: "Philly Cheesesteak Burrito Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🥩",
     tags: ["Quick", "High-Protein", "Single-Serving"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
     description:
       "Thin-sliced sirloin steak, crispy roasted potatoes, and sautéed peppers, onions, and mushrooms with melted mozzarella and a dollop of Greek yogurt.",
     prep_time_mins: 15,
@@ -9206,11 +9267,12 @@ const RECIPES = [
   {
     recipe_id: "high-protein-turkey-chili-bowl",
     title: "High Protein Turkey Chili Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🌶️",
     tags: ["Chili", "High-Protein", "High-Fiber"],
     dish_category: "Soups, Stews & Chilis",
+    subsection: "Bowls & Other",
     description:
       "A quick, deeply browned turkey chili with black beans, tomatoes, and jalapeño, finished with cheese, Greek yogurt, and fresh cilantro.",
     prep_time_mins: 10,
@@ -9271,11 +9333,12 @@ const RECIPES = [
   {
     recipe_id: "chicken-rainbow-veggie-rice-bowl",
     title: "Chicken & Rainbow Veggie Rice Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🌈",
     tags: ["Grilled", "High-Protein", "Meal-Prep"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
     description:
       "Grilled chicken breast over brown rice with tender-crisp bell peppers, broccoli, and green beans for a colorful, veggie-packed bowl.",
     prep_time_mins: 10,
@@ -9342,11 +9405,12 @@ const RECIPES = [
   {
     recipe_id: "creamy-cilantro-chicken-quinoa-bowl",
     title: "Creamy Cilantro Chicken Quinoa Bowl",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🥑",
     tags: ["Quick", "High-Protein", "Meal-Prep"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Seared chicken breast over quinoa with roasted cherry tomatoes, corn, and avocado, drizzled with a creamy cilantro-lime Greek yogurt sauce.",
     prep_time_mins: 10,
@@ -9417,11 +9481,12 @@ const RECIPES = [
   {
     recipe_id: "chicken-fajita-burrito-bowls",
     title: "Chicken Fajita Burrito Bowls",
-    category: "Web Finds",
-    source: "Web Finds",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
     icon: "🌯",
     tags: ["Meal-Prep", "Tex-Mex", "High-Protein"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
     description:
       "Fajita-seasoned chicken and sautéed peppers and onions over cilantro lime rice with black beans, salsa, and cheese — batch-friendly and ready in 20 minutes.",
     prep_time_mins: 10,
@@ -9492,6 +9557,9 @@ const RECIPES = [
      accent   — per-card glow color (drives border-top + ambient glow)
      icon     — faint watermark emoji, top-right
      status   — "live" | "coming-soon"
+     subsections (optional) — [{ key, label }, ...] sub-tabs shown on
+       collection.html; filters recipes whose `subsection` field equals `key`.
+       Omit for a collection with no sub-tabs (renders exactly as before).
    Add a future collection by appending here — no rendering changes needed.
    ========================================================================== */
 const COLLECTIONS = [
@@ -9558,7 +9626,14 @@ const COLLECTIONS = [
     accent: "#4E8B65",          // fresh green
     icon: "🍱",
     status: "live",
-    source_match: "High-Protein Meal Prep"
+    source_match: "High-Protein Meal Prep",
+    subsections: [
+      { key: "Chicken", label: "Chicken" },
+      { key: "Beef & Steak", label: "Beef & Steak" },
+      { key: "Pasta Dishes", label: "Pasta Dishes" },
+      { key: "Seafood", label: "Seafood" },
+      { key: "Bowls & Other", label: "Bowls & Other" }
+    ]
   },
   {
     id: "desserts",
@@ -9571,7 +9646,12 @@ const COLLECTIONS = [
     accent: "#C9738B",          // dusty rose
     icon: "🍰",
     status: "live",
-    source_match: "Desserts"
+    source_match: "Desserts",
+    subsections: [
+      { key: "Indulgent Dessert", label: "Indulgent" },
+      { key: "Protein Dessert", label: "Protein" },
+      { key: "Ninja Creami Recipes", label: "Ninja Creami" }
+    ]
   },
   {
     id: "salsas",

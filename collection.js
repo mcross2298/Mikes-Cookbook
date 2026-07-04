@@ -189,10 +189,39 @@
     box.setAttribute("aria-label", "Search recipes");
     searchWrap.appendChild(box);
 
+    // Sub-tabs (optional): a collection can define c.subsections to split its
+    // list into an "All" tab plus one tab per subsection key. A recipe with no
+    // matching subsection only shows under "All". No-op for collections that
+    // don't define subsections — everything renders exactly as before.
+    var activeSub = "";
+    var subtabButtons = [];
+    if (c.subsections && c.subsections.length) {
+      var subtabsBar = el("div", "subtabs");
+      [{ key: "", label: "All" }].concat(c.subsections).forEach(function (t) {
+        var btn = el("button", "subtab" + (t.key === activeSub ? " active" : ""), esc(t.label));
+        btn.type = "button";
+        btn.addEventListener("click", function () {
+          if (activeSub === t.key) return;
+          activeSub = t.key;
+          subtabButtons.forEach(function (b) { b.el.classList.toggle("active", b.key === activeSub); });
+          paint();
+        });
+        subtabButtons.push({ key: t.key, el: btn });
+        subtabsBar.appendChild(btn);
+      });
+      searchWrap.parentNode.insertBefore(subtabsBar, searchWrap.nextSibling);
+      // .col-top is also sticky at top:0; offset the tab bar by its rendered
+      // height so the two stack instead of overlapping when both are stuck.
+      var positionSubtabs = function () { subtabsBar.style.top = top.offsetHeight + "px"; };
+      positionSubtabs();
+      window.addEventListener("resize", positionSubtabs);
+    }
+
     function paint() {
       var q = box.value.trim();
       grid.innerHTML = "";
       list = currentList();
+      if (activeSub) list = list.filter(function (r) { return r.subsection === activeSub; });
       paintHead();
 
       // A live collection with nothing in it yet (e.g. "My Recipes" before you
