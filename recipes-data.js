@@ -11278,6 +11278,494 @@ const RECIPES = [
         detail: "Divide the tater tots, scrambled eggs, and chicken bites evenly among 4 glass meal-prep containers. Add a small sauce cup of Chick-fil-A sauce to each."
       }
     ]
+  },
+
+  {
+    recipe_id: "lemon-herb-dill-protein-sauce",
+    title: "Lemon Herb Dill Protein Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🌿",
+    tags: ["No-Cook", "High-Protein", "Bright"],
+    dish_category: "Sauces",
+    description:
+      "A bright, tangy Greek yogurt sauce loaded with fresh dill and lemon zest. Spoon it over grilled chicken, salmon, or a bowl of roasted vegetables.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8FA671",
+
+    macro_profiles: {
+      serving_2: { calories: 30, protein_g: 3, fat_g: 1, carbs_g: 3 },
+      serving_4: { calories: 30, protein_g: 3, fat_g: 1, carbs_g: 3 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon zest", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Fresh dill", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon zest", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Fresh dill", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Greek yogurt, lemon juice, lemon zest, dill, garlic powder, black pepper, and salt."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Whisk in the water a little at a time until the sauce reaches a drizzle-able consistency. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-protein-sauce",
+    title: "Buffalo Protein Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🔥",
+    tags: ["No-Cook", "Spicy", "High-Protein"],
+    dish_category: "Sauces",
+    description:
+      "A creamy Greek yogurt take on classic buffalo sauce — tangy, spicy, and just a little sweet. Great on wings, grilled chicken, or as a dip for veggies.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C1442E",
+
+    macro_profiles: {
+      serving_2: { calories: 40, protein_g: 3, fat_g: 1, carbs_g: 5 },
+      serving_4: { calories: 40, protein_g: 3, fat_g: 1, carbs_g: 5 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Hot sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Hot sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Greek yogurt, hot sauce, paprika, garlic powder, honey, lemon juice, and salt until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Whisk in the water a little at a time to loosen the sauce. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "jalapeno-lime-yogurt-sauce",
+    title: "Jalapeño Lime Yogurt Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🍋",
+    tags: ["No-Cook", "Spicy", "High-Protein"],
+    dish_category: "Sauces",
+    description:
+      "A cool, herby Greek yogurt sauce with fresh jalapeño, lime, and coriander. Perfect drizzled over tacos, grilled fish, or a taco bowl.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8CA05C",
+
+    macro_profiles: {
+      serving_2: { calories: 55, protein_g: 6, fat_g: 1, carbs_g: 4 },
+      serving_4: { calories: 55, protein_g: 6, fat_g: 1, carbs_g: 4 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "1", unit: "whole", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Lime zest", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Jalapeño", prep: "seeded and minced", quantity: "2", unit: "whole", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Lime zest", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend it together",
+        detail:
+          "In a blender or food processor, combine the Greek yogurt, jalapeño, cilantro, lime zest, lime juice, garlic powder, and salt. Blend until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Blend in the water a little at a time to reach a drizzle-able consistency. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "roasted-red-pepper-protein-sauce",
+    title: "Roasted Red Pepper Protein Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🫑",
+    tags: ["No-Cook", "High-Protein", "Smoky"],
+    dish_category: "Sauces",
+    description:
+      "A smoky, savory Greek yogurt sauce built on roasted red peppers and paprika. Excellent over grilled chicken, steak, or roasted vegetables.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#B5432E",
+
+    macro_profiles: {
+      serving_2: { calories: 90, protein_g: 7, fat_g: 4, carbs_g: 7 },
+      serving_4: { calories: 90, protein_g: 7, fat_g: 4, carbs_g: 7 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Roasted red peppers", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Roasted red peppers", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend it together",
+        detail:
+          "In a blender or food processor, combine the roasted red peppers, Greek yogurt, paprika, lemon juice, olive oil, garlic powder, and salt. Blend until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Blend in the water a little at a time to reach a drizzle-able consistency. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-cajun-yogurt-sauce",
+    title: "Creamy Cajun Yogurt Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🧂",
+    tags: ["No-Cook", "Spicy", "High-Protein"],
+    dish_category: "Sauces",
+    description:
+      "A creamy, zippy Greek yogurt sauce built on Cajun seasoning. Great over blackened chicken or fish, or drizzled on a grain bowl.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#BF7A3D",
+
+    macro_profiles: {
+      serving_2: { calories: 65, protein_g: 6, fat_g: 1, carbs_g: 7 },
+      serving_4: { calories: 65, protein_g: 6, fat_g: 1, carbs_g: 7 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Cajun seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Cajun seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Greek yogurt, Cajun seasoning, lemon juice, onion powder, garlic powder, honey, and salt."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Whisk in the water a little at a time to loosen the sauce. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "peri-peri-garlic-yogurt-sauce",
+    title: "Peri Peri Garlic Yogurt Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🧄",
+    tags: ["No-Cook", "Spicy", "High-Protein"],
+    dish_category: "Sauces",
+    description:
+      "A punchy Greek yogurt sauce with peri peri seasoning, roasted garlic, and a touch of honey. Delicious over grilled chicken or roasted potatoes.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C16B3C",
+
+    macro_profiles: {
+      serving_2: { calories: 70, protein_g: 6, fat_g: 1, carbs_g: 7 },
+      serving_4: { calories: 70, protein_g: 6, fat_g: 1, carbs_g: 7 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Peri peri seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Peri peri seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Greek yogurt, garlic, peri peri seasoning, honey, lemon juice, paprika, and salt."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Whisk in the water a little at a time to loosen the sauce. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "smoky-chipotle-protein-sauce",
+    title: "Smoky Chipotle Protein Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🌶️",
+    tags: ["No-Cook", "Spicy", "High-Protein"],
+    dish_category: "Sauces",
+    description:
+      "A smoky, slightly sweet Greek yogurt sauce built on chipotle powder. Perfect drizzled over tacos, burrito bowls, or grilled steak.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8B5A3C",
+
+    macro_profiles: {
+      serving_2: { calories: 65, protein_g: 6, fat_g: 1, carbs_g: 7 },
+      serving_4: { calories: 65, protein_g: 6, fat_g: 1, carbs_g: 7 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Chipotle powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Chipotle powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Greek yogurt, chipotle powder, lemon juice, paprika, garlic powder, honey, and salt."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Whisk in the water a little at a time to loosen the sauce. Chill until ready to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "roasted-garlic-parmesan-protein-sauce",
+    title: "Roasted Garlic Parmesan Protein Sauce",
+    category: "Sauce",
+    source: "Sauces",
+    icon: "🧀",
+    tags: ["No-Cook", "High-Protein", "Savory"],
+    dish_category: "Sauces",
+    description:
+      "A rich, savory Greek yogurt sauce with roasted garlic and parmesan. Wonderful over grilled chicken, steak, or roasted vegetables.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#CBB27B",
+
+    macro_profiles: {
+      serving_2: { calories: 80, protein_g: 8, fat_g: 3, carbs_g: 4 },
+      serving_4: { calories: 80, protein_g: 8, fat_g: 3, carbs_g: 4 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Greek yogurt", prep: "plain", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Greek yogurt, parmesan, garlic, lemon juice, garlic powder, black pepper, and salt."
+      },
+      {
+        step_number: 2,
+        title: "Thin & chill",
+        detail:
+          "Whisk in the water a little at a time to loosen the sauce. Chill until ready to serve."
+      }
+    ]
   }
 ];
 
@@ -11406,6 +11894,19 @@ const COLLECTIONS = [
     icon: "🌶️",
     status: "live",
     source_match: "Salsas"
+  },
+  {
+    id: "sauces",
+    title: "Sauces",
+    tag: "★ Collection · Mix & Match",
+    blurb:
+      "Creamy, protein-packed Greek yogurt sauces to top whatever meal you " +
+      "please — grilled chicken, steak, fish, veggies, or bowls.",
+    designer: "📖 Saved From Around the Web",
+    accent: "#BF7A3D",          // sauce tan-orange
+    icon: "🥄",
+    status: "live",
+    source_match: "Sauces"
   }
 ];
 
