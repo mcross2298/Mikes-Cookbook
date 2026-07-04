@@ -684,18 +684,43 @@
     }, 0);
   }
 
+  // Ingredient identity for overlap scoring below — same items regardless of
+  // which authored serving tier we read, since scaling only changes
+  // quantity, not what's on the list (see recipes-data.js's data model).
+  // Keyed the same way buildGrocery() keys a merged row (category + lower-
+  // cased item name) so "shares an ingredient" means the same thing here as
+  // it does on the actual grocery list.
+  function recipeIngredientKeys(r) {
+    var by = r.ingredients_by_serving || {};
+    var list = by[Object.keys(by)[0]] || [];
+    var keys = {};
+    list.forEach(function (ing) {
+      var item = (ing.item || "").trim();
+      if (!item) return;
+      keys[(ing.category || "Other") + "|" + item.toLowerCase()] = true;
+    });
+    return keys;
+  }
+  function mergeIngredientKeys(target, keys) {
+    Object.keys(keys).forEach(function (k) { target[k] = true; });
+  }
+
   /* ── Smart Week generation ────────────────────────────────────────────
      Scope-driven 7-day generator: pick a scope (All / Breakfast / Lunch /
      Dinner / Breakfast+Dinner / Lunch+Dinner), fill every day for the
      slots in that scope from classifyMealSlots' eligible pools. Selection
      favors recipes not yet used elsewhere in the generated week, avoids
      repeating the same dish_category on consecutive days within a slot,
-     and deprioritizes recipes cooked recently (via the cook log — which
-     the planner's own "Mark Completed" now feeds, not just the recipe
-     detail page). Anything cooked within SMW_HARD_EXCLUDE_DAYS is dropped
-     from the candidate pool outright, unless that would leave a slot with
-     no options at all, in which case it falls back to scoring the full
-     pool with the existing soft recency decay. */
+     deprioritizes recipes cooked recently (via the cook log — which the
+     planner's own "Mark Completed" now feeds, not just the recipe detail
+     page), and gives a bounded bonus to recipes that share grocery-list
+     ingredients with what's already been picked this week (so perishable
+     Produce/Meat/Dairy tends to get used up across meals instead of each
+     day pulling from a totally disjoint set). Anything cooked within
+     SMW_HARD_EXCLUDE_DAYS is dropped from the candidate pool outright,
+     unless that would leave a slot with no options at all, in which case
+     it falls back to scoring the full pool with the existing soft
+     recency decay. */
   var SMART_SCOPES = [
     { key: "all",           label: "All",                slots: ["Breakfast", "Lunch", "Dinner"] },
     { key: "breakfast",     label: "Breakfast",          slots: ["Breakfast"] },
@@ -707,16 +732,23 @@
   var SMW_RECENCY_CAP_DAYS = 60;   // never-cooked / long-ago treated as equally "fresh"
   var SMW_REPEAT_CATEGORY_PENALTY = 15;
   var SMW_HARD_EXCLUDE_DAYS = 7;   // cooked this recently: skip unless the pool would go empty
-  function smwScoreCandidate(r, usedIds, prevCategory) {
+  var SMW_OVERLAP_WEIGHT = 4;      // points per shared ingredient with recipes already picked this week
+  var SMW_OVERLAP_CAP = 6;         // cap the bonus so overlap nudges ties rather than steamrolling recency/variety
+  function smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys) {
     var score = 0;
     if (usedIds.has(r.recipe_id)) score -= 1000;
     var days = daysSinceCooked(r.recipe_id);
     score += (days == null) ? SMW_RECENCY_CAP_DAYS : Math.min(days, SMW_RECENCY_CAP_DAYS);
     if (prevCategory && r.dish_category === prevCategory) score -= SMW_REPEAT_CATEGORY_PENALTY;
+    if (usedIngredientKeys) {
+      var keys = recipeIngredientKeys(r), overlap = 0;
+      Object.keys(keys).forEach(function (k) { if (usedIngredientKeys[k]) overlap++; });
+      score += Math.min(overlap, SMW_OVERLAP_CAP) * SMW_OVERLAP_WEIGHT;
+    }
     score += Math.random() * 10; // jitter so Regenerate actually varies
     return score;
   }
-  function smwPickForSlot(slot, usedIds, prevCategory, excludeId) {
+  function smwPickForSlot(slot, usedIds, prevCategory, excludeId, usedIngredientKeys) {
     var pool = mealEligibleRecipes(slot);
     if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
     if (!pool.length) return null;
@@ -727,7 +759,7 @@
     var candidates = fresh.length ? fresh : pool;
     var best = null, bestScore = -Infinity;
     candidates.forEach(function (r) {
-      var s = smwScoreCandidate(r, usedIds, prevCategory);
+      var s = smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys);
       if (s > bestScore) { bestScore = s; best = r; }
     });
     return best;
@@ -736,14 +768,16 @@
   function smwGenerateWeek(scopeKey) {
     var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
     var usedIds = new Set();
+    var usedIngredientKeys = {};
     var prevCategoryBySlot = {};
     var grid = [];
     DAYS.forEach(function (day) {
       scope.slots.forEach(function (slot) {
-        var pick = smwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null);
+        var pick = smwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, usedIngredientKeys);
         if (pick) {
           usedIds.add(pick.recipe_id);
           prevCategoryBySlot[slot] = pick.dish_category;
+          mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(pick));
           grid.push({ day: day, slot: slot, id: pick.recipe_id });
         }
       });
@@ -751,17 +785,25 @@
     return { scope: scope, grid: grid };
   }
   // Re-pick a single day+slot, excluding its current recipe so the tap
-  // always changes something (when an alternative exists).
+  // always changes something (when an alternative exists). Ingredient
+  // overlap is scored against every OTHER slot already in the grid, so a
+  // regenerated pick still tries to match the rest of the week.
   function smwRegenerateSlot(grid, day, slot) {
     var usedIds = new Set();
-    grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
+    var usedIngredientKeys = {};
+    grid.forEach(function (g) {
+      if (g.day === day && g.slot === slot) return;
+      usedIds.add(g.id);
+      var r = recipeById(g.id);
+      if (r) mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(r));
+    });
     var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
     var dayIdx = DAYS.indexOf(day);
     var prevEntry = dayIdx > 0
       ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
       : null;
     var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
-    var pick = smwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null);
+    var pick = smwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, usedIngredientKeys);
     return pick ? pick.recipe_id : null;
   }
   // Commits a generated grid into the plan: replaces any existing meals in
@@ -2840,12 +2882,12 @@
   /* ── Time Check generation (tcw* namespace) ───────────────────────────
      Deliberately decoupled from Smart Week's own smw* scoring above (see
      that section's note) — same grid shape and the same recency +
-     dish-category-variety tie-break (smwScoreCandidate), but each day's
-     candidate pool is first narrowed to whatever fits that day's assigned
-     time bucket. A bucket with zero fits for a slot falls back to the
-     full eligible pool, so a day/slot never comes back empty just because
-     its budget was narrow. */
-  function tcwPickForSlot(slot, usedIds, prevCategory, excludeId, bucketKey) {
+     dish-category-variety + ingredient-overlap tie-break
+     (smwScoreCandidate), but each day's candidate pool is first narrowed
+     to whatever fits that day's assigned time bucket. A bucket with zero
+     fits for a slot falls back to the full eligible pool, so a day/slot
+     never comes back empty just because its budget was narrow. */
+  function tcwPickForSlot(slot, usedIds, prevCategory, excludeId, bucketKey, usedIngredientKeys) {
     var pool = mealEligibleRecipes(slot);
     if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
     var bucket = BWQ_BUCKETS.filter(function (b) { return b.key === bucketKey; })[0];
@@ -2861,7 +2903,7 @@
     var candidates = fresh.length ? fresh : pool;
     var best = null, bestScore = -Infinity;
     candidates.forEach(function (r) {
-      var s = smwScoreCandidate(r, usedIds, prevCategory);
+      var s = smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys);
       if (s > bestScore) { bestScore = s; best = r; }
     });
     return best;
@@ -2871,16 +2913,18 @@
   function tcwGenerateWeek(scopeKey, dayBuckets) {
     var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
     var usedIds = new Set();
+    var usedIngredientKeys = {};
     var prevCategoryBySlot = {};
     var grid = [];
     DAYS.forEach(function (day) {
       var bucketKey = dayBuckets[day];
       if (!bucketKey) return;
       scope.slots.forEach(function (slot) {
-        var pick = tcwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, bucketKey);
+        var pick = tcwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, bucketKey, usedIngredientKeys);
         if (pick) {
           usedIds.add(pick.recipe_id);
           prevCategoryBySlot[slot] = pick.dish_category;
+          mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(pick));
           grid.push({ day: day, slot: slot, id: pick.recipe_id });
         }
       });
@@ -2889,16 +2933,24 @@
   }
   // Re-pick a single day+slot against that day's assigned bucket, excluding
   // its current recipe so the tap always changes something when possible.
+  // Ingredient overlap is scored against every other slot already in the
+  // grid, same as smwRegenerateSlot.
   function tcwRegenerateSlot(grid, day, slot, dayBuckets) {
     var usedIds = new Set();
-    grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
+    var usedIngredientKeys = {};
+    grid.forEach(function (g) {
+      if (g.day === day && g.slot === slot) return;
+      usedIds.add(g.id);
+      var r = recipeById(g.id);
+      if (r) mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(r));
+    });
     var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
     var dayIdx = DAYS.indexOf(day);
     var prevEntry = dayIdx > 0
       ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
       : null;
     var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
-    var pick = tcwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, dayBuckets[day]);
+    var pick = tcwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, dayBuckets[day], usedIngredientKeys);
     return pick ? pick.recipe_id : null;
   }
 
