@@ -5820,6 +5820,356 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "pb-berry-yogurt-crunch-bowl",
+    title: "PB Berry Yogurt Crunch Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥣",
+    tags: ["High-Protein", "No-Bake", "Quick"],
+    dish_category: "Desserts",
+    description:
+      "A layered Greek yogurt bowl with crunchy granola, fresh blueberries and raspberries, a warm peanut butter drizzle, and dark chocolate chunks — a fast, balanced sweet snack with protein, fiber, and healthy fats.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#B5786B",
+
+    macro_profiles: {
+      serving_1: { calories: 410, protein_g: 27, fat_g: 18, carbs_g: 32 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Granola", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Peanut butter", prep: "warmed slightly", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Blueberries", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Raspberries", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Dark chocolate chunks", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Build the yogurt base",
+        detail:
+          "Spoon the Greek yogurt into a bowl and smooth it evenly."
+      },
+      {
+        step_number: 2,
+        title: "Add crunch",
+        detail:
+          "Scatter the granola generously over the yogurt."
+      },
+      {
+        step_number: 3,
+        title: "Layer the fruit",
+        detail:
+          "Add the blueberries and raspberries evenly across the bowl."
+      },
+      {
+        step_number: 4,
+        title: "Drizzle peanut butter",
+        detail:
+          "Warm the peanut butter slightly before drizzling so it spreads beautifully."
+      },
+      {
+        step_number: 5,
+        title: "Finish the bowl",
+        detail:
+          "Top with the dark chocolate chunks and a dusting of cinnamon."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-pistachio-protein-pot",
+    title: "Dark Chocolate Pistachio Protein Pot",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Quick"],
+    dish_category: "Desserts",
+    description:
+      "A two-layer Greek yogurt pot — vanilla-honey on the bottom, cocoa swirled on top — finished with chopped pistachios. Tastes like a chocolate dessert but is mostly high-protein yogurt.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#5A4632",
+
+    macro_profiles: {
+      serving_1: { calories: 280, protein_g: 28, fat_g: 9, carbs_g: 22 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pistachios", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Milk", prep: "splash, to loosen", quantity: "", unit: "", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the vanilla layer",
+        detail:
+          "Whisk half the yogurt with the protein powder and honey until smooth and thick, loosening with a splash of milk if needed."
+      },
+      {
+        step_number: 2,
+        title: "Make the chocolate layer",
+        detail:
+          "Stir the cocoa into the other half of the yogurt to make the chocolate layer."
+      },
+      {
+        step_number: 3,
+        title: "Layer the base",
+        detail:
+          "Spoon the vanilla layer into a pot or glass as the base."
+      },
+      {
+        step_number: 4,
+        title: "Add the chocolate layer",
+        detail:
+          "Spoon the chocolate layer over the top and smooth it flat."
+      },
+      {
+        step_number: 5,
+        title: "Top & chill",
+        detail:
+          "Scatter the chopped pistachios across the surface and chill until ready to eat."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crispy-apple-pie-turnovers",
+    title: "Crispy Apple Pie Turnovers",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥟",
+    tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Air-fried low-carb tortilla pockets stuffed with cinnamon apple pie filling and finished with a protein icing drizzle — a crisp, portable take on apple turnovers made in the air fryer.",
+    prep_time_mins: 15,
+    cook_time_mins: 5,
+    native_serving: 8,
+    accent: "#9C5A28",
+
+    macro_profiles: {
+      serving_8: { calories: 86, protein_g: 2, fat_g: 2, carbs_g: 15 }
+    },
+
+    scaling_options: [8],
+
+    ingredients_by_serving: {
+      serving_8: [
+        { item: "No sugar added apple pie filling", prep: "", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Low-carb tortillas", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Ground cinnamon", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cinnamon", prep: "for the brown sugar topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "for the brown sugar topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Vanilla whey/casein protein powder", prep: "for the icing", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Powdered sugar", prep: "for the icing", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "for the icing", quantity: "4", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the filling",
+        detail:
+          "Add the apple pie filling and cinnamon to a bowl. Use a knife to cut the apples into smaller pieces."
+      },
+      {
+        step_number: 2,
+        title: "Cut the tortillas",
+        detail:
+          "Cut each tortilla in half to form 8 cone-shaped pockets."
+      },
+      {
+        step_number: 3,
+        title: "Fill the pockets",
+        detail:
+          "Add 1/8 of the pie filling to each tortilla cone. Repeat for all 8 pockets."
+      },
+      {
+        step_number: 4,
+        title: "Air fry",
+        detail:
+          "Spray both sides with non-stick cooking spray and air fry at 400°F for 3 to 5 minutes until golden."
+      },
+      {
+        step_number: 5,
+        title: "Make the icing & finish",
+        detail:
+          "Make the protein icing by mixing the dry ingredients, then slowly add cold water until it reaches icing consistency. If too thin, refrigerate to thicken, then drizzle over the turnovers and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "reeses-uncrustable-protein-pop-tarts",
+    title: "Reese's Uncrustable Protein Pop Tarts",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥧",
+    tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Low-calorie bread sealed around a protein peanut butter filling, air-fried until golden, then topped with chocolate protein frosting, mini Reese's cups, and crushed Reese's Puffs.",
+    prep_time_mins: 20,
+    cook_time_mins: 5,
+    native_serving: 4,
+    accent: "#6E4A2E",
+
+    macro_profiles: {
+      serving_4: { calories: 270, protein_g: 23, fat_g: 6, carbs_g: 31 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Low-calorie bread of choice", prep: "", quantity: "8", unit: "slices", category: "Pantry" },
+        { item: "Egg whites", prep: "for sealing", quantity: "50", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein protein powder", prep: "for the PB filling", quantity: "45", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Chocolate whey/casein protein powder", prep: "for the frosting", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Unsweetened baking cocoa", prep: "for the frosting", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Mini Reese's cups", prep: "for topping", quantity: "", unit: "", category: "Pantry" },
+        { item: "Reese's Puffs cereal", prep: "crushed, for topping", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the PB filling",
+        detail:
+          "Mix the vanilla protein powder, powdered peanut butter, sweetener, and salt. Slowly add cold water until thick, then place in the fridge to chill."
+      },
+      {
+        step_number: 2,
+        title: "Make the chocolate frosting",
+        detail:
+          "Mix the chocolate protein powder and cocoa the same way — add cold water until thick and smooth, then place in the fridge."
+      },
+      {
+        step_number: 3,
+        title: "Fill the first side",
+        detail:
+          "Lay one slice of bread flat and brush egg whites around the edges. Add 1/4 of the PB filling to the center."
+      },
+      {
+        step_number: 4,
+        title: "Seal",
+        detail:
+          "Take a second slice, brush egg whites on the bottom edges, place on top, then brush the top edges and press down firmly to seal."
+      },
+      {
+        step_number: 5,
+        title: "Trim & repeat",
+        detail:
+          "Trim the crusts and crimp the edges with a fork. Repeat for all 4 pop tarts."
+      },
+      {
+        step_number: 6,
+        title: "Air fry",
+        detail:
+          "Air fry at 400°F for 4 to 5 minutes, spraying the tops lightly and flipping once golden."
+      },
+      {
+        step_number: 7,
+        title: "Top & serve",
+        detail:
+          "Top with the chocolate frosting, mini Reese's cups, and crushed Reese's Puffs. Enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "oreo-cookies-and-cream-protein-ice-cream",
+    title: "Oreo Cookies & Cream Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍪",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A blended vanilla protein base spun into soft-serve texture in a Creami-style ice cream maker, then mixed with crushed Oreo Thins for an oversized single-pint cookies-and-cream treat.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#4A4A52",
+
+    macro_profiles: {
+      serving_1: { calories: 390, protein_g: 37, fat_g: 10, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Fat-free milk", prep: "", quantity: "225", unit: "g", category: "Dairy" },
+        { item: "Unsweetened vanilla almond milk", prep: "", quantity: "225", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Sugar-free white chocolate pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Oreo Thins", prep: "for mix-in", quantity: "4", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the base",
+        detail:
+          "Add all ingredients except the Oreos into your ice cream maker pint. Use a small hand blender and mix until completely smooth, with no clumps at the bottom or sides."
+      },
+      {
+        step_number: 2,
+        title: "Freeze solid",
+        detail:
+          "Add the pint to the freezer and freeze until completely solid — overnight works well."
+      },
+      {
+        step_number: 3,
+        title: "Spin",
+        detail:
+          "Once frozen solid, process the pint on the machine's \"Lite Ice Cream\" function. One spin is usually enough to get it nice and creamy."
+      },
+      {
+        step_number: 4,
+        title: "Add the mix-in",
+        detail:
+          "Use a spoon to make a hole down the center of the ice cream and add the Oreo Thins so they get evenly distributed."
+      },
+      {
+        step_number: 5,
+        title: "Mix in & serve",
+        detail:
+          "Process the pint again on the \"Mix-In\" function to break everything up and mix it throughout, then it's ready to enjoy."
+      }
+    ]
+  },
+
+  {
     recipe_id: "pesto-chicken-caesar-pasta-salad",
     title: "Pesto Chicken Caesar Pasta Salad",
     category: "Meal Prep",
