@@ -8787,6 +8787,691 @@ const RECIPES = [
         detail: "Slice the sandwiches in half and serve warm."
       }
     ]
+  },
+
+  {
+    recipe_id: "chili-oil-caramelized-onion-shrimp-pasta",
+    title: "Chili Oil Caramelized Onion Shrimp Pasta",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🍤",
+    tags: ["Skillet", "Spicy", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Seared shrimp and deeply caramelized onions tossed with high-protein pasta in a creamy chili oil sauce, finished with Parmesan and chili flakes.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#B8442E",
+
+    macro_profiles: {
+      serving_4: { calories: 565, protein_g: 46, fat_g: 20, carbs_g: 48 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Large shrimp", prep: "peeled and deveined", quantity: "500", unit: "g", category: "Meat" },
+        { item: "Olive oil", prep: "for the shrimp", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste, for the shrimp", quantity: "", unit: "", category: "Pantry" },
+        { item: "Onion", prep: "thinly sliced (about 200g)", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Olive oil", prep: "for the onions", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tsp", category: "Dairy" },
+        { item: "Brown sugar or honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "pinch, for the onions", quantity: "", unit: "", category: "Pantry" },
+        { item: "High-protein spaghetti or linguine", prep: "", quantity: "225", unit: "g", category: "Pantry" },
+        { item: "Chili oil", prep: "adjust for spice level", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Low-sodium chicken broth", prep: "or pasta water", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Light cream", prep: "or half-and-half", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "softened", quantity: "60", unit: "g", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Chili flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste, for the sauce", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley or chives", prep: "chopped, optional", quantity: "1", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Caramelize the onions",
+        detail:
+          "In a skillet over medium-low heat, add olive oil and butter. Once melted, add the sliced onions and a pinch of salt. Stir occasionally for 12–15 minutes until soft and golden. Add the brown sugar or honey and cook another 2 minutes. Remove and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Cook the pasta",
+        detail:
+          "Boil the high-protein pasta in salted water according to package instructions. Reserve 1/2 cup pasta water before draining."
+      },
+      {
+        step_number: 3,
+        title: "Cook the shrimp",
+        detail:
+          "In the same skillet, heat olive oil over medium heat. Add shrimp, garlic powder, paprika, salt, and pepper. Cook 2–3 minutes per side until pink and opaque. Remove from the pan and set aside."
+      },
+      {
+        step_number: 4,
+        title: "Make the sauce",
+        detail:
+          "In the skillet, add the chili oil and minced garlic. Sauté for 30 seconds until fragrant. Add the caramelized onions, chicken broth (or pasta water), and cream. Stir and simmer for 2–3 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Add the cheeses",
+        detail:
+          "Whisk in the cream cheese until melted and smooth, then stir in the Parmesan. Season with chili flakes, salt, and pepper."
+      },
+      {
+        step_number: 6,
+        title: "Combine everything",
+        detail:
+          "Add the cooked pasta and shrimp to the skillet. Toss well until coated in sauce, adding a splash of pasta water if needed to thin it out."
+      },
+      {
+        step_number: 7,
+        title: "Serve",
+        detail: "Plate the pasta and top with extra chili oil, chili flakes, and chopped parsley or chives for garnish."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "taco-beef-sweet-potato-bowl",
+    title: "Taco Beef Sweet Potato Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🌮",
+    tags: ["High-Protein", "High-Fiber", "Single-Serving"],
+    dish_category: "Salads & Slaws",
+    description:
+      "A high-protein, high-fiber taco bowl — roasted sweet potato, browned lean ground beef, and avocado over shredded lettuce with a tangy Greek yogurt-lime crema.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 1,
+    accent: "#C77B4A",
+
+    macro_profiles: {
+      serving_1: { calories: 540, protein_g: 42, fat_g: 24, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Lean ground beef", prep: "90/10", quantity: "400", unit: "g", category: "Meat" },
+        { item: "Sweet potato", prep: "cubed", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Shredded lettuce", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Taco seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black beans", prep: "optional blood-sugar-boost add-in", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Ground flaxseed", prep: "optional blood-sugar-boost add-in, in place of black beans", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Feta cheese", prep: "crumbled, optional blood-sugar-boost add-in", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Pumpkin seeds", prep: "optional blood-sugar-boost add-in", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the sweet potato",
+        detail:
+          "Toss the cubes in olive oil, salt, and pepper, then roast until caramelized and tender at the edges."
+      },
+      {
+        step_number: 2,
+        title: "Brown the beef",
+        detail:
+          "Cook the ground beef over high heat until deeply browned, then stir in the taco seasoning with a splash of water until glossy."
+      },
+      {
+        step_number: 3,
+        title: "Whisk the sauce",
+        detail: "Stir the Greek yogurt, lime juice, and cilantro together for a cool, tangy crema."
+      },
+      {
+        step_number: 4,
+        title: "Build the bowl",
+        detail: "Lay down the lettuce, then arrange the beef, sweet potato, and avocado in sections."
+      },
+      {
+        step_number: 5,
+        title: "Finish",
+        detail: "Spoon the yogurt-lime sauce alongside and season everything to taste."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-ranch-turkey-burrito-bowl",
+    title: "Buffalo Ranch Turkey Burrito Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🦃",
+    tags: ["Quick", "High-Protein", "Single-Serving"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Buffalo-sauced ground turkey over rice and black beans with celery, carrots, ranch, and Greek yogurt — a quick, tangy single-bowl dinner.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 1,
+    accent: "#A6472E",
+
+    macro_profiles: {
+      serving_1: { calories: 451, protein_g: 50, fat_g: 7, carbs_g: 43 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Extra lean ground turkey", prep: "", quantity: "120", unit: "g", category: "Meat" },
+        { item: "Rice", prep: "cooked", quantity: "90", unit: "g", category: "Pantry" },
+        { item: "Black beans", prep: "", quantity: "70", unit: "g", category: "Pantry" },
+        { item: "Celery and carrot mix", prep: "", quantity: "60", unit: "g", category: "Produce" },
+        { item: "Buffalo sauce", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Light ranch dressing", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Non-fat Greek yogurt", prep: "", quantity: "30", unit: "g", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the turkey",
+        detail: "Cook the turkey and mix with buffalo sauce."
+      },
+      {
+        step_number: 2,
+        title: "Heat the base",
+        detail: "Heat the rice and beans."
+      },
+      {
+        step_number: 3,
+        title: "Add the vegetables",
+        detail: "Add the celery and carrots to the bowl."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail: "Top with ranch and Greek yogurt, then serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-fajita-sweet-potato-bowl",
+    title: "Chicken Fajita Sweet Potato Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🫑",
+    tags: ["Quick", "High-Protein", "Single-Serving"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Seasoned chicken breast, roasted sweet potato, and sautéed fajita peppers and onions over black beans, topped with Greek yogurt and lime.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#BE6A2E",
+
+    macro_profiles: {
+      serving_1: { calories: 472, protein_g: 48, fat_g: 9, carbs_g: 42 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Chicken breast", prep: "", quantity: "120", unit: "g", category: "Meat" },
+        { item: "Sweet potato", prep: "roasted", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Fajita peppers and onions", prep: "", quantity: "80", unit: "g", category: "Produce" },
+        { item: "Black beans", prep: "", quantity: "50", unit: "g", category: "Pantry" },
+        { item: "Non-fat Greek yogurt", prep: "", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Taco seasoning", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Season and cook the chicken breast."
+      },
+      {
+        step_number: 2,
+        title: "Roast the sweet potatoes",
+        detail: "Roast the sweet potatoes until tender."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the peppers & onions",
+        detail: "Sauté the fajita peppers and onions."
+      },
+      {
+        step_number: 4,
+        title: "Assemble the bowl",
+        detail: "Assemble the bowl with the sweet potato base."
+      },
+      {
+        step_number: 5,
+        title: "Top & serve",
+        detail: "Top with Greek yogurt and lime."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-meatball-quinoa-bowl",
+    title: "Chicken Meatball Quinoa Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🧆",
+    tags: ["Mediterranean", "High-Protein", "Meal-Prep"],
+    dish_category: "Salads & Slaws",
+    description:
+      "A high-protein Mediterranean bowl of pan-fried chicken meatballs, quinoa, cherry tomatoes, cucumber, kalamata olives, and feta with tzatziki.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#6E8C6A",
+
+    macro_profiles: {
+      serving_2: { calories: 510, protein_g: 44, fat_g: 20, carbs_g: 40 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground chicken", prep: "", quantity: "400", unit: "g", category: "Meat" },
+        { item: "Quinoa", prep: "cooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Cherry tomatoes", prep: "halved", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Cucumber", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Kalamata olives", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Feta cheese", prep: "crumbled", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Tzatziki", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Pumpkin seeds or hemp seeds", prep: "optional blood-sugar-boost add-in", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado", prep: "sliced, optional blood-sugar-boost add-in", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Chickpeas", prep: "roasted, optional blood-sugar-boost add-in", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the meatballs",
+        detail:
+          "Combine the ground chicken with garlic, oregano, parsley, salt, and pepper, then roll into evenly sized balls."
+      },
+      {
+        step_number: 2,
+        title: "Cook until golden",
+        detail: "Pan-fry or bake the meatballs until browned outside and cooked through, so they stay juicy in the center."
+      },
+      {
+        step_number: 3,
+        title: "Build the salad",
+        detail: "Toss the tomatoes, cucumber, and olives with a little olive oil for a fresh, briny side."
+      },
+      {
+        step_number: 4,
+        title: "Assemble the bowl",
+        detail: "Spoon the quinoa in, add the meatballs and salad in sections, then crumble feta over the top."
+      },
+      {
+        step_number: 5,
+        title: "Finish",
+        detail: "Add a generous dollop of tzatziki and a final scatter of parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "philly-cheesesteak-burrito-bowl",
+    title: "Philly Cheesesteak Burrito Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🥩",
+    tags: ["Quick", "High-Protein", "Single-Serving"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Thin-sliced sirloin steak, crispy roasted potatoes, and sautéed peppers, onions, and mushrooms with melted mozzarella and a dollop of Greek yogurt.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 1,
+    accent: "#8B5A3C",
+
+    macro_profiles: {
+      serving_1: { calories: 486, protein_g: 47, fat_g: 18, carbs_g: 34 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Lean sirloin steak", prep: "", quantity: "120", unit: "g", category: "Meat" },
+        { item: "Potatoes", prep: "roasted", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Peppers and onions", prep: "sautéed", quantity: "80", unit: "g", category: "Produce" },
+        { item: "Light mozzarella cheese", prep: "", quantity: "25", unit: "g", category: "Dairy" },
+        { item: "Non-fat Greek yogurt", prep: "", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Mushrooms", prep: "", quantity: "50", unit: "g", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the steak",
+        detail: "Cook the steak to desired doneness and slice thinly."
+      },
+      {
+        step_number: 2,
+        title: "Roast the potatoes",
+        detail: "Roast the potatoes at 425°F (220°C) until crispy."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the vegetables",
+        detail: "Sauté the peppers, onions, and mushrooms."
+      },
+      {
+        step_number: 4,
+        title: "Assemble the bowl",
+        detail: "Assemble the bowl and sprinkle with cheese."
+      },
+      {
+        step_number: 5,
+        title: "Finish",
+        detail: "Add Greek yogurt on top."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "high-protein-turkey-chili-bowl",
+    title: "High Protein Turkey Chili Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🌶️",
+    tags: ["Chili", "High-Protein", "High-Fiber"],
+    dish_category: "Soups, Stews & Chilis",
+    description:
+      "A quick, deeply browned turkey chili with black beans, tomatoes, and jalapeño, finished with cheese, Greek yogurt, and fresh cilantro.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 1,
+    accent: "#A83A2E",
+
+    macro_profiles: {
+      serving_1: { calories: 470, protein_g: 42, fat_g: 18, carbs_g: 29 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Lean ground turkey", prep: "", quantity: "150", unit: "g", category: "Meat" },
+        { item: "Black beans", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Tomatoes", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Jalapeño", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Shredded cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "", quantity: "", unit: "", category: "Produce" },
+        { item: "Chili seasoning", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the turkey",
+        detail:
+          "Cook the turkey until deeply browned, because caramelization builds the chili's flavor base."
+      },
+      {
+        step_number: 2,
+        title: "Add the aromatics",
+        detail: "Stir in the onion and jalapeño until softened and fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Build the chili",
+        detail: "Add tomatoes, beans, and seasoning before simmering until thick and rich."
+      },
+      {
+        step_number: 4,
+        title: "Let it develop flavor",
+        detail: "Allow everything to simmer slowly, because chili always tastes better with time."
+      },
+      {
+        step_number: 5,
+        title: "Add the toppings",
+        detail: "Finish with cheese, Greek yogurt, and fresh cilantro."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-rainbow-veggie-rice-bowl",
+    title: "Chicken & Rainbow Veggie Rice Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🌈",
+    tags: ["Grilled", "High-Protein", "Meal-Prep"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Grilled chicken breast over brown rice with tender-crisp bell peppers, broccoli, and green beans for a colorful, veggie-packed bowl.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#4C8A5E",
+
+    macro_profiles: {
+      serving_1: { calories: 495, protein_g: 42, fat_g: 15, carbs_g: 41 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Chicken breast strips", prep: "", quantity: "150", unit: "g", category: "Meat" },
+        { item: "Brown rice", prep: "cooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Red bell pepper", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Yellow bell pepper", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Broccoli florets", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Green beans", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the rice",
+        detail:
+          "Prepare the brown rice ahead of time, because warm rice creates the perfect base for the vegetables."
+      },
+      {
+        step_number: 2,
+        title: "Season the chicken",
+        detail:
+          "Season generously with salt and pepper before grilling until golden and lightly charred."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the vegetables",
+        detail:
+          "Cook the peppers, broccoli, and green beans until tender-crisp, because texture makes the bowl more satisfying."
+      },
+      {
+        step_number: 4,
+        title: "Slice & rest",
+        detail: "Allow the chicken to rest briefly before slicing to keep every piece juicy."
+      },
+      {
+        step_number: 5,
+        title: "Layer the bowl",
+        detail: "Arrange the rice first and place the vegetables around the edges for variety in every bite."
+      },
+      {
+        step_number: 6,
+        title: "Serve warm",
+        detail: "Top with chicken and freshly cracked pepper before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-cilantro-chicken-quinoa-bowl",
+    title: "Creamy Cilantro Chicken Quinoa Bowl",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🥑",
+    tags: ["Quick", "High-Protein", "Meal-Prep"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Seared chicken breast over quinoa with roasted cherry tomatoes, corn, and avocado, drizzled with a creamy cilantro-lime Greek yogurt sauce.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#CBA232",
+
+    macro_profiles: {
+      serving_1: { calories: 540, protein_g: 48, fat_g: 22, carbs_g: 36 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Chicken breast", prep: "", quantity: "150", unit: "g", category: "Meat" },
+        { item: "Quinoa", prep: "cooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Cherry tomatoes", prep: "roasted", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Corn kernels", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Green onion", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt and pepper", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the chicken",
+        detail:
+          "Rub the chicken breast with salt and pepper generously, because simple seasoning lets the fresh bowl ingredients shine naturally."
+      },
+      {
+        step_number: 2,
+        title: "Grill until golden",
+        detail:
+          "Cook the chicken in a hot skillet for 5 to 6 minutes per side until deeply golden and juicy throughout."
+      },
+      {
+        step_number: 3,
+        title: "Roast the tomatoes",
+        detail:
+          "Roast the cherry tomatoes until they soften and become sweet, because the concentrated flavor makes the bowl taste richer."
+      },
+      {
+        step_number: 4,
+        title: "Mix the creamy sauce",
+        detail:
+          "Whisk Greek yogurt, cilantro, lime juice, and a pinch of salt together until smooth and creamy."
+      },
+      {
+        step_number: 5,
+        title: "Build the bowl",
+        detail:
+          "Arrange quinoa, avocado, corn, and tomatoes evenly before placing sliced chicken over everything."
+      },
+      {
+        step_number: 6,
+        title: "Finish & serve",
+        detail: "Drizzle generously with cilantro sauce and sprinkle green onions over the top for freshness."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-fajita-burrito-bowls",
+    title: "Chicken Fajita Burrito Bowls",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🌯",
+    tags: ["Meal-Prep", "Tex-Mex", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Fajita-seasoned chicken and sautéed peppers and onions over cilantro lime rice with black beans, salsa, and cheese — batch-friendly and ready in 20 minutes.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#BF6E35",
+
+    macro_profiles: {
+      serving_4: { calories: 498, protein_g: 52, fat_g: 12, carbs_g: 43 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Cilantro lime rice", prep: "cooked", quantity: "500", unit: "g", category: "Pantry" },
+        { item: "Bell peppers", prep: "", quantity: "2", unit: "(300g)", category: "Produce" },
+        { item: "Onion", prep: "", quantity: "1", unit: "large (150g)", category: "Produce" },
+        { item: "Black beans", prep: "", quantity: "120", unit: "g", category: "Pantry" },
+        { item: "Salsa", prep: "", quantity: "80", unit: "g", category: "Pantry" },
+        { item: "Light shredded cheese", prep: "", quantity: "60", unit: "g", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "15", unit: "ml", category: "Pantry" },
+        { item: "Fajita seasoning", prep: "", quantity: "15", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the chicken",
+        detail: "Toss the chicken with fajita seasoning."
+      },
+      {
+        step_number: 2,
+        title: "Cook & slice",
+        detail: "Cook the chicken in a skillet and slice."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the vegetables",
+        detail: "Sauté the peppers and onions."
+      },
+      {
+        step_number: 4,
+        title: "Assemble & serve",
+        detail:
+          "Assemble the bowls with rice, beans, vegetables, chicken, salsa, and cheese. Divide into 4 servings."
+      }
+    ]
   }
 ];
 
