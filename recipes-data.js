@@ -5451,6 +5451,375 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "vanilla-cake-batter-protein-popsicles",
+    title: "Vanilla Cake Batter Protein Popsicles",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍭",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "Birthday-cake-flavored popsicles made from Greek yogurt, vanilla protein powder, and rainbow sprinkles, finished with a melted white chocolate drizzle — a make-ahead freezer treat with real protein folded in.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 6,
+    accent: "#D98FC0",
+
+    macro_profiles: {
+      serving_6: { calories: 120, protein_g: 12, fat_g: 3, carbs_g: 9 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Milk of choice", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "2", unit: "scoops", category: "Pantry" },
+        { item: "Sugar-free vanilla pudding mix", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Rainbow sprinkles", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "White chocolate chips", prep: "melted, to drizzle", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the base",
+        detail:
+          "Whisk the Greek yogurt, milk, protein powder, pudding mix, and vanilla together until completely smooth and pourable."
+      },
+      {
+        step_number: 2,
+        title: "Let it thicken",
+        detail:
+          "Let the mix sit for a couple of minutes so the pudding starts to thicken it slightly, which helps the sprinkles stay suspended."
+      },
+      {
+        step_number: 3,
+        title: "Stir in sprinkles",
+        detail:
+          "Stir in the rainbow sprinkles quickly, working fast so the colors do not bleed into the batter."
+      },
+      {
+        step_number: 4,
+        title: "Fill the molds",
+        detail:
+          "Pour the mixture into popsicle molds and tap them on the counter to knock out any air bubbles."
+      },
+      {
+        step_number: 5,
+        title: "Freeze",
+        detail:
+          "Push in the sticks and freeze overnight until solid all the way through."
+      },
+      {
+        step_number: 6,
+        title: "Release & drizzle",
+        detail:
+          "Run the molds under warm water to release the pops, then drizzle with the melted white chocolate right before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pistachio-chocolate-dipped-yogurt-bars",
+    title: "Pistachio Chocolate-Dipped Yogurt Bars",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "Frozen Greek yogurt bars dipped in a dark chocolate shell and finished with warmed pistachio butter and chopped pistachios — a snappy, creamy freezer treat ready whenever the craving hits.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#7C9A4E",
+
+    macro_profiles: {
+      serving_2: { calories: 210, protein_g: 9, fat_g: 11, carbs_g: 19 },
+      serving_4: { calories: 210, protein_g: 9, fat_g: 11, carbs_g: 19 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Shelled pistachios", prep: "chopped", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Pistachio butter", prep: "for drizzling", quantity: "1/2", unit: "tbsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "1 1/2", unit: "cups", category: "Dairy" },
+        { item: "Honey or maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Shelled pistachios", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Pistachio butter", prep: "for drizzling", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Fill the molds",
+        detail:
+          "Stir the Greek yogurt, honey, and vanilla together until smooth, then spoon it into popsicle bar molds and freeze overnight until solid."
+      },
+      {
+        step_number: 2,
+        title: "Melt the chocolate",
+        detail:
+          "Melt the chocolate chips with the coconut oil in short bursts, stirring between each one, until it pours in a smooth ribbon."
+      },
+      {
+        step_number: 3,
+        title: "Dip the bars",
+        detail:
+          "Pop the bars out of the molds and dip or spoon the chocolate over each one, letting it set on contact with the frozen yogurt."
+      },
+      {
+        step_number: 4,
+        title: "Finish & freeze",
+        detail:
+          "Drizzle with the warmed pistachio butter, scatter the chopped pistachios over the top, and return to the freezer until ready to eat."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "passionfruit-mango-cheesecake-cups",
+    title: "Passionfruit & Mango Cheesecake Cups",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥭",
+    tags: ["No-Bake", "Make-Ahead", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "A no-bake cheesecake cup with a graham cracker crust, a mango-swirled cream cheese and Greek yogurt filling, and a glossy layer of fresh passionfruit pulp — a cool, tropical treat that needs no oven.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#EFA24A",
+
+    macro_profiles: {
+      serving_2: { calories: 290, protein_g: 8, fat_g: 15, carbs_g: 32 },
+      serving_4: { calories: 290, protein_g: 8, fat_g: 15, carbs_g: 32 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Graham cracker crumbs", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Butter", prep: "melted", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Cream cheese", prep: "softened", quantity: "4", unit: "oz", category: "Dairy" },
+        { item: "Plain Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Powdered sugar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Mango puree", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh passionfruit", prep: "pulp scooped", quantity: "2", unit: "", category: "Produce" },
+        { item: "Mango", prep: "diced, to top", quantity: "1/4", unit: "cup", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Graham cracker crumbs", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Butter", prep: "melted", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Cream cheese", prep: "softened", quantity: "8", unit: "oz", category: "Dairy" },
+        { item: "Plain Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Powdered sugar", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Mango puree", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh passionfruit", prep: "pulp scooped", quantity: "4", unit: "", category: "Produce" },
+        { item: "Mango", prep: "diced, to top", quantity: "1/2", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Press the crust",
+        detail:
+          "Stir the graham crumbs and melted butter together until they look like wet sand, then press them firmly into the bottom of small serving glasses."
+      },
+      {
+        step_number: 2,
+        title: "Beat the filling",
+        detail:
+          "Beat the cream cheese, Greek yogurt, powdered sugar, and vanilla until completely smooth with no lumps hiding in there."
+      },
+      {
+        step_number: 3,
+        title: "Fold & spoon",
+        detail:
+          "Fold the mango puree through the cream until the whole thing turns a soft sunset yellow, then spoon it over the bases."
+      },
+      {
+        step_number: 4,
+        title: "Top with passionfruit",
+        detail:
+          "Tap each glass gently on the counter so the filling settles flat, then spoon the passionfruit pulp over the top in a glossy layer."
+      },
+      {
+        step_number: 5,
+        title: "Chill & finish",
+        detail:
+          "Chill for at least 2 hours so it sets, then finish with the diced mango right before you serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-peanut-butter-freezer-bark",
+    title: "Dark Chocolate Peanut Butter Freezer Bark",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "A protein-rich peanut butter and oat base topped with melted dark chocolate and flaky sea salt, frozen and sliced into bark squares — a satisfying make-ahead treat for the freezer.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#3C2A1E",
+
+    macro_profiles: {
+      serving_2: { calories: 310, protein_g: 14, fat_g: 18, carbs_g: 24 },
+      serving_4: { calories: 310, protein_g: 14, fat_g: 18, carbs_g: 24 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Natural peanut butter", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Rolled oats", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Peanuts", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1/2", unit: "scoop", category: "Pantry" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate (85%)", prep: "melted", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Flaky sea salt", prep: "to finish", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Natural peanut butter", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Peanuts", prep: "chopped", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Honey or maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate (85%)", prep: "melted", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Flaky sea salt", prep: "to finish", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Stir the peanut butter, oats, chopped peanuts, protein powder, and honey together until thick and sticky."
+      },
+      {
+        step_number: 2,
+        title: "Press and layer",
+        detail:
+          "Press the mixture firmly into a parchment-lined tin in an even layer."
+      },
+      {
+        step_number: 3,
+        title: "Top with chocolate",
+        detail:
+          "Melt the dark chocolate with the coconut oil and pour it over the base, spreading to the edges."
+      },
+      {
+        step_number: 4,
+        title: "Freeze and cut",
+        detail:
+          "Sprinkle with flaky salt, freeze until firm, then slice into squares."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "blackberry-pistachio-protein-pot",
+    title: "Blackberry Pistachio Protein Pot",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🫐",
+    tags: ["High-Protein", "Make-Ahead", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "A layered single-serving pot of soaked oats, jammy blackberry compote, and a whipped Greek yogurt protein base, topped with crushed pistachios, fresh mint, and blackberries.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#5C3A6E",
+
+    macro_profiles: {
+      serving_1: { calories: 440, protein_g: 38, fat_g: 15, carbs_g: 40 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "dairy or unsweetened almond", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt or Skyr", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Blackberries", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Crushed pistachios", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh mint and a few blackberries", prep: "to garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Soak the oats",
+        detail:
+          "Stir the oats, milk, chia seeds, and vanilla together. Chill until thick and creamy (overnight is best, 30 minutes minimum)."
+      },
+      {
+        step_number: 2,
+        title: "Whip the base",
+        detail:
+          "Beat the Greek yogurt, cream cheese, protein powder, and honey together until thick and smooth."
+      },
+      {
+        step_number: 3,
+        title: "Make the compote",
+        detail:
+          "Mash the blackberries and let them sit 10 minutes until thickened and jammy."
+      },
+      {
+        step_number: 4,
+        title: "Layer it up",
+        detail:
+          "Spoon the soaked oats into a glass, then the blackberry compote, then the whipped protein base, and finish with the crushed pistachios."
+      },
+      {
+        step_number: 5,
+        title: "Garnish",
+        detail:
+          "Finish with a few fresh blackberries and a sprig of mint."
+      }
+    ]
+  },
+
+  {
     recipe_id: "pesto-chicken-caesar-pasta-salad",
     title: "Pesto Chicken Caesar Pasta Salad",
     category: "Meal Prep",
