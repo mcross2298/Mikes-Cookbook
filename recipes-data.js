@@ -6609,6 +6609,300 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "cherry-pie-turnovers",
+    title: "Cherry Pie Turnovers",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍒",
+    tags: ["High-Protein", "Air Fryer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "Air-fried low-carb tortilla pockets stuffed with no-sugar-added cherry pie filling and finished with a protein icing drizzle — a crisp, portable turnover made in the air fryer.",
+    prep_time_mins: 15,
+    cook_time_mins: 5,
+    native_serving: 10,
+    accent: "#A3324A",
+
+    macro_profiles: {
+      serving_10: { calories: 75, protein_g: 3, fat_g: 2, carbs_g: 14 }
+    },
+
+    scaling_options: [10],
+
+    ingredients_by_serving: {
+      serving_10: [
+        { item: "No sugar added cherry pie filling", prep: "", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Low-carb tortillas", prep: "", quantity: "5", unit: "", category: "Pantry" },
+        { item: "Vanilla whey/casein protein powder", prep: "for the icing", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Powdered sugar", prep: "for the icing", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "for the icing", quantity: "4", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the filling",
+        detail:
+          "Add the whole can of cherry pie filling into a bowl."
+      },
+      {
+        step_number: 2,
+        title: "Cut the tortillas",
+        detail:
+          "Cut each tortilla in half to form 10 cone-shaped pockets."
+      },
+      {
+        step_number: 3,
+        title: "Fill the pockets",
+        detail:
+          "Add 1/10th of your pie filling to each tortilla cone. Repeat for all 10 pockets."
+      },
+      {
+        step_number: 4,
+        title: "Air fry",
+        detail:
+          "Once all 10 pockets are made, spray both sides with non-stick cooking spray and air fry at 400°F for 3 to 5 minutes until golden."
+      },
+      {
+        step_number: 5,
+        title: "Make the icing & finish",
+        detail:
+          "Make the protein icing by adding all the dry ingredients into a bowl and mixing, then add cold water and mix until you have an icing. Be careful not to add too much water — it thickens up fast in the fridge. Drizzle over the turnovers and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pretzel-milk-toffee-crunch-protein-ice-cream",
+    title: "Pretzel Milk Toffee Crunch Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥨",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A Creami-style protein ice cream steeped from pretzel-infused milk, mixed with dark chocolate chips, toffee bits, and crushed pretzels, then finished with a low-calorie caramel drizzle.",
+    prep_time_mins: 20,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#8C6239",
+
+    macro_profiles: {
+      serving_1: { calories: 449, protein_g: 52, fat_g: 10, carbs_g: 35 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Unsweetened almond milk", prep: "", quantity: "240", unit: "g", category: "Dairy" },
+        { item: "Fat-free milk", prep: "for steeping the pretzels", quantity: "240", unit: "g", category: "Dairy" },
+        { item: "Pretzels", prep: "for infusing", quantity: "56", unit: "g", category: "Pantry" },
+        { item: "Fat-free milk", prep: "to bring the base to 450g", quantity: "150", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein protein powder", prep: "", quantity: "45", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Butter extract", prep: "", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "for mix-in", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Heath toffee bits", prep: "for mix-in", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Pretzels", prep: "crushed, for mix-in", quantity: "7", unit: "g", category: "Pantry" },
+        { item: "Sugar-free pancake syrup", prep: "for the caramel", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Biscoff cookie butter", prep: "melted, for the caramel", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Caramel emulsion", prep: "1 drop, for the caramel", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Steep the pretzels",
+        detail:
+          "Add the almond milk, 240g of fat-free milk, and the pretzels to a container. Press the pretzels into the milk so they're fully submerged, then cover and refrigerate overnight."
+      },
+      {
+        step_number: 2,
+        title: "Strain",
+        detail:
+          "The next day, strain the mixture through a fine mesh strainer or cheesecloth. You should have about 300g of pretzel-infused milk. Discard the soaked pretzels."
+      },
+      {
+        step_number: 3,
+        title: "Blend",
+        detail:
+          "Add 150g more fat-free milk to bring the total milk base to 450g. Add the protein powder, pudding mix, sweetener, butter extract, and vanilla extract. Blend until completely smooth."
+      },
+      {
+        step_number: 4,
+        title: "Freeze",
+        detail:
+          "Pour into a pint and freeze overnight, leaving the lid off to help prevent a hump from forming."
+      },
+      {
+        step_number: 5,
+        title: "Spin",
+        detail:
+          "Spin on the Ice Cream setting. It will look dry and crumbly at first — that's normal and helps create a thicker final texture."
+      },
+      {
+        step_number: 6,
+        title: "Mix in",
+        detail:
+          "Make a small well in the center, add the chocolate chips, toffee bits, and crushed pretzels, then run the Mix-In cycle."
+      },
+      {
+        step_number: 7,
+        title: "Drizzle & serve",
+        detail:
+          "Whisk together the pancake syrup, melted Biscoff, and caramel emulsion, then top with a drizzle of the low-calorie caramel and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "funfetti-protein-cheesecake-cannolis",
+    title: "Funfetti Protein Cheesecake Cannolis",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🎉",
+    tags: ["High-Protein", "No-Bake", "Party"],
+    dish_category: "Desserts",
+    description:
+      "Crisp pizzelle shells shaped into cannoli tubes and piped with a whipped cream cheese and Greek yogurt cheesecake filling, finished with sprinkles at each end.",
+    prep_time_mins: 30,
+    cook_time_mins: 0,
+    native_serving: 20,
+    accent: "#B85C9E",
+
+    macro_profiles: {
+      serving_20: { calories: 57, protein_g: 4, fat_g: 1, carbs_g: 8 }
+    },
+
+    scaling_options: [20],
+
+    ingredients_by_serving: {
+      serving_20: [
+        { item: "Vanilla pizzelles", prep: "", quantity: "20", unit: "", category: "Pantry" },
+        { item: "Fat-free cream cheese", prep: "", quantity: "220", unit: "g", category: "Dairy" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "227", unit: "g", category: "Dairy" },
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Fat-free Cool Whip", prep: "", quantity: "100", unit: "g", category: "Dairy" },
+        { item: "Sprinkles", prep: "", quantity: "50", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the filling",
+        detail:
+          "Add the cream cheese, Greek yogurt, protein powder, pudding mix, and zero-cal sweetener to a small blender. Blend until silky smooth."
+      },
+      {
+        step_number: 2,
+        title: "Fold in Cool Whip",
+        detail:
+          "Add to a bowl and fold in the fat-free Cool Whip."
+      },
+      {
+        step_number: 3,
+        title: "Chill",
+        detail:
+          "Place the mixture in the fridge to cool and thicken up."
+      },
+      {
+        step_number: 4,
+        title: "Shape the shells",
+        detail:
+          "Take one pizzelle at a time and cover each side in a paper towel. Microwave for 20 seconds, then immediately form into a cannoli shape — they harden within seconds. Repeat for all 20."
+      },
+      {
+        step_number: 5,
+        title: "Pipe the filling",
+        detail:
+          "Once the filling has cooled, add it to a ziplock bag, cut the tip, and pipe it into each cannoli shell."
+      },
+      {
+        step_number: 6,
+        title: "Chill & garnish",
+        detail:
+          "Repeat for all 20, then refrigerate for at least an hour to cool. Add sprinkles to the outside ends and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cosmic-brownie-ice-cream-bars",
+    title: "Cosmic Brownie Ice Cream Bars",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌌",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A black cocoa protein base folded with Cool Whip, frozen into bars, and coated in crushed Fiber One Brownies and Cosmic Brownie chips for a crunchy, chocolatey shell.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 10,
+    accent: "#241812",
+
+    macro_profiles: {
+      serving_10: { calories: 123, protein_g: 5.5, fat_g: 3.5, carbs_g: 20 }
+    },
+
+    scaling_options: [10],
+
+    ingredients_by_serving: {
+      serving_10: [
+        { item: "Vanilla whey/casein blend protein powder", prep: "", quantity: "45", unit: "g", category: "Pantry" },
+        { item: "Black cocoa powder", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Sugar-free cheesecake pudding mix", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Zero-calorie sweetener", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "big pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fat-free Cool Whip", prep: "frozen", quantity: "1", unit: "container (~215g)", category: "Dairy" },
+        { item: "Fiber One brownies", prep: "crushed, for coating", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Cosmic Brownie chips", prep: "for coating", quantity: "40", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Add the dry powdered ingredients into a bowl and mix. Slowly add cold water and mix until you get a runny, icing-like consistency."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the Cool Whip",
+        detail:
+          "Fold in the frozen fat-free Cool Whip, trying not to overmix."
+      },
+      {
+        step_number: 3,
+        title: "Fill the molds",
+        detail:
+          "Evenly divide the mixture into 10 ice cream bar molds. If you run short on molds, use mini cupcake molds for the extra."
+      },
+      {
+        step_number: 4,
+        title: "Freeze",
+        detail:
+          "Add to the freezer until frozen, at least 3 to 4 hours."
+      },
+      {
+        step_number: 5,
+        title: "Coat & serve",
+        detail:
+          "Crush the Fiber One brownies and Cosmic Brownie chips together into a coating. Once the bars are frozen, take them out of the molds and roll each one in the coating before serving."
+      }
+    ]
+  },
+
+  {
     recipe_id: "pesto-chicken-caesar-pasta-salad",
     title: "Pesto Chicken Caesar Pasta Salad",
     category: "Meal Prep",
