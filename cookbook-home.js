@@ -600,7 +600,8 @@
     "Grilled & Sheet-Pan",
     "Sandwiches",
     "Desserts",
-    "Salsas & Dips"
+    "Salsas & Dips",
+    "Sauces"
   ];
   var CATEGORY_META = {
     "Breakfast":             { icon: "🍳", accent: "#E0A458", blurb: "Eggs, hashes, and morning plates to start the day strong." },
@@ -611,7 +612,8 @@
     "Grilled & Sheet-Pan":   { icon: "🔥", accent: "#A65A3A", blurb: "Char, smoke, and hands-off sheet-pan roasts." },
     "Sandwiches":            { icon: "🥪", accent: "#B98A4B", blurb: "Stacked, handheld, low-carb-friendly bites." },
     "Desserts":              { icon: "🍰", accent: "#C9738B", blurb: "Icebox cakes, trifles, and sweet make-ahead treats." },
-    "Salsas & Dips":         { icon: "🌶️", accent: "#C1442E", blurb: "Fresh, no-cook salsas and dips for chips, tacos, and grilled everything." }
+    "Salsas & Dips":         { icon: "🌶️", accent: "#C1442E", blurb: "Fresh, no-cook salsas and dips for chips, tacos, and grilled everything." },
+    "Sauces":                { icon: "🥄", accent: "#BF7A3D", blurb: "Creamy, protein-packed yogurt sauces to top any meal." }
   };
   function presentCategories() {
     return CATEGORY_ORDER.filter(function (c) {
