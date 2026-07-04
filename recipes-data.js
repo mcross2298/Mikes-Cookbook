@@ -5108,6 +5108,349 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "chocolate-espresso-protein-ice-cream",
+    title: "Chocolate Espresso Protein Ice Cream",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍨",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    description:
+      "A thick, creamy blender ice cream made from Greek yogurt, chocolate protein powder, and instant espresso — a rich mocha treat with none of the added sugar of the scoop-shop version.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#4A2E23",
+
+    macro_profiles: {
+      serving_2: { calories: 157, protein_g: 22, fat_g: 2, carbs_g: 7 },
+      serving_4: { calories: 157, protein_g: 22, fat_g: 2, carbs_g: 7 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "120", unit: "ml", category: "Dairy" },
+        { item: "Instant espresso powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Sugar-free chocolate pudding mix", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Ice cubes", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "240", unit: "ml", category: "Dairy" },
+        { item: "Instant espresso powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Sugar-free chocolate pudding mix", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Ice cubes", prep: "", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend",
+        detail:
+          "Blend all ingredients together until thick and creamy."
+      },
+      {
+        step_number: 2,
+        title: "Transfer",
+        detail:
+          "Transfer the mixture to a container."
+      },
+      {
+        step_number: 3,
+        title: "Freeze",
+        detail:
+          "Freeze for 20 to 30 minutes for a firmer, scoopable texture."
+      },
+      {
+        step_number: 4,
+        title: "Scoop & serve",
+        detail:
+          "Scoop and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "strawberry-shortcake-protein-mousse",
+    title: "Strawberry Shortcake Protein Mousse",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍓",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A quick no-bake mousse swirling Greek yogurt, vanilla protein powder, and fresh strawberries, finished with a dusting of graham cracker crumbs for that shortcake crunch.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D67E8C",
+
+    macro_profiles: {
+      serving_2: { calories: 149, protein_g: 19, fat_g: 1, carbs_g: 11 },
+      serving_4: { calories: 149, protein_g: 19, fat_g: 1, carbs_g: 11 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Strawberries", prep: "diced, divided", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Graham crackers", prep: "crushed", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "50", unit: "g", category: "Pantry" },
+        { item: "Strawberries", prep: "diced, divided", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Graham crackers", prep: "crushed", quantity: "16", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "20", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Mix the Greek yogurt, protein powder, and maple syrup until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Fold in strawberries",
+        detail:
+          "Fold in half of the diced strawberries."
+      },
+      {
+        step_number: 3,
+        title: "Divide & top",
+        detail:
+          "Divide into serving cups and top with the remaining strawberries and graham cracker crumbs."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail:
+          "Chill for 20 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-coconut-protein-truffles",
+    title: "Chocolate Coconut Protein Truffles",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["High-Protein", "No-Bake", "Bite-Size"],
+    dish_category: "Desserts",
+    description:
+      "No-bake truffles made from chocolate protein powder, Greek yogurt, cocoa, and shredded coconut, rolled with dark chocolate chips — a rich bite-size treat that chills up firm enough to hold its shape.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#5C3A21",
+
+    macro_profiles: {
+      serving_4: { calories: 83, protein_g: 9, fat_g: 3, carbs_g: 5 },
+      serving_2: { calories: 83, protein_g: 9, fat_g: 3, carbs_g: 5 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chocolate protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Unsweetened shredded coconut", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "finely chopped", quantity: "10", unit: "g", category: "Pantry" }
+      ],
+      serving_2: [
+        { item: "Chocolate protein powder", prep: "", quantity: "15", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "40", unit: "g", category: "Dairy" },
+        { item: "Unsweetened shredded coconut", prep: "", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "finely chopped", quantity: "5", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Combine",
+        detail:
+          "Combine all ingredients in a bowl."
+      },
+      {
+        step_number: 2,
+        title: "Chill",
+        detail:
+          "Refrigerate for 15 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Roll",
+        detail:
+          "Roll into 8 equal truffles."
+      },
+      {
+        step_number: 4,
+        title: "Chill again & serve",
+        detail:
+          "Chill for another 30 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "apple-pie-protein-parfait",
+    title: "Apple Pie Protein Parfait",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍎",
+    tags: ["High-Protein", "Make-Ahead", "Layered"],
+    dish_category: "Desserts",
+    description:
+      "Cinnamon-stewed apples layered over a vanilla Greek yogurt protein base and topped with oats — a warm-spiced parfait that tastes like apple pie in a glass.",
+    prep_time_mins: 10,
+    cook_time_mins: 5,
+    native_serving: 2,
+    accent: "#C1793A",
+
+    macro_profiles: {
+      serving_2: { calories: 176, protein_g: 21, fat_g: 2, carbs_g: 16 },
+      serving_4: { calories: 176, protein_g: 21, fat_g: 2, carbs_g: 16 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Apple", prep: "diced", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Cinnamon", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Quick oats", prep: "", quantity: "15", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Apple", prep: "diced", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Cinnamon", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Quick oats", prep: "", quantity: "30", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the apple",
+        detail:
+          "Cook the diced apple with cinnamon and maple syrup in a pan for 4 to 5 minutes, until softened."
+      },
+      {
+        step_number: 2,
+        title: "Mix the yogurt base",
+        detail:
+          "Mix the Greek yogurt and protein powder in a bowl."
+      },
+      {
+        step_number: 3,
+        title: "Layer",
+        detail:
+          "Layer the yogurt mixture and cooked apples into serving glasses."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail:
+          "Top with oats and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-peanut-butter-cheesecake-cups",
+    title: "Chocolate Peanut Butter Cheesecake Cups",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥜",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "A rich no-bake cheesecake cup blending Greek yogurt, light cream cheese, chocolate protein powder, and powdered peanut butter, studded with mini chocolate chips.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8B5A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 184, protein_g: 23, fat_g: 6, carbs_g: 9 },
+      serving_4: { calories: 184, protein_g: 23, fat_g: 6, carbs_g: 9 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Mini chocolate chips", prep: "", quantity: "5", unit: "g", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "340", unit: "g", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "160", unit: "g", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "50", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Sugar-free maple syrup", prep: "", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Mini chocolate chips", prep: "", quantity: "10", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Mix the Greek yogurt and cream cheese until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Add flavor",
+        detail:
+          "Add the protein powder, powdered peanut butter, and maple syrup. Stir until fully combined."
+      },
+      {
+        step_number: 3,
+        title: "Fold in chips",
+        detail:
+          "Fold in the mini chocolate chips."
+      },
+      {
+        step_number: 4,
+        title: "Divide & chill",
+        detail:
+          "Divide into serving cups and chill for 30 minutes before serving."
+      }
+    ]
+  },
+
+  {
     recipe_id: "pesto-chicken-caesar-pasta-salad",
     title: "Pesto Chicken Caesar Pasta Salad",
     category: "Meal Prep",
