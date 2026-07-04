@@ -11143,6 +11143,237 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "cinnamon-roll-protein-baked-oats",
+    title: "Cinnamon Roll Protein Baked Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍩",
+    tags: ["Meal-Prep", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A baked-oat batter swirled with cinnamon and maple syrup for warm cinnamon-roll flavor, oats and protein instead of butter and white flour — under 200 calories a square.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B8804A",
+
+    macro_profiles: {
+      serving_4: { calories: 185, protein_g: 14, fat_g: 5, carbs_g: 22 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Rolled oats", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Egg", prep: "large", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Baking powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" },
+        { item: "Cinnamon", prep: "for the swirl", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "for the swirl", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the batter",
+        detail:
+          "Heat the oven to 350°F and line a small baking dish so the squares lift out clean later. Blend the oats, protein powder, egg, milk, maple syrup, cinnamon, baking powder, and salt into a pourable batter."
+      },
+      {
+        step_number: 2,
+        title: "Add the swirl",
+        detail:
+          "Pour the batter into the prepared dish. Stir the swirl cinnamon and maple syrup together, then swirl loosely through the top so it ribbons rather than disappears."
+      },
+      {
+        step_number: 3,
+        title: "Bake & cool",
+        detail:
+          "Bake for 20 minutes until the center is set and a knife comes out clean. Cool before slicing into 4 squares."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "frozen-blueberry-kefir-crunch-bowl",
+    title: "Frozen Blueberry Kefir Crunch Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🫐",
+    tags: ["High-Protein", "No-Cook", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A thick, blended frozen-fruit and kefir bowl topped with fresh berries, granola, and a peanut butter drizzle — creamy, crunchy, and feels like dessert.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#5B6EA8",
+
+    macro_profiles: {
+      serving_1: { calories: 430, protein_g: 30, fat_g: 10, carbs_g: 55 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Frozen blueberries", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Low-fat kefir", prep: "", quantity: "150", unit: "g", category: "Dairy" },
+        { item: "Nonfat Greek yogurt", prep: "", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Banana", prep: "frozen", quantity: "1", unit: "", category: "Produce" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh strawberries", prep: "topping", quantity: "40", unit: "g", category: "Produce" },
+        { item: "Fresh blueberries", prep: "topping", quantity: "40", unit: "g", category: "Produce" },
+        { item: "High-protein granola", prep: "topping", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Powdered peanut butter", prep: "mixed with water into a drizzle", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend it thick",
+        detail:
+          "Add the frozen blueberries, banana, kefir, Greek yogurt, and protein powder to a blender. Blend on low first, then build to high, pausing to scrape down the sides so it stays thick rather than runny. If it struggles, add kefir one tablespoon at a time."
+      },
+      {
+        step_number: 2,
+        title: "Assemble the bowl",
+        detail:
+          "Spoon into a serving bowl and smooth the top flat. Arrange the fresh strawberries and blueberries in rows across the top, then sprinkle over the granola and chia seeds."
+      },
+      {
+        step_number: 3,
+        title: "Drizzle & serve",
+        detail:
+          "Whisk the powdered peanut butter with a little water until pourable, then drizzle over the top before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "carrot-cake-protein-overnight-oats",
+    title: "Carrot Cake Protein Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥕",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of oats, chia, grated carrot, and protein powder that chills overnight into a thick, pudding-like carrot cake breakfast.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#D08A3E",
+
+    macro_profiles: {
+      serving_1: { calories: 420, protein_g: 28, fat_g: 14, carbs_g: 48 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Carrot", prep: "finely grated", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Milk of choice", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Raisins", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Walnuts", prep: "chopped", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "to top", quantity: "", unit: "", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail:
+          "Stir the oats, chia, grated carrot, protein powder, and cinnamon together in a jar. Pour in the milk and mix well until everything is loose and combined."
+      },
+      {
+        step_number: 2,
+        title: "Add the raisins & chill",
+        detail:
+          "Stir through the raisins, then leave it five minutes and stir again to stop the chia clumping. Chill overnight until thick and pudding-like."
+      },
+      {
+        step_number: 3,
+        title: "Top & serve",
+        detail:
+          "Top with Greek yogurt, chopped walnuts, and a final dusting of cinnamon before eating."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "blackberry-cheesecake-yogurt-pot",
+    title: "Blackberry Cheesecake Yogurt Pot",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍰",
+    tags: ["No-Cook", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "Layers of sweetened protein Greek yogurt and mashed blackberry compote that taste like cheesecake — no cooking, ready in two minutes.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#6B4060",
+
+    macro_profiles: {
+      serving_1: { calories: 320, protein_g: 30, fat_g: 6, carbs_g: 34 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Blackberries", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Blackberry compote or jam", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh blackberries", prep: "to top", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whip the yogurt",
+        detail:
+          "Whisk the Greek yogurt with the protein powder and honey until thick and smooth."
+      },
+      {
+        step_number: 2,
+        title: "Mash the fruit",
+        detail:
+          "Mash half the blackberries into the compote for a looser, fruitier layer."
+      },
+      {
+        step_number: 3,
+        title: "Layer & serve",
+        detail:
+          "Spoon a layer of the yogurt into a glass, then a layer of blackberry. Repeat the layers, finishing with yogurt on top. Top with fresh blackberries and a little extra compote before serving."
+      }
+    ]
+  },
+
+  {
     recipe_id: "turkish-beef-cubes-spiced-eggs",
     title: "Turkish-Style Sautéed Beef Cubes & Spiced Eggs",
     category: "Meal Prep",
