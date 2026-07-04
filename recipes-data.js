@@ -9537,6 +9537,617 @@ const RECIPES = [
           "Assemble the bowls with rice, beans, vegetables, chicken, salsa, and cheese. Divide into 4 servings."
       }
     ]
+  },
+
+  {
+    recipe_id: "honey-garlic-chicken-stir-fry",
+    title: "Honey Garlic Chicken Stir Fry",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥢",
+    tags: ["Meal-Prep", "High-Protein", "Asian-Inspired"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Seared chicken and crisp stir-fry vegetables glazed in a sticky honey garlic sauce over rice — a fast, protein-packed weeknight bowl built for batch cooking.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C4832E",
+
+    macro_profiles: {
+      serving_4: { calories: 471, protein_g: 50, fat_g: 10, carbs_g: 40 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Mixed stir-fry vegetables", prep: "", quantity: "500", unit: "g", category: "Produce" },
+        { item: "Rice", prep: "cooked", quantity: "400", unit: "g", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Soy sauce", prep: "low sodium", quantity: "30", unit: "ml", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Ginger", prep: "minced", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Cornstarch", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "10", unit: "ml", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the chicken",
+        detail: "Cook the chicken in a hot skillet until browned and cooked through."
+      },
+      {
+        step_number: 2,
+        title: "Add the vegetables",
+        detail: "Add the mixed stir-fry vegetables and cook for 5-6 minutes until crisp-tender."
+      },
+      {
+        step_number: 3,
+        title: "Make the sauce",
+        detail: "Whisk together the honey, soy sauce, garlic, ginger, and cornstarch."
+      },
+      {
+        step_number: 4,
+        title: "Simmer & glaze",
+        detail: "Pour the sauce over the chicken and vegetables and simmer until thickened and glossy."
+      },
+      {
+        step_number: 5,
+        title: "Serve",
+        detail: "Drizzle with sesame oil and serve over rice. Divide into 4 containers."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-chicken-loaded-potatoes",
+    title: "Buffalo Chicken Loaded Potatoes",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥔",
+    tags: ["Meal-Prep", "High-Protein", "Spicy"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Baked russet potatoes split and piled high with buffalo shredded chicken, melted cheddar, cooling Greek yogurt, and green onions.",
+    prep_time_mins: 15,
+    cook_time_mins: 45,
+    native_serving: 4,
+    accent: "#B33A2E",
+
+    macro_profiles: {
+      serving_4: { calories: 489, protein_g: 54, fat_g: 13, carbs_g: 39 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Russet potatoes", prep: "", quantity: "800", unit: "g", category: "Produce" },
+        { item: "Greek yogurt", prep: "plain, nonfat", quantity: "120", unit: "g", category: "Dairy" },
+        { item: "Buffalo sauce", prep: "", quantity: "80", unit: "g", category: "Pantry" },
+        { item: "Cheddar cheese", prep: "light, shredded", quantity: "120", unit: "g", category: "Dairy" },
+        { item: "Green onions", prep: "sliced", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Bake the potatoes",
+        detail: "Preheat the oven to 425°F (220°C) and bake the potatoes for 45 minutes until tender."
+      },
+      {
+        step_number: 2,
+        title: "Cook & shred the chicken",
+        detail: "Cook the chicken through, then shred."
+      },
+      {
+        step_number: 3,
+        title: "Toss in buffalo sauce",
+        detail: "Mix the shredded chicken with the buffalo sauce."
+      },
+      {
+        step_number: 4,
+        title: "Load the potatoes",
+        detail: "Slice the potatoes open, fluff the insides, and top with buffalo chicken, cheddar, and Greek yogurt."
+      },
+      {
+        step_number: 5,
+        title: "Finish",
+        detail: "Season with salt and pepper, garnish with green onions, and broil for 2 minutes if desired."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-garlic-parmesan-chicken-pasta",
+    title: "Creamy Garlic Parmesan Chicken Pasta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🧄",
+    tags: ["Meal-Prep", "High-Protein", "Creamy"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Seared chicken sliced over protein pasta and steamed broccoli in a creamy garlic parmesan sauce — a lightened-up comfort classic that reheats well.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#D1A23A",
+
+    macro_profiles: {
+      serving_4: { calories: 482, protein_g: 53, fat_g: 12, carbs_g: 37 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Protein pasta", prep: "dry", quantity: "240", unit: "g", category: "Pantry" },
+        { item: "Broccoli florets", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Unsweetened almond milk", prep: "", quantity: "250", unit: "ml", category: "Dairy" },
+        { item: "Light cream cheese", prep: "", quantity: "60", unit: "g", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Cornstarch", prep: "", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Cook the pasta according to package directions."
+      },
+      {
+        step_number: 2,
+        title: "Sear the chicken",
+        detail: "Season the chicken and cook in a skillet until it reaches 165°F (74°C) internally. Slice."
+      },
+      {
+        step_number: 3,
+        title: "Steam the broccoli",
+        detail: "Steam the broccoli until tender."
+      },
+      {
+        step_number: 4,
+        title: "Make the sauce",
+        detail: "In the same skillet, combine the almond milk, cream cheese, garlic, Parmesan, and cornstarch. Simmer until thickened."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the pasta, broccoli, and chicken into the sauce. Divide into 4 portions."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sweet-chili-chicken-rice-bowls",
+    title: "Sweet Chili Chicken Rice Bowls",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍚",
+    tags: ["Meal-Prep", "High-Protein", "Asian-Inspired"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Skillet chicken and stir-fry vegetables tossed in a sweet chili glaze over jasmine rice — a quick, batch-friendly bowl with a little heat.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#CC5B3F",
+
+    macro_profiles: {
+      serving_4: { calories: 466, protein_g: 49, fat_g: 10, carbs_g: 42 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Jasmine rice", prep: "cooked", quantity: "500", unit: "g", category: "Pantry" },
+        { item: "Stir-fry vegetables", prep: "frozen", quantity: "400", unit: "g", category: "Produce" },
+        { item: "Sweet chili sauce", prep: "", quantity: "80", unit: "g", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "15", unit: "ml", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Ginger", prep: "", quantity: "5", unit: "g", category: "Produce" },
+        { item: "Sesame oil", prep: "", quantity: "10", unit: "ml", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Cook the chicken in a large skillet until browned and cooked through."
+      },
+      {
+        step_number: 2,
+        title: "Stir-fry",
+        detail: "Add the garlic, ginger, vegetables, soy sauce, and sweet chili sauce. Stir-fry until the vegetables are tender."
+      },
+      {
+        step_number: 3,
+        title: "Serve",
+        detail: "Drizzle with sesame oil and serve over rice. Divide into 4 bowls."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "street-corn-chicken-bowl",
+    title: "Street Corn Chicken Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌽",
+    tags: ["Meal-Prep", "High-Protein", "Quick"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Seared paprika chicken over rice with charred corn, avocado, and cilantro folded into a lime-Greek-yogurt dressing — a bright bowl built to beat the afternoon crash.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#D6A93A",
+
+    macro_profiles: {
+      serving_2: { calories: 540, protein_g: 42, fat_g: 16, carbs_g: 52 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "cubed", quantity: "2", unit: "breasts", category: "Meat" },
+        { item: "White rice", prep: "cooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Sweetcorn", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh coriander", prep: "chopped", quantity: "", unit: "", category: "Produce" },
+        { item: "Salt and cracked pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season & cook the chicken",
+        detail: "Season the chicken with paprika, salt, and pepper, then cook in a hot pan until golden and cooked through."
+      },
+      {
+        step_number: 2,
+        title: "Char the corn",
+        detail: "Char the corn in the same pan for a couple of minutes until it picks up color."
+      },
+      {
+        step_number: 3,
+        title: "Make the dressing",
+        detail: "Stir the Greek yogurt with the lime juice and a pinch of salt into a creamy dressing."
+      },
+      {
+        step_number: 4,
+        title: "Combine",
+        detail: "Fold the corn, avocado, and most of the coriander through the dressing."
+      },
+      {
+        step_number: 5,
+        title: "Assemble",
+        detail: "Spoon the rice into a bowl, pile the chicken and dressed corn on top, and finish with the remaining coriander and a crack of pepper."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sweet-potato-cottage-cheese-beef-bowl",
+    title: "Sweet Potato Cottage Cheese Beef Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍠",
+    tags: ["Meal-Prep", "High-Protein", "Smoky"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
+    description:
+      "Smoky roasted sweet potatoes and seasoned ground beef with cottage cheese, avocado, everything bagel seasoning, and a drizzle of hot honey.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#B8622E",
+
+    macro_profiles: {
+      serving_4: { calories: 565, protein_g: 46, fat_g: 26, carbs_g: 34 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Ground beef", prep: "lean, 90/10", quantity: "1.5", unit: "lb", category: "Meat" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Sweet potatoes", prep: "peeled and cubed", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cottage cheese", prep: "low-fat", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Avocado", prep: "diced", quantity: "2", unit: "medium", category: "Produce" },
+        { item: "Everything bagel seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Hot honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the sweet potatoes",
+        detail: "Preheat the oven to 400°F (200°C). Toss the sweet potato cubes with olive oil, smoked paprika, garlic powder, salt, and pepper. Spread on a baking sheet and roast for 25 minutes, flipping halfway, until golden and tender."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail: "Heat a skillet over medium heat and cook the ground beef, breaking it apart, until browned. Drain excess fat, then stir in the garlic powder, onion powder, smoked paprika, chili powder, salt, and pepper."
+      },
+      {
+        step_number: 3,
+        title: "Assemble the bowls",
+        detail: "Divide the roasted sweet potatoes, ground beef, cottage cheese, and avocado evenly into four bowls."
+      },
+      {
+        step_number: 4,
+        title: "Add toppings",
+        detail: "Sprinkle the avocado with everything bagel seasoning and drizzle the cottage cheese with hot honey."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crispy-salmon-avocado-cucumber-salsa-bowl",
+    title: "Crispy Salmon with Avocado Cucumber Salsa Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🐟",
+    tags: ["Meal-Prep", "High-Protein", "Seafood"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Seafood",
+    description:
+      "Air-fried, sriracha-glazed salmon cubes over rice with a chilled avocado-cucumber-jalapeño salsa — crisp on the outside, cool and fresh on top.",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#3F8FA6",
+
+    macro_profiles: {
+      serving_4: { calories: 580, protein_g: 38, fat_g: 28, carbs_g: 45 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Salmon", prep: "cut into 1-in cubes", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Japanese barbecue sauce", prep: "or soy sauce / coconut aminos", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Sriracha", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Persian cucumbers", prep: "diced", quantity: "3", unit: "small", category: "Produce" },
+        { item: "Red onion", prep: "finely diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Avocado", prep: "diced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Jalapeños", prep: "seeded and finely diced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Green onions", prep: "sliced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "White rice", prep: "cooked", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Sesame seeds", prep: "for garnish", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the salmon",
+        detail: "Combine the mayonnaise, Japanese barbecue sauce, garlic, sriracha, salt, and pepper. Toss the salmon cubes in the marinade and let sit for 10 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Make the salsa",
+        detail: "Mix the cucumbers, red onion, avocado, jalapeños, green onions, and lime juice. Season with salt and stir gently so the avocado doesn't mash. Chill while you cook the salmon."
+      },
+      {
+        step_number: 3,
+        title: "Air-fry the salmon",
+        detail: "Preheat an air fryer to 380°F (190°C). Arrange the marinated salmon in a single layer and air-fry for 10-11 minutes, flipping halfway, until crisp outside and cooked through."
+      },
+      {
+        step_number: 4,
+        title: "Assemble",
+        detail: "Divide the rice into 4 bowls, top with the crispy salmon and avocado-cucumber salsa, and garnish with sesame seeds."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-fajita-bowl-cilantro-lime-sauce",
+    title: "Chicken Fajita Bowl with Cilantro Lime Sauce",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥙",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Skillet fajita chicken, peppers, and onions over cilantro lime rice with black beans, avocado, and pico de gallo, drizzled with a cool cilantro lime sauce.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#C46A35",
+
+    macro_profiles: {
+      serving_4: { calories: 550, protein_g: 45, fat_g: 20, carbs_g: 50 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breast", prep: "sliced into strips", quantity: "1.5", unit: "lb", category: "Meat" },
+        { item: "Bell peppers", prep: "sliced into strips", quantity: "2", unit: "", category: "Produce" },
+        { item: "Onion", prep: "sliced", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Olive oil", prep: "divided", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1.5", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "ground", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Rice", prep: "cooked", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Cilantro", prep: "finely chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Avocado", prep: "sliced or diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Black beans", prep: "drained and rinsed", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Pico de gallo", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Lime wedges", prep: "for garnish", quantity: "", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the chicken & veggies",
+        detail: "Mix the garlic powder, onion powder, chili powder, cumin, smoked paprika, salt, and pepper. Toss the chicken strips with half the olive oil and half the spice mix; toss the peppers and onion with the rest."
+      },
+      {
+        step_number: 2,
+        title: "Cook",
+        detail: "Cook the chicken in a hot skillet for 5-8 minutes until browned through, then remove. Cook the peppers and onion in the same skillet until tender with a slight char. Combine and keep warm."
+      },
+      {
+        step_number: 3,
+        title: "Make the cilantro lime rice",
+        detail: "Stir the lime juice, cilantro, and salt into the cooked rice."
+      },
+      {
+        step_number: 4,
+        title: "Make the sauce",
+        detail: "Whisk together the Greek yogurt, cilantro, lime juice, garlic, salt, and pepper. Thin with olive oil or water if desired."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowls",
+        detail: "Divide the cilantro lime rice into 4 bowls. Top with the chicken, peppers, and onion. Add the black beans, avocado, and pico de gallo, then drizzle with the cilantro lime sauce."
+      },
+      {
+        step_number: 6,
+        title: "Garnish & serve",
+        detail: "Add lime wedges and extra cilantro, then serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mexican-ground-beef-bowl-cilantro-lime-rice",
+    title: "Mexican Ground Beef Bowl with Cilantro Lime Rice",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🫘",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
+    description:
+      "Chili-spiced ground beef and cilantro lime rice with black beans and corn, finished with a smoky chipotle lime sauce — a batch-cooking staple with real kick.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#A8452E",
+
+    macro_profiles: {
+      serving_4: { calories: 590, protein_g: 42, fat_g: 22, carbs_g: 55 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Ground beef", prep: "lean, 90%", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "ground", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Jasmine rice", prep: "", quantity: "1.5", unit: "cups", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Lime", prep: "juiced and zested", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cilantro", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Black beans", prep: "rinsed and drained", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Corn kernels", prep: "frozen or canned", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "minced", quantity: "1-2", unit: "peppers", category: "Pantry" },
+        { item: "Adobo sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the rice",
+        detail: "Add the rice, water, and salt to a pot. Bring to a boil, reduce heat to low, cover, and cook for 15 minutes. Rest 5 minutes, then fluff and stir in the lime juice, zest, and cilantro."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail: "Heat the olive oil in a skillet over medium-high heat and brown the ground beef, breaking it apart. Stir in the chili powder, smoked paprika, garlic powder, onion powder, cumin, salt, and pepper, then the tomato paste and a splash of water. Simmer 2-3 minutes until coated and slightly thickened."
+      },
+      {
+        step_number: 3,
+        title: "Make the chipotle lime sauce",
+        detail: "Mix the Greek yogurt, mayonnaise, chipotle peppers, adobo sauce, lime juice, garlic powder, and salt until smooth. Adjust the heat with more chipotle or adobo."
+      },
+      {
+        step_number: 4,
+        title: "Build the bowls",
+        detail: "Divide the cilantro lime rice into 4 containers and top with the black beans, corn, and seasoned ground beef."
+      },
+      {
+        step_number: 5,
+        title: "Finish",
+        detail: "Drizzle generously with the chipotle lime sauce, or pack it separately if storing."
+      }
+    ]
   }
 ];
 
