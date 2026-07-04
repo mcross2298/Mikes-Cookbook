@@ -182,6 +182,8 @@
   var GROC_KEY    = "mc-cookbook:mealplan:grocery"; // [ checked merge-keys ]
   var HISTORY_KEY = "mc-cookbook:mealplan:history"; // [ { savedAt, label, meals } ]
   var CUSTOM_KEY  = "mc-cookbook:mealplan:custom";  // [ { uid, text, done } ]
+  var AUTODRAFT_DISMISS_KEY = "mc-cookbook:mealplan:autodraft-dismissed"; // timestamp (ms)
+  var AUTODRAFT_COOLDOWN_MS = 7 * 86400000;
   var DAYS      = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   var DAY_LONG  = {
     Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday",
@@ -237,12 +239,37 @@
   // plan always gets its own 7-day window for the day-7 archive prompt.
   function savePlan(p) {
     if (p.meals && p.meals.length) {
-      if (!p.startedAt) p.startedAt = new Date().toISOString();
+      if (!p.startedAt) {
+        p.startedAt = new Date().toISOString();
+        // A manually-built plan means the auto-draft offer (Home) is moot
+        // until the plan empties out again — clear any standing dismissal.
+        clearAutoDraftDismiss();
+        homeAutoDraftGrid = null;
+      }
     } else {
       p.startedAt = null;
       p.day7Dismissed = false;
     }
     try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+  }
+  // Home's auto-drafted-week offer (see renderAutoDraftCard): only offered
+  // when the plan is empty, and dismissing it snoozes the offer for ~7 days
+  // or until the plan changes (savePlan clears the dismissal above).
+  var homeAutoDraftGrid = null;
+  function loadAutoDraftDismissedAt() {
+    try { return parseInt(localStorage.getItem(AUTODRAFT_DISMISS_KEY) || "0", 10) || 0; }
+    catch (e) { return 0; }
+  }
+  function dismissAutoDraft() {
+    try { localStorage.setItem(AUTODRAFT_DISMISS_KEY, String(Date.now())); } catch (e) {}
+  }
+  function clearAutoDraftDismiss() {
+    try { localStorage.removeItem(AUTODRAFT_DISMISS_KEY); } catch (e) {}
+  }
+  function homeAutoDraftEligible() {
+    if (planMeals().length) return false;
+    var at = loadAutoDraftDismissedAt();
+    return !(at > 0 && (Date.now() - at) < AUTODRAFT_COOLDOWN_MS);
   }
   function newUid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -1240,6 +1267,57 @@
     return (Date.now() - then) >= 14 * 86400000;
   }
 
+  // Auto-drafted week: only offered when the plan is empty (homeAutoDraftEligible).
+  // Reuses Smart Week's own generator/commit (smwGenerateWeek/commitSmartWeek) —
+  // this is a new *trigger* for that existing code (shown proactively instead of
+  // waiting for a button tap), not a new generator. The grid is cached in
+  // homeAutoDraftGrid so Regenerate re-rolls it but a re-render (e.g. tab switch)
+  // doesn't silently swap the draft out from under the cook.
+  function renderAutoDraftCard() {
+    if (!homeAutoDraftGrid) homeAutoDraftGrid = smwGenerateWeek("all").grid;
+    var grid = homeAutoDraftGrid;
+    var mealCount = grid.length;
+    var recipeCount = Array.from(new Set(grid.map(function (g) { return g.id; }))).length;
+
+    var card = el("div", "autodraft-card");
+    card.innerHTML =
+      '<p class="autodraft-eyebrow">✨ Drafted for you</p>' +
+      '<h3 class="autodraft-title">This week, ready to review</h3>' +
+      '<p class="autodraft-text">' +
+        esc(mealCount + (mealCount === 1 ? " meal" : " meals") + " across " +
+            recipeCount + (recipeCount === 1 ? " recipe" : " recipes") +
+            " — a Balanced Smart Week, picked to avoid repeats.") +
+      "</p>";
+
+    var actions = el("div", "autodraft-actions");
+    var use = el("button", "autodraft-use", "Use this week");
+    use.type = "button";
+    use.addEventListener("click", function () {
+      var scope = SMART_SCOPES.filter(function (s) { return s.key === "all"; })[0];
+      commitSmartWeek(grid, scope.slots);
+      homeAutoDraftGrid = null;
+      renderHome();
+    });
+    var regen = el("button", "autodraft-regen", "🔀 Regenerate");
+    regen.type = "button";
+    regen.addEventListener("click", function () {
+      homeAutoDraftGrid = smwGenerateWeek("all").grid;
+      renderHome();
+    });
+    var not = el("button", "autodraft-dismiss", "Not now");
+    not.type = "button";
+    not.addEventListener("click", function () {
+      dismissAutoDraft();
+      homeAutoDraftGrid = null;
+      renderHome();
+    });
+    actions.appendChild(use);
+    actions.appendChild(regen);
+    actions.appendChild(not);
+    card.appendChild(actions);
+    return card;
+  }
+
   // Dismissible inline nudge: only when a backup is stale AND there's data worth
   // protecting. Dismiss hides it for the session; an export clears it for good.
   function backupBanner() {
@@ -1376,6 +1454,13 @@
     hc.appendChild(cta);
     hero.appendChild(hc);
     s.appendChild(hero);
+
+    // Auto-drafted week: only when there's no plan yet and the offer isn't
+    // on cooldown (dismissed recently). Sits right under the hero so it
+    // reads as "here's a start" rather than competing with it.
+    if (!planned && homeAutoDraftEligible()) {
+      s.appendChild(renderAutoDraftCard());
+    }
 
     // Browse modules — two labeled sections keep the Home screen scannable.
     var browse = el("div", "home-browse");
