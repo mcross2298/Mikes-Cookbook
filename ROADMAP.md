@@ -44,14 +44,26 @@ that directly, per the alignment discussion for this roadmap.
 
 ---
 
-## Pillar A — Data & Doc Integrity (backlog, not started this round)
+## Pillar A — Data & Doc Integrity ✅ (validation script shipped)
 
-Kept here as a named ticket rather than dropped, since it underwrites Pillar C's trust story
-(an auto-generated plan needs the same data guarantees a validation script would enforce) —
-but it was explicitly **not** picked as this round's priority, so treat it as backlog:
+**Status:** ✅ **Shipped.** `tools/validate-recipes.js` loads `recipes-data.js` the same way the
+browser does (vm-executes it with `window` pointed at the sandbox, no parser dependency) and
+checks: unique/slug-shaped `recipe_id`s, required fields, `dish_category` against the known
+11-value enum, ingredient `category` against Meat/Dairy/Produce/Pantry, every `COLLECTIONS`
+`source_match` actually resolving to a recipe (a `live` collection can't render empty), and
+`MIKES_FAVORITES` slugs resolving to real recipes. Wired into `.github/workflows/pages.yml` as a
+**hard-fail** gate (per Mike's call) right after the `node --check` step, before the SW regen.
 
-- A recipe-data validation script (plain Node or Python, no new dependency) run in CI alongside
-  `node --check`, checking the invariants listed in §0.
+Building it surfaced something CLAUDE.md's data-model section doesn't mention: recipes aren't all
+on the classic `serving_2`/`serving_4` ladder — batch-yield items (a whole cheesecake, a
+single-tray dessert) author **one** `serving_N` tier matching `native_serving`/`scaling_options`
+instead (`cookbook.js`'s `nativeServing()`/`ingredientsFor()`/`macrosFor()` already handle this
+generically). The validator requires *at least one* `serving_N` tier rather than specifically 2
+and 4, and only enforces macro-equality *across whichever tiers a recipe actually has*. Verified
+against a mutated copy of the real data (typo'd `dish_category`, mismatched macro tiers, a bad
+ingredient category, a duplicated `recipe_id`) to confirm it actually catches these classes of
+bug, not just passes vacuously.
+
 - A CLAUDE.md/ROADMAP.md freshness check folded into the "process rule" above rather than a new
   tool — i.e. discipline, not automation, for now.
 
@@ -59,7 +71,7 @@ but it was explicitly **not** picked as this round's priority, so treat it as ba
 
 ---
 
-## Pillar B — Proactive Scheduling & Reminders ✅ (tier 1 shipped)
+## Pillar B — Proactive Scheduling & Reminders ✅ (tier 1 + tier 2 shipped)
 
 ### Problem
 Every smart feature in the app — Smart Week, the Macro Smart Generator, batch-prep suggestions,
@@ -78,15 +90,15 @@ Two tiers, in order of how soon they're buildable:
 1. **"Dumb" reminders (buildable now, no data bridge needed).** A weekly trigger (e.g. Sunday
    evening) that messages Mike a nudge — "plan/batch-prep for the week," "log today's macros if
    you haven't." No awareness of his actual plan or tracker state; a templated prompt.
-2. **"Informed" reminders (needs a data bridge — open design question).** A trigger that
-   references Mike's *actual* current meal plan, macro history, or tracker gaps to make the nudge
-   specific ("3 of this week's meals share a sheet-pan step — batch those Sunday"). The app's
-   state lives in `localStorage` in Mike's phone browser; a scheduled trigger running server-side
-   has no way to read that today. Shipping tier 2 requires deciding *how* state gets out —
-   candidates: Mike pastes a quick status when asked, a periodic export to somewhere the trigger
-   can read (e.g. a synced file/sheet), or deferring until there's a reason to add a lightweight
-   sync layer. **Do not build a backend for this without a separate, explicit go-ahead** — it's
-   the one item in this roadmap that would break the "no backend" constraint if done carelessly.
+2. **"Informed" reminders — ✅ shipped as "ask-when-it-fires."** Rather than build a data bridge
+   out of `localStorage` (which would risk the "no backend" constraint), the trigger's prompt
+   was changed so the weekly check-in **asks Mike a specific question** ("is next week's plan
+   set?", "want a fresh Smart Week draft?", "hitting your macro goals lately?") instead of
+   guessing at his state or sending a generic blast. If Mike replies, the session uses his actual
+   answer to respond usefully (batch-prep timing, recipe suggestions, etc.). Zero new app code,
+   zero new infrastructure — the informedness comes from asking, not from reading state
+   remotely. A real data-bridge/export/sync mechanism remains **un-built and un-scoped**; revisit
+   only if ask-when-it-fires proves insufficient, and still not without a separate go-ahead.
 
 ### Acceptance (first slice — tier 1 only)
 - A recurring trigger fires on a chosen cadence and delivers a specific, useful reminder message
@@ -129,8 +141,10 @@ generation automatically.
   higher-protein recipes next week). Surface *why* a recipe was picked ("+protein vs. last week")
   so it doesn't feel like a black box. The auto-draft ships plain (Balanced only) until this
   lands.
-- **Pairs with Pillar B:** the tier-1 weekly reminder (shipped) is a natural moment to tell Mike a
-  draft is ready to review — not yet wired together; the reminder is still generic copy today.
+- **Pairs with Pillar B:** the shipped weekly check-in already asks whether Mike wants a fresh
+  Smart Week draft, which naturally points at this feature — not formally wired together (the
+  trigger's question is templated, not aware the auto-draft card exists), but conceptually
+  aligned.
 
 ### Acceptance
 - Opening Home on/after the start of a new week with an empty plan shows a ready-to-review draft,
@@ -155,9 +169,10 @@ under-surfaced because it's opt-in only).
 | **1** | ✅ This roadmap + `CLAUDE.md` refresh | Align before building (done as part of this pass) | — | — |
 | **2** | ✅ **Pillar B, tier 1** — dumb weekly reminder trigger | No app-code risk, ships immediately, gives fast feedback on whether reminders are actually useful before investing further | Low | Med–High |
 | **3** | ✅ **Pillar C** — auto-drafted week (macro-trend bias not yet) | Builds on code that already exists; biggest differentiation payoff | Med | High |
-| **4** | **Pillar B, tier 2** — informed reminders | Only after the data-bridge design question is resolved; revisit once Phase 2/3 show reminders are worth deepening | Med–High | Med–High |
-| **Backlog** | **Pillar A** — data validation script | Not urgent, not user-visible; pick up opportunistically or once recipe-intake automation raises the stakes for bad data slipping through | Low–Med | Med |
+| **4** | ✅ **Pillar B, tier 2** — informed reminders, shipped as "ask-when-it-fires" | Sidesteps the data-bridge question entirely by asking Mike directly instead of reading his state remotely | Low | Med–High |
+| **5** | ✅ **Pillar A** — recipe-data validation script | Greenlit alongside Phase 4; hard-fail gate in CI, `tools/validate-recipes.js` | Low–Med | Med |
 | **Backlog** | Macro-trend bias (Pillar C fast-follow) | Deferred by choice in Phase 3 — ship once the plain auto-draft has been used for a bit | Med | Med–High |
+| **Backlog** | A real data-bridge/export/sync mechanism for Pillar B | Only if ask-when-it-fires proves insufficient — still requires a separate go-ahead per the "no backend" constraint | Med–High | Med–High |
 
 **Already done (no work):** persistent nav, screen wake lock, Cooking Mode, arbitrary serving
 scaling, app-wide search, visual/motion polish (all v1 Pillars 1–4), Smart Week, Macro Smart
@@ -165,7 +180,9 @@ Generator, batch-prep suggestion, cook log, macro tracker (goals/food search/bar
 "My Recipes", PWA install + offline service worker + CI regen, favorites store, collections,
 design-token system.
 
-## Open questions before Phase 4
+## Open questions (backlog only)
 - How should app state (meal plan, macro history) get from the phone's `localStorage` to
-  somewhere a scheduled trigger can read it, if at all? Resolve this only once tier-1 reminders
-  have proven useful enough to justify it.
+  somewhere a scheduled trigger can read it, if at all — only relevant if "ask-when-it-fires"
+  (Pillar B tier 2, shipped) turns out to be insufficient and a real data bridge is wanted.
+- Should the two backlog items (macro-trend bias, a real data bridge) be picked up next, or is
+  this round of continuous improvement done for now?
