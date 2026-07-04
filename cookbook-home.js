@@ -227,10 +227,21 @@
     try {
       var p = JSON.parse(localStorage.getItem(PLAN_KEY) || "{}") || {};
       if (!Array.isArray(p.meals)) p.meals = [];
+      if (!("startedAt" in p)) p.startedAt = null;
+      if (!("day7Dismissed" in p)) p.day7Dismissed = false;
       return p;
-    } catch (e) { return { meals: [] }; }
+    } catch (e) { return { meals: [], startedAt: null, day7Dismissed: false }; }
   }
+  // Auto-stamps startedAt the moment a plan first gets meals, and clears it
+  // (plus the day-7 dismissal flag) once the plan empties out, so a fresh
+  // plan always gets its own 7-day window for the day-7 archive prompt.
   function savePlan(p) {
+    if (p.meals && p.meals.length) {
+      if (!p.startedAt) p.startedAt = new Date().toISOString();
+    } else {
+      p.startedAt = null;
+      p.day7Dismissed = false;
+    }
     try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
   }
   function newUid() {
@@ -338,15 +349,42 @@
   function saveHistory(arr) {
     try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
   }
-  function archiveWeek() {
+  // Most-recurring recipe tags across a set of meals, joined into a
+  // readable auto-name (e.g. "High-Protein & One-Dish Week"). Falls back
+  // to a dated label when no recipe has tags.
+  function tagFrequencyName(meals) {
+    var counts = {};
+    meals.forEach(function (m) {
+      var r = recipeById(m.id);
+      if (!r || !Array.isArray(r.tags)) return;
+      r.tags.forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+    });
+    var sorted = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+    if (!sorted.length) {
+      return "Week of " + new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+    return sorted.slice(0, 2).join(" & ") + " Week";
+  }
+  function archiveWeek(customLabel) {
     var meals = planMeals();
     if (!meals.length) return;
     var arr = loadHistory();
     var now = new Date();
-    var label = "Week of " + now.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    var label = (customLabel && customLabel.trim()) || tagFrequencyName(meals);
     arr.unshift({ savedAt: now.toISOString(), label: label, meals: meals });
     if (arr.length > 8) arr = arr.slice(0, 8);
     saveHistory(arr);
+  }
+  // Has the active plan's 7-day window elapsed since its first meal was
+  // added? Checked at app boot (no real background cron available).
+  var SMW_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  function planWeekElapsed(p) {
+    if (!p.startedAt) return false;
+    var started = Date.parse(p.startedAt);
+    return !isNaN(started) && (Date.now() - started) >= SMW_WEEK_MS;
+  }
+  function shouldPromptDay7(p) {
+    return p.meals.length > 0 && !p.day7Dismissed && planWeekElapsed(p);
   }
 
   /* ── Completion tracking & macro history ──────────────────────────────
@@ -390,14 +428,18 @@
   function unlogMealMacros(uid) {
     saveMacroHistory(loadMacroHistory().filter(function (e) { return e.uid !== uid; }));
   }
+  // Returns true when this tap just completed the final remaining meal of
+  // the week, so the caller can surface the "Save Week Block?" prompt.
   function toggleMealCompleted(uid) {
     var p = loadPlan();
     var m = p.meals.filter(function (x) { return x.uid === uid; })[0];
-    if (!m) return;
+    if (!m) return false;
     m.completed = !m.completed;
     m.completedAt = m.completed ? new Date().toISOString() : null;
     savePlan(p);
-    if (m.completed) logMealMacros(m); else unlogMealMacros(uid);
+    if (!m.completed) { unlogMealMacros(uid); return false; }
+    logMealMacros(m);
+    return p.meals.length > 0 && p.meals.every(function (x) { return x.completed; });
   }
 
   /* ── Custom grocery items — user-typed additions outside of recipes ── */
@@ -1466,15 +1508,17 @@
     });
     return b;
   }
-  // "Mark Completed" toggle: flips m.completed/completedAt, logs macros.
+  // "Mark Completed" toggle: flips m.completed/completedAt, logs macros,
+  // and surfaces "Save Week Block?" the moment this was the last meal left.
   function completeToggle(m) {
     var b = el("button", "plan-complete" + (m.completed ? " is-done" : ""), CHECK_SVG);
     b.type = "button";
     b.setAttribute("aria-label", m.completed ? "Mark meal not completed" : "Mark meal completed");
     b.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation();
-      toggleMealCompleted(m.uid);
+      var weekJustFinished = toggleMealCompleted(m.uid);
       refresh();
+      if (weekJustFinished) openSaveWeekPrompt();
     });
     return b;
   }
@@ -2191,6 +2235,64 @@
     document.body.classList.add("picking");
   }
 
+  /* ── Save Week Block prompt: fires on final-meal completion (see
+     completeToggle) or a day-7-elapsed check at app boot (see init()).
+     "Not now" sets day7Dismissed so the boot check won't re-nag for this
+     same plan; saving archives with either the tag-frequency name or a
+     custom override, then clears the plan like "Clear week" already does. */
+  function closeSaveWeekPrompt() {
+    var ov = document.querySelector(".swp-overlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+  function openSaveWeekPrompt() {
+    closeSaveWeekPrompt();
+    var meals = planMeals();
+    if (!meals.length) return;
+
+    var ov = el("div", "picker swp-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "🎉 Save Week Block?"));
+    var close = el("button", "picker-close", "Not now");
+    close.type = "button";
+    close.addEventListener("click", function () {
+      var p = loadPlan();
+      p.day7Dismissed = true;
+      savePlan(p);
+      closeSaveWeekPrompt();
+    });
+    top.appendChild(close);
+    ov.appendChild(top);
+
+    var body = el("div", "picker-results swp-body");
+    body.appendChild(el("p", "swp-copy",
+      "This week is complete. Save it to your library so you can reuse it later."));
+    body.appendChild(el("label", "swp-label", "Name this week"));
+    var input = el("input", "swp-input");
+    input.type = "text";
+    input.maxLength = 60;
+    input.value = tagFrequencyName(meals);
+    body.appendChild(input);
+
+    var actions = el("div", "smw-actions");
+    var save = el("button", "cook-start swp-save-btn", "Save Week Block");
+    save.type = "button";
+    save.addEventListener("click", function () {
+      archiveWeek(input.value);
+      clearPlan();
+      saveGroc(new Set());
+      closeSaveWeekPrompt();
+      plannerState.view = "plan";
+      refresh();
+    });
+    actions.appendChild(save);
+    body.appendChild(actions);
+    ov.appendChild(body);
+
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
   /* ── Bandwidth Quiz: match suggestions to how much cook time each day
      actually has, instead of a full 7-day schedule (Smart Week's job). The
      cook answers "how many days this week are Quick / Standard /
@@ -2678,6 +2780,14 @@
     if (tabTracker)  tabTracker.addEventListener("click",  function () { setTab("tracker"); });
 
     setTab((location.hash || "#home").slice(1));
+
+    // Day-7 archive check: no background cron exists in a static PWA, so
+    // this is evaluated once per app open instead. Deferred a tick so the
+    // shell finishes its first paint before an overlay can appear on top.
+    setTimeout(function () {
+      var p = loadPlan();
+      if (shouldPromptDay7(p)) openSaveWeekPrompt();
+    }, 0);
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

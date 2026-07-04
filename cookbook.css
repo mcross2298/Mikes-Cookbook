@@ -1367,6 +1367,24 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .smw-confirm-btn { margin: 0; }
 .smw-confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* ── Save Week Block prompt (final-meal completion / day-7 boot check) ── */
+.swp-body { padding-top: 4px; }
+.swp-copy { padding: 4px 20px 14px; font-size: 14px; color: var(--on-dark-dim); line-height: 1.5; margin: 0; }
+.swp-label {
+  display: block; padding: 0 20px 6px;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--on-dark-dim);
+}
+.swp-input {
+  display: block; width: calc(100% - 40px); margin: 0 20px 16px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  background-color: var(--bg); border: 1px solid var(--line-dark);
+  color: var(--on-dark); font-family: var(--sans); font-size: 15px;
+  -webkit-appearance: none;
+}
+.swp-input:focus { outline: none; border-color: rgba(var(--accent-rgb), 0.5); }
+.swp-save-btn { margin: 0; }
+
 /* ── Time Check: bandwidth quiz button + bucketed suggestion overlay ──── */
 .plan-time-btn {
   appearance: none; display: block; width: 100%; margin: 10px 0 0; cursor: pointer;
