@@ -243,7 +243,9 @@
       uid: newUid(), id: id,
       serving: opts.serving || 2,
       day: opts.day || null,
-      slot: opts.slot || null
+      slot: opts.slot || null,
+      completed: false,
+      completedAt: null
     });
     savePlan(p);
   }
@@ -345,6 +347,57 @@
     arr.unshift({ savedAt: now.toISOString(), label: label, meals: meals });
     if (arr.length > 8) arr = arr.slice(0, 8);
     saveHistory(arr);
+  }
+
+  /* ── Completion tracking & macro history ──────────────────────────────
+     "Mark Completed" flips a meal's completed/completedAt and logs its
+     macros to MACRO_HISTORY_KEY, keyed by uid so re-toggling never
+     double-counts. Un-marking removes its log entry. Macro math mirrors
+     computeWeekMacros: serving_2 is the per-serving base, scaled to the
+     meal's planned serving count. */
+  var MACRO_HISTORY_KEY = "mc-cookbook:mealplan:macrohistory";
+  function loadMacroHistory() {
+    try { return JSON.parse(localStorage.getItem(MACRO_HISTORY_KEY) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveMacroHistory(arr) {
+    try { localStorage.setItem(MACRO_HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+  function mealMacros(m) {
+    var r = recipeById(m.id);
+    if (!r || !r.macro_profiles) return null;
+    var mp = r.macro_profiles.serving_2 || {};
+    var scale = (m.serving || 2) / 2;
+    return {
+      kcal: Math.round((mp.calories  || 0) * scale),
+      p:    Math.round((mp.protein_g || 0) * scale),
+      f:    Math.round((mp.fat_g     || 0) * scale),
+      c:    Math.round((mp.carbs_g   || 0) * scale)
+    };
+  }
+  function logMealMacros(m) {
+    var macros = mealMacros(m);
+    if (!macros) return;
+    var arr = loadMacroHistory().filter(function (e) { return e.uid !== m.uid; });
+    arr.push({
+      uid: m.uid, recipeId: m.id, day: m.day || null, slot: m.slot || null,
+      serving: m.serving || 2, completedAt: m.completedAt,
+      date: (m.completedAt || "").slice(0, 10),
+      kcal: macros.kcal, p: macros.p, f: macros.f, c: macros.c
+    });
+    saveMacroHistory(arr);
+  }
+  function unlogMealMacros(uid) {
+    saveMacroHistory(loadMacroHistory().filter(function (e) { return e.uid !== uid; }));
+  }
+  function toggleMealCompleted(uid) {
+    var p = loadPlan();
+    var m = p.meals.filter(function (x) { return x.uid === uid; })[0];
+    if (!m) return;
+    m.completed = !m.completed;
+    m.completedAt = m.completed ? new Date().toISOString() : null;
+    savePlan(p);
+    if (m.completed) logMealMacros(m); else unlogMealMacros(uid);
   }
 
   /* ── Custom grocery items — user-typed additions outside of recipes ── */
@@ -456,7 +509,8 @@
         var cat  = ing.category || "Other";
         var ikey = cat + "|" + item.toLowerCase();
         var it = items[ikey];
-        if (!it) { it = items[ikey] = { key: ikey, item: item, category: cat, buckets: {}, bucketOrder: [], texts: [] }; order.push(ikey); }
+        if (!it) { it = items[ikey] = { key: ikey, item: item, category: cat, buckets: {}, bucketOrder: [], texts: [], mealUids: [] }; order.push(ikey); }
+        if (it.mealUids.indexOf(meal.uid) < 0) it.mealUids.push(meal.uid);
 
         var info = unitInfo(unit);
         var num  = parseQty(ing.quantity);
@@ -503,15 +557,27 @@
             var uniq = it.texts.filter(function (t, i) { return it.texts.indexOf(t) === i; });
             parts.push(uniq.join(", "));
           }
-          return { key: it.key, item: it.item, qty: parts.join(" · ") };
+          return { key: it.key, item: it.item, qty: parts.join(" · "), mealUids: it.mealUids };
         })
       };
     });
   }
+  // True once every meal that contributed this item has been marked
+  // completed — the "split-trip" signal that it's already been used up.
+  function groceryRowAllDone(row) {
+    if (!row.mealUids || !row.mealUids.length) return false;
+    var plan = planMeals();
+    return row.mealUids.every(function (uid) {
+      var m = plan.filter(function (x) { return x.uid === uid; })[0];
+      return !!(m && m.completed);
+    });
+  }
   function groceryItemCount() {
-    var pantry = loadPantry();   // count only what you'd actually buy
+    var pantry = loadPantry();   // count only what you'd still actually need to buy
     return buildGrocery().reduce(function (n, c) {
-      return n + c.rows.filter(function (row) { return !pantry.has(pantryKey(row.item)); }).length;
+      return n + c.rows.filter(function (row) {
+        return !pantry.has(pantryKey(row.item)) && !groceryRowAllDone(row);
+      }).length;
     }, 0);
   }
 
@@ -1358,7 +1424,7 @@
   // Three sub-views (Plan / Grocery / Recipes). The Plan view itself toggles
   // between a flat List (default) and a 7-day × Breakfast/Lunch/Dinner
   // Schedule. The same meal set feeds all three views.
-  var plannerState = { view: "plan", planView: "list", pantryOpen: false, historyOpen: false };
+  var plannerState = { view: "plan", planView: "list", pantryOpen: false, historyOpen: false, madeOpen: false };
   function refresh() { renderPlanner(); }
 
   // Segmented control reusing the recipe page's .servings / .serving-opt look.
@@ -1400,13 +1466,26 @@
     });
     return b;
   }
+  // "Mark Completed" toggle: flips m.completed/completedAt, logs macros.
+  function completeToggle(m) {
+    var b = el("button", "plan-complete" + (m.completed ? " is-done" : ""), CHECK_SVG);
+    b.type = "button";
+    b.setAttribute("aria-label", m.completed ? "Mark meal not completed" : "Mark meal completed");
+    b.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      toggleMealCompleted(m.uid);
+      refresh();
+    });
+    return b;
+  }
 
-  // Full meal row (List view + Schedule "Unscheduled" tray): icon, title,
-  // serving toggle, per-meal Day + Slot pickers, remove.
+  // Full meal row (List view + Schedule "Unscheduled" tray): completion
+  // toggle, icon, title, serving toggle, per-meal Day + Slot pickers, remove.
   function mealRow(m) {
     var r = recipeById(m.id);
-    var row = el("div", "plan-meal");
+    var row = el("div", "plan-meal" + (m.completed ? " is-done" : ""));
 
+    row.appendChild(completeToggle(m));
     row.appendChild(el("span", "plan-meal-icon", esc(r ? (r.icon || "🍽️") : "🍽️")));
 
     var main = el("div", "plan-meal-main");
@@ -1451,7 +1530,8 @@
   // Compact chip for a meal placed in a Schedule slot.
   function scheduleChip(m) {
     var r = recipeById(m.id);
-    var chip = el("div", "plan-chip");
+    var chip = el("div", "plan-chip" + (m.completed ? " is-done" : ""));
+    chip.appendChild(completeToggle(m));
     chip.appendChild(el("span", "plan-chip-icon", esc(r ? (r.icon || "🍽️") : "🍽️")));
     var t = el("a", "plan-chip-title", esc(r ? r.title : m.id));
     if (r) t.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
@@ -1658,6 +1738,29 @@
     return wrap;
   }
 
+  // Split-trip collapse: items whose contributing meals are all marked
+  // Completed move here, off the active shopping list.
+  function madeSection(rows, checked) {
+    var wrap = el("div", "made-foot" + (plannerState.madeOpen ? " open" : ""));
+    var head = el("button", "made-foot-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", plannerState.madeOpen ? "true" : "false");
+    head.innerHTML =
+      '<span class="made-foot-title">✅ Already made</span>' +
+      '<span class="made-foot-count">' + rows.length + "</span>" +
+      '<span class="made-foot-chev">' + (plannerState.madeOpen ? "▾" : "▸") + "</span>";
+    head.addEventListener("click", function () {
+      plannerState.madeOpen = !plannerState.madeOpen; refresh();
+    });
+    wrap.appendChild(head);
+    if (plannerState.madeOpen) {
+      var list = el("div", "made-foot-list");
+      rows.forEach(function (row) { list.appendChild(groceryRow(row, checked)); });
+      wrap.appendChild(list);
+    }
+    return wrap;
+  }
+
   /* ── C4: Sum the weekly planned macros from recipe data ──────────────
      Uses serving_2 tier as the base (per-serving = calories/2) and scales
      to the meal's planned serving count. Macros are constant per serving. */
@@ -1764,12 +1867,13 @@
       var checked = loadGroc();
       var pantry = loadPantry();
 
-      var buyCats = [], staples = [];
+      var buyCats = [], staples = [], madeRows = [];
       cats.forEach(function (c) {
         var buy = [];
         c.rows.forEach(function (row) {
-          if (pantry.has(pantryKey(row.item))) staples.push(row);
-          else buy.push(row);
+          if (pantry.has(pantryKey(row.item))) { staples.push(row); return; }
+          if (groceryRowAllDone(row)) { madeRows.push(row); return; }
+          buy.push(row);
         });
         if (buy.length) buyCats.push({ category: c.category, rows: buy });
       });
@@ -1781,8 +1885,9 @@
         " · " + meals.length + (meals.length === 1 ? " meal" : " meals")));
 
       if (!total) {
-        card.appendChild(emptyState("🧂",
-          "Everything you need is a pantry staple.<br>Check your pantry below."));
+        card.appendChild(madeRows.length
+          ? emptyState("✅", "Everything for this week is already made.<br>Nice work.")
+          : emptyState("🧂", "Everything you need is a pantry staple.<br>Check your pantry below."));
       }
       buyCats.forEach(function (c) {
         var sec = el("div", "grocery-cat");
@@ -1794,6 +1899,7 @@
       });
       body.appendChild(card);
 
+      if (madeRows.length) body.appendChild(madeSection(madeRows, checked));
       if (staples.length) body.appendChild(pantryFooter(staples, checked));
 
       // C4: Macro goals bar — only when goals exist in MC Training's calculator
