@@ -7816,6 +7816,296 @@ const RECIPES = [
           "Gently fold in the avocado just before serving with tortilla chips."
       }
     ]
+  },
+
+  {
+    recipe_id: "fajita-steak-loaded-sweet-potato-nachos",
+    title: "Fajita Steak Loaded Sweet Potato Nachos",
+    category: "Web Finds",
+    source: "Web Finds",
+    icon: "🧀",
+    tags: ["Sheet-Pan", "Steak", "Shareable"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Crispy sweet potato \"chips\" loaded with fajita-seasoned steak, melted cheddar and mozzarella, caramelized onion and pepper, fresh tomato salsa, guacamole, and a drizzle of honey and chili flakes.",
+    prep_time_mins: 15,
+    cook_time_mins: 45,
+    native_serving: 4,
+    accent: "#C1622E",
+
+    macro_profiles: {
+      serving_4: { calories: 480, protein_g: 34, fat_g: 18, carbs_g: 35 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Rump steaks", prep: "", quantity: "2", unit: "", category: "Meat" },
+        { item: "Sweet potatoes", prep: "cut into circles", quantity: "4", unit: "", category: "Produce" },
+        { item: "Fajita seasoning", prep: "for the sweet potatoes", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Chicken seasoning", prep: "for the sweet potatoes", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fajita seasoning", prep: "for the steak and vegetables", quantity: "1/2", unit: "sachet", category: "Pantry" },
+        { item: "Reduced-fat cheddar cheese", prep: "grated", quantity: "20", unit: "g", category: "Dairy" },
+        { item: "Mozzarella cheese", prep: "grated", quantity: "20", unit: "g", category: "Dairy" },
+        { item: "Onion", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Tomatoes", prep: "chopped into small chunks", quantity: "8", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "finely chopped", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Lime", prep: "squeezed, for the tomatoes", quantity: "1", unit: "", category: "Produce" },
+        { item: "Guacamole", prep: "prepared", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Light crème fraîche", prep: "", quantity: "4", unit: "tbsp", category: "Dairy" },
+        { item: "Honey", prep: "for drizzling", quantity: "", unit: "", category: "Pantry" },
+        { item: "Chili flakes", prep: "to finish", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "to finish", quantity: "", unit: "", category: "Produce" },
+        { item: "Salt & black pepper", prep: "to taste, for the steak", quantity: "", unit: "", category: "Pantry" },
+        { item: "Olive oil", prep: "for cooking", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the sweet potatoes",
+        detail:
+          "Cut the sweet potatoes into circles and add to a baking tray. Drizzle with oil and the sweet potato seasoning, then cook in a preheated oven at 190°C (375°F) for 35 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Caramelize the onion & pepper",
+        detail:
+          "Slice the onion and pepper and add to an oiled pan. Sprinkle with half of the remaining fajita seasoning and cook on medium heat for 20 minutes, until completely soft."
+      },
+      {
+        step_number: 3,
+        title: "Cook the steak",
+        detail:
+          "Season the steak with salt and pepper, then coat in the rest of the fajita seasoning. Cook in an oiled pan to your preferred doneness (medium-rare works well), then rest for at least 10 minutes before slicing."
+      },
+      {
+        step_number: 4,
+        title: "Make the tomato salsa & guacamole",
+        detail:
+          "Chop the tomatoes into small chunks and combine with the finely chopped red onion, a drizzle of olive oil, and a squeeze of lime. Prepare the guacamole."
+      },
+      {
+        step_number: 5,
+        title: "Melt the cheese",
+        detail:
+          "Once the sweet potatoes are cooked, sprinkle over the cheddar and mozzarella and return to the oven for 10 minutes, until the cheese is golden."
+      },
+      {
+        step_number: 6,
+        title: "Assemble & serve",
+        detail:
+          "Layer the caramelized onion and pepper, sliced steak, tomato salsa, guacamole, and crème fraîche over the cheesy sweet potatoes. Finish with a drizzle of honey, chili flakes, and fresh parsley."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "fresh-guacamole",
+    title: "Fresh Guacamole",
+    category: "Salsa",
+    source: "Salsas",
+    icon: "🥑",
+    tags: ["No-Cook", "Make-Ahead", "Vegetarian"],
+    dish_category: "Salsas & Dips",
+    description:
+      "A simple, bright, and creamy dip made with smashed avocados, tomatoes, onion, jalapeños, fresh lemon and lime, salt, and pepper. Easy, flavorful, and perfect with chips, tacos, bowls, toast, or any quick snack plate.",
+    prep_time_mins: 15,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#6B8E4E",
+
+    macro_profiles: {
+      serving_4: { calories: 230, protein_g: 3, fat_g: 20, carbs_g: 12 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Avocados", prep: "smashed", quantity: "3", unit: "", category: "Produce" },
+        { item: "Tomatoes", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Onion", prep: "minced", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Jalapeño", prep: "minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Lemon", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Smash the avocados",
+        detail:
+          "Smash the avocados in a large bowl until mostly smooth with some texture remaining."
+      },
+      {
+        step_number: 2,
+        title: "Add the aromatics",
+        detail:
+          "Add the minced tomatoes, onion, and jalapeño."
+      },
+      {
+        step_number: 3,
+        title: "Season",
+        detail:
+          "Squeeze in the fresh lemon and lime juice, then season with salt and pepper to taste."
+      },
+      {
+        step_number: 4,
+        title: "Mix & serve",
+        detail:
+          "Mix until combined and serve fresh."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "italian-pasta-salad-pepperoncini-dressing",
+    title: "Italian Pasta Salad with Pepperoncini Dressing",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍝",
+    tags: ["Pasta Salad", "Vegetarian", "Make-Ahead"],
+    dish_category: "Salads & Slaws",
+    description:
+      "A fresh, make-ahead vegetarian pasta salad packed with chickpeas, cherry tomatoes, sweet peppers, pepperoncini, olives, spinach, Parmesan, and a zesty homemade Italian dressing. Colorful, tangy, and satisfying for weekday lunches, BBQs, or warm-weather entertaining.",
+    prep_time_mins: 20,
+    cook_time_mins: 15,
+    native_serving: 6,
+    accent: "#8AA84F",
+
+    macro_profiles: {
+      serving_6: { calories: 650, protein_g: 23, fat_g: 30, carbs_g: 68 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Fusilli pasta", prep: "", quantity: "1", unit: "lb", category: "Pantry" },
+        { item: "Chickpeas", prep: "drained and rinsed", quantity: "1", unit: "15-oz can", category: "Pantry" },
+        { item: "Cherry tomatoes", prep: "halved", quantity: "1", unit: "pint", category: "Produce" },
+        { item: "Mini sweet peppers", prep: "thinly sliced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Pepperoncini peppers", prep: "sliced", quantity: "3/4", unit: "cup", category: "Pantry" },
+        { item: "Kalamata olives", prep: "pitted and halved", quantity: "3/4", unit: "cup", category: "Pantry" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Provolone or mozzarella cheese", prep: "small cubed", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Fresh baby spinach", prep: "roughly chopped", quantity: "2-3", unit: "cups", category: "Produce" },
+        { item: "Extra-virgin olive oil", prep: "for the dressing", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Red wine vinegar", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Pepperoncini brine", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Shallots", prep: "minced", quantity: "3", unit: "tbsp", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Kosher salt", prep: "", quantity: "3/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail:
+          "Bring a large pot of salted water to a boil and cook the fusilli until al dente. Drain and let cool."
+      },
+      {
+        step_number: 2,
+        title: "Make the dressing",
+        detail:
+          "Whisk together the olive oil, red wine vinegar, pepperoncini brine, shallots, garlic, oregano, parsley, salt, and pepper."
+      },
+      {
+        step_number: 3,
+        title: "Combine the salad",
+        detail:
+          "In a large bowl, toss the cooled pasta with the chickpeas, cherry tomatoes, sweet peppers, pepperoncini, olives, Parmesan, provolone, and spinach."
+      },
+      {
+        step_number: 4,
+        title: "Dress & chill",
+        detail:
+          "Pour the dressing over the salad and toss to coat. Make 1-2 hours ahead so the pasta absorbs the dressing and the flavors deepen."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "butter-cream-shrimp-rice",
+    title: "Butter-Cream Shrimp & Rice",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍤",
+    tags: ["Meal-Prep", "Creamy", "Shrimp"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "A rich, creamy shrimp dinner made with extra-jumbo shrimp, tomato paste, garlic, Cajun seasoning, heavy cream, chicken broth, butter, and lemon. Saucy, savory, restaurant-style, and perfect served over warm rice.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B5452E",
+
+    macro_profiles: {
+      serving_4: { calories: 1020, protein_g: 51, fat_g: 60, carbs_g: 55 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Extra-jumbo shrimp", prep: "", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Heavy cream", prep: "", quantity: "2 1/4", unit: "cups", category: "Dairy" },
+        { item: "Chicken broth", prep: "", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "5", unit: "tbsp", category: "Pantry" },
+        { item: "Butter", prep: "divided", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Avocado oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Creole/Cajun seasoning", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried basil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Rice", prep: "for serving", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season & sear the shrimp",
+        detail:
+          "Pat the shrimp dry and season with the Creole/Cajun seasoning, Italian seasoning, garlic powder, onion powder, smoked paprika, black pepper, parsley, and basil. Sear in the avocado oil for 2 minutes per side in a hot skillet, then remove."
+      },
+      {
+        step_number: 2,
+        title: "Start the sauce",
+        detail:
+          "Melt 2 tablespoons of the butter in the skillet, then sauté the garlic and tomato paste until deep red."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail:
+          "Whisk in the chicken broth and heavy cream, then simmer until the sauce is thick enough to coat a spoon."
+      },
+      {
+        step_number: 4,
+        title: "Finish & serve",
+        detail:
+          "Stir the shrimp back into the sauce, then add the remaining 1 tablespoon of cold butter and the lemon juice. Serve over warm rice."
+      }
+    ]
   }
 ];
 
