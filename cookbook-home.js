@@ -481,6 +481,113 @@
     }, 0);
   }
 
+  /* ── Smart Week grouping ──────────────────────────────────────────────
+     Suggests 5 recipes whose grocery lists overlap heavily, so perishables
+     (Produce/Meat/Dairy) get used up across the week instead of accumulating
+     in the fridge. Reuses buildGrocery's item key (category + lowercased
+     item name) so "shared" here always matches what actually merges on the
+     grocery list. Pantry staples count toward overlap too, just at a lower
+     weight — they're not the spoilage problem, but two recipes calling for
+     the same rare pantry item is still a real signal. */
+  var SMW_PANTRY_WEIGHT = 0.25;
+  function smwItemKey(cat, item) { return (cat || "Other") + "|" + item.toLowerCase(); }
+  function smwItemWeight(cat) { return cat === "Pantry" ? SMW_PANTRY_WEIGHT : 1; }
+  // recipe_id -> { key: weight }, using whichever authored tier exists.
+  function smwBuildItemMaps(labels) {
+    var maps = {};
+    recipes().forEach(function (r) {
+      var tiers = r.ingredients_by_serving || {};
+      var list = tiers.serving_2 || tiers.serving_4 || [];
+      var map = {};
+      list.forEach(function (ing) {
+        var item = (ing.item || "").trim();
+        if (!item) return;
+        var cat = ing.category || "Other";
+        var key = smwItemKey(cat, item);
+        map[key] = smwItemWeight(cat);
+        if (!labels[key]) labels[key] = { item: item, category: cat };
+      });
+      maps[r.recipe_id] = map;
+    });
+    return maps;
+  }
+  function smwPairScore(mapA, mapB) {
+    var score = 0;
+    for (var key in mapA) {
+      if (mapB[key] != null) score += mapA[key];
+    }
+    return score;
+  }
+  function smwGroupScore(ids, itemMaps) {
+    var score = 0;
+    for (var i = 0; i < ids.length; i++) {
+      for (var j = i + 1; j < ids.length; j++) score += smwPairScore(itemMaps[ids[i]], itemMaps[ids[j]]);
+    }
+    return score;
+  }
+  // Greedily grow a seed pair to `size` recipes: each step adds whichever
+  // remaining candidate shares the most (weighted) with the group so far.
+  function smwGrow(seed, poolIds, itemMaps, size) {
+    var group = seed.slice();
+    var remaining = poolIds.filter(function (id) { return group.indexOf(id) < 0; });
+    while (group.length < size && remaining.length) {
+      var bestId = null, bestScore = -1;
+      remaining.forEach(function (id) {
+        var score = 0;
+        group.forEach(function (gid) { score += smwPairScore(itemMaps[id], itemMaps[gid]); });
+        if (score > bestScore) { bestScore = score; bestId = id; }
+      });
+      if (bestId == null) break;
+      group.push(bestId);
+      remaining.splice(remaining.indexOf(bestId), 1);
+    }
+    return group;
+  }
+  // Top-scoring recipe pairs across the pool, used as seeds for candidate groups.
+  function smwTopSeedPairs(poolIds, itemMaps, limit) {
+    var pairs = [];
+    for (var i = 0; i < poolIds.length; i++) {
+      for (var j = i + 1; j < poolIds.length; j++) {
+        var score = smwPairScore(itemMaps[poolIds[i]], itemMaps[poolIds[j]]);
+        if (score > 0) pairs.push({ ids: [poolIds[i], poolIds[j]], score: score });
+      }
+    }
+    pairs.sort(function (a, b) { return b.score - a.score; });
+    return pairs.slice(0, limit);
+  }
+  // Returns several distinct 5-recipe combos, best (most shared-ingredient
+  // weight) first, drawn from poolIds. Each combo: { ids, score }.
+  function smwCombos(poolIds, size) {
+    size = size || 5;
+    if (poolIds.length < size) return [];
+    var labels = {};
+    var itemMaps = smwBuildItemMaps(labels);
+    var seeds = smwTopSeedPairs(poolIds, itemMaps, 10);
+    var combos = [], seen = {};
+    seeds.forEach(function (seedPair) {
+      var group = smwGrow(seedPair.ids, poolIds, itemMaps, size);
+      if (group.length < size) return;
+      var sig = group.slice().sort().join(",");
+      if (seen[sig]) return;
+      seen[sig] = true;
+      combos.push({ ids: group, score: smwGroupScore(group, itemMaps) });
+    });
+    combos.sort(function (a, b) { return b.score - a.score; });
+    return { combos: combos, itemMaps: itemMaps, labels: labels };
+  }
+  // Item keys shared by 2+ recipes within a combo, most-shared first.
+  function smwSharedKeys(ids, itemMaps) {
+    var counts = {};
+    ids.forEach(function (id) {
+      var map = itemMaps[id];
+      for (var key in map) counts[key] = (counts[key] || 0) + 1;
+    });
+    return Object.keys(counts)
+      .filter(function (k) { return counts[k] >= 2; })
+      .sort(function (a, b) { return counts[b] - counts[a]; })
+      .map(function (k) { return { key: k, count: counts[k] }; });
+  }
+
   /* ── Dish-type categories ─────────────────────────────────────────── */
   // Each recipe declares exactly one `dish_category`, so a recipe always has a
   // single home. Per-category icon/accent/blurb drive the Categories cards.
@@ -1421,6 +1528,11 @@
     add.addEventListener("click", function () { openPicker({}); });
     body.appendChild(add);
 
+    var smart = el("button", "plan-smart-btn", "✨&nbsp;&nbsp;Smart Week");
+    smart.type = "button";
+    smart.addEventListener("click", openSmartWeek);
+    body.appendChild(smart);
+
     if (meals.length) {
       var clear = el("button", "plan-clear", "Clear week");
       clear.type = "button";
@@ -1812,6 +1924,104 @@
       results.appendChild(grid);
     }
     box.addEventListener("input", paint);
+    paint();
+
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
+  /* ── Smart Week overlay: preview 5 ingredient-overlapping recipes ──── */
+  function closeSmartWeek() {
+    var ov = document.querySelector(".smw-overlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+  function openSmartWeek() {
+    closeSmartWeek();
+
+    // Suggest from recipes not already in the week, so Smart Week complements
+    // the plan instead of duplicating it — unless the catalog is too small.
+    var planned = planRecipeIds();
+    var allIds = recipes().map(function (r) { return r.recipe_id; });
+    var pool = allIds.filter(function (id) { return planned.indexOf(id) < 0; });
+    if (pool.length < 5) pool = allIds;
+
+    var built = smwCombos(pool, 5);
+    var combos = built.combos || [], itemMaps = built.itemMaps || {}, labels = built.labels || {};
+    var index = 0;
+
+    var ov = el("div", "picker smw-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "✨ Smart Week"));
+    var close = el("button", "picker-close", "Cancel");
+    close.type = "button";
+    close.addEventListener("click", closeSmartWeek);
+    top.appendChild(close);
+    ov.appendChild(top);
+
+    var body = el("div", "picker-results smw-body");
+    ov.appendChild(body);
+
+    function paint() {
+      body.innerHTML = "";
+      if (!combos.length) {
+        body.appendChild(emptyState("🧊",
+          "Not enough shared ingredients yet.<br>Add a few more recipes and try again."));
+        return;
+      }
+      var combo = combos[index];
+      var shared = smwSharedKeys(combo.ids, itemMaps);
+
+      var summary = el("div", "smw-summary");
+      var topShared = shared.slice(0, 6).map(function (s) { return esc(labels[s.key].item); }).join(" · ");
+      summary.innerHTML =
+        '<p class="smw-summary-line">5 meals · ' + shared.length +
+        (shared.length === 1 ? " shared ingredient" : " shared ingredients") +
+        " — less perishable food left to spoil.</p>" +
+        (topShared ? '<p class="smw-summary-tags">' + topShared + "</p>" : "");
+      body.appendChild(summary);
+
+      var grid = el("div", "col-grid smw-grid");
+      combo.ids.forEach(function (id) {
+        var r = recipeById(id);
+        if (!r) return;
+        var mySet = itemMaps[id] || {};
+        var mine = shared
+          .filter(function (s) { return mySet[s.key] != null; })
+          .map(function (s) { return labels[s.key].item; });
+        var card = el("div", "rc smw-card");
+        card.style.setProperty("--rc-accent", r.accent || "#C87A53");
+        card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
+        card.innerHTML =
+          '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+          '<div class="rc-body">' +
+            '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
+            '<p class="rc-meta">' + esc(r.dish_category || "") + "</p>" +
+            (mine.length ? '<p class="smw-card-shares">Shares ' + esc(mine.join(", ")) + "</p>" : "") +
+          "</div>";
+        grid.appendChild(card);
+      });
+      body.appendChild(grid);
+
+      var actions = el("div", "smw-actions");
+      if (combos.length > 1) {
+        var shuffle = el("button", "picker-sort-btn smw-shuffle-btn", "🔀 Try another combo");
+        shuffle.type = "button";
+        shuffle.addEventListener("click", function () { index = (index + 1) % combos.length; paint(); });
+        actions.appendChild(shuffle);
+      }
+      var confirm = el("button", "cook-start smw-confirm-btn", "＋ Add these 5 to This Week");
+      confirm.type = "button";
+      confirm.addEventListener("click", function () {
+        combo.ids.forEach(function (id) { addMeal(id, { serving: 2 }); });
+        closeSmartWeek();
+        plannerState.view = "plan";
+        refresh();
+        window.scrollTo(0, 0);
+      });
+      actions.appendChild(confirm);
+      body.appendChild(actions);
+    }
     paint();
 
     document.body.appendChild(ov);
