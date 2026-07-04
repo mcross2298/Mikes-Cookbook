@@ -10939,6 +10939,345 @@ const RECIPES = [
         detail: "Plate the noodles, top with the crispy chicken, and sprinkle with sesame seeds."
       }
     ]
+  },
+
+  {
+    recipe_id: "creamy-sun-dried-tomato-chicken-orzo",
+    title: "Creamy Sun-Dried Tomato Chicken with Orzo",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍅",
+    tags: ["Meal-Prep", "High-Protein", "Creamy"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Tender chicken thighs in a creamy parmesan sauce with sun-dried tomatoes and perfectly cooked orzo, finished with fresh basil.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#A8433D",
+
+    macro_profiles: {
+      serving_4: { calories: 590, protein_g: 44, fat_g: 22, carbs_g: 52 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless chicken thighs", prep: "", quantity: "900", unit: "g", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "4", unit: "cloves", category: "Produce" },
+        { item: "Sun-dried tomatoes", prep: "sliced", quantity: "90", unit: "g", category: "Pantry" },
+        { item: "Orzo", prep: "dry", quantity: "320", unit: "g", category: "Pantry" },
+        { item: "Chicken stock", prep: "", quantity: "700", unit: "ml", category: "Pantry" },
+        { item: "Double cream", prep: "", quantity: "300", unit: "ml", category: "Dairy" },
+        { item: "Parmesan", prep: "finely grated", quantity: "80", unit: "g", category: "Dairy" },
+        { item: "Salt", prep: "", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh basil", prep: "torn", quantity: "2", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season and sear",
+        detail: "Season the chicken and sear in olive oil until golden and cooked through. Remove and rest."
+      },
+      {
+        step_number: 2,
+        title: "Sauté aromatics",
+        detail: "In the same pan, sauté the garlic and sun-dried tomatoes until fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Add orzo & stock",
+        detail: "Add the orzo and chicken stock. Simmer, stirring occasionally, until the orzo is tender."
+      },
+      {
+        step_number: 4,
+        title: "Make it creamy",
+        detail: "Stir in the double cream and parmesan until the sauce is rich and glossy."
+      },
+      {
+        step_number: 5,
+        title: "Finish & serve",
+        detail: "Return the chicken to the pan, coat well in the sauce, finish with basil, and serve warm."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-butter-shrimp-lemon-orzo",
+    title: "Garlic Butter Shrimp with Creamy Lemon Orzo",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍤",
+    tags: ["Meal-Prep", "High-Protein", "Seafood"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Seafood",
+    description:
+      "Succulent garlic butter shrimp atop a rich and creamy lemon orzo with parmesan and sun-dried tomatoes — bright, comforting, and fast.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#D9A441",
+
+    macro_profiles: {
+      serving_4: { calories: 640, protein_g: 45, fat_g: 24, carbs_g: 60 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Raw king prawns", prep: "", quantity: "800", unit: "g", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "40", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced", quantity: "4", unit: "cloves", category: "Produce" },
+        { item: "Lemon zest", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Orzo", prep: "dry", quantity: "320", unit: "g", category: "Pantry" },
+        { item: "Chicken stock", prep: "", quantity: "600", unit: "ml", category: "Pantry" },
+        { item: "Double cream", prep: "", quantity: "200", unit: "ml", category: "Dairy" },
+        { item: "Parmesan", prep: "grated", quantity: "70", unit: "g", category: "Dairy" },
+        { item: "Sun-dried tomatoes", prep: "chopped", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the prawns",
+        detail: "Sear the prawns in olive oil until just cooked. Remove and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Toast the orzo",
+        detail: "In the same pan, melt the butter and sauté the garlic until fragrant. Add the orzo and toast for 1-2 minutes, stirring."
+      },
+      {
+        step_number: 3,
+        title: "Simmer",
+        detail: "Pour in the chicken stock and simmer, stirring occasionally, until the orzo is almost tender."
+      },
+      {
+        step_number: 4,
+        title: "Make it creamy",
+        detail: "Stir in the cream, parmesan, lemon zest, lemon juice, and sun-dried tomatoes. Cook until creamy and the orzo is tender."
+      },
+      {
+        step_number: 5,
+        title: "Finish & serve",
+        detail: "Return the prawns to the pan and heat gently. Season with salt and pepper, then finish with parsley, extra parmesan, and a squeeze of lemon."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "baked-berry-protein-breakfast-bowl",
+    title: "Baked Berry Protein Breakfast Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍓",
+    tags: ["Meal-Prep", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A single-serving baked bowl of egg, yogurt, and vanilla protein powder batter studded with fresh berries — a warm, high-protein start to the day.",
+    prep_time_mins: 5,
+    cook_time_mins: 22,
+    native_serving: 1,
+    accent: "#7B4B94",
+
+    macro_profiles: {
+      serving_1: { calories: 410, protein_g: 32, fat_g: 12, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Egg", prep: "large", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Plain or vanilla yogurt", prep: "", quantity: "50", unit: "g", category: "Dairy" },
+        { item: "Milk", prep: "almond or any milk", quantity: "70", unit: "ml", category: "Dairy" },
+        { item: "All-purpose flour", prep: "", quantity: "35", unit: "g", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Baking powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh berries", prep: "berries recommended", quantity: "1/2", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the batter",
+        detail: "Preheat the oven to 350°F (180°C) and lightly grease a small oven-safe dish. Whisk together the egg, yogurt, milk, honey, and protein powder until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Add dry ingredients",
+        detail: "Stir in the flour and baking powder until fully combined and no lumps remain."
+      },
+      {
+        step_number: 3,
+        title: "Assemble",
+        detail: "Pour the batter into the prepared dish and evenly scatter the fruit over the top."
+      },
+      {
+        step_number: 4,
+        title: "Bake",
+        detail: "Bake for 20-25 minutes until set in the center and lightly golden on top."
+      },
+      {
+        step_number: 5,
+        title: "Cool and serve",
+        detail: "Let cool for 5 minutes before eating. Enjoy warm, or store chilled and reheat briefly."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "turkish-beef-cubes-spiced-eggs",
+    title: "Turkish-Style Sautéed Beef Cubes & Spiced Eggs",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍳",
+    tags: ["Meal-Prep", "High-Protein", "Spicy"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
+    description:
+      "Seared beef sirloin cubes and skillet eggs finished with a quick chili-herb oil — a Turkish-inspired, protein-packed skillet for any time of day.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 2,
+    accent: "#B8562F",
+
+    macro_profiles: {
+      serving_2: { calories: 485, protein_g: 49, fat_g: 29, carbs_g: 4 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Beef sirloin or steak", prep: "cut into 1-inch cubes", quantity: "450", unit: "g", category: "Meat" },
+        { item: "Olive oil", prep: "for the beef", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Kosher salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the beef", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "for the beef", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried thyme or oregano", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Eggs", prep: "large", quantity: "4", unit: "", category: "Dairy" },
+        { item: "Salt and pepper", prep: "pinch, for the eggs", quantity: "", unit: "", category: "Pantry" },
+        { item: "Olive oil or melted butter", prep: "for the chili-herb oil", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Chili flakes", prep: "for the oil, plus extra to serve", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "for the oil", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley or dill", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the beef",
+        detail: "Heat a large skillet (cast iron preferred) over medium-high. Toss the beef cubes with oil, salt, pepper, paprika, chili flakes, and thyme. Sear in a single layer, turning so all sides are deeply browned and just cooked through, 4-5 minutes total. Push the beef to one side of the skillet."
+      },
+      {
+        step_number: 2,
+        title: "Cook the eggs",
+        detail: "Crack the eggs directly into the empty side of the skillet. Lower the heat to medium and cover loosely until the whites set but the yolks remain runny, 3-4 minutes (or flip gently for over-easy)."
+      },
+      {
+        step_number: 3,
+        title: "Make the spiced oil",
+        detail: "While the eggs cook, quickly heat the olive oil or butter with chili flakes, paprika, parsley, and a pinch of salt in a small pan (or microwave) until fragrant, about 60 seconds."
+      },
+      {
+        step_number: 4,
+        title: "Finish",
+        detail: "Drizzle the chili-herb oil generously over the eggs and beef. Sprinkle with fresh herbs, extra chili, and black pepper."
+      },
+      {
+        step_number: 5,
+        title: "Serve",
+        detail: "Enjoy straight from the pan with warm flatbread or crusty bread for dipping."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chick-fil-a-inspired-breakfast-meal-prep",
+    title: "Chick-fil-A Inspired Breakfast Meal Prep",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍗",
+    tags: ["Meal-Prep", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Chicken",
+    description:
+      "Crispy air-fried chicken bites, fluffy scrambled eggs, and tater tots meal-prepped into containers with a homemade copycat Chick-fil-A sauce.",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#E0A72E",
+
+    macro_profiles: {
+      serving_4: { calories: 460, protein_g: 42, fat_g: 24, carbs_g: 18 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Frozen lightly breaded chicken bites", prep: "such as Just Bare or similar", quantity: "16", unit: "oz", category: "Meat" },
+        { item: "Cooking spray or olive oil spray", prep: "", quantity: "", unit: "", category: "Pantry" },
+        { item: "Eggs", prep: "large", quantity: "10", unit: "", category: "Dairy" },
+        { item: "Milk", prep: "or unsweetened almond milk", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Butter or olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Frozen tater tots", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Light mayo", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "BBQ sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Yellow mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "optional, for brightness", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Preheat an air fryer to 400°F (200°C). Spray the chicken bites with oil and air fry for 10-12 minutes, shaking halfway, until crispy and golden."
+      },
+      {
+        step_number: 2,
+        title: "Cook the tater tots",
+        detail: "Air fry or bake the tater tots according to package directions until crispy."
+      },
+      {
+        step_number: 3,
+        title: "Make the scrambled eggs",
+        detail: "Whisk together the eggs, milk, salt, and pepper. Heat a large skillet over medium heat, melt the butter, then add the egg mixture. Gently stir until soft and fluffy, about 3-4 minutes. Remove from heat."
+      },
+      {
+        step_number: 4,
+        title: "Mix the sauce",
+        detail: "Whisk together the mayo, honey, BBQ sauce, and both mustards until smooth. Add lemon juice if desired."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowls",
+        detail: "Divide the tater tots, scrambled eggs, and chicken bites evenly among 4 glass meal-prep containers. Add a small sauce cup of Chick-fil-A sauce to each."
+      }
+    ]
   }
 ];
 
