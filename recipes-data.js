@@ -11766,6 +11766,446 @@ const RECIPES = [
           "Whisk in the water a little at a time to loosen the sauce. Chill until ready to serve."
       }
     ]
+  },
+
+  {
+    recipe_id: "chimichurri-steak-marinade",
+    title: "Chimichurri Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌿",
+    tags: ["No-Cook", "Herby", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "A bright, herby Argentine-style marinade of olive oil, garlic, and vinegar. Let steak sit in it before grilling for a fresh, tangy crust.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#6B8E4E",
+
+    macro_profiles: {
+      serving_2: { calories: 124, protein_g: 0, fat_g: 14, carbs_g: 1 },
+      serving_4: { calories: 124, protein_g: 0, fat_g: 14, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Red wine vinegar", prep: "", quantity: "1", unit: "splash", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Red wine vinegar", prep: "", quantity: "2", unit: "splash", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, parsley, oregano, garlic, and a splash of red wine vinegar."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge. Bring to room temperature before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "korean-bbq-steak-marinade",
+    title: "Korean BBQ Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥢",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "A sweet-savory soy, sesame, and ginger marinade with a Korean BBQ edge. Great on flank or skirt steak before a hot sear.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#A63D2F",
+
+    macro_profiles: {
+      serving_2: { calories: 57, protein_g: 1, fat_g: 2, carbs_g: 8 },
+      serving_4: { calories: 57, protein_g: 1, fat_g: 2, carbs_g: 8 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Ginger", prep: "grated", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Soy sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sesame oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the soy sauce, brown sugar, sesame oil, garlic, and ginger until the sugar dissolves."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge. Pat dry before searing for the best crust."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "coffee-chili-steak-marinade",
+    title: "Coffee Chili Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "☕",
+    tags: ["No-Cook", "Bold", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Espresso powder and chili build a dark, bittersweet crust on grilled steak — bold flavor with a subtle kick.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#6F4E37",
+
+    macro_profiles: {
+      serving_2: { calories: 73, protein_g: 0, fat_g: 7, carbs_g: 3 },
+      serving_4: { calories: 73, protein_g: 0, fat_g: 7, carbs_g: 3 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Espresso powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Espresso powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, espresso powder, chili powder, brown sugar, and black pepper into a paste."
+      },
+      {
+        step_number: 2,
+        title: "Rub & marinate the steak",
+        detail:
+          "Rub the paste over steak and marinate 30 minutes to 2 hours in the fridge, then bring to room temperature before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "peppercorn-garlic-steak-marinade",
+    title: "Peppercorn Garlic Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🧂",
+    tags: ["No-Cook", "Peppery", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Cracked peppercorns and garlic in olive oil make a sharp, savory crust that's perfect for a classic pan-seared steak.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#5C5346",
+
+    macro_profiles: {
+      serving_2: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 1 },
+      serving_4: { calories: 68, protein_g: 0, fat_g: 7, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Crushed peppercorns", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "pinch", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Crushed peppercorns", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Onion powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "2", unit: "pinch", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, crushed peppercorns, garlic, onion powder, and salt."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Rub over steak and marinate 30 minutes to 2 hours in the fridge before grilling or pan-searing."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "balsamic-herb-steak-marinade",
+    title: "Balsamic Herb Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍇",
+    tags: ["No-Cook", "Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Balsamic vinegar, olive oil, oregano, and garlic — a simple, tangy marinade that tenderizes while it flavors.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#6B2D3C",
+
+    macro_profiles: {
+      serving_2: { calories: 77, protein_g: 0, fat_g: 7, carbs_g: 3 },
+      serving_4: { calories: 77, protein_g: 0, fat_g: 7, carbs_g: 3 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Balsamic vinegar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Balsamic vinegar", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the balsamic vinegar, olive oil, oregano, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chipotle-lime-steak-marinade",
+    title: "Chipotle Lime Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🌶️",
+    tags: ["No-Cook", "Spicy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Smoky chipotle powder and bright lime juice give steak a Tex-Mex edge — great for fajitas or tacos off the grill.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#BF5B2E",
+
+    macro_profiles: {
+      serving_2: { calories: 69, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 69, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Lime juice", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the lime juice, chipotle powder, olive oil, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-herb-steak-marinade",
+    title: "Garlic Herb Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🧄",
+    tags: ["No-Cook", "Herby", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "An everyday steakhouse marinade — olive oil, garlic, rosemary, and cracked pepper. Simple, reliable, and always in season.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#7D8C57",
+
+    macro_profiles: {
+      serving_2: { calories: 123, protein_g: 0, fat_g: 14, carbs_g: 1 },
+      serving_4: { calories: 123, protein_g: 0, fat_g: 14, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Dried rosemary", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Dried rosemary", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, garlic, rosemary, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "montreal-steak-marinade",
+    title: "Montreal Style Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥩",
+    tags: ["No-Cook", "Peppery", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Bold Montreal steak seasoning loosened into an olive oil marinade — coarse, garlicky, and peppery, built for a hard sear.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#4A4A48",
+
+    macro_profiles: {
+      serving_2: { calories: 67, protein_g: 0, fat_g: 7, carbs_g: 1 },
+      serving_4: { calories: 67, protein_g: 0, fat_g: 7, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Montreal steak seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cracked black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Montreal steak seasoning", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Cracked black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, Montreal steak seasoning, garlic powder, and cracked pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Rub over steak and marinate 30 minutes to 2 hours in the fridge, then bring to room temperature before grilling."
+      }
+    ]
   }
 ];
 
@@ -11907,6 +12347,24 @@ const COLLECTIONS = [
     icon: "🥄",
     status: "live",
     source_match: "Sauces"
+  },
+  {
+    id: "marinades",
+    title: "Marinades",
+    tag: "★ Collection · Mix & Match",
+    blurb:
+      "No-cook marinades to build a crust and lock in flavor before the grill " +
+      "or pan — sorted by protein so you can grab-and-go.",
+    designer: "📖 Saved From Around the Web",
+    accent: "#A63D2F",          // seared crust red-brown
+    icon: "🧂",
+    status: "live",
+    source_match: "Marinades",
+    subsections: [
+      { key: "Chicken", label: "Chicken" },
+      { key: "Beef & Steak", label: "Beef & Steak" },
+      { key: "Seafood", label: "Seafood" }
+    ]
   }
 ];
 
