@@ -287,13 +287,40 @@
     try { localStorage.setItem(GROC_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
   }
 
-  /* ── Cook log (read-only here; written on the recipe detail page) ──────
-     Drives "made recently" awareness in the planner picker. Entries may be
-     bare ISO strings (legacy) or { at, photo } objects. */
+  /* ── Cook log (shared with the recipe detail page's "I Cooked This") ───
+     Drives "made recently" awareness in the planner picker and Smart Week's
+     repeat-avoidance. Entries may be bare ISO strings (legacy) or
+     { at, photo } objects. The planner also *writes* here now (see
+     toggleMealCompleted) so Smart Week gets a recency signal even from
+     users who never open the recipe detail page. */
   var COOKED_KEY = "mc-cookbook:cooked";
   function loadCookedMap() {
     try { var o = JSON.parse(localStorage.getItem(COOKED_KEY) || "{}"); return (o && typeof o === "object" && !Array.isArray(o)) ? o : {}; }
     catch (e) { return {}; }
+  }
+  function saveCookedMap(map) {
+    try { localStorage.setItem(COOKED_KEY, JSON.stringify(map)); } catch (e) {}
+  }
+  // Mirrors cookbook.js's logCooked/removeCooked. Returns the ISO timestamp
+  // used, so the caller can stash it on the meal and remove exactly this
+  // entry later without touching any recipe-page-authored history.
+  function logCookEntry(id) {
+    var map = loadCookedMap();
+    var at = new Date().toISOString();
+    if (!Array.isArray(map[id])) map[id] = [];
+    map[id].push({ at: at, photo: null });
+    saveCookedMap(map);
+    return at;
+  }
+  function removeCookEntry(id, at) {
+    var map = loadCookedMap();
+    if (!Array.isArray(map[id])) return;
+    map[id] = map[id].filter(function (e) {
+      var eat = typeof e === "string" ? e : (e && e.at);
+      return eat !== at;
+    });
+    if (!map[id].length) delete map[id];
+    saveCookedMap(map);
   }
   function lastCookedAt(id) {
     var list = loadCookedMap()[id];
@@ -388,11 +415,12 @@
   }
 
   /* ── Completion tracking & macro history ──────────────────────────────
-     "Mark Completed" flips a meal's completed/completedAt and logs its
-     macros to MACRO_HISTORY_KEY, keyed by uid so re-toggling never
-     double-counts. Un-marking removes its log entry. Macro math mirrors
-     computeWeekMacros: serving_2 is the per-serving base, scaled to the
-     meal's planned serving count. */
+     "Mark Completed" flips a meal's completed/completedAt, logs its macros
+     to MACRO_HISTORY_KEY, and appends a shared cook-log entry (feeding
+     Smart Week's repeat-avoidance) — all keyed by uid/cookLogAt so
+     re-toggling never double-counts. Un-marking removes both. Macro math
+     mirrors computeWeekMacros: serving_2 is the per-serving base, scaled to
+     the meal's planned serving count. */
   var MACRO_HISTORY_KEY = "mc-cookbook:mealplan:macrohistory";
   function loadMacroHistory() {
     try { return JSON.parse(localStorage.getItem(MACRO_HISTORY_KEY) || "[]"); }
@@ -436,9 +464,15 @@
     if (!m) return false;
     m.completed = !m.completed;
     m.completedAt = m.completed ? new Date().toISOString() : null;
-    savePlan(p);
-    if (!m.completed) { unlogMealMacros(uid); return false; }
+    if (!m.completed) {
+      unlogMealMacros(uid);
+      if (m.cookLogAt) { removeCookEntry(m.id, m.cookLogAt); m.cookLogAt = null; }
+      savePlan(p);
+      return false;
+    }
     logMealMacros(m);
+    m.cookLogAt = logCookEntry(m.id);
+    savePlan(p);
     return p.meals.length > 0 && p.meals.every(function (x) { return x.completed; });
   }
 
@@ -629,7 +663,12 @@
      slots in that scope from classifyMealSlots' eligible pools. Selection
      favors recipes not yet used elsewhere in the generated week, avoids
      repeating the same dish_category on consecutive days within a slot,
-     and deprioritizes recipes cooked recently (via the cook log). */
+     and deprioritizes recipes cooked recently (via the cook log — which
+     the planner's own "Mark Completed" now feeds, not just the recipe
+     detail page). Anything cooked within SMW_HARD_EXCLUDE_DAYS is dropped
+     from the candidate pool outright, unless that would leave a slot with
+     no options at all, in which case it falls back to scoring the full
+     pool with the existing soft recency decay. */
   var SMART_SCOPES = [
     { key: "all",           label: "All",                slots: ["Breakfast", "Lunch", "Dinner"] },
     { key: "breakfast",     label: "Breakfast",          slots: ["Breakfast"] },
@@ -640,6 +679,7 @@
   ];
   var SMW_RECENCY_CAP_DAYS = 60;   // never-cooked / long-ago treated as equally "fresh"
   var SMW_REPEAT_CATEGORY_PENALTY = 15;
+  var SMW_HARD_EXCLUDE_DAYS = 7;   // cooked this recently: skip unless the pool would go empty
   function smwScoreCandidate(r, usedIds, prevCategory) {
     var score = 0;
     if (usedIds.has(r.recipe_id)) score -= 1000;
@@ -653,8 +693,13 @@
     var pool = mealEligibleRecipes(slot);
     if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
     if (!pool.length) return null;
+    var fresh = pool.filter(function (r) {
+      var days = daysSinceCooked(r.recipe_id);
+      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
+    });
+    var candidates = fresh.length ? fresh : pool;
     var best = null, bestScore = -Infinity;
-    pool.forEach(function (r) {
+    candidates.forEach(function (r) {
       var s = smwScoreCandidate(r, usedIds, prevCategory);
       if (s > bestScore) { bestScore = s; best = r; }
     });
