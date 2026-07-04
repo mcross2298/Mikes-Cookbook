@@ -706,6 +706,108 @@
     saveGroc(new Set());
   }
 
+  /* ── RecipeEquivalenceEngine (Smart Replacement) ──────────────────────
+     Deliberately decoupled from Smart Week's generation/scoring above —
+     this only ever answers "what could replace THIS one meal", using its
+     own sre* namespace. Two branches:
+       Iso-Nutritional: same dish_category (the app's proxy for cooking
+       method/"structural blueprint"), shared equipment-style tags, and
+       per-serving protein/carbs/fat within a tolerance band, widened only
+       if the strict ±10% band can't surface 3 candidates.
+       Express: prep+cook <= 15 min, ranked by low-friction tags first
+       (No-Cook/One-Pot/One-Pan/One-Skillet/Quick) then by speed.
+     Both stay within the meal's own slot eligibility (or, for an
+     unscheduled meal, the source recipe's own eligible slots). */
+  var SRE_EQUIPMENT_TAGS = [
+    "Skillet", "One-Skillet", "One-Pan", "One-Pot", "Sheet-Pan",
+    "Grill-Ready", "Grilled", "Air Fryer", "Crockpot", "Instant-Pot", "Casserole"
+  ];
+  var SRE_EXPRESS_LOW_FRICTION_TAGS = ["No-Cook", "One-Pot", "One-Pan", "One-Skillet", "Quick"];
+  var SRE_EXPRESS_MAX_MINS = 15;
+  var SRE_MACRO_TOLERANCES = [0.10, 0.20, 0.35];
+
+  function sreTargetSlots(m, source) {
+    return m.slot ? [m.slot] : classifyMealSlots(source);
+  }
+  function sreSharedTagCount(a, b) {
+    var bTags = b.tags || [];
+    return (a.tags || []).filter(function (t) { return bTags.indexOf(t) >= 0; }).length;
+  }
+  function sreEquipmentMatch(a, b) {
+    var aEq = (a.tags || []).filter(function (t) { return SRE_EQUIPMENT_TAGS.indexOf(t) >= 0; });
+    var bEq = (b.tags || []).filter(function (t) { return SRE_EQUIPMENT_TAGS.indexOf(t) >= 0; });
+    return aEq.some(function (t) { return bEq.indexOf(t) >= 0; });
+  }
+  function sreWithinTolerance(sourceVal, candVal, tolerance) {
+    if (sourceVal === 0) return Math.abs(candVal - sourceVal) <= 1;
+    return Math.abs(candVal - sourceVal) / Math.abs(sourceVal) <= tolerance;
+  }
+  function sreMacroWithinBand(source, candidate, tolerance) {
+    var sm = source.macro_profiles && source.macro_profiles.serving_2;
+    var cm = candidate.macro_profiles && candidate.macro_profiles.serving_2;
+    if (!sm || !cm) return false;
+    return sreWithinTolerance(sm.protein_g || 0, cm.protein_g || 0, tolerance) &&
+           sreWithinTolerance(sm.carbs_g   || 0, cm.carbs_g   || 0, tolerance) &&
+           sreWithinTolerance(sm.fat_g     || 0, cm.fat_g     || 0, tolerance);
+  }
+  function sreIsoCandidates(m) {
+    var source = recipeById(m.id);
+    if (!source) return [];
+    var slots = sreTargetSlots(m, source);
+    var pool = recipes().filter(function (r) {
+      return r.recipe_id !== source.recipe_id &&
+        slots.some(function (slot) { return isMealEligible(r, slot); });
+    });
+    var matches = [];
+    for (var i = 0; i < SRE_MACRO_TOLERANCES.length; i++) {
+      matches = pool.filter(function (r) { return sreMacroWithinBand(source, r, SRE_MACRO_TOLERANCES[i]); });
+      if (matches.length >= 3) break;
+    }
+    if (matches.length < 3) matches = pool.slice(); // last resort: drop the macro band entirely
+    matches.sort(function (a, b) {
+      function score(r) {
+        return (r.dish_category === source.dish_category ? 100 : 0) +
+               (sreEquipmentMatch(source, r) ? 30 : 0) +
+               sreSharedTagCount(source, r) * 5;
+      }
+      return score(b) - score(a);
+    });
+    return matches.slice(0, 3);
+  }
+  function sreExpressScore(r) {
+    var tags = r.tags || [];
+    var bonus = tags.filter(function (t) { return SRE_EXPRESS_LOW_FRICTION_TAGS.indexOf(t) >= 0; }).length;
+    var total = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
+    return bonus * 100 - total;
+  }
+  function sreExpressCandidates(m) {
+    var source = recipeById(m.id);
+    if (!source) return [];
+    var slots = sreTargetSlots(m, source);
+    var pool = recipes().filter(function (r) {
+      if (r.recipe_id === source.recipe_id) return false;
+      var total = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
+      if (total <= 0 || total > SRE_EXPRESS_MAX_MINS) return false;
+      return slots.some(function (slot) { return isMealEligible(r, slot); });
+    });
+    pool.sort(function (a, b) { return sreExpressScore(b) - sreExpressScore(a); });
+    return pool.slice(0, 3);
+  }
+  // Swaps a meal's recipe in place (keeps day/slot/serving); resets
+  // completion since it's now literally a different dish. The grocery list
+  // and macro tally sync automatically on next render — both are always
+  // derived fresh from planMeals(), never cached.
+  function swapMeal(uid, newRecipeId) {
+    var p = loadPlan();
+    var m = p.meals.filter(function (x) { return x.uid === uid; })[0];
+    if (!m) return;
+    if (m.completed) unlogMealMacros(uid);
+    m.id = newRecipeId;
+    m.completed = false;
+    m.completedAt = null;
+    savePlan(p);
+  }
+
   /* ── Dish-type categories ─────────────────────────────────────────── */
   // Each recipe declares exactly one `dish_category`, so a recipe always has a
   // single home. Per-category icon/accent/blurb drive the Categories cards.
@@ -1508,6 +1610,17 @@
     });
     return b;
   }
+  // Opens the Smart Replacement picker (Iso-Nutritional / Express) for this meal.
+  function replaceBtn(m) {
+    var b = el("button", "plan-swap", "⇄");
+    b.type = "button";
+    b.setAttribute("aria-label", "Replace this meal");
+    b.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      openReplaceRecipe(m);
+    });
+    return b;
+  }
   // "Mark Completed" toggle: flips m.completed/completedAt, logs macros,
   // and surfaces "Save Week Block?" the moment this was the last meal left.
   function completeToggle(m) {
@@ -1566,6 +1679,7 @@
     pickers.appendChild(daySel);
     pickers.appendChild(slotSel);
     ctrl.appendChild(pickers);
+    ctrl.appendChild(replaceBtn(m));
     ctrl.appendChild(removeBtn(m));
     row.appendChild(ctrl);
     return row;
@@ -1581,6 +1695,7 @@
     if (r) t.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
     chip.appendChild(t);
     chip.appendChild(servingToggle(m));
+    chip.appendChild(replaceBtn(m));
     chip.appendChild(removeBtn(m));
     return chip;
   }
@@ -2288,6 +2403,77 @@
     actions.appendChild(save);
     body.appendChild(actions);
     ov.appendChild(body);
+
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
+  /* ── Smart Replacement overlay: Iso-Nutritional / Express picker ────── */
+  function closeReplaceRecipe() {
+    var ov = document.querySelector(".sre-overlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+  function openReplaceRecipe(m) {
+    closeReplaceRecipe();
+    var source = recipeById(m.id);
+    if (!source) return;
+
+    var mode = "iso";
+
+    var ov = el("div", "picker sre-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "⇄ Replace " + esc(source.title)));
+    var close = el("button", "picker-close", "Cancel");
+    close.type = "button";
+    close.addEventListener("click", closeReplaceRecipe);
+    top.appendChild(close);
+    ov.appendChild(top);
+
+    var modeBar = el("div", "sre-mode-bar");
+    ov.appendChild(modeBar);
+
+    var body = el("div", "picker-results sre-body");
+    ov.appendChild(body);
+
+    function paint() {
+      modeBar.innerHTML = "";
+      modeBar.appendChild(segControl("sre-modetoggle", [
+        { value: "iso", label: "Similar" },
+        { value: "express", label: "Quick (≤15 min)" }
+      ], mode, function (v) { mode = v; paint(); }));
+
+      body.innerHTML = "";
+      var candidates = mode === "iso" ? sreIsoCandidates(m) : sreExpressCandidates(m);
+      if (!candidates.length) {
+        body.appendChild(emptyState("🔍", mode === "iso"
+          ? "No close matches found yet."
+          : "No 15-minutes-or-less options for this slot yet."));
+        return;
+      }
+      var grid = el("div", "col-grid sre-grid");
+      candidates.forEach(function (r) {
+        var t = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
+        var card = el("button", "rc-pick rc sre-card");
+        card.type = "button";
+        card.style.setProperty("--rc-accent", r.accent || "#C87A53");
+        card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
+        card.innerHTML =
+          '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+          '<div class="rc-body">' +
+            '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
+            '<p class="rc-meta">' + esc(r.dish_category || "") + (t ? " · " + t + " min" : "") + "</p>" +
+          "</div>";
+        card.addEventListener("click", function () {
+          swapMeal(m.uid, r.recipe_id);
+          closeReplaceRecipe();
+          refresh();
+        });
+        grid.appendChild(card);
+      });
+      body.appendChild(grid);
+    }
+    paint();
 
     document.body.appendChild(ov);
     document.body.classList.add("picking");

@@ -1288,6 +1288,17 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .plan-remove:hover { color: #ff5a6e; border-color: rgba(255,90,110,0.5); }
 .plan-remove:active { transform: scale(0.9); }
 
+/* Smart Replacement trigger — same footprint as .plan-remove, accent hover. */
+.plan-swap {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-dark); background: transparent;
+  color: var(--on-dark-dim); font-size: 14px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.plan-swap:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
+.plan-swap:active { transform: scale(0.9); }
+
 /* "Mark Completed" toggle — check-box look shared with grocery rows. */
 .plan-complete {
   flex: 0 0 auto; appearance: none; cursor: pointer;
@@ -1384,6 +1395,10 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 }
 .swp-input:focus { outline: none; border-color: rgba(var(--accent-rgb), 0.5); }
 .swp-save-btn { margin: 0; }
+
+/* ── Smart Replacement overlay: mode toggle + candidate grid ─────────── */
+.sre-mode-bar { padding: 4px 20px 10px; }
+.sre-body { padding-top: 4px; }
 
 /* ── Time Check: bandwidth quiz button + bucketed suggestion overlay ──── */
 .plan-time-btn {
