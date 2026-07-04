@@ -1,226 +1,156 @@
-# Mike's Cookbook — Continuous Improvement Roadmap
+# Mike's Cookbook — Continuous Improvement Roadmap (v2)
 
 > **Audience:** solo dev (you). Every item is a ticket: problem → approach → acceptance criteria → effort.
 > **Constraints:** vanilla HTML/CSS/JS, no framework, no build step. PWA additions allowed.
 > **Sequencing:** quick wins first. Items already shipped are marked ✅ so we don't re-litigate.
-> **Process:** one phase per PR. This document is **Phase 1**. Each pillar's tickets become later phases.
+> **Supersedes v1.** Everything v1 called Pillars 1–4 (persistent nav, wake lock, Cooking Mode,
+> arbitrary serving scaling, app-wide search, visual polish) is **done** — see §0. This version
+> replaces those with the next set of tickets, chosen from a July 2026 codebase evaluation.
+> **Process rule going forward:** the last step of any phase that ships user-visible or
+> architectural change is a short pass over this file and `CLAUDE.md` to keep them truthful.
+> Doc drift is what made v1 stale (see §0) — don't repeat it.
 
 ---
 
-## 0. Architecture Reality Check
+## 0. Architecture Reality Check (refreshed)
 
-This is the ground truth the roadmap is built on (read the code, not the marketing):
+Ground truth as of this evaluation — read the code, not the last roadmap:
 
-- **Hybrid SPA + MPA.** `index.html` is a single-page **shell** with three swappable screens
-  (`#screen-home`, `#screen-recipes`, `#screen-favorites`) and it owns the fixed
-  `<nav class="tab-bar">`. But `recipe.html` and `collection.html` are **standalone pages**
-  with their own `<main>` and **no tab bar** — only a back link.
-- **No native runtime.** There is no React Native nav stack, no router. "Screens" are
-  `display:none` toggles driven by `cookbook-home.js#setTab()`, mirrored to `location.hash`.
-- **Already shipped & solid:**
-  - ✅ **PWA / offline** — `manifest.json` (standalone, portrait), `sw.js` (network-first HTML
-    with a 3s kitchen-WiFi timeout, cache-first assets), registered on all three pages,
-    precache list + cache version auto-generated in CI by `tools/build-sw.py`.
-  - ✅ **Favorites** — shared `localStorage` key `mc-cookbook:favorites`, hearts on
-    home/collection/recipe, exposed as `window.MCFav`.
-  - ✅ **41 recipes**, a Collections model (`live` / `coming-soon`), in-collection live search
-    (`collection.js#matches()` across title, tags, ingredients).
-  - ✅ **CI** — GitHub Pages deploy, `node --check` JS syntax gate, SW regen on deploy.
-  - ✅ **Design tokens** — full palette/type/radii system in `cookbook.css :root`,
-    `prefers-reduced-motion` already honored, `env(safe-area-inset-bottom)` respected.
+- **160 recipes** across **11 dish categories** (Breakfast, Salads & Slaws, Soups/Stews/Chilis,
+  Casseroles & Bakes, Skillets & Stir-Fries, Grilled & Sheet-Pan, Sandwiches, Desserts, Salsas &
+  Dips, Sauces, Marinades) — up from the 41 recipes / 7 categories the previous docs described.
+- **7 shell screens**, not 5: Home, Planner, Categories, Recipes, Favorites, **Mike's Favorites**,
+  and a full **macro Tracker** (`tracker.js` + 5 supporting modules — food search via Open Food
+  Facts, barcode scan, goal calculator, recipe-to-log bridge).
+- **`user-recipes.js`** ("My Recipes") lets Mike add his own recipes from the Home hub; they're
+  stored in `localStorage` and merged into the same data layer everything else reads, so they
+  behave like built-in recipes everywhere (search, planner, favorites, categories).
+- **v1's Pillars 1–3 are shipped:** persistent nav (`cookbook-nav.js`), screen wake lock +
+  full-screen Cooking Mode (`cookbook.js`), arbitrary 1–12 serving scaling (`scaleQuantity`, now
+  wired in, not dead code), app-wide search. The meal planner has grown well past what v1
+  described: **Smart Week** (scope-driven 7-day generator), a **Macro Smart Generator** (opt-in
+  macro-targeted variant), **batch-prep day suggestion**, meal-completion → **cook log**, and
+  **macro history** feeding back into generation.
+- **Zero automated verification.** CI (`.github/workflows/pages.yml`) is a `node --check` syntax
+  gate + service-worker regen + deploy — nothing validates the 12.4k-line `recipes-data.js`
+  (unique `recipe_id`, valid `dish_category`/ingredient-`category` enums, `source_match`
+  resolvability, `serving_2`/`serving_4` macro equality) and there is no UI smoke test. This
+  wasn't picked as this round's priority but is flagged here as a known gap — see §Backlog.
 
-**Implication:** the headline bug ("tab bar doesn't show on every screen") is **not** a layout
-constraint or state bug — it's that the persistent nav lives only inside the `index.html` shell
-and was never ported to the two standalone pages. That reframes Pillar 1 from "fix a bug" to
-"establish one shared nav contract across the hybrid."
+**Implication:** the app is materially ahead of what its own docs described. The risk this round
+isn't a missing feature, it's that **the planner's smart features are all pull-based** — Mike has
+to open the app and tap a button for any of them to do something. Pillars B and C below target
+that directly, per the alignment discussion for this roadmap.
 
 ---
 
-## Pillar 1 — Persistent Bottom Navigation (the foundation)
+## Pillar A — Data & Doc Integrity (backlog, not started this round)
+
+Kept here as a named ticket rather than dropped, since it underwrites Pillar C's trust story
+(an auto-generated plan needs the same data guarantees a validation script would enforce) —
+but it was explicitly **not** picked as this round's priority, so treat it as backlog:
+
+- A recipe-data validation script (plain Node or Python, no new dependency) run in CI alongside
+  `node --check`, checking the invariants listed in §0.
+- A CLAUDE.md/ROADMAP.md freshness check folded into the "process rule" above rather than a new
+  tool — i.e. discipline, not automation, for now.
+
+**Effort:** Low–Med · **Impact:** Med (protective, not user-visible).
+
+---
+
+## Pillar B — Proactive Scheduling & Reminders
 
 ### Problem
-The bottom tab bar (Home / Recipes / Favorites) renders on the `index.html` shell but
-**vanishes** the moment a user opens a collection (`collection.html`) or a recipe
-(`recipe.html`). Navigation orientation is lost; the only way back is a single "‹" link.
+Every smart feature in the app — Smart Week, the Macro Smart Generator, batch-prep suggestions,
+the macro tracker's goal tracking — only acts when Mike opens the app and taps something. Nothing
+reaches out to him. There's no backend and no accounts, so this can't be "the app pushes a
+notification" in the traditional sense without new infrastructure.
 
-### Root causes (this codebase, ranked)
-1. **No shared nav component.** The tab bar markup is hard-coded *inside* `index.html`.
-   The standalone pages were authored without it. There is one source of truth and it
-   isn't shared. *(primary)*
-2. **Hybrid SPA/MPA seam.** `index.html` switches screens in-place; the other two are real
-   page loads. A persistent bar therefore must survive a full navigation, not just a tab toggle.
-3. **Active-state coupling.** `setTab()` derives active state from in-page screen IDs, which
-   don't exist on the standalone pages — so even a copy-pasted bar wouldn't light up correctly.
+### Approach
+This session's environment (Claude Code Remote) already has a scheduling primitive that's
+**independent of the app's codebase**: a cron-style trigger can fire into a Claude session on a
+schedule and message Mike directly. That's the mechanism this pillar uses — it's automation
+*around* the cookbook, not a new app feature.
 
-### Recommended fix — one shared nav contract
-Extract the bar into a tiny shared module rather than copy-pasting markup.
+Two tiers, in order of how soon they're buildable:
 
-- **New file `cookbook-nav.js`** exporting `renderTabBar(active)` that builds the exact
-  existing `.tab-bar` markup and appends it to `document.querySelector('main.app')`.
-- **Active state by context, not screen ID:**
-  - on `index.html`, the current `#hash` (existing behavior) drives active;
-  - on `recipe.html` / `collection.html`, pass `active: 'recipes'` (both live under the
-    Recipes branch).
-- **Tabs deep-link across pages:** on a standalone page, a tab is an `<a>` to
-  `index.html#home | #recipes | #favorites`. On the shell, tabs keep calling `setTab()`
-  (no full reload). One render function, two wiring modes.
-- **Reuse, don't restyle.** `.tab-bar` / `.tab` / `.tab-icon` CSS already exists and is
-  safe-area aware; the standalone pages only need the `.app` → `.app.shell` bottom-padding
-  rule applied so content clears the fixed bar.
+1. **"Dumb" reminders (buildable now, no data bridge needed).** A weekly trigger (e.g. Sunday
+   evening) that messages Mike a nudge — "plan/batch-prep for the week," "log today's macros if
+   you haven't." No awareness of his actual plan or tracker state; a templated prompt.
+2. **"Informed" reminders (needs a data bridge — open design question).** A trigger that
+   references Mike's *actual* current meal plan, macro history, or tracker gaps to make the nudge
+   specific ("3 of this week's meals share a sheet-pan step — batch those Sunday"). The app's
+   state lives in `localStorage` in Mike's phone browser; a scheduled trigger running server-side
+   has no way to read that today. Shipping tier 2 requires deciding *how* state gets out —
+   candidates: Mike pastes a quick status when asked, a periodic export to somewhere the trigger
+   can read (e.g. a synced file/sheet), or deferring until there's a reason to add a lightweight
+   sync layer. **Do not build a backend for this without a separate, explicit go-ahead** — it's
+   the one item in this roadmap that would break the "no backend" constraint if done carelessly.
 
-### Standard exceptions (where the bar *should* hide)
-- **Cooking Mode** (Pillar 2): full-screen, distraction-free stepping → bar hidden, replaced
-  by large prev/next affordances. The one sanctioned exception.
-- **Modals / full-screen image viewers** (if added): bar stays but is visually behind the scrim.
-- Everywhere else: **bar is always present.**
+### Acceptance (first slice — tier 1 only)
+- A recurring trigger fires on a chosen cadence and delivers a specific, useful reminder message
+  (not generic "don't forget to eat healthy" filler).
+- No app code changes required to ship this slice.
+- Mike can adjust or cancel the cadence without touching code (trigger update/delete).
 
-### Implementation checklist (→ becomes the Phase 2 PR)
-- [ ] Create `cookbook-nav.js` with `renderTabBar(active)`; move markup out of `index.html`.
-- [ ] Call it from `index.html` (active via hash), `recipe.html`, `collection.html` (active `recipes`).
-- [ ] Standalone pages: add `class="app shell"` (or a `.has-tabbar` padding rule) so content
-      clears the 64px `--tab-h` bar + safe area.
-- [ ] Standalone tabs are `<a href="index.html#...">`; shell tabs keep `setTab()`.
-- [ ] Add `cookbook-nav.js` to the `sw.js` precache (run `tools/build-sw.py`).
-- [ ] Accessibility: `role="tablist"`, `aria-current="page"` on active tab.
-- [ ] **Acceptance:** bar visible & correctly highlighted on all of `index/recipe/collection`;
-      tapping a tab from a recipe lands on the right shell screen; no content hidden behind the
-      bar on any screen or device with a home-indicator; `node --check` passes; SW check passes.
-
-**Effort:** Low–Med · **Impact:** High (it's the spine everything else hangs on).
+**Effort:** Low (tier 1) / Med–High (tier 2, blocked on the data-bridge decision).
+**Impact:** Med–High.
 
 ---
 
-## Pillar 2 — Core Cooking UX (3 high-impact, friction-down)
+## Pillar C — Smarter, Proactive Meal Planning
 
-The flow is Discovery → Selection → Prep → **Cook**. The cook step is where hands are messy,
-the screen sleeps, and text is too small at arm's length. These three target exactly that.
+### Problem
+Smart Week and the Macro Smart Generator are Mike's most differentiated features and they're
+push-button only — opening Home to an empty planner on a Monday shows silence, not a suggestion.
+Macro history is already tracked (`mc-cookbook:mealplan:macrohistory`) but doesn't feed back into
+generation automatically.
 
-### 2.1 — Screen Wake Lock (top quick win) ⚡
-- **Problem:** the phone/iPad sleeps mid-cook; user taps with greasy hands to wake it.
-- **Approach:** `navigator.wakeLock.request('screen')` engaged when the **Recipe (Method)**
-  sub-tab is active in `cookbook.js`; release on tab change / `visibilitychange`; re-acquire on
-  return. Feature-detect and no-op silently where unsupported.
-- **Acceptance:** screen stays awake on the Method tab; lock released when leaving it; no errors
-  on unsupported browsers; a subtle "stay-awake" indicator shows it's active.
-- **Effort:** Low · **Impact:** High.
-
-### 2.2 — Cooking Mode (full-screen stepper)
-- **Problem:** the checklist view is dense; while actively cooking you want **one step, huge.**
-- **Approach:** a "Start Cooking" button on the Method tab enters a full-screen mode showing the
-  current step large; advance via the **existing swipe handler** in `cookbook.js#wireTabs()`
-  (generalize it) or big prev/next buttons. **Hides the Pillar 1 tab bar** (the sanctioned
-  exception). Includes a **font-scale control** (A−/A+) writing a `--cook-font` CSS var to
-  `localStorage`. Pairs with 2.1 (wake lock on by default in this mode).
-- **Acceptance:** enter/exit cleanly; step state stays in sync with the checklist; font scale
-  persists; reduced-motion respected; bar correctly hidden in-mode and restored on exit.
-- **Effort:** Med · **Impact:** High.
-
-### 2.3 — Inline step timers + auto-advance focus
-- **Problem:** steps say "simmer 20 min" but the user reaches for a separate timer app.
-- **Approach:** lightweight parse of durations in `instruction.detail` ("20 min", "1 hour") →
-  render a tappable timer chip that counts down (with a completion ping / vibration via
-  `navigator.vibrate`). Auto-scroll the active step into view as the user checks steps off.
-- **Acceptance:** durations detected without mangling text; timer runs and notifies; works
-  offline; no false positives on quantities like "20g".
-- **Effort:** Med · **Impact:** Med–High.
-
----
-
-## Pillar 3 — Next-Gen Features (3, practical kitchen utility)
-
-No generic AI chat. Each leans on a real device/web capability and the cook's actual context.
-
-### 3.1 — Arbitrary serving scaling (unlock latent code)
-- **Problem:** recipes only offer authored 2/4 tiers; a cook wants 3, 6, 8.
-- **Approach:** `scaleQuantity()` **already exists and is tested-by-shape** in `cookbook.js`
-  but is unused. Wire a "custom servings" stepper that scales from a recipe's native tier using
-  it, regenerating ingredients + grocery list on the fly. Macros stay per-serving (existing note).
-- **Acceptance:** any serving count yields tidy fractions ("1 1/2"); "to taste" passes through;
-  grocery + mise lists update; check-off state keyed correctly per chosen count.
-- **Effort:** Low–Med · **Impact:** High (big utility, code already written).
-
-### 3.2 — Offline level-up (build on shipped PWA)
-- **Problem:** offline works, but there's no "new version available" signal and updates can feel
-  stale; kitchen WiFi flaps mid-session.
-- **Approach:** add an **update toast** — when `sw.js` detects a new `CACHE_NAME`, post a message
-  to clients; show a "Tap to refresh" banner. Optionally precache **favorited recipes' assets**
-  eagerly so a user's go-to recipes are guaranteed offline. (Offline core is ✅; this is polish.)
-- **Acceptance:** toast appears on new deploy, dismissable, refreshes to new SW; no double-reload
-  loops; favorites reliably open with no network.
-- **Effort:** Med · **Impact:** Med.
-
-### 3.3 — App-wide search & multi-tag organization
-- **Problem:** search today is **scoped to one collection** (`collection.js`). There's no global
-  search and no cross-cutting filtering by diet/tag across the 41 recipes.
-- **Approach:** a global search entry on the Recipes screen reusing `matches()`; add a tag/diet
-  filter rail (Primal / Carnivore / Heritage + free tags) that combines with search. Pure client
-  filter over `window.RECIPES` — no backend.
-- **Acceptance:** global query searches all recipes by title/tag/ingredient; tag filters stack
-  with search; empty states handled; deep-links to a recipe from results.
-- **Effort:** Med · **Impact:** High (discovery scales with the catalog).
-
----
-
-## Pillar 4 — Premium Visuals & Aesthetic Polish
-
-The bones are good (cohesive tokens, serif display, cream-on-slate). Polish is about **motion,
-hierarchy, and tactile feedback** — making it *feel* engineered.
-
-### Visual hierarchy
-- Tighten the type scale around the existing `--serif` display: one clear hero size, one card
-  title size, one meta size. Increase contrast between `--ink` and `--ink-dim` on dense lists.
-- Give the active serving pill and active tab a stronger, single accent treatment (avoid
-  competing accents on one screen — one focal accent per view).
-
-### Micro-interactions (tactile, sub-200ms)
-- **Favorite heart:** a small scale-pop + brief radial burst on toggle (respect reduced-motion).
-- **Check-off:** the existing checkbox should animate the stroke draw (the `CHECK_SVG` path is
-  already there — animate `stroke-dashoffset`), plus a subtle row settle.
-- **Tab / serving change:** crossfade or slide the pane (generalize from the swipe handler), not
-  an instant swap.
-- **Press feedback:** cards get a 0.98 scale-down on `:active` for a physical feel.
-
-### Motion system
-- Add **motion tokens** to `:root`: `--ease-out: cubic-bezier(.2,.8,.2,1)`,
-  `--dur-fast: 120ms`, `--dur: 200ms`. Use them everywhere instead of ad-hoc values.
-- Everything wrapped by the **existing** `@media (prefers-reduced-motion: reduce)` block.
+### Approach (client-side only — no backend needed for any of this)
+- **Auto-drafted week on Home.** If the planner is empty and it's the start of a new week, run
+  the existing Smart Week scoring path automatically and surface the result on Home as a
+  **draft to review/accept/discard**, instead of requiring Mike to find and tap the button first.
+  This is a UX trigger change on top of code that already exists (`smw*` scoring in
+  `cookbook-home.js`), not new generation logic.
+- **Macro-trend bias.** Read `mc-cookbook:mealplan:macrohistory` before generating and nudge the
+  Macro Smart Generator's targets if a trend is clear (e.g. protein consistently under goal →
+  bias selection toward higher-protein recipes next week). Surface *why* a recipe was picked
+  ("+protein vs. last week") so it doesn't feel like a black box.
+- **Pairs with Pillar B:** the tier-1 weekly reminder is a natural moment to tell Mike a draft is
+  ready to review, once this pillar ships.
 
 ### Acceptance
-- No animation exceeds ~250ms; all motion disabled under reduced-motion; one focal accent per
-  screen; 60fps on a mid-range phone (transform/opacity only, no layout thrash).
+- Opening Home on/after the start of a new week with an empty plan shows a ready-to-review draft,
+  not an empty state.
+- Accepting a draft behaves like the existing "commit" flow; discarding it clears cleanly with no
+  orphaned state.
+- Any macro-trend bias is visible in the UI (a short reason string), not silent.
+- No regression to the existing on-demand Smart Week / Macro Smart Generator flows — this adds an
+  automatic trigger for the same code path, it doesn't replace manual use.
 
-**Effort:** Low–Med (incremental) · **Impact:** Med–High (this is the "elite feel").
+**Effort:** Med · **Impact:** High (this is the app's most differentiated feature, currently
+under-surfaced because it's opt-in only).
 
 ---
 
-## Prioritization Matrix (Impact × Effort)
+## Sequenced phases
 
-```
-            LOW EFFORT                         HIGH EFFORT
-        ┌───────────────────────────┬───────────────────────────┐
-  HIGH  │  ★ DO FIRST (quick wins)  │  PLAN (big bets)          │
- IMPACT │  • 2.1 Wake Lock          │  • 2.2 Cooking Mode       │
-        │  • 1   Persistent nav     │  • 3.3 App-wide search    │
-        │  • 3.1 Serving scaling    │                           │
-        ├───────────────────────────┼───────────────────────────┤
-  MED   │  FILL-IN                  │  LATER / EVALUATE         │
- IMPACT │  • 4   Polish (incl.)     │  • 2.3 Inline timers      │
-        │                           │  • 3.2 Offline level-up   │
-        └───────────────────────────┴───────────────────────────┘
-```
-
-### Sequenced phases (one PR each)
 | Phase | Ticket | Why this order | Effort | Impact |
 |------:|--------|----------------|:------:|:------:|
-| **1** | This roadmap | Align before building | — | — |
-| **2** | **Pillar 1** persistent nav | Foundation; Cooking Mode depends on owning the bar | Low–Med | High |
-| **3** | **2.1** Wake Lock | Highest impact-per-line; standalone | Low | High |
-| **4** | **3.1** Serving scaling | Code already exists; fast big win | Low–Med | High |
-| **5** | **4** Polish pass | Cheap, compounds the above visually | Low–Med | Med–High |
-| **6** | **2.2** Cooking Mode | Needs Phase 2 (bar ownership) + Phase 3 (wake lock) | Med | High |
-| **7** | **3.3** App-wide search | Scales discovery as catalog grows | Med | High |
-| **8** | **2.3** Inline timers | Nice-to-have; self-contained | Med | Med–High |
-| **9** | **3.2** Offline level-up | Core offline already ✅; pure refinement | Med | Med |
+| **1** | This roadmap + `CLAUDE.md` refresh | Align before building (done as part of this pass) | — | — |
+| **2** | **Pillar B, tier 1** — dumb weekly reminder trigger | No app-code risk, ships immediately, gives fast feedback on whether reminders are actually useful before investing further | Low | Med–High |
+| **3** | **Pillar C** — auto-drafted week + macro-trend bias | Builds on code that already exists; biggest differentiation payoff | Med | High |
+| **4** | **Pillar B, tier 2** — informed reminders | Only after the data-bridge design question is resolved; revisit once Phase 2/3 show reminders are worth deepening | Med–High | Med–High |
+| **Backlog** | **Pillar A** — data validation script | Not urgent, not user-visible; pick up opportunistically or once recipe-intake automation raises the stakes for bad data slipping through | Low–Med | Med |
 
-**Already done (no work):** PWA install, offline service worker + CI regen, favorites store,
-collections, in-collection search, design-token system, reduced-motion support.
+**Already done (no work):** persistent nav, screen wake lock, Cooking Mode, arbitrary serving
+scaling, app-wide search, visual/motion polish (all v1 Pillars 1–4), Smart Week, Macro Smart
+Generator, batch-prep suggestion, cook log, macro tracker (goals/food search/barcode scan),
+"My Recipes", PWA install + offline service worker + CI regen, favorites store, collections,
+design-token system.
+
+## Open questions before Phase 4
+- How should app state (meal plan, macro history) get from the phone's `localStorage` to
+  somewhere a scheduled trigger can read it, if at all? Resolve this only once tier-1 reminders
+  have proven useful enough to justify it.

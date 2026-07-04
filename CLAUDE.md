@@ -44,13 +44,14 @@ worker and PWA install require an `http(s)` origin.
 
 The app is **hub-and-spoke**. There is **no bottom tab bar**.
 
-- **`index.html`** is a single-page **shell**. It holds five `<section
+- **`index.html`** is a single-page **shell**. It holds seven `<section
   class="screen">` panels (`#screen-home`, `#screen-planner`,
-  `#screen-categories`, `#screen-recipes`, `#screen-favorites`); only the
-  `.active` one is visible. `cookbook-home.js` swaps screens via `display`
-  toggles and mirrors the active screen to `location.hash` (e.g. `#recipes`)
-  so it survives reloads and deep links. **Home is the hub**; each spoke screen
-  has a "‹ Home" anchor back.
+  `#screen-categories`, `#screen-recipes`, `#screen-favorites`,
+  `#screen-mikes`, `#screen-tracker`); only the `.active` one is visible.
+  `cookbook-home.js` swaps screens via `display` toggles and mirrors the
+  active screen to `location.hash` (e.g. `#recipes`) so it survives reloads
+  and deep links. **Home is the hub**; each spoke screen has a "‹ Home" anchor
+  back.
 - **`recipe.html`** and **`collection.html`** are **standalone pages** with
   their own `<main>`. They live outside the shell and get a single persistent
   floating **🏠 Home** button rendered by `cookbook-nav.js`.
@@ -64,19 +65,22 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 
 | File | Role |
 | --- | --- |
-| `index.html` | App shell — the five hub/spoke screens. Loads `recipes-data.js`, `cookbook-home.js`, `cookbook-sw.js`. |
-| `cookbook-home.js` | Shell controller (~40 KB). Renders Home hub, This Week meal planner, Categories, Recipes (collection cards + search), Favorites. Owns the meal-plan + favorites logic. |
-| `collection.html` / `collection.js` | One collection's recipe list (`collection.html?c=<id>`) + live search; coming-soon placeholder for future collections. |
-| `recipe.html` / `cookbook.js` | Unified recipe detail: fixed header (title/tags/times/serving stepper) + 3 swipeable sub-tabs (Overview & Macros · Grocery · Recipe). Owns serving scaling + check-off state. |
+| `index.html` | App shell — the seven hub/spoke screens (Home, Planner, Categories, Recipes, Favorites, Mike's Favorites, Tracker). Loads `recipes-data.js`, `user-recipes.js`, `cookbook-home.js`, the tracker module set, `cookbook-sw.js`. |
+| `cookbook-home.js` | Shell controller (~140 KB, ~3.2k lines). Renders Home hub, This Week meal planner (Smart Week, Macro Smart Generator, batch-prep suggestion, cook-log + macro history), Categories, Recipes (collection cards + app-wide search), Favorites, Mike's Favorites. Owns meal-plan + favorites logic. |
+| `collection.html` / `collection.js` | One collection's recipe list (`collection.html?c=<id>`) + live search; coming-soon placeholder for future collections; also serves the "My Recipes" collection. |
+| `recipe.html` / `cookbook.js` | Unified recipe detail: fixed header (title/tags/times/serving stepper) + swipeable sub-tabs (Overview & Macros · Grocery · Recipe). Owns serving scaling (`scaleQuantity`, wired for arbitrary 1–12 servings), check-off state, screen wake lock, and full-screen Cooking Mode. |
 | `cookbook-nav.js` | Renders the floating 🏠 Home button on `data-tabbar="page"` pages. Exposes `window.MCNav`. |
-| `recipes-data.js` | **The data layer.** `RECIPES` array (41 recipes) + `COLLECTIONS` array. Decoupled from rendering; exposed as `window.RECIPES` / `window.COLLECTIONS`. |
+| `recipes-data.js` | **The data layer** (~12.4k lines / ~600 KB). `RECIPES` array (160 recipes) + `COLLECTIONS` array. Decoupled from rendering; exposed as `window.RECIPES` / `window.COLLECTIONS`. |
+| `user-recipes.js` | "My Recipes" — lets a cook add their own recipes from the Home hub; stored in `localStorage` (`mc-cookbook:userrecipes`) and merged into `window.RECIPES`/`COLLECTIONS` at load so they behave like built-in recipes everywhere (search, planner, favorites, categories). Must load after `recipes-data.js`, before the page controllers. |
+| `tracker.js` / `tracker-store.js` / `tracker-calc.js` / `tracker-foodapi.js` / `tracker-barcode.js` / `tracker-recipe.js` | The in-app macro tracker (`#screen-tracker`): week calendar strip, hour-by-hour food log, calorie/macro goals from a suggest-then-adjust calculator, food entry via Open Food Facts search or barcode scan, and direct recipe logging from the recipe page. `localStorage`-only (`mc-cookbook:tracker:v1`), no login. Exposed as `window.MCTracker`. |
 | `cookbook.css` | The entire design system + all component styles (~50 KB). Design tokens live in `:root`. |
 | `cookbook-sw.js` | Shared service-worker **registration** + update toasts; included on every page. |
 | `sw.js` | The service worker itself. `CACHE_URLS` is **auto-generated** — never hand-edit it. |
 | `manifest.json` / `icon.svg` | PWA manifest + app icon. |
+| `quick-tour.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. |
 | `.github/workflows/pages.yml` | CI: `node --check` JS gate → regen SW → deploy to GitHub Pages. |
-| `ROADMAP.md` | Phased improvement roadmap; "Architecture Reality Check" is good ground-truth reading. |
+| `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
 ## Data model (`recipes-data.js`)
@@ -90,7 +94,7 @@ A `RECIPES` entry includes (see the file header for full notes):
   `category`, `tags`, `description`.
 - `source` — the origin cookbook/collection; **this string is how recipes are
   matched into a collection** (a collection's `source_match` must equal it).
-- `dish_category` — exactly **one** of the 7 categories below; drives the
+- `dish_category` — exactly **one** of the categories below; drives the
   Categories screen.
 - `icon`, `accent` (per-recipe accent color, also themes the detail screen),
   `prep_time_mins`, `cook_time_mins`, `native_serving`, `scaling_options`.
@@ -108,15 +112,20 @@ Any other count (1–12, via the stepper in `cookbook.js`) is generated on the
 fly by scaling the native tier. Macros are constant per serving and never
 scale.
 
-**Categories** (`CATEGORY_ORDER` in `cookbook-home.js`): Breakfast · Salads &
-Slaws · Soups, Stews & Chilis · Casseroles & Bakes · Skillets & Stir-Fries ·
-Grilled & Sheet-Pan · Sandwiches.
+**Categories** (`CATEGORY_ORDER` in `cookbook-home.js`, 11 total): Breakfast ·
+Salads & Slaws · Soups, Stews & Chilis · Casseroles & Bakes · Skillets &
+Stir-Fries · Grilled & Sheet-Pan · Sandwiches · Desserts · Salsas & Dips ·
+Sauces · Marinades. A category only appears on the Categories screen once a
+recipe uses it (`categoriesWithRecipes()`), so adding a 12th needs an entry in
+both `CATEGORY_ORDER` and `CATEGORY_META`.
 
 **Collections** (`COLLECTIONS`): each is a flagship card with `status:
 "live" | "coming-soon"`. A `live` collection lists every recipe whose `source`
-matches its `source_match` and links to `collection.html?c=<id>`. Currently
-live: *Two Meals a Day* (Primal). Coming soon: *Kelli Cross' Recipes*
-(Heritage), *Carnivore*.
+matches its `source_match` and links to `collection.html?c=<id>`. Live
+sources today: *Two Meals a Day*, *Chipotle Copycats*, *High-Protein Meal
+Prep*, *Desserts*, *Salsas*, *Sauces*, *Marinades*, plus the user-authored
+*My Recipes* collection (`user-recipes.js`). Coming soon: *Kelli Cross'
+Recipes* (Heritage), *Carnivore*.
 
 ## Client-side state (localStorage)
 
@@ -128,6 +137,15 @@ JSON-serialize directly — this was a real bug; keep the pattern).
   home/collection/recipe all read/write this one key; exposed as `window.MCFav`.
 - `mc-cookbook:mealplan` — the This Week planner `{ meals: [...] }`.
 - `mc-cookbook:mealplan:grocery` — checked grocery merge-keys for the plan.
+- `mc-cookbook:mealplan:history` — saved/archived week blocks.
+- `mc-cookbook:mealplan:custom` — ad-hoc (non-recipe) planner line items.
+- `mc-cookbook:mealplan:macrohistory` — macro history feeding Smart Week's
+  Macro Smart Generator and cook-log awareness.
+- `mc-cookbook:tracker:v1` — the macro tracker's whole state (goals, logged
+  food/hour, week data); owned by `tracker-store.js`, exposed indirectly via
+  `window.MCTracker`.
+- `mc-cookbook:userrecipes` — JSON array of full user-authored recipe objects
+  (`user-recipes.js`), merged into `window.RECIPES`/`COLLECTIONS` at load.
 - `mc-cookbook:<recipe_id>:s<serving>:<kind>` — recipe-detail check-off state
   (groceries/steps), keyed by recipe **and** serving count so each count keeps
   an independent checklist.
