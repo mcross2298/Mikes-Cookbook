@@ -1466,41 +1466,21 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 
 .bwq-body { padding: 4px 20px calc(20px + env(safe-area-inset-bottom)); }
 .bwq-intro { font-size: 13.5px; color: var(--on-dark-dim); line-height: 1.5; margin: 0 0 16px; }
+/* .smw-scope-bar carries its own 20px horizontal padding for smw-body (which
+   has none); bwq-body already insets 20px on every child, so cancel the
+   bar's own inset here to avoid a doubled indent. */
+.bwq-body .smw-scope-bar { padding-left: 0; padding-right: 0; margin: 0 0 14px; }
+.bwq-body .smw-day { padding-left: 0; padding-right: 0; }
+.bwq-body .smw-actions { padding-left: 0; padding-right: 0; }
 
-.bwq-row {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 12px 0; border-bottom: 1px solid var(--line-dark);
-}
-.bwq-row:last-of-type { border-bottom: 0; }
-.bwq-row-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.bwq-row-emoji { font-size: 22px; flex: 0 0 auto; }
-.bwq-row-text { font-size: 13.5px; color: var(--on-dark); line-height: 1.4; }
-.bwq-row-sub { font-size: 12px; color: var(--on-dark-dim); font-weight: 400; }
-
-.bwq-stepper { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
-.bwq-step {
-  flex: 0 0 auto; width: 32px; height: 32px; appearance: none;
-  border: 1px solid var(--line-dark); background: transparent; color: var(--on-dark);
-  font-family: var(--sans); font-size: 18px; font-weight: 600; line-height: 1;
-  border-radius: var(--r-sm); cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease, opacity 0.18s ease;
-}
-.bwq-step:hover:not(:disabled) { background: rgba(var(--accent-rgb), 0.18); color: var(--accent); }
-.bwq-step:active:not(:disabled) { transform: scale(0.94); }
-.bwq-step:disabled { opacity: 0.3; cursor: default; }
-.bwq-count { min-width: 18px; text-align: center; font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--accent); }
+.tcw-day-block { padding: 12px 0; border-bottom: 1px solid var(--line-dark); }
+.tcw-day-block:last-of-type { border-bottom: 0; }
+.tcw-day-label { font-family: var(--serif); font-size: 13.5px; font-weight: 700; color: var(--on-dark); margin: 0 0 8px; }
+.servings.tcw-day-toggle { margin-top: 0; }
 
 .bwq-continue-btn { margin: 18px 0 0; }
 
 .bwq-back-btn { margin: 0 0 14px; }
-.bwq-section { margin: 0 0 22px; }
-.bwq-section:last-child { margin-bottom: 0; }
-.bwq-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 0 10px; }
-.bwq-section-title { font-family: var(--serif); font-size: 15px; font-weight: 700; color: var(--on-dark); }
-.bwq-section-progress { font-size: 12px; color: var(--accent); font-weight: 700; white-space: nowrap; }
-.bwq-grid { padding-top: 0; }
-.bwq-card.is-added { opacity: 0.45; }
-.bwq-card.is-added .rc-macro { color: var(--on-dark-dim); }
 
 /* ── C1: Past-weeks history — collapsible list with Reuse button ──────── */
 .plan-history { margin: 16px 0 0; }
