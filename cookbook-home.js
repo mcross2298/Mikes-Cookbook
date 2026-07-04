@@ -957,6 +957,41 @@
     savePlan(p);
   }
 
+  /* ── Batch-prep day suggestion ─────────────────────────────────────────
+     Pure post-generation grouping pass over a Smart Week grid (Balanced or
+     Macro-Targeted, either produces the same { day, slot, id } shape) — no
+     new persisted state, re-derived every time like the grocery list
+     already is. Finds the equipment-style tag (reusing Smart Replacement's
+     SRE_EQUIPMENT_TAGS) shared by the most meals in the grid, and surfaces
+     it as a dismissible callout naming the day that already has the most
+     of them, so cooking those together is a smaller lift. It's advisory
+     only: it never touches the grid or the committed plan itself. */
+  var PREP_DAY_MIN_MEALS = 3; // below this, grouping isn't worth surfacing
+  function prepDaySuggestion(grid) {
+    if (!grid.length) return null;
+    var byTag = {};
+    grid.forEach(function (g) {
+      var r = recipeById(g.id);
+      if (!r) return;
+      (r.tags || []).forEach(function (t) {
+        if (SRE_EQUIPMENT_TAGS.indexOf(t) < 0) return;
+        (byTag[t] || (byTag[t] = [])).push(g);
+      });
+    });
+    var bestTag = null, bestEntries = null;
+    Object.keys(byTag).forEach(function (t) {
+      var entries = byTag[t];
+      if (entries.length < PREP_DAY_MIN_MEALS) return;
+      if (!bestEntries || entries.length > bestEntries.length) { bestTag = t; bestEntries = entries; }
+    });
+    if (!bestTag) return null;
+    var dayCounts = {};
+    bestEntries.forEach(function (g) { dayCounts[g.day] = (dayCounts[g.day] || 0) + 1; });
+    var day = DAYS.filter(function (d) { return dayCounts[d]; })
+      .sort(function (a, b) { return dayCounts[b] - dayCounts[a] || DAYS.indexOf(a) - DAYS.indexOf(b); })[0];
+    return { tag: bestTag, count: bestEntries.length, day: day };
+  }
+
   /* ── Dish-type categories ─────────────────────────────────────────── */
   // Each recipe declares exactly one `dish_category`, so a recipe always has a
   // single home. Per-category icon/accent/blurb drive the Categories cards.
@@ -2382,6 +2417,10 @@
       return (mode === "macro" && macroGoals) ? msgGenerateWeek(scopeKey).grid : smwGenerateWeek(scopeKey).grid;
     }
     var grid = currentGrid();
+    // Dismissing the prep-day callout only sticks until the grid is
+    // wholesale-regenerated (new scope/mode/Regenerate tap) — a single
+    // slot edit shouldn't bring back a suggestion the user just dismissed.
+    var prepDismissed = false;
 
     var ov = el("div", "picker smw-overlay");
     var top = el("div", "picker-top");
@@ -2402,6 +2441,7 @@
     scopeSel.addEventListener("change", function () {
       scopeKey = scopeSel.value;
       grid = currentGrid();
+      prepDismissed = false;
       paint();
     });
     scopeBar.appendChild(scopeSel);
@@ -2409,6 +2449,7 @@
     regenAll.type = "button";
     regenAll.addEventListener("click", function () {
       grid = currentGrid();
+      prepDismissed = false;
       paint();
     });
     scopeBar.appendChild(regenAll);
@@ -2423,6 +2464,7 @@
       ], mode, function (v) {
         mode = v;
         grid = currentGrid();
+        prepDismissed = false;
         paintMode();
         paint();
       }));
@@ -2444,6 +2486,22 @@
       if (!grid.length) {
         body.appendChild(emptyState("🧊", "No recipes available for this scope yet."));
       } else {
+        if (!prepDismissed) {
+          var suggestion = prepDaySuggestion(grid);
+          if (suggestion) {
+            var callout = el("div", "smw-prep-callout");
+            callout.appendChild(el("span", "smw-prep-text",
+              suggestion.count + " meals share " + esc(suggestion.tag) + " gear — batch-prep on " +
+              esc(DAY_LONG[suggestion.day]) + "?"));
+            var dismiss = el("button", "smw-prep-dismiss", "×");
+            dismiss.type = "button";
+            dismiss.setAttribute("aria-label", "Dismiss prep-day suggestion");
+            dismiss.addEventListener("click", function () { prepDismissed = true; paint(); });
+            callout.appendChild(dismiss);
+            body.appendChild(callout);
+          }
+        }
+
         if (scope.slots.length > 1) {
           var trimRow = el("div", "smw-trim-row");
           scope.slots.forEach(function (slot) {
