@@ -13199,6 +13199,578 @@ const RECIPES = [
         detail: "Portion into bowls, top with green onion, sesame seeds, and a drizzle of bang bang sauce, then enjoy."
       }
     ]
+  },
+
+  {
+    recipe_id: "chipotle-honey-mustard-chicken-salad",
+    title: "Chipotle Honey Mustard Chicken Salad",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥗",
+    tags: ["High-Protein", "Salad", "Meal Prep"],
+    dish_category: "Salads & Slaws",
+    description:
+      "Roasted sweet potatoes and carrots with air-fried chicken over romaine and iceberg, tossed in a creamy chipotle honey mustard dressing with feta and pickled red onion.",
+    prep_time_mins: 20,
+    cook_time_mins: 25,
+    native_serving: 3,
+    accent: "#B8722E",
+
+    macro_profiles: {
+      serving_3: { calories: 431, protein_g: 61, fat_g: 7.3, carbs_g: 28 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Romaine lettuce", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Iceberg lettuce", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Rainbow carrots", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Sweet potatoes", prep: "cut into pieces and roasted", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Chicken breast", prep: "air fried", quantity: "510", unit: "g", category: "Meat" },
+        { item: "Fat-free feta", prep: "", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Green onion", prep: "", quantity: "15", unit: "g", category: "Produce" },
+        { item: "Pickled red onion", prep: "", quantity: "15", unit: "g", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dressing", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "Low-fat cottage cheese", prep: "for the dressing", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Honey mustard", prep: "for the dressing", quantity: "63", unit: "g", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "for the dressing", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Pickle brine or white vinegar", prep: "for the dressing", quantity: "1 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion powder", prep: "for the dressing", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the dressing", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "for the dressing", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the dressing", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the dressing", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Water", prep: "for the dressing, if needed", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the vegetables",
+        detail: "Cut sweet potatoes and carrots into similar-size pieces. Add to a bowl and spray with non-stick avocado or olive oil spray, then toss in sea salt and garlic powder. Roast at 425°F for 20–25 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail: "Flatten and dry the chicken breast, then season with a bold seasoning like chipotle or blackened seasoning. Air fry at 400°F for 9–10 minutes. Let rest for 10 minutes before cutting into pieces."
+      },
+      {
+        step_number: 3,
+        title: "Make the dressing",
+        detail: "Add all dressing ingredients into a small blender and blend until smooth."
+      },
+      {
+        step_number: 4,
+        title: "Toss the salad",
+        detail: "In a large mixing bowl, combine romaine, iceberg lettuce, carrots, grape tomatoes, sweet potatoes, chicken, feta, and 1/3 of the dressing batch. Toss well to coat. Then add green onion, pickled red onion, and a little more feta on top."
+      },
+      {
+        step_number: 5,
+        title: "Serve",
+        detail: "Serve immediately, or portion into meal-prep containers — if meal prepping, keep the remaining dressing separate and add just before eating."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cheeseburger-fries-meal",
+    title: "Cheeseburger & Fries Meal",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍔",
+    tags: ["High-Protein", "Copycat", "Air Fryer"],
+    dish_category: "Sandwiches",
+    description:
+      "Seared cheeseburger patties with a low-cal Big Mac-style sauce and crispy air-fried russet fries — a full drive-thru meal built into the macros.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 3,
+    accent: "#C9942E",
+
+    macro_profiles: {
+      serving_3: { calories: 634, protein_g: 54, fat_g: 14, carbs_g: 74 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "16", unit: "oz", category: "Meat" },
+        { item: "Sea salt", prep: "for the patties, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the patties, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Yellow mustard", prep: "for the patties", quantity: "", unit: "a little", category: "Pantry" },
+        { item: "Chicken broth", prep: "a splash", quantity: "1", unit: "splash", category: "Pantry" },
+        { item: "Brioche buns", prep: "", quantity: "3", unit: "", category: "Pantry" },
+        { item: "2% American cheese", prep: "", quantity: "3", unit: "slices", category: "Dairy" },
+        { item: "Iceberg lettuce", prep: "to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Pickles", prep: "diced, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Red onion", prep: "diced, to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Sugar-free ketchup", prep: "for the sauce", quantity: "65", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the sauce", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Pickle juice", prep: "for the sauce", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Nutritional yeast", prep: "for the sauce", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Paprika", prep: "for the sauce", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "for the sauce", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Black pepper", prep: "for the sauce", quantity: "1", unit: "g", category: "Pantry" },
+        { item: "Russet potatoes", prep: "cut into fries", quantity: "750", unit: "g", category: "Produce" },
+        { item: "Cooking spray", prep: "for the fries", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Sea salt", prep: "for the fries, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the fries, to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cut and start the fries",
+        detail: "Wash and dry the potatoes, then cut into evenly sized fries. Add to the air fryer and cook at 400°F for 18–20 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Form and sear the patties",
+        detail: "While the fries cook, form the cold ground beef into 3 even patties. Add to a pan over medium-high heat, then season with sea salt, garlic powder, and a little yellow mustard."
+      },
+      {
+        step_number: 3,
+        title: "Finish the patties",
+        detail: "Cook until browned up the sides, then flip. Add a splash of chicken broth, cover for 1–2 minutes, then top with American cheese and remove from the pan."
+      },
+      {
+        step_number: 4,
+        title: "Season the fries",
+        detail: "Once the fries are done, spray lightly with nonstick cooking spray, season with sea salt and garlic powder, and toss."
+      },
+      {
+        step_number: 5,
+        title: "Build and serve",
+        detail: "Build your burgers with the Big Mac sauce, lettuce, pickles, and red onion. Serve with fries and enjoy!"
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-chicken-tender-salad",
+    title: "Buffalo Chicken Tender Salad",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥗",
+    tags: ["High-Protein", "Air Fryer", "Salad"],
+    dish_category: "Salads & Slaws",
+    description:
+      "Crispy panko-breaded buffalo chicken tenders over crunchy romaine and celery slaw with blue cheese crumbles and a creamy buffalo yogurt dressing.",
+    prep_time_mins: 25,
+    cook_time_mins: 10,
+    native_serving: 3,
+    accent: "#B5432E",
+
+    macro_profiles: {
+      serving_3: { calories: 549, protein_g: 59, fat_g: 6.5, carbs_g: 41 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Plain non-fat Greek yogurt", prep: "for the dressing", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the dressing", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Franks Red Hot Buffalo sauce", prep: "for the dressing", quantity: "150", unit: "g", category: "Pantry" },
+        { item: "Nutritional yeast", prep: "for the dressing", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Romaine lettuce", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Iceberg lettuce", prep: "", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Carrots", prep: "shredded", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Celery", prep: "", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Red onion", prep: "", quantity: "50", unit: "g", category: "Produce" },
+        { item: "Green onion", prep: "", quantity: "15", unit: "g", category: "Produce" },
+        { item: "Blue cheese crumbles", prep: "", quantity: "20", unit: "g", category: "Dairy" },
+        { item: "Chicken tenders", prep: "", quantity: "567", unit: "g", category: "Meat" },
+        { item: "Cajun seasoning", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "All-purpose flour", prep: "for coating", quantity: "35", unit: "g", category: "Pantry" },
+        { item: "Corn starch", prep: "for coating", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Panko", prep: "for coating", quantity: "50", unit: "g", category: "Pantry" },
+        { item: "Egg whites", prep: "for coating", quantity: "50", unit: "g", category: "Dairy" },
+        { item: "Franks Red Hot Buffalo sauce", prep: "for tossing the tenders", quantity: "50", unit: "g", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the dressing",
+        detail: "Add all your dressing ingredients to a small blender and blend until smooth. Refrigerate until ready to use."
+      },
+      {
+        step_number: 2,
+        title: "Bread the tenders",
+        detail: "Set up 3 coating stations: flour + cornstarch + seasonings, egg whites + buffalo sauce, and panko + seasonings. Using one hand for dry ingredients and one for wet, coat each tender in the flour mixture, then the egg mixture, then the panko."
+      },
+      {
+        step_number: 3,
+        title: "Air fry",
+        detail: "Place the coated tenders in the air fryer, spray with nonstick cooking spray, and air fry at 400°F for 9–10 minutes. Let cool for 10 minutes, then chop into bite-sized pieces."
+      },
+      {
+        step_number: 4,
+        title: "Toss and serve",
+        detail: "Add all your salad ingredients to a large bowl and toss with only 1/3 of the dressing. This recipe makes about 3 large servings — if meal prepping, keep the dressing separate and add just before serving. Enjoy!"
+      }
+    ]
+  },
+
+  {
+    recipe_id: "turkey-avocado-cheese-hot-pockets",
+    title: "Turkey, Avocado & Cheese Hot Pockets",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🥪",
+    tags: ["High-Protein", "Air Fryer", "Quick"],
+    dish_category: "Sandwiches",
+    description:
+      "Bread dough sealed around turkey, avocado, roasted red peppers, and Colby Jack, air-fried into a golden hand-held hot pocket with a chipotle honey mustard dip.",
+    prep_time_mins: 15,
+    cook_time_mins: 4,
+    native_serving: 1,
+    accent: "#CC7A2E",
+
+    macro_profiles: {
+      serving_1: { calories: 303, protein_g: 35, fat_g: 7, carbs_g: 25 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Bread", prep: "sliced", quantity: "2", unit: "slices", category: "Pantry" },
+        { item: "Oven roasted deli turkey breast", prep: "", quantity: "113", unit: "g", category: "Meat" },
+        { item: "2% Colby Jack cheese", prep: "", quantity: "14", unit: "g", category: "Dairy" },
+        { item: "Roasted red peppers", prep: "", quantity: "10", unit: "g", category: "Produce" },
+        { item: "Pickled red onions", prep: "to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Avocado", prep: "", quantity: "14", unit: "g", category: "Produce" },
+        { item: "Egg whites", prep: "for brushing and sealing", quantity: "", unit: "", category: "Dairy" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the dip", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Honey mustard", prep: "for the dip", quantity: "42", unit: "g", category: "Pantry" },
+        { item: "Chipotle peppers in adobo", prep: "for the dip", quantity: "3", unit: "", category: "Pantry" },
+        { item: "Sea salt", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Black pepper", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "for the dip, to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Water", prep: "for the dip", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Flatten the bread",
+        detail: "Take a rolling pin and roll out your slices of bread as flat as you can get them."
+      },
+      {
+        step_number: 2,
+        title: "Seal one edge",
+        detail: "Brush the inside edges of one of your slices of bread — this is important so it sticks with the top slice to seal your hot pocket."
+      },
+      {
+        step_number: 3,
+        title: "Fill",
+        detail: "Add your cheese to the middle of that slice of bread. Then add your turkey, roasted red peppers, pickled red onions, and avocado."
+      },
+      {
+        step_number: 4,
+        title: "Seal and crimp",
+        detail: "Brush the bottom edges of your other slice of bread (the top slice) to help it seal, then press the edges down. Brush more egg whites on the edges and carefully crimp with a fork until fully sealed. Use a pizza cutter to trim the edges into a perfect rectangle."
+      },
+      {
+        step_number: 5,
+        title: "Air fry",
+        detail: "Carefully transfer to your air fryer. Spray the top with nonstick cooking spray. Air fry at 400°F for 3–4 minutes or until golden."
+      },
+      {
+        step_number: 6,
+        title: "Make the dip and serve",
+        detail: "Blend all the chipotle honey mustard dip ingredients until smooth. Serve alongside the hot pocket and enjoy!"
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-caesar-salad-wraps",
+    title: "Chicken Caesar Salad Wraps",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🌯",
+    tags: ["High-Protein", "Meal Prep", "Salad"],
+    dish_category: "Sandwiches",
+    description:
+      "A homemade high-protein flatbread wrapped around air-fried chicken Caesar salad — a portable, macro-friendly spin on the classic.",
+    prep_time_mins: 20,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#5E7A4A",
+
+    macro_profiles: {
+      serving_2: { calories: 320, protein_g: 46, fat_g: 7, carbs_g: 17 },
+      serving_4: { calories: 320, protein_g: 46, fat_g: 7, carbs_g: 17 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "All-purpose flour", prep: "for the wrap", quantity: "12", unit: "g", category: "Pantry" },
+        { item: "Coconut flour", prep: "for the wrap", quantity: "12", unit: "g", category: "Pantry" },
+        { item: "Nutritional yeast", prep: "for the wrap", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Italian seasoning", prep: "for the wrap", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "2% cottage cheese", prep: "for the wrap", quantity: "150", unit: "g", category: "Dairy" },
+        { item: "Egg whites", prep: "for the wrap", quantity: "75", unit: "g", category: "Dairy" },
+        { item: "Chicken breast", prep: "flattened and seasoned", quantity: "454", unit: "g", category: "Meat" },
+        { item: "All-purpose seasoning", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Romaine lettuce", prep: "", quantity: "250", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "100", unit: "g", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the Caesar dressing", quantity: "227", unit: "g", category: "Dairy" },
+        { item: "Lemon", prep: "juiced, for the dressing", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "for the dressing", quantity: "14", unit: "g", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "for the dressing", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the dressing", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan cheese", prep: "for the dressing", quantity: "24", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced, for the dressing", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Kosher salt", prep: "for the dressing", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "All-purpose flour", prep: "for the wrap", quantity: "24", unit: "g", category: "Pantry" },
+        { item: "Coconut flour", prep: "for the wrap", quantity: "24", unit: "g", category: "Pantry" },
+        { item: "Nutritional yeast", prep: "for the wrap", quantity: "10", unit: "g", category: "Pantry" },
+        { item: "Italian seasoning", prep: "for the wrap", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "2% cottage cheese", prep: "for the wrap", quantity: "300", unit: "g", category: "Dairy" },
+        { item: "Egg whites", prep: "for the wrap", quantity: "150", unit: "g", category: "Dairy" },
+        { item: "Chicken breast", prep: "flattened and seasoned", quantity: "908", unit: "g", category: "Meat" },
+        { item: "All-purpose seasoning", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Romaine lettuce", prep: "", quantity: "500", unit: "g", category: "Produce" },
+        { item: "Grape tomatoes", prep: "", quantity: "200", unit: "g", category: "Produce" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the Caesar dressing", quantity: "454", unit: "g", category: "Dairy" },
+        { item: "Lemon", prep: "juiced, for the dressing", quantity: "1", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "for the dressing", quantity: "28", unit: "g", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "for the dressing", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Dijon mustard", prep: "for the dressing", quantity: "20", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan cheese", prep: "for the dressing", quantity: "48", unit: "g", category: "Dairy" },
+        { item: "Garlic", prep: "minced, for the dressing", quantity: "6", unit: "cloves", category: "Produce" },
+        { item: "Kosher salt", prep: "for the dressing", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the wrap batter",
+        detail: "Add the dry ingredients for the wrap into a bowl. Then blend the wet ingredients until smooth. Combine wet with dry slowly to avoid clumping."
+      },
+      {
+        step_number: 2,
+        title: "Bake the wrap",
+        detail: "Spread the batter onto parchment paper into a big thin rectangle. Bake at 450°F for 7–8 minutes, then carefully peel it off the parchment."
+      },
+      {
+        step_number: 3,
+        title: "Cook the chicken",
+        detail: "Flatten and season the chicken on both sides. Air fry at 400°F for 9 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Make the dressing",
+        detail: "Add all the Caesar dressing ingredients to a bowl and mix until smooth."
+      },
+      {
+        step_number: 5,
+        title: "Build and roll",
+        detail: "Build your Caesar salad and toss with the dressing. Add half the salad to your wrap and roll up tightly — parchment paper helps keep it wrapped tight."
+      },
+      {
+        step_number: 6,
+        title: "Slice and serve",
+        detail: "Slice in half and enjoy!"
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-chicken-dip-pinwheels",
+    title: "Buffalo Chicken Dip Pinwheels",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🌀",
+    tags: ["High-Protein", "Game Day", "Air Fryer"],
+    dish_category: "Sandwiches",
+    description:
+      "Buffalo chicken, Greek yogurt, and melty mozzarella rolled up in low-carb tortillas and baked into golden pinwheels — a game-day snack with a high-protein ranch dip on the side.",
+    prep_time_mins: 20,
+    cook_time_mins: 16,
+    native_serving: 24,
+    accent: "#8C5A2E",
+
+    macro_profiles: {
+      serving_24: { calories: 58, protein_g: 7.5, fat_g: 1.3, carbs_g: 4.5 }
+    },
+
+    scaling_options: [24],
+
+    ingredients_by_serving: {
+      serving_24: [
+        { item: "Boneless, skinless chicken breast", prep: "", quantity: "567", unit: "g", category: "Meat" },
+        { item: "Ranch dip mix", prep: "to season the chicken", quantity: "1/2", unit: "packet", category: "Pantry" },
+        { item: "Franks Red Hot Buffalo sauce", prep: "", quantity: "113", unit: "g", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "", quantity: "100", unit: "g", category: "Dairy" },
+        { item: "Light Laughing Cow cheese wedges", prep: "", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Part-skim mozzarella", prep: "", quantity: "56", unit: "g", category: "Dairy" },
+        { item: "Nutritional yeast", prep: "", quantity: "6", unit: "g", category: "Pantry" },
+        { item: "Red onion", prep: "finely diced", quantity: "70", unit: "g", category: "Produce" },
+        { item: "Green onion", prep: "", quantity: "15", unit: "g", category: "Produce" },
+        { item: "Low-carb burrito tortillas", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the ranch dip", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the ranch dip", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Ranch dip mix", prep: "for the ranch dip", quantity: "16", unit: "g", category: "Pantry" },
+        { item: "Pickle juice", prep: "for the ranch dip", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Dried dill", prep: "for the ranch dip", quantity: "2", unit: "g", category: "Pantry" },
+        { item: "Water", prep: "for the ranch dip, if needed", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the ranch dip",
+        detail: "Blend all the high-protein ranch ingredients together until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail: "Pat dry your chicken breast, then flatten and season with the ranch dip mix. Air fry at 400°F for 9–10 minutes. Let cool for 10 minutes once done."
+      },
+      {
+        step_number: 3,
+        title: "Mix the filling",
+        detail: "Chop the chicken breast into tiny pieces. Add to a bowl along with the rest of the buffalo chicken filling ingredients and mix until combined."
+      },
+      {
+        step_number: 4,
+        title: "Roll the tortillas",
+        detail: "Lay one tortilla flat. Add 1/4 of the filling and spread evenly into a rectangle, then slice off the edges for even rolls. Roll tightly. Repeat for all 4 tortillas, then slice each roll into about 1-inch pinwheels."
+      },
+      {
+        step_number: 5,
+        title: "Arrange and bake",
+        detail: "Lightly spray a muffin tin with cooking spray and place pinwheels snugly in. Lightly spray the tops with cooking spray. Bake at 400°F for 14–16 minutes or until golden and crispy. Enjoy!"
+      }
+    ]
+  },
+
+  {
+    recipe_id: "one-pan-cheesy-taco-rice",
+    title: "One Pan Cheesy Taco Rice",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🍚",
+    tags: ["High-Protein", "One-Pan", "Meal Prep"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "A one-pan, cheesy ground beef taco rice simmered with black beans, peppers, and diced tomatoes, finished with a low-cal creamy Taco Bell-style sauce and jalapeños.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#B5602E",
+
+    macro_profiles: {
+      serving_2: { calories: 665, protein_g: 55, fat_g: 13, carbs_g: 79 },
+      serving_4: { calories: 665, protein_g: 55, fat_g: 13, carbs_g: 79 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "227", unit: "g", category: "Meat" },
+        { item: "Frozen corn", prep: "", quantity: "75", unit: "g", category: "Produce" },
+        { item: "Orange bell pepper", prep: "diced", quantity: "60", unit: "g", category: "Produce" },
+        { item: "Yellow bell pepper", prep: "diced", quantity: "60", unit: "g", category: "Produce" },
+        { item: "Green bell pepper", prep: "diced", quantity: "60", unit: "g", category: "Produce" },
+        { item: "White onion", prep: "diced", quantity: "75", unit: "g", category: "Produce" },
+        { item: "Black beans", prep: "canned", quantity: "120", unit: "g", category: "Pantry" },
+        { item: "Taco seasoning", prep: "", quantity: "13", unit: "g", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "3", unit: "g", category: "Pantry" },
+        { item: "Diced tomatoes with green chiles", prep: "canned", quantity: "142", unit: "g", category: "Pantry" },
+        { item: "Tomato sauce", prep: "8oz can", quantity: "114", unit: "g", category: "Pantry" },
+        { item: "Beef bone broth", prep: "", quantity: "120", unit: "g", category: "Pantry" },
+        { item: "Long grain white rice", prep: "", quantity: "93", unit: "g", category: "Pantry" },
+        { item: "Reduced-fat Colby Jack cheese", prep: "", quantity: "43", unit: "g", category: "Dairy" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "85", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "57", unit: "g", category: "Dairy" },
+        { item: "Taco Bell Fire Sauce", prep: "for the sauce", quantity: "57", unit: "g", category: "Pantry" },
+        { item: "Taco seasoning", prep: "for the sauce", quantity: "4", unit: "g", category: "Pantry" },
+        { item: "Jalapeños", prep: "sliced, to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Light sour cream", prep: "", quantity: "24", unit: "g", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "to taste", quantity: "", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "96/4 lean ground beef", prep: "", quantity: "454", unit: "g", category: "Meat" },
+        { item: "Frozen corn", prep: "", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Orange bell pepper", prep: "diced", quantity: "120", unit: "g", category: "Produce" },
+        { item: "Yellow bell pepper", prep: "diced", quantity: "120", unit: "g", category: "Produce" },
+        { item: "Green bell pepper", prep: "diced", quantity: "120", unit: "g", category: "Produce" },
+        { item: "White onion", prep: "diced", quantity: "150", unit: "g", category: "Produce" },
+        { item: "Black beans", prep: "canned", quantity: "240", unit: "g", category: "Pantry" },
+        { item: "Taco seasoning", prep: "", quantity: "25", unit: "g", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "5", unit: "g", category: "Pantry" },
+        { item: "Diced tomatoes with green chiles", prep: "canned", quantity: "283", unit: "g", category: "Pantry" },
+        { item: "Tomato sauce", prep: "8oz can", quantity: "227", unit: "g", category: "Pantry" },
+        { item: "Beef bone broth", prep: "", quantity: "240", unit: "g", category: "Pantry" },
+        { item: "Long grain white rice", prep: "", quantity: "185", unit: "g", category: "Pantry" },
+        { item: "Reduced-fat Colby Jack cheese", prep: "", quantity: "85", unit: "g", category: "Dairy" },
+        { item: "Plain non-fat Greek yogurt", prep: "for the sauce", quantity: "170", unit: "g", category: "Dairy" },
+        { item: "2% cottage cheese", prep: "for the sauce", quantity: "113", unit: "g", category: "Dairy" },
+        { item: "Taco Bell Fire Sauce", prep: "for the sauce", quantity: "113", unit: "g", category: "Pantry" },
+        { item: "Taco seasoning", prep: "for the sauce", quantity: "8", unit: "g", category: "Pantry" },
+        { item: "Jalapeños", prep: "sliced, to taste", quantity: "", unit: "", category: "Produce" },
+        { item: "Light sour cream", prep: "", quantity: "48", unit: "g", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "to taste", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the Taco Bell sauce",
+        detail: "Add all your Taco Bell sauce ingredients to a small blender and blend until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Brown the beef",
+        detail: "Add your lean ground beef to a preheated pan over 7/10 heat. Flatten it out and cook 3–4 minutes until browned and crusty. Flip and cook another 2–3 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Add the vegetables and seasoning",
+        detail: "Break up the beef, then add the corn, peppers, and onions. Cook until lightly browned. Add the seasonings and Worcestershire sauce and cook for 30–60 seconds."
+      },
+      {
+        step_number: 4,
+        title: "Simmer the rice",
+        detail: "Stir in the black beans, bone broth, tomatoes with green chiles, tomato sauce, and rice. Bring to a boil, cover, reduce heat, and cook for 15–20 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Finish and top",
+        detail: "Uncover and cook a few more minutes until the rice is tender and the liquid is absorbed. Add the cheese, cover until melted, then add your toppings and enjoy!"
+      }
+    ]
   }
 ];
 
