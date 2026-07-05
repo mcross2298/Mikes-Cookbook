@@ -15994,6 +15994,405 @@ const RECIPES = [
         detail: "Uncover and cook a few more minutes until the rice is tender and the liquid is absorbed. Add the cheese, cover until melted, then add your toppings and enjoy!"
       }
     ]
+  },
+
+  {
+    recipe_id: "salted-caramel-protein-ice-cream-bark",
+    title: "Salted Caramel Protein Ice Cream Bark",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍦",
+    tags: ["High-Protein", "No-Bake", "Frozen"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A snappy frozen bark made from whisked Greek yogurt and protein powder, swirled with caramel and finished with chopped peanuts and flaky salt — tastes like salted caramel ice cream and stays under 200 calories a piece.",
+    prep_time_mins: 10,
+    cook_time_mins: 180,
+    native_serving: 6,
+    accent: "#C68642",
+
+    macro_profiles: {
+      serving_6: { calories: 160, protein_g: 14, fat_g: 6, carbs_g: 13 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Peanuts", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Flaky sea salt", prep: "", quantity: "", unit: "pinch", category: "Pantry" },
+        { item: "Date caramel or sugar-free caramel", prep: "for the drizzle", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "for the drizzle", quantity: "", unit: "pinch", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the base",
+        detail: "Whisk the Greek yogurt, protein powder, maple syrup, and vanilla until thick and smooth."
+      },
+      {
+        step_number: 2,
+        title: "Spread it thin",
+        detail: "Spread the mixture thin across a parchment-lined tray into an even slab."
+      },
+      {
+        step_number: 3,
+        title: "Drizzle & swirl",
+        detail: "Drizzle the caramel over the top and swirl it through with a knife tip."
+      },
+      {
+        step_number: 4,
+        title: "Scatter the toppings",
+        detail: "Scatter the peanuts and flaky salt across the surface, pressing them in lightly."
+      },
+      {
+        step_number: 5,
+        title: "Freeze & break",
+        detail: "Freeze for 3 hours until solid, then break into shards to serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "double-chocolate-protein-brownie-bites",
+    title: "Double Chocolate Protein Brownie Bites",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍫",
+    tags: ["High-Protein", "Baked", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "Dense, fudgy brownie bites blended from black beans, cocoa, and chocolate protein powder, topped with a melted chocolate shell — nobody clocks the beans hiding under all that cocoa.",
+    prep_time_mins: 10,
+    cook_time_mins: 18,
+    native_serving: 6,
+    accent: "#3B2412",
+
+    macro_profiles: {
+      serving_6: { calories: 195, protein_g: 11, fat_g: 8, carbs_g: 20 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Black beans", prep: "drained", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Chocolate protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Egg", prep: "", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Maple syrup", prep: "", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Baking powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "", unit: "pinch", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "for the topping", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "for the topping", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat",
+        detail: "Heat the oven to 350°F and line a muffin tin or brownie pan."
+      },
+      {
+        step_number: 2,
+        title: "Blend the batter",
+        detail: "Blend the black beans, cocoa, protein powder, egg, maple syrup, baking powder, and salt until totally smooth."
+      },
+      {
+        step_number: 3,
+        title: "Stir in the chips",
+        detail: "Stir the chocolate chips through the batter by hand."
+      },
+      {
+        step_number: 4,
+        title: "Bake",
+        detail: "Bake for 18 minutes, then cool fully in the pan so the centers set fudgy."
+      },
+      {
+        step_number: 5,
+        title: "Top & chill",
+        detail: "Melt the topping chocolate with the coconut oil and spoon it over each bite. Chill for 10 minutes until the top sets, then slice into squares."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cookies-cream-protein-cheesecake-cups",
+    title: "Cookies & Cream Protein Cheesecake Cups",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍰",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A no-bake cheesecake cup built on Greek yogurt and protein instead of heavy cream, with crushed chocolate sandwich cookies running all the way through — cool, tangy, and under 200 calories a cup.",
+    prep_time_mins: 15,
+    cook_time_mins: 120,
+    native_serving: 4,
+    accent: "#4A4A4A",
+
+    macro_profiles: {
+      serving_4: { calories: 180, protein_g: 13, fat_g: 7, carbs_g: 17 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Low-fat cream cheese", prep: "softened", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chocolate sandwich cookies", prep: "crushed", quantity: "3", unit: "", category: "Pantry" },
+        { item: "Chocolate sandwich cookies", prep: "crushed, for the base", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Butter", prep: "melted, for the base", quantity: "1", unit: "tsp", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Press the base",
+        detail: "Press the crushed cookies and melted butter into the bottom of each liner to set a firm base."
+      },
+      {
+        step_number: 2,
+        title: "Whip the filling",
+        detail: "Whip the cream cheese, yogurt, protein powder, maple syrup, and vanilla until thick and smooth."
+      },
+      {
+        step_number: 3,
+        title: "Fold in the cookies",
+        detail: "Fold the crushed cookies through the filling so they speckle it without muddying the color."
+      },
+      {
+        step_number: 4,
+        title: "Fill the cups",
+        detail: "Spoon the filling over each base and smooth the tops with the back of a spoon."
+      },
+      {
+        step_number: 5,
+        title: "Chill & top",
+        detail: "Chill for at least 2 hours until set, then top with an extra cookie crumble before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-chip-cookie-dough-protein-cups",
+    title: "Chocolate Chip Cookie Dough Protein Cups",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍪",
+    tags: ["High-Protein", "No-Bake", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "Edible cookie dough cups made from almond flour and protein powder, sealed inside a dark chocolate shell — tastes like the bowl of dough you weren't supposed to eat, minus the raw flour and sugar crash.",
+    prep_time_mins: 10,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#8B5A2B",
+
+    macro_profiles: {
+      serving_4: { calories: 190, protein_g: 12, fat_g: 9, carbs_g: 16 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Almond flour", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Almond butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Mini chocolate chips", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Milk", prep: "splash, if needed", quantity: "", unit: "", category: "Dairy" },
+        { item: "Salt", prep: "", quantity: "", unit: "pinch", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "for the shell", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "for the shell", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the dough",
+        detail: "Mix the almond flour, protein powder, maple syrup, almond butter, and salt into a thick dough, adding a splash of milk only if it won't come together."
+      },
+      {
+        step_number: 2,
+        title: "Fold & chill",
+        detail: "Fold the mini chocolate chips through, then chill the dough for 10 minutes so it firms up enough to handle."
+      },
+      {
+        step_number: 3,
+        title: "Melt the shell",
+        detail: "Melt the chocolate chips with the coconut oil in short bursts, stirring between each, until glossy and smooth."
+      },
+      {
+        step_number: 4,
+        title: "Build the base",
+        detail: "Layer a spoon of melted chocolate into each muffin liner and swirl it up the sides to build the base."
+      },
+      {
+        step_number: 5,
+        title: "Fill & seal",
+        detail: "Press a rolled ball of dough into each cup, then cover with the rest of the chocolate so the filling's sealed in."
+      },
+      {
+        step_number: 6,
+        title: "Chill & serve",
+        detail: "Chill the cups for 20 minutes until the shell snaps firm, then peel away the liners and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-raspberry-almond-yogurt-clusters",
+    title: "Dark Chocolate Raspberry Almond Yogurt Clusters",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🫐",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "Frozen Greek yogurt clusters folded with fresh raspberries and coated in a dark chocolate shell, finished with crushed freeze-dried raspberries and almonds — tangy, creamy, and a little crunchy.",
+    prep_time_mins: 10,
+    cook_time_mins: 65,
+    native_serving: 4,
+    accent: "#7A1F3D",
+
+    macro_profiles: {
+      serving_4: { calories: 230, protein_g: 18, fat_g: 8, carbs_g: 18 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "200", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1/2", unit: "scoop", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Raspberries", prep: "", quantity: "120", unit: "g", category: "Produce" },
+        { item: "70% dark chocolate", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Freeze-dried raspberries", prep: "crushed, for topping", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Almonds", prep: "chopped, for topping", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the base",
+        detail: "Whisk the yogurt, protein powder, honey, and vanilla until smooth and thick."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the raspberries",
+        detail: "Add the raspberries and fold them through with just a few gentle strokes, leaving some whole so they don't turn the mix pink."
+      },
+      {
+        step_number: 3,
+        title: "Freeze the clusters",
+        detail: "Spoon into clusters on a parchment-lined tray, spacing them apart, and freeze 45 minutes until firm."
+      },
+      {
+        step_number: 4,
+        title: "Melt the chocolate",
+        detail: "Melt the dark chocolate with the coconut oil in 20-second bursts, stirring between each, until smooth and glossy."
+      },
+      {
+        step_number: 5,
+        title: "Coat & top",
+        detail: "Coat or drizzle each frozen cluster with the chocolate, working quickly so it sets on contact. Top with crushed freeze-dried raspberries and chopped almonds."
+      },
+      {
+        step_number: 6,
+        title: "Freeze & serve",
+        detail: "Freeze another 20 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-strawberry-greek-yogurt-clusters",
+    title: "Dark Chocolate Strawberry Greek Yogurt Clusters",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍓",
+    tags: ["High-Protein", "Frozen", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "Frozen Greek yogurt clusters studded with diced strawberries and drizzled in a dark chocolate shell, finished with freeze-dried strawberries and pistachios — creamy, sweet, and actually filling.",
+    prep_time_mins: 10,
+    cook_time_mins: 80,
+    native_serving: 4,
+    accent: "#C1275A",
+
+    macro_profiles: {
+      serving_4: { calories: 230, protein_g: 18, fat_g: 8, carbs_g: 18 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "200", unit: "g", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1/2", unit: "scoop", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh strawberries", prep: "diced", quantity: "100", unit: "g", category: "Produce" },
+        { item: "70% dark chocolate", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Freeze-dried strawberries", prep: "for topping", quantity: "", unit: "to taste", category: "Pantry" },
+        { item: "Pistachios", prep: "crushed, optional, for topping", quantity: "", unit: "to taste", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk the base",
+        detail: "Whisk the yogurt, protein powder, honey, and vanilla until thick, smooth, and lump-free."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the strawberries",
+        detail: "Dice the strawberries small and pat them dry, then fold them through gently so they don't bleed into the yogurt."
+      },
+      {
+        step_number: 3,
+        title: "Freeze the clusters",
+        detail: "Spoon small clusters onto a parchment-lined tray, leaving space between each one so they freeze evenly, and freeze 45 minutes until firm enough to hold their shape."
+      },
+      {
+        step_number: 4,
+        title: "Melt & drizzle",
+        detail: "Melt the dark chocolate with the coconut oil in 20-second bursts, stirring between each, until glossy, then drizzle generously over each cluster."
+      },
+      {
+        step_number: 5,
+        title: "Freeze & serve",
+        detail: "Freeze another 30 to 45 minutes, until the shell sets with a snap, before serving."
+      }
+    ]
   }
 ];
 
