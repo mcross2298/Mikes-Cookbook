@@ -14421,6 +14421,7 @@ const RECIPES = [
     icon: "🥪",
     tags: ["High-Protein", "Copycat", "Stovetop"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "A better-for-you copycat of the classic Chick-fil-A sandwich — seasoned minced chicken patties, smashed and seared, topped with a tangy low-cal Chick-fil-A-style sauce.",
     prep_time_mins: 15,
@@ -14524,6 +14525,7 @@ const RECIPES = [
     icon: "🍝",
     tags: ["High-Protein", "Pasta Salad", "Meal Prep"],
     dish_category: "Salads & Slaws",
+    subsection: "Salads & Slaws",
     description:
       "A cold, creamy avocado-lime pasta salad loaded with blackened chicken, crispy bacon, romaine, and tomatoes — a big-bowl favorite built for meal prep.",
     prep_time_mins: 20,
@@ -14605,6 +14607,7 @@ const RECIPES = [
     icon: "🥙",
     tags: ["High-Protein", "Mediterranean", "Meal Prep"],
     dish_category: "Salads & Slaws",
+    subsection: "Salads & Slaws",
     description:
       "Grilled chicken, quinoa, chickpeas, and crisp veggies with feta, olives, and a lemon-dill yogurt dressing — a filling, fiber-rich bowl built to curb afternoon cravings.",
     prep_time_mins: 15,
@@ -14698,6 +14701,7 @@ const RECIPES = [
     icon: "🍗",
     tags: ["High-Protein", "Air Fryer", "Kid-Friendly"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Grilled & Sheet-Pan",
     description:
       "Greek yogurt-marinated chicken tenders crusted in crushed pretzels and air-fried crisp, served with a smoky chipotle honey mustard dip.",
     prep_time_mins: 40,
@@ -14789,6 +14793,7 @@ const RECIPES = [
     icon: "🥖",
     tags: ["High-Protein", "Game Day", "Cheesy"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "Hawaiian roll sliders stuffed with giant garlic-parmesan meatballs, simmered in pizza sauce and broiled with melted mozzarella — a cheesy, hand-held crowd-pleaser.",
     prep_time_mins: 20,
@@ -14876,6 +14881,7 @@ const RECIPES = [
     icon: "🥗",
     tags: ["High-Protein", "Salad", "Meal Prep"],
     dish_category: "Salads & Slaws",
+    subsection: "Salads & Slaws",
     description:
       "Lemon-basil marinated, air-fried chicken over crisp romaine, peppers, cucumber, and tomatoes, tossed in a big-batch low-cal Caesar dressing loaded with parmesan and garlic.",
     prep_time_mins: 15,
@@ -14972,6 +14978,7 @@ const RECIPES = [
     icon: "🌮",
     tags: ["High-Protein", "Pasta Salad", "Copycat"],
     dish_category: "Salads & Slaws",
+    subsection: "Salads & Slaws",
     description:
       "Taco-seasoned ground beef and fusilli tossed with romaine, corn, black beans, and cotija, finished with a creamy Taco Bell Fire Sauce dressing — meal-prep ready.",
     prep_time_mins: 20,
@@ -15060,6 +15067,7 @@ const RECIPES = [
     icon: "🍜",
     tags: ["High-Protein", "Stir-Fry", "Air Fryer"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Skillets & Stir-Fries",
     description:
       "Crispy air-fried chicken bites tossed in a fresh orange-ginger sauce with stir-fried veggies and ramen noodles — a lightened-up takeout favorite.",
     prep_time_mins: 20,
@@ -15162,6 +15170,7 @@ const RECIPES = [
     icon: "🍕",
     tags: ["High-Protein", "Air Fryer", "Quick"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "An egg-white-crusted tortilla folded into quarters with laughing cow, mozzarella, and turkey pepperoni, air-fried until golden and cheese-pulled — pizza night, macro-style.",
     prep_time_mins: 10,
@@ -15242,6 +15251,7 @@ const RECIPES = [
     icon: "🍗",
     tags: ["High-Protein", "Air Fryer", "Copycat"],
     dish_category: "Grilled & Sheet-Pan",
+    subsection: "Grilled & Sheet-Pan",
     description:
       "Air-fried blackened chicken tenderloins served with a copycat low-cal Raising Cane's-style dipping sauce — smoky, tangy, and ready in under 20 minutes.",
     prep_time_mins: 10,
@@ -15323,6 +15333,7 @@ const RECIPES = [
     icon: "🥡",
     tags: ["High-Protein", "Stir-Fry", "Low-Carb"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Skillets & Stir-Fries",
     description:
       "Deconstructed egg rolls — savory ground beef, cabbage slaw, carrots, and ginger-garlic seared in a skillet, drizzled with a sweet-spicy bang bang yogurt sauce. Also known as \"crack slaw.\"",
     prep_time_mins: 15,
@@ -15414,6 +15425,7 @@ const RECIPES = [
     icon: "🥗",
     tags: ["High-Protein", "Salad", "Meal Prep"],
     dish_category: "Salads & Slaws",
+    subsection: "Salads & Slaws",
     description:
       "Roasted sweet potatoes and carrots with air-fried chicken over romaine and iceberg, tossed in a creamy chipotle honey mustard dressing with feta and pickled red onion.",
     prep_time_mins: 20,
@@ -15489,6 +15501,7 @@ const RECIPES = [
     icon: "🍔",
     tags: ["High-Protein", "Copycat", "Air Fryer"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "Seared cheeseburger patties with a low-cal Big Mac-style sauce and crispy air-fried russet fries — a full drive-thru meal built into the macros.",
     prep_time_mins: 15,
@@ -15567,6 +15580,7 @@ const RECIPES = [
     icon: "🥗",
     tags: ["High-Protein", "Air Fryer", "Salad"],
     dish_category: "Salads & Slaws",
+    subsection: "Salads & Slaws",
     description:
       "Crispy panko-breaded buffalo chicken tenders over crunchy romaine and celery slaw with blue cheese crumbles and a creamy buffalo yogurt dressing.",
     prep_time_mins: 25,
@@ -15636,6 +15650,7 @@ const RECIPES = [
     icon: "🥪",
     tags: ["High-Protein", "Air Fryer", "Quick"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "Bread dough sealed around turkey, avocado, roasted red peppers, and Colby Jack, air-fried into a golden hand-held hot pocket with a chipotle honey mustard dip.",
     prep_time_mins: 15,
@@ -15710,6 +15725,7 @@ const RECIPES = [
     icon: "🌯",
     tags: ["High-Protein", "Meal Prep", "Salad"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "A homemade high-protein flatbread wrapped around air-fried chicken Caesar salad — a portable, macro-friendly spin on the classic.",
     prep_time_mins: 20,
@@ -15809,6 +15825,7 @@ const RECIPES = [
     icon: "🌀",
     tags: ["High-Protein", "Game Day", "Air Fryer"],
     dish_category: "Sandwiches",
+    subsection: "Sandwiches",
     description:
       "Buffalo chicken, Greek yogurt, and melty mozzarella rolled up in low-carb tortillas and baked into golden pinwheels — a game-day snack with a high-protein ranch dip on the side.",
     prep_time_mins: 20,
@@ -15880,6 +15897,7 @@ const RECIPES = [
     icon: "🍚",
     tags: ["High-Protein", "One-Pan", "Meal Prep"],
     dish_category: "Skillets & Stir-Fries",
+    subsection: "Skillets & Stir-Fries",
     description:
       "A one-pan, cheesy ground beef taco rice simmered with black beans, peppers, and diced tomatoes, finished with a low-cal creamy Taco Bell-style sauce and jalapeños.",
     prep_time_mins: 15,
@@ -16147,7 +16165,13 @@ const COLLECTIONS = [
     accent: "#3E7CB1",          // steel blue
     icon: "💪",
     status: "live",
-    source_match: "Flexible Dieting"
+    source_match: "Flexible Dieting",
+    subsections: [
+      { key: "Sandwiches", label: "Sandwiches" },
+      { key: "Salads & Slaws", label: "Salads & Slaws" },
+      { key: "Skillets & Stir-Fries", label: "Skillets & Stir-Fries" },
+      { key: "Grilled & Sheet-Pan", label: "Grilled & Sheet-Pan" }
+    ]
   }
 ];
 

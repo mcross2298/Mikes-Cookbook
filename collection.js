@@ -70,6 +70,24 @@
     return false;
   }
 
+  // Compact bottom stat row for a recipe card — one authored serving's
+  // Cal/Protein/Fat/Carbs, matching recipe.html's macro card exactly (no
+  // division by serving count; see macrosFor() in cookbook.js).
+  function macroStatsHtml(m) {
+    var stats = [
+      { cls: "cal", v: m.calories, label: "Cal" },
+      { cls: "", v: m.protein_g, label: "Protein" },
+      { cls: "", v: m.fat_g, label: "Fat" },
+      { cls: "", v: m.carbs_g, label: "Carbs" }
+    ].filter(function (s) { return s.v != null; });
+    if (!stats.length) return "";
+    return '<div class="rc-stats">' + stats.map(function (s) {
+      return '<div class="rc-stat ' + s.cls + '">' +
+        '<span class="rc-stat-num">' + Math.round(s.v) + "</span>" +
+        '<span class="rc-stat-label">' + s.label + "</span></div>";
+    }).join("") + "</div>";
+  }
+
   function recipeCard(r, onChange) {
     var accent = r.accent || "#C87A53";
     var card = el("a", "rc");
@@ -77,23 +95,18 @@
     card.style.setProperty("--rc-accent", accent);
     card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
 
-    var tier = (r.scaling_options && r.scaling_options[0]) || 2;
-    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) || {};
-    var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
-
-    var meta = [];
-    if (r.dish_category) meta.push(esc(r.dish_category));
-    if (totalTime) meta.push(totalTime + " min");
-    var macro = [];
-    if (m.calories != null) macro.push(m.calories + " cal");
-    if (m.protein_g != null) macro.push(m.protein_g + "g protein");
+    // macro_profiles are stored PER SINGLE SERVING and are identical across
+    // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,
+    // the same way recipe.html's macro card does.
+    var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
+    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
+      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
 
     card.innerHTML =
       '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
-        '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
-        (macro.length ? '<p class="rc-macro">' + macro.join(" · ") + "</p>" : "") +
+        macroStatsHtml(m) +
       "</div>";
 
     var on = loadFavs().has(r.recipe_id);

@@ -363,15 +363,6 @@
     var t = lastCookedAt(id);
     return t == null ? null : Math.floor((Date.now() - t) / 86400000);
   }
-  function cookedLabel(id) {
-    var days = daysSinceCooked(id);
-    if (days == null) return null;
-    if (days <= 0) return "Last made: today";
-    if (days === 1) return "Last made: yesterday";
-    if (days < 7) return "Last made: " + days + "d ago";
-    var wks = Math.round(days / 7);
-    return "Last made: " + wks + (wks === 1 ? " wk ago" : " wks ago");
-  }
 
   /* ── Pantry staples (items you always have → off the buy list) ─────────
      mc-cookbook:pantry → array of normalized item names. Keyed by item name
@@ -1099,6 +1090,24 @@
     return recipes().filter(function (r) { return r.dish_category === cat; });
   }
 
+  // Compact bottom stat row for a recipe card — one authored serving's
+  // Cal/Protein/Fat/Carbs, matching recipe.html's macro card exactly (no
+  // division by serving count; see macrosFor() there).
+  function macroStatsHtml(m) {
+    var stats = [
+      { cls: "cal", v: m.calories, label: "Cal" },
+      { cls: "", v: m.protein_g, label: "Protein" },
+      { cls: "", v: m.fat_g, label: "Fat" },
+      { cls: "", v: m.carbs_g, label: "Carbs" }
+    ].filter(function (s) { return s.v != null; });
+    if (!stats.length) return "";
+    return '<div class="rc-stats">' + stats.map(function (s) {
+      return '<div class="rc-stat ' + s.cls + '">' +
+        '<span class="rc-stat-num">' + Math.round(s.v) + "</span>" +
+        '<span class="rc-stat-label">' + s.label + "</span></div>";
+    }).join("") + "</div>";
+  }
+
   /* ── Shared: a recipe card (used by Categories / Recipes / Favorites) ── */
   function recipeCard(r, opts) {
     opts = opts || {};
@@ -1108,27 +1117,18 @@
     card.style.setProperty("--rc-accent", accent);
     card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
 
-    // macro_profiles are stored as TOTALS for the tier; show per-serving macros
-    // on the card (tier total ÷ tier serving count = one individual serving).
-    var tier = (opts.serving || (r.scaling_options && r.scaling_options[0]) || 2);
-    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) || {};
-    var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
+    // macro_profiles are stored PER SINGLE SERVING and are identical across
+    // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,
+    // the same way recipe.html's macro card does. Do not divide by serving count.
+    var tier = (opts.serving || (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2);
+    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
+      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
 
-    var meta = [];
-    if (r.dish_category) meta.push(esc(r.dish_category));
-    if (totalTime) meta.push(totalTime + " min");
-    var macro = [];
-    if (m.calories != null) macro.push(Math.round(m.calories / tier) + " cal");
-    if (m.protein_g != null) macro.push(Math.round(m.protein_g / tier) + "g protein");
-
-    var lastMade = cookedLabel(r.recipe_id);
     card.innerHTML =
       '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
-        '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
-        (macro.length ? '<p class="rc-macro">' + macro.join(" · ") + "</p>" : "") +
-        (lastMade ? '<p class="rc-last-cooked">' + esc(lastMade) + "</p>" : "") +
+        macroStatsHtml(m) +
       "</div>";
 
     // A heart in the card's upper-right corner — favorite straight from the
