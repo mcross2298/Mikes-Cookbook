@@ -1162,6 +1162,7 @@
       score += Math.min(overlap, SMW_OVERLAP_CAP) * SMW_OVERLAP_WEIGHT;
     }
     if (loadFavs().has(r.recipe_id)) score += SMW_FAVORITE_BONUS;
+    score += seasonalWeight(r.dish_category);
     score += Math.random() * 10; // jitter so Regenerate actually varies
     return score;
   }
@@ -1508,6 +1509,26 @@
     "Sauces":                { icon: "🥄", accent: "#BF7A3D", blurb: "Creamy, protein-packed yogurt sauces to top any meal." },
     "Marinades":             { icon: "🧂", accent: "#A63D2F", blurb: "No-cook marinades to build a crust and lock in flavor before the grill." }
   };
+  // A small curated month→category weight table (no data-model change — no
+  // season tag exists in recipes-data.js) applied as a minor score bonus in
+  // both Smart Week generation and the "For You" carousel below.
+  var SEASON_CATEGORY_BONUS = {
+    winter: { "Soups, Stews & Chilis": 8, "Casseroles & Bakes": 5 },
+    spring: { "Salads & Slaws": 5, "Sandwiches": 3 },
+    summer: { "Grilled & Sheet-Pan": 8, "Salsas & Dips": 5, "Salads & Slaws": 5 },
+    fall:   { "Soups, Stews & Chilis": 5, "Casseroles & Bakes": 5, "Desserts": 3 }
+  };
+  function currentSeason() {
+    var m = new Date().getMonth();   // 0=Jan..11=Dec
+    if (m === 11 || m <= 1) return "winter";
+    if (m <= 4) return "spring";
+    if (m <= 7) return "summer";
+    return "fall";
+  }
+  function seasonalWeight(dishCategory) {
+    var bonus = SEASON_CATEGORY_BONUS[currentSeason()] || {};
+    return bonus[dishCategory] || 0;
+  }
   function presentCategories() {
     return CATEGORY_ORDER.filter(function (c) {
       return recipes().some(function (r) { return r.dish_category === c; });
@@ -2034,6 +2055,67 @@
     return card;
   }
 
+  /* ── "For You" recommendation carousel (Home) ────────────────────────
+     Independent of the planner's weekly-intent flow (Smart Week) — a small
+     always-visible strip so Home has something to say even when nobody's
+     building a plan. Ranks by favorite-tag overlap, Mike's-pick status, and
+     the same seasonal category bonus Smart Week uses, deprioritizing
+     anything cooked in the last two weeks so it doesn't just repeat the
+     Today card. */
+  var FORYOU_MIKES_BONUS = 6;
+  var FORYOU_RECENT_PENALTY = 12;
+  var FORYOU_RECENT_DAYS = 14;
+  function forYouCandidates(limit) {
+    var favIds = loadFavs();
+    var favRecipes = recipes().filter(function (r) { return favIds.has(r.recipe_id); });
+    var tagWeight = {};
+    favRecipes.forEach(function (r) {
+      (r.tags || []).forEach(function (t) { tagWeight[t] = (tagWeight[t] || 0) + 1; });
+    });
+    var hasTasteSignal = Object.keys(tagWeight).length > 0;
+    var scored = recipes()
+      .filter(function (r) { return !favIds.has(r.recipe_id); })   // favorites have their own screen
+      .map(function (r) {
+        var score = 0;
+        (r.tags || []).forEach(function (t) { if (tagWeight[t]) score += tagWeight[t]; });
+        if (isMikeFav(r.recipe_id)) score += FORYOU_MIKES_BONUS;
+        score += seasonalWeight(r.dish_category);
+        var days = daysSinceCooked(r.recipe_id);
+        if (days != null && days < FORYOU_RECENT_DAYS) score -= FORYOU_RECENT_PENALTY;
+        score += Math.random() * 3;   // light jitter so ties don't render identically every visit
+        return { r: r, score: score };
+      });
+    // With no favorites yet (fresh install) every score is jitter-plus-
+    // seasonal — fine on its own, but Mike's curated picks are a better
+    // "here's something worth trying" default than an arbitrary data-order
+    // tie-break would be.
+    if (!hasTasteSignal) {
+      scored.forEach(function (x) { if (isMikeFav(x.r.recipe_id)) x.score += FORYOU_MIKES_BONUS; });
+    }
+    scored.sort(function (a, b) { return b.score - a.score; });
+    return scored.slice(0, limit).map(function (x) { return x.r; });
+  }
+  function renderForYouCarousel() {
+    var picks = forYouCandidates(8);
+    if (picks.length < 3) return null;   // too few real candidates to feel curated
+    var wrap = el("div", "foryou");
+    wrap.appendChild(el("div", "tier-label", "For You"));
+    var row = el("div", "foryou-row");
+    picks.forEach(function (r) {
+      var accent = clampAccent(r.accent || "#C87A53");
+      var card = el("a", "foryou-card");
+      card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
+      card.style.setProperty("--rc-accent", accent);
+      card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
+      card.innerHTML =
+        '<span class="foryou-icon">' + recipeIconHtml(r.icon) + "</span>" +
+        '<span class="foryou-title">' + esc(r.title) + "</span>";
+      row.appendChild(card);
+    });
+    wrap.appendChild(row);
+    return wrap;
+  }
+
   function renderHome() {
     var s = $("#screen-home");
     s.innerHTML = "";
@@ -2115,6 +2197,9 @@
     if (!planned && homeAutoDraftEligible()) {
       s.appendChild(renderAutoDraftCard());
     }
+
+    var forYou = renderForYouCarousel();
+    if (forYou) s.appendChild(forYou);
 
     // Browse modules — two labeled sections keep the Home screen scannable.
     var browse = el("div", "home-browse");
@@ -2298,11 +2383,20 @@
 
   // Persists only for the JS runtime (like catState/plannerState) — resets
   // to off on a fresh load rather than sticking on silently across visits.
-  var recipesState = { lowShopping: false };
+  var recipesState = { lowShopping: false, category: null, macro: null };
   // "Need 2 or fewer" keeps the filter meaningfully narrower than "browse
   // everything," while still surfacing real dishes, not just the ones with
   // the shortest ingredient lists.
   var LOW_SHOPPING_MAX_NEED = 2;
+  var MACRO_FACETS = {
+    protein: { label: "🍗 High Protein", test: function (m) { return (m.protein_g || 0) >= 30; } },
+    lowcarb: { label: "🥑 Low Carb", test: function (m) { return m.carbs_g != null && m.carbs_g <= 15; } }
+  };
+  function recipeNativeMacros(r) {
+    var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
+    return (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
+      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
+  }
 
   function renderRecipes() {
     var s = $("#screen-recipes");
@@ -2320,10 +2414,11 @@
     searchWrap.appendChild(box);
     s.appendChild(searchWrap);
 
-    // "Cook what you have" — filters/sorts by pantry-staple ingredient
-    // overlap, so pantry data (previously write-only, feeding only the
-    // grocery list) does double duty as a browse filter here.
+    // Composable filter chips — dish category, macro thresholds, and the
+    // existing pantry-match filter all combine with each other and with the
+    // search box, instead of search being the only way into the catalog.
     var filterBar = el("div", "recipe-filter-bar");
+
     var pantryToggle = el("button", "pantry-filter-toggle" + (recipesState.lowShopping ? " on" : ""),
       "🧂 Low-shopping");
     pantryToggle.type = "button";
@@ -2335,7 +2430,34 @@
       paint();
     });
     filterBar.appendChild(pantryToggle);
+
+    Object.keys(MACRO_FACETS).forEach(function (key) {
+      var facet = MACRO_FACETS[key];
+      var chip = el("button", "pantry-filter-toggle" + (recipesState.macro === key ? " on" : ""), facet.label);
+      chip.type = "button";
+      chip.setAttribute("aria-pressed", recipesState.macro === key ? "true" : "false");
+      chip.addEventListener("click", function () {
+        recipesState.macro = (recipesState.macro === key) ? null : key;
+        paint();
+      });
+      filterBar.appendChild(chip);
+    });
     s.appendChild(filterBar);
+
+    // Category chips get their own scrollable row — 11 categories is too
+    // many to fit inline with the macro/pantry chips above.
+    var catBar = el("div", "recipe-cat-bar");
+    presentCategories().forEach(function (cat) {
+      var chip = el("button", "recipe-cat-chip" + (recipesState.category === cat ? " on" : ""), cat);
+      chip.type = "button";
+      chip.setAttribute("aria-pressed", recipesState.category === cat ? "true" : "false");
+      chip.addEventListener("click", function () {
+        recipesState.category = (recipesState.category === cat) ? null : cat;
+        paint();
+      });
+      catBar.appendChild(chip);
+    });
+    s.appendChild(catBar);
 
     if (focusRecipesSearch) {
       focusRecipesSearch = false;
@@ -2345,11 +2467,15 @@
     var results = el("div", "browse-results");
     s.appendChild(results);
 
+    function anyFacetActive() {
+      return recipesState.lowShopping || recipesState.category || recipesState.macro;
+    }
+
     function paint() {
       var q = box.value.trim();
       results.innerHTML = "";
 
-      if (!q && !recipesState.lowShopping) {           // default: collection cards
+      if (!q && !anyFacetActive()) {                   // default: collection cards
         var wrap = el("div", "cards-wrap");
         wrap.appendChild(el("div", "tier-label", "★ Collections"));
         collections().forEach(function (c) { wrap.appendChild(collectionCard(c)); });
@@ -2359,6 +2485,13 @@
 
       var list = q ? recipes().filter(function (r) { return recipesMatch(r, q); }) : recipes().slice();
 
+      if (recipesState.category) {
+        list = list.filter(function (r) { return r.dish_category === recipesState.category; });
+      }
+      if (recipesState.macro) {
+        var test = MACRO_FACETS[recipesState.macro].test;
+        list = list.filter(function (r) { return test(recipeNativeMacros(r)); });
+      }
       if (recipesState.lowShopping) {
         list = list
           .map(function (r) { return { r: r, info: pantryMatchInfo(r) }; })
@@ -2372,12 +2505,17 @@
           '<span class="empty-emoji">' + (recipesState.lowShopping ? "🧂" : "🔍") + "</span>" +
           (recipesState.lowShopping
             ? "Nothing needs " + LOW_SHOPPING_MAX_NEED + " or fewer items you don't already have — mark more staples from the Grocery tab, or turn this filter off."
-            : "No recipes match your search.")));
+            : "No recipes match these filters.")));
         return;
       }
+      var facetLabel = [
+        recipesState.category,
+        recipesState.macro ? MACRO_FACETS[recipesState.macro].label.replace(/^\S+\s/, "") : null,
+        recipesState.lowShopping ? "low-shopping" : null
+      ].filter(Boolean).join(" · ");
       results.appendChild(el("div", "browse-count",
         list.length + (list.length === 1 ? " recipe" : " recipes") +
-        (recipesState.lowShopping ? " · low-shopping" : "")));
+        (facetLabel ? " · " + facetLabel : "")));
       var grid = el("div", "col-grid");
       list.forEach(function (r) {
         grid.appendChild(recipeCard(r, { pantryInfo: recipesState.lowShopping ? pantryMatchInfo(r) : null }));
@@ -2902,6 +3040,75 @@
     }, 220);
   }
 
+  /* ── "Use it up" ingredient cross-links (Grocery tab) ────────────────
+     An odd leftover half-pound of something has no obvious next use today —
+     this indexes every recipe's native-tier ingredient list once (cached)
+     so tapping a grocery item can surface other recipes that use it. Keyed
+     through the same groceryMergeName() singular/plural normalization the
+     grocery list itself already merges on, so matches line up with what's
+     actually on the list. */
+  var ingredientIndexCache = null;
+  function ingredientIndex() {
+    if (ingredientIndexCache) return ingredientIndexCache;
+    var idx = {};
+    recipes().forEach(function (r) {
+      var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
+      var by = r.ingredients_by_serving || {};
+      var list = by["serving_" + tier] || by["serving_" + (r.native_serving || 2)] || by[Object.keys(by)[0]] || [];
+      var seen = {};
+      list.forEach(function (ing) {
+        var key = groceryMergeName((ing.item || "").trim());
+        if (!key || seen[key]) return;
+        seen[key] = 1;
+        (idx[key] = idx[key] || []).push(r);
+      });
+    });
+    ingredientIndexCache = idx;
+    return idx;
+  }
+  function recipesUsingItem(itemName) {
+    return ingredientIndex()[groceryMergeName((itemName || "").trim())] || [];
+  }
+  function closeIngredientUses() {
+    var ov = document.querySelector(".iu-overlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+  function openIngredientUses(itemName) {
+    closeIngredientUses();
+    var matches = recipesUsingItem(itemName);
+
+    var ov = el("div", "picker iu-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "Uses for " + itemName));
+    var close = el("button", "picker-close", "✕");
+    close.type = "button";
+    close.addEventListener("click", closeIngredientUses);
+    top.appendChild(close);
+    ov.appendChild(top);
+
+    var body = el("div", "picker-results");
+    if (!matches.length) {
+      body.appendChild(emptyState("🔍", "No other recipes in the cookbook use " + itemName + " yet."));
+    } else {
+      var list = el("div", "iu-list");
+      matches.forEach(function (r) {
+        var row = el("a", "iu-row");
+        row.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
+        row.innerHTML =
+          '<span class="iu-icon">' + recipeIconHtml(r.icon) + "</span>" +
+          '<span class="iu-name">' + esc(r.title) + "</span>";
+        list.appendChild(row);
+      });
+      body.appendChild(list);
+    }
+    ov.appendChild(body);
+
+    ov.addEventListener("click", function (e) { if (e.target === ov) closeIngredientUses(); });
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
   function groceryRow(row, checked, opts) {
     opts = opts || {};
     var isDone = checked.has(row.key);
@@ -2918,6 +3125,14 @@
       el2.classList.toggle("done", nowDone);
       saveGroc(set);
       collapseGroceryRow(el2, nowDone);
+    });
+    // Tapping the item name itself (not the row) surfaces other recipes
+    // that use it — an odd leftover has no obvious next use otherwise.
+    // Stops propagation so it never also toggles the check-off.
+    var textEl = el2.querySelector(".check-text");
+    textEl.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      openIngredientUses(row.item);
     });
     // Staple toggle: lift an "always have" item off the buy list (or send a
     // staple back to it). Stops propagation so it never toggles the check-off.
