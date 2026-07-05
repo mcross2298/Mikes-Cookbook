@@ -992,6 +992,30 @@ body {
   .autodraft-use, .autodraft-regen, .autodraft-dismiss { transition: none; }
 }
 
+/* ── "For You" carousel (Home) ────────────────────────────────────── */
+.foryou { padding: 4px 0 8px; }
+.foryou .tier-label { margin: 6px 20px 12px; }
+.foryou-row {
+  display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 6px;
+  -webkit-overflow-scrolling: touch;
+}
+.foryou-card {
+  flex: 0 0 128px; display: flex; flex-direction: column; align-items: center; gap: 9px;
+  text-decoration: none; color: inherit; text-align: center;
+  background: var(--bg-elev); border: 1px solid var(--line-dark);
+  border-radius: 14px; padding: 14px 10px; transition: transform var(--dur-fast) var(--ease-out);
+}
+.foryou-card:active { transform: scale(0.97); }
+.foryou-icon {
+  width: 40px; height: 40px; border-radius: 50%; font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(var(--rc-accent-rgb), 0.20);
+}
+.foryou-title {
+  font-size: 12.5px; font-weight: 700; color: var(--on-dark); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
 .home-section-head {
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 20px 20px 10px;
@@ -1274,18 +1298,38 @@ button.col-back { appearance: none; -webkit-appearance: none;
 .search-box::placeholder { color: var(--on-dark-dim); }
 .search-box:focus { border-color: rgba(var(--accent-rgb),0.5); }
 
-/* "Cook what you have" filter toggle (Recipes screen) */
-.recipe-filter-bar { display: flex; padding: 0 20px 14px; }
+/* Faceted search chips (Recipes screen): pantry-match + macro thresholds
+   share one scrollable row; dish categories get their own row below since
+   11 categories won't fit inline with the others. */
+.recipe-filter-bar {
+  display: flex; gap: 8px; padding: 0 20px 10px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 .pantry-filter-toggle {
-  appearance: none; cursor: pointer; font-family: var(--sans);
+  flex: 0 0 auto; appearance: none; cursor: pointer; font-family: var(--sans);
   background: var(--bg-elev); border: 1px solid var(--line-dark); color: var(--on-dark-dim);
-  border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 800;
+  border-radius: 999px; padding: 8px 14px; font-size: 12.5px; font-weight: 800; white-space: nowrap;
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 .pantry-filter-toggle.on {
   background: rgba(var(--accent-rgb),0.18); border-color: rgba(var(--accent-rgb),0.5); color: var(--accent);
 }
 .pantry-filter-toggle:active { transform: scale(0.97); }
+
+.recipe-cat-bar {
+  display: flex; gap: 8px; padding: 0 20px 14px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.recipe-cat-chip {
+  flex: 0 0 auto; appearance: none; cursor: pointer; font-family: var(--sans);
+  background: transparent; border: 1px solid var(--line-dark); color: var(--on-dark-dim);
+  border-radius: 999px; padding: 7px 13px; font-size: 12px; font-weight: 700; white-space: nowrap;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.recipe-cat-chip.on {
+  background: var(--accent); border-color: var(--accent); color: #1a1208;
+}
+.recipe-cat-chip:active { transform: scale(0.97); }
 
 /* Pantry-match badge on a recipe card (Low-shopping filter only) */
 .rc-pantry-badge {
@@ -1956,6 +2000,18 @@ body.picking { overflow: hidden; }
   padding-bottom: calc(24px + env(safe-area-inset-bottom));
 }
 .picker-results .col-grid { padding-top: 6px; }
+
+/* "Use it up" ingredient cross-links (Grocery tab) */
+.iu-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 18px; }
+.iu-row {
+  display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
+  background: var(--bg-elev); border: 1px solid var(--line-dark); border-radius: var(--r-md);
+  padding: 12px 14px;
+}
+.iu-row:active { transform: scale(0.98); }
+.iu-icon { width: 26px; height: 26px; flex: 0 0 auto; }
+.iu-name { font-size: 14.5px; font-weight: 700; color: var(--on-dark); }
+.grocery-row .check-text { cursor: pointer; text-decoration: underline dotted rgba(255,255,255,0.28); text-underline-offset: 3px; }
 
 /* The picker card is a <button> wearing the .rc recipe-card look. */
 .rc-pick {
