@@ -94,6 +94,10 @@
     root.appendChild(renderToolbar());
     root.appendChild(renderCalendar());
     root.appendChild(renderSummary(totals, goals));
+    var fit = renderFitPicks(totals, goals);
+    if (fit) root.appendChild(fit);
+    var freq = renderFrequent();
+    if (freq) root.appendChild(freq);
     root.appendChild(renderFind());
     root.appendChild(renderTimeline(entries));
     host.appendChild(root);
@@ -164,6 +168,86 @@
       "</div>" +
       '<div class="ckt-met-track"><div class="ckt-met-fill" style="width:' + pct + "%;background:" + (over ? "#C0473B" : color) + '"></div></div>';
     return m;
+  }
+
+  // ---- "fits your remaining macros" (today only) ---------------------------
+  // Real-time "what do I eat right now" — distinct from Smart Week's weekly
+  // generator. Ranks by protein-per-calorie so a tight remaining budget still
+  // surfaces something worth eating, not just whatever's smallest. A ≥80kcal
+  // floor keeps this a "what's my next meal" list, not condiments/salsas —
+  // it also happens to guard against a couple of known-bad authored macro
+  // rows (e.g. a chicken dish sitting at 45kcal/serving) without this feature
+  // silently trusting an implausible outlier as its top pick.
+  function fitPickRecipes(remaining) {
+    if (!remaining || !(remaining.kcal > 40)) return [];
+    return (window.RECIPES || [])
+      .map(function (r) { return { r: r, per: recipePerServing(r) }; })
+      .filter(function (x) { return x.per && x.per.kcal >= 80 && x.per.kcal <= remaining.kcal + 60; })
+      .sort(function (a, b) { return (b.per.p / b.per.kcal) - (a.per.p / a.per.kcal); })
+      .slice(0, 4);
+  }
+  function renderFitPicks(totals, goals) {
+    if (!goals || selKey !== S.todayKey()) return null;
+    var remaining = {
+      kcal: goals.kcal - totals.kcal, p: goals.p - totals.p,
+      f: goals.f - totals.f, c: goals.c - totals.c
+    };
+    var picks = fitPickRecipes(remaining);
+    if (!picks.length) return null;
+
+    var card = el("div", "ckt-fit");
+    card.appendChild(el("div", "ckt-fit-head", "Fits your remaining macros"));
+    var list = el("div", "ckt-fit-list");
+    picks.forEach(function (x) {
+      var row = el("div", "ckt-fit-row");
+      row.innerHTML =
+        '<div class="ckt-fit-main">' +
+          '<div class="ckt-fit-name">' + esc(x.r.title) + "</div>" +
+          '<div class="ckt-fit-sub">' + Math.round(x.per.kcal) + " kcal · " + Math.round(x.per.p) + "g protein</div>" +
+        "</div>";
+      var btn = el("button", "ckt-fit-log", "Log");
+      btn.type = "button";
+      btn.onclick = function () { addSlotMs = defaultSlot(); openFacts(foodFromRecipe(x.r), {}); };
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+    card.appendChild(list);
+    return card;
+  }
+
+  // ---- frequent-foods quick-log shelf ---------------------------------------
+  // Coffee, eggs, shakes get logged dozens of times but each used to need a
+  // fresh search or scan. Excludes recipe entries (already one tap via
+  // search/fit-picks above) so this stays a shelf for actual repeat foods.
+  function frequentFoods(limit) {
+    var obj = S.read(), tally = {};
+    Object.keys(obj.days || {}).forEach(function (dk) {
+      (obj.days[dk].entries || []).forEach(function (e) {
+        if (e.source === "recipe") return;
+        var key = e.code ? ("c:" + e.code) : ("n:" + String(e.name).toLowerCase());
+        if (!tally[key]) tally[key] = { count: 0, entry: e };
+        tally[key].count++;
+      });
+    });
+    return Object.keys(tally).map(function (k) { return tally[k]; })
+      .sort(function (a, b) { return b.count - a.count; })
+      .slice(0, limit || 8)
+      .map(function (t) { return t.entry; });
+  }
+  function renderFrequent() {
+    var freq = frequentFoods(8);
+    if (!freq.length) return null;
+    var wrap = el("div", "ckt-freq");
+    wrap.appendChild(el("div", "ckt-freq-head", "Log again"));
+    var row = el("div", "ckt-freq-row");
+    freq.forEach(function (e) {
+      var chip = el("button", "ckt-freq-chip", esc(e.name));
+      chip.type = "button";
+      chip.onclick = function () { addSlotMs = defaultSlot(); openFacts(foodFromEntry(e), {}); };
+      row.appendChild(chip);
+    });
+    wrap.appendChild(row);
+    return wrap;
   }
 
   function renderFind() {
@@ -918,6 +1002,23 @@
       ".ckt-find-ic{font-size:14px;}" +
       ".ckt-find-txt{flex:1;text-align:left;background:none;border:none;color:var(--ink-dim);font-size:14px;cursor:pointer;font-family:inherit;padding:0;}" +
       ".ckt-find-scan{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-size:15px;cursor:pointer;font-family:inherit;}" +
+      /* "fits your remaining macros" (today only) */
+      ".ckt-fit{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;}" +
+      ".ckt-fit-head{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:10px;}" +
+      ".ckt-fit-list{display:flex;flex-direction:column;gap:8px;}" +
+      ".ckt-fit-row{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-radius:var(--r-sm);padding:9px 11px;}" +
+      ".ckt-fit-main{flex:1;min-width:0;}" +
+      ".ckt-fit-name{font-size:13.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+      ".ckt-fit-sub{font-size:11px;color:var(--ink-dim);font-weight:600;margin-top:2px;}" +
+      ".ckt-fit-log{flex:0 0 auto;appearance:none;cursor:pointer;font-family:inherit;background:var(--accent);color:#fff;border:0;" +
+        "border-radius:8px;padding:7px 13px;font-size:12px;font-weight:800;}" +
+      /* frequent-foods quick-log shelf */
+      ".ckt-freq{margin-bottom:16px;}" +
+      ".ckt-freq-head{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-dark-dim);margin-bottom:8px;}" +
+      ".ckt-freq-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;}" +
+      ".ckt-freq-chip{flex:0 0 auto;appearance:none;cursor:pointer;font-family:inherit;background:var(--bg-elev);color:var(--on-dark);" +
+        "border:1px solid var(--line-dark);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;}" +
+      ".ckt-freq-chip:active{transform:scale(0.96);}" +
       /* timeline */
       ".ckt-time{position:relative;}" +
       ".ckt-hr{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:stretch;}" +
