@@ -307,12 +307,23 @@
   function newUid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   }
+  // Not every recipe authors a serving_2 tier (batch-yield recipes author
+  // just one serving_N matching native_serving/scaling_options — see
+  // CLAUDE.md's "Serving ladder"). Defaulting blindly to 2 left recipes like
+  // a serving_4-only or serving_1-only dish with an unresolvable
+  // ingredients_by_serving lookup, silently dropping them from the grocery
+  // list. Fall back to an authored tier for that recipe instead.
+  function defaultServingFor(id) {
+    var r = recipeById(id);
+    if (!r) return 2;
+    return (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
+  }
   function addMeal(id, opts) {
     opts = opts || {};
     var p = loadPlan();
     p.meals.push({
       uid: newUid(), id: id,
-      serving: opts.serving || 2,
+      serving: opts.serving || defaultServingFor(id),
       day: opts.day || null,
       slot: opts.slot || null,
       completed: false,
@@ -845,7 +856,7 @@
     var p = loadPlan();
     p.meals = p.meals.filter(function (m) { return scopeSlots.indexOf(m.slot) < 0; });
     grid.forEach(function (g) {
-      p.meals.push({ uid: newUid(), id: g.id, serving: 2, day: g.day, slot: g.slot });
+      p.meals.push({ uid: newUid(), id: g.id, serving: defaultServingFor(g.id), day: g.day, slot: g.slot });
     });
     savePlan(p);
     saveGroc(new Set());
@@ -2518,7 +2529,7 @@
         days <= 0 ? "Cooked today" : "Cooked " + days + "d ago"));
     }
     card.addEventListener("click", function () {
-      addMeal(r.recipe_id, { day: ctx.day || null, slot: ctx.slot || null, serving: 2 });
+      addMeal(r.recipe_id, { day: ctx.day || null, slot: ctx.slot || null });
       closePicker();
       refresh();
     });
