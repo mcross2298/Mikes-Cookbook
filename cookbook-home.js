@@ -431,6 +431,46 @@
     return t == null ? null : Math.floor((Date.now() - t) / 86400000);
   }
 
+  /* ── Consistency streak (Home hero) ──────────────────────────────────
+     Derived only — no new storage. A day "counts" if it has either a cook-log
+     entry (COOKED_KEY, any recipe) or a tracker entry (mc-cookbook:tracker:v1),
+     so cooking-only or tracking-only days both keep the streak alive. */
+  function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function loadCookedDateSet() {
+    var map = loadCookedMap(), days = {};
+    Object.keys(map).forEach(function (id) {
+      (map[id] || []).forEach(function (e) {
+        var at = typeof e === "string" ? e : (e && e.at);
+        if (at) days[at.slice(0, 10)] = 1;
+      });
+    });
+    return days;
+  }
+  function loadTrackedDateSet() {
+    if (!window.MCTrackerStore) return {};
+    var obj = MCTrackerStore.read(), days = {};
+    Object.keys(obj.days || {}).forEach(function (k) {
+      if ((obj.days[k].entries || []).length) days[k] = 1;
+    });
+    return days;
+  }
+  function activeStreakDays() {
+    var cooked = loadCookedDateSet(), tracked = loadTrackedDateSet();
+    function keyFor(d) { return window.MCTrackerStore ? MCTrackerStore.keyFromDate(d) : ymd(d); }
+    var d = new Date();
+    // Not logging anything yet *today* shouldn't read as "streak broken" —
+    // start counting from yesterday until today has its first entry.
+    if (!(cooked[keyFor(d)] || tracked[keyFor(d)])) d.setDate(d.getDate() - 1);
+    var streak = 0;
+    while (streak < 400) {
+      var k = keyFor(d);
+      if (!(cooked[k] || tracked[k])) break;
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }
+
   /* ── Pantry staples (items you always have → off the buy list) ─────────
      mc-cookbook:pantry → array of normalized item names. Keyed by item name
      (not category) so "salt" is a staple everywhere. Part of the mc-cookbook:
@@ -1706,6 +1746,73 @@
     return wrap;
   }
 
+  /* ── "Today" glance card (Home) ────────────────────────────────────
+     The hero above answers "what does my week look like"; this answers
+     "what do I do right now" — the gap that sends someone to a notes app
+     on a day the week is already planned. Only renders once something's
+     actually scheduled for today; an empty week is already covered by the
+     hero/auto-draft card. */
+  function todayDayCode() {
+    return DAYS[(new Date().getDay() + 6) % 7];   // JS getDay(): Sun=0..Sat=6
+  }
+  function renderTodayCard() {
+    var code = todayDayCode();
+    var todays = planMeals().filter(function (m) { return m.day === code; });
+    if (!todays.length) return null;
+
+    var card = el("div", "home-hero-card today-card");
+    card.appendChild(el("p", "home-hero-eyebrow", "Today · " + DAY_LONG[code]));
+
+    var list = el("div", "today-meals");
+    todays.forEach(function (m) {
+      var r = recipeById(m.id);
+      if (!r) return;
+      var row = el("div", "today-meal" + (m.completed ? " done" : ""));
+      row.innerHTML =
+        '<span class="today-meal-slot">' + esc(m.slot || "") + "</span>" +
+        '<span class="today-meal-title">' + esc(r.title) + "</span>";
+      if (m.completed) {
+        row.appendChild(el("span", "today-meal-check", "✓ Logged"));
+      } else {
+        var logBtn = el("button", "today-meal-log", "Log");
+        logBtn.type = "button";
+        logBtn.addEventListener("click", function () {
+          toggleMealCompleted(m.uid);
+          plannerToast("Logged “" + r.title + "” to today's tracker");
+          renderHome();
+        });
+        row.appendChild(logBtn);
+      }
+      list.appendChild(row);
+    });
+    card.appendChild(list);
+
+    if (window.MCTrackerStore) {
+      var goals = MCTrackerStore.getGoals();
+      if (goals) {
+        var totals = MCTrackerStore.totalsOf(MCTrackerStore.entriesFor(MCTrackerStore.todayKey()));
+        var strip = el("div", "today-macros");
+        [["kcal", "Cal", goals.kcal], ["p", "Protein", goals.p], ["f", "Fat", goals.f], ["c", "Carbs", goals.c]]
+          .forEach(function (t) {
+            var have = totals[t[0]] || 0, goal = t[2] || 0;
+            var pct = goal ? Math.min(100, Math.round((have / goal) * 100)) : 0;
+            var tile = el("div", "today-macro");
+            tile.innerHTML =
+              '<span class="today-macro-lbl">' + t[1] + "</span>" +
+              '<span class="today-macro-val">' + have + (goal ? "/" + goal : "") + "</span>" +
+              '<span class="today-macro-track"><span class="today-macro-fill" style="width:' + pct + '%"></span></span>';
+            strip.appendChild(tile);
+          });
+        card.appendChild(strip);
+        var link = el("a", "today-tracker-link", "Open Tracker →");
+        link.href = "#tracker";
+        link.addEventListener("click", function (e) { e.preventDefault(); setTab("tracker"); });
+        card.appendChild(link);
+      }
+    }
+    return card;
+  }
+
   function renderHome() {
     var s = $("#screen-home");
     s.innerHTML = "";
@@ -1763,8 +1870,23 @@
     cta.href = "#planner";
     cta.addEventListener("click", function (e) { e.preventDefault(); setTab("planner"); });
     hc.appendChild(cta);
+
+    // Consistency streak — derived only (cook log + tracker entries), no new
+    // storage. Shown on the hero itself, not a separate card, so it reads as
+    // part of "this is how you're doing" rather than competing for attention.
+    var streak = activeStreakDays();
+    if (streak > 0) {
+      hc.appendChild(el("div", "home-streak", "🔥 " + streak + "-day streak"));
+    }
+
     hero.appendChild(hc);
     s.appendChild(hero);
+
+    // "Today" glance — only renders when today itself has something planned,
+    // so it complements rather than duplicates the auto-draft card below
+    // (which only ever shows for a fully empty week).
+    var todayCard = renderTodayCard();
+    if (todayCard) s.appendChild(todayCard);
 
     // Auto-drafted week: only when there's no plan yet and the offer isn't
     // on cooldown (dismissed recently). Sits right under the hero so it

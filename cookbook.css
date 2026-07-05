@@ -892,6 +892,53 @@ body {
 }
 .home-cta:active { opacity: 0.88; }
 
+/* Consistency streak chip — sits on the hero card itself (position:relative,
+   overflow:hidden already set on .home-hero-card). Only ever rendered when
+   the streak is > 0, so there's no "0-day streak" state to style. */
+.home-streak {
+  position: absolute; top: 16px; right: 16px; z-index: 2;
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(0,0,0,0.32); border: 1px solid rgba(var(--accent-rgb),0.35);
+  border-radius: 999px; padding: 5px 11px; font-size: 12.5px; font-weight: 800;
+  color: var(--on-dark); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+
+/* ── "Today" glance card (Home): what to do right now, distinct from the
+   "This Week" hero above it. Same visual family as .home-hero-card, but
+   given its own outer margin since it's appended directly to the screen
+   (not inside .home-hero's padded wrapper) — matches .autodraft-card. ── */
+.today-card {
+  margin: 0 20px 18px; padding: 18px 18px 16px;
+}
+.today-meals { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.today-meal {
+  display: flex; align-items: center; gap: 10px; padding: 9px 11px;
+  background: rgba(0,0,0,0.20); border-radius: 10px;
+}
+.today-meal.done { opacity: 0.6; }
+.today-meal-slot {
+  flex: 0 0 auto; font-size: 10.5px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--accent); min-width: 58px;
+}
+.today-meal-title { flex: 1; font-size: 13.5px; font-weight: 700; color: var(--on-dark); }
+.today-meal-check { flex: 0 0 auto; font-size: 12px; font-weight: 800; color: var(--sage); }
+.today-meal-log {
+  flex: 0 0 auto; appearance: none; cursor: pointer; font-family: var(--sans);
+  background: var(--accent); color: #1a1208; border: 0; border-radius: 8px;
+  padding: 6px 12px; font-size: 12px; font-weight: 800;
+}
+.today-meal-log:active { transform: scale(0.95); }
+.today-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+.today-macro { min-width: 0; }
+.today-macro-lbl { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--on-dark-dim); }
+.today-macro-val { display: block; font-size: 13px; font-weight: 800; color: var(--on-dark); margin: 2px 0 5px; }
+.today-macro-track { display: block; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.10); overflow: hidden; }
+.today-macro-fill { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.today-tracker-link {
+  display: inline-block; margin-top: 14px; font-size: 12.5px; font-weight: 800;
+  color: var(--accent); text-decoration: none;
+}
+
 /* ── Auto-drafted week (Home): proactive Smart Week offer, empty-plan only ── */
 .autodraft-card {
   margin: 0 20px 18px; padding: 18px 18px 16px; border-radius: 16px;
