@@ -15443,9 +15443,18 @@ const RECIPES = [
     native_serving: 4,
     accent: "#8B3A2B",
 
+    // Recomputed from the actual ingredients (2oz raw chicken tenderloin +
+    // a per-serving share of the yogurt/cottage-cheese sauce) — the
+    // previous 45kcal/10g protein/0.5g fat/0g carb was internally
+    // arithmetic-consistent (10*4 + 0.5*9 ≈ 45) but implausibly low in
+    // absolute terms for a chicken dish; found via the council's "fits your
+    // remaining macros" picker surfacing it as a top pick on pure protein
+    // density. ~62kcal/13g protein/0.7g fat from the chicken alone at
+    // standard raw-chicken-breast USDA values, plus ~24kcal/2.6g protein/
+    // 0.6g fat/1.6g carb from the sauce.
     macro_profiles: {
-      serving_2: { calories: 45, protein_g: 10, fat_g: 0.5, carbs_g: 0 },
-      serving_4: { calories: 45, protein_g: 10, fat_g: 0.5, carbs_g: 0 }
+      serving_2: { calories: 90, protein_g: 15, fat_g: 2, carbs_g: 2 },
+      serving_4: { calories: 90, protein_g: 15, fat_g: 2, carbs_g: 2 }
     },
 
     scaling_options: [2, 4],
