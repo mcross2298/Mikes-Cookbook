@@ -169,7 +169,7 @@
   function renderFind() {
     var bar = el("div", "ckt-find");
     bar.appendChild(el("span", "ckt-find-ic", "🔍"));
-    var txt = el("button", "ckt-find-txt", "Search food database");
+    var txt = el("button", "ckt-find-txt", "Search foods & recipes");
     txt.onclick = function () { addSlotMs = defaultSlot(); openSearch(); };
     bar.appendChild(txt);
     if (window.MCBarcode && MCBarcode.supported()) {
@@ -463,6 +463,34 @@
     if (cur) { profSnapshot = S.getProfile().heightCm ? S.getProfile() : readProfile(); calcBtn.textContent = "Recalculate"; buildAdjust(); adjust.style.display = "block"; }
   }
 
+  // ---- cookbook recipe matches (searched first, before Open Food Facts) ----
+  // Logging a built-in recipe used to require leaving the Tracker entirely for
+  // the separate "Log to tracker" sheet on the recipe page (tracker-recipe.js)
+  // — the tracker's own search never checked window.RECIPES. Mirrors that
+  // file's perServing() (including its macro-free-user-recipe guard) so a
+  // recipe with no macro data is silently excluded rather than logging 0 kcal.
+  function recipePerServing(r) {
+    var mp = r.macro_profiles || {};
+    var m = mp.serving_2 || mp.serving_4 || mp.serving_1 || null;
+    if (!m) { for (var k in mp) { m = mp[k]; break; } }
+    if (!m) return null;
+    var hasMacros = ["calories", "protein_g", "fat_g", "carbs_g"].some(function (k) { return m[k] != null; });
+    if (!hasMacros) return null;
+    return { kcal: num(m.calories), p: num(m.protein_g), f: num(m.fat_g), c: num(m.carbs_g) };
+  }
+  function foodFromRecipe(r) {
+    var per = recipePerServing(r);
+    if (!per) return null;
+    return { name: r.title, brand: "", basis: "serving", servingLabel: "serving", grams: null, per: per, nutr: {}, source: "recipe", code: "" };
+  }
+  function searchRecipes(q) {
+    var ql = q.toLowerCase();
+    return (window.RECIPES || [])
+      .filter(function (r) { return (r.title || "").toLowerCase().indexOf(ql) >= 0; })
+      .filter(function (r) { return recipePerServing(r) != null; })
+      .slice(0, 5);
+  }
+
   // ---- search --------------------------------------------------------------
   function tokenFilter(items, q) {
     var tokens = q.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
@@ -478,12 +506,36 @@
   }
 
   function openSearch() {
-    var s = sheet("Search foods", "Powered by Open Food Facts.");
+    var s = sheet("Search foods", "Your cookbook, then Open Food Facts.");
     var input = el("input", "ckt-input");
-    input.type = "search"; input.placeholder = 'e.g. "chobani yogurt", "rxbar"…';
+    input.type = "search"; input.placeholder = 'e.g. "chobani yogurt", "chili"…';
     s.sh.appendChild(input);
+    var recipeResults = el("div", "ckt-results ckt-results-recipes");
     var results = el("div", "ckt-results");
+    s.sh.appendChild(recipeResults);
     s.sh.appendChild(results);
+
+    // Cookbook matches render instantly (no network) above the food-database
+    // results, so a recipe someone actually cooks doesn't lose to a slower
+    // Open Food Facts round-trip for the same words.
+    function runRecipes(q) {
+      var matches = searchRecipes(q);
+      recipeResults.innerHTML = "";
+      if (!matches.length) return;
+      recipeResults.appendChild(el("div", "ckt-results-head", "From your cookbook"));
+      matches.forEach(function (r) {
+        var per = recipePerServing(r);
+        var row = el("div", "ckt-result ckt-result-recipe");
+        row.innerHTML =
+          '<div class="ckt-result-main">' +
+            '<div class="ckt-result-name">' + esc(r.title) + "</div>" +
+            '<div class="ckt-result-sub">From your cookbook · per serving</div>' +
+          "</div>" +
+          '<div class="ckt-result-kcal">' + Math.round(per.kcal) + "<span>kcal</span></div>";
+        row.onclick = function () { s.close(); openFacts(foodFromRecipe(r), {}); };
+        recipeResults.appendChild(row);
+      });
+    }
 
     function showEmpty() {
       results.innerHTML = '<div class="ckt-results-msg">🔍 Type at least 2 characters to search the food database.</div>';
@@ -493,7 +545,8 @@
     var timer = null;
     function run() {
       var q = input.value.trim();
-      if (q.length < 2) { showEmpty(); return; }
+      if (q.length < 2) { recipeResults.innerHTML = ""; showEmpty(); return; }
+      runRecipes(q);
       results.innerHTML = '<div class="ckt-results-msg">Searching…</div>';
       MCFoodAPI.search(q).then(function (items) {
         var filtered = tokenFilter(items, q);
@@ -520,7 +573,7 @@
     }
     input.addEventListener("input", function () {
       clearTimeout(timer);
-      if (!input.value.trim()) { showEmpty(); return; }
+      if (!input.value.trim()) { recipeResults.innerHTML = ""; showEmpty(); return; }
       timer = setTimeout(run, 350);
     });
     setTimeout(function () { input.focus(); }, 250);
@@ -911,6 +964,9 @@
       ".ckt-result-sub{font-size:11px;color:var(--ink-dim);font-weight:600;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
       ".ckt-result-kcal{font-size:15px;font-weight:900;color:var(--ink);flex-shrink:0;text-align:center;}" +
       ".ckt-result-kcal span{display:block;font-size:9px;color:var(--ink-dim);font-weight:700;}" +
+      ".ckt-results-recipes{margin-bottom:2px;}" +
+      ".ckt-results-head{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);margin:2px 0 8px;}" +
+      ".ckt-result-recipe{border-left:3px solid var(--accent);}" +
       ".ckt-adjust{margin-top:8px;}" +
       ".ckt-adjust-head{font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:10px;}" +
       ".ckt-calsum{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;}" +

@@ -92,6 +92,56 @@
     return set.has(id);
   }
 
+  /* ── This Week planner (shared store with cookbook-home.js) ────────
+     collection.html doesn't load cookbook-home.js, so this mirrors just
+     enough of its addMeal() shape to add a recipe unscheduled — the
+     planner's own "Add a meal" flow still owns day/slot assignment. */
+  var PLAN_KEY = "mc-cookbook:mealplan";
+  function addToPlan(r) {
+    var p;
+    try { p = JSON.parse(localStorage.getItem(PLAN_KEY) || "null"); } catch (e) { p = null; }
+    if (!p || !Array.isArray(p.meals)) p = { meals: [] };
+    var serving = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
+    var meal = {
+      uid: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      id: r.recipe_id, serving: serving, day: null, slot: null,
+      completed: false, completedAt: null
+    };
+    p.meals.push(meal);
+    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+    return meal;
+  }
+  function removeFromPlan(uid) {
+    var p;
+    try { p = JSON.parse(localStorage.getItem(PLAN_KEY) || "null"); } catch (e) { p = null; }
+    if (!p || !Array.isArray(p.meals)) return;
+    p.meals = p.meals.filter(function (m) { return m.uid !== uid; });
+    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+  }
+
+  // Same toast look as cookbook.js's/cookbook-home.js's, with an optional
+  // action button for "Undo".
+  function toast(msg, actionLabel, onAction) {
+    var t = el("div", "mc-toast");
+    t.appendChild(el("span", "mc-toast-msg", esc(msg)));
+    if (actionLabel) {
+      var btn = el("button", "mc-toast-btn", esc(actionLabel));
+      btn.type = "button";
+      btn.addEventListener("click", function () {
+        onAction();
+        t.classList.remove("show");
+        setTimeout(function () { t.remove(); }, 300);
+      });
+      t.appendChild(btn);
+    }
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add("show"); });
+    setTimeout(function () {
+      t.classList.remove("show");
+      setTimeout(function () { t.remove(); }, 300);
+    }, actionLabel ? 5000 : 3200);
+  }
+
   function collections() { return window.COLLECTIONS || []; }
   function recipes() { return window.RECIPES || []; }
 
@@ -165,6 +215,29 @@
       pop(heart);
     });
     card.appendChild(heart);
+
+    // One-tap plan-add, stacked below the heart (see cookbook.js's matching
+    // recipe-detail control for the full rationale).
+    var planBtn = el("button", "plan-toggle", "+");
+    planBtn.type = "button";
+    planBtn.setAttribute("aria-label", "Add to This Week");
+    var planBtnTimer = null;
+    planBtn.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var meal = addToPlan(r);
+      planBtn.classList.add("added");
+      planBtn.textContent = "✓";
+      pop(planBtn);
+      toast("Added “" + r.title + "” to This Week", "Undo", function () {
+        removeFromPlan(meal.uid);
+      });
+      clearTimeout(planBtnTimer);
+      planBtnTimer = setTimeout(function () {
+        planBtn.classList.remove("added");
+        planBtn.textContent = "+";
+      }, 1800);
+    });
+    card.appendChild(planBtn);
 
     // "Mike's pick" star — the curated, shipped list (window.MIKES_FAVORITES)
     // reads here too, so a visitor sees Mike's picks while browsing a collection.

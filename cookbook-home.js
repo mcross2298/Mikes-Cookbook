@@ -335,15 +335,17 @@
   function addMeal(id, opts) {
     opts = opts || {};
     var p = loadPlan();
-    p.meals.push({
+    var meal = {
       uid: newUid(), id: id,
       serving: opts.serving || defaultServingFor(id),
       day: opts.day || null,
       slot: opts.slot || null,
       completed: false,
       completedAt: null
-    });
+    };
+    p.meals.push(meal);
     savePlan(p);
+    return meal;
   }
   function updateMeal(uid, patch) {
     var p = loadPlan();
@@ -1342,6 +1344,30 @@
       pop(heart);
     });
     card.appendChild(heart);
+
+    // One-tap plan-add, stacked below the heart — previously the only way
+    // onto This Week's plan was leaving the card, going Home, and re-
+    // searching for the same recipe by name in the planner's picker.
+    var planBtn = el("button", "plan-toggle", "+");
+    planBtn.type = "button";
+    planBtn.setAttribute("aria-label", "Add to This Week");
+    var planBtnTimer = null;
+    planBtn.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var meal = addMeal(r.recipe_id, { serving: opts.serving });
+      planBtn.classList.add("added");
+      planBtn.textContent = "✓";
+      pop(planBtn);
+      plannerToast("Added “" + r.title + "” to This Week", "Undo", function () {
+        removeMeal(meal.uid);
+      });
+      clearTimeout(planBtnTimer);
+      planBtnTimer = setTimeout(function () {
+        planBtn.classList.remove("added");
+        planBtn.textContent = "+";
+      }, 1800);
+    });
+    card.appendChild(planBtn);
 
     // "Mike's pick" star — visible to EVERYONE on a curated recipe, so Mike's
     // taste reads across the whole app, not just inside the Mike's screen.
