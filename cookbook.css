@@ -646,6 +646,8 @@ body {
    there's no recipe photography, so this gives each card some visual
    distinction beyond "same tile, different title." */
 .rc-band {
+  position: relative;
+  overflow: hidden;
   height: 52px;
   display: grid;
   place-items: center;
@@ -656,6 +658,21 @@ body {
       rgba(var(--rc-accent-rgb), 0.70) 100%);
   background-size: var(--rc-pattern-size, auto), auto;
   border-bottom: 1px solid var(--line);
+}
+/* A single, lower-intensity ported cue from the category-card motion system
+   (see .cc-sheen) — just the sheen sweep, not the glow/pulse/box-shadow
+   breathing too, and a much slower/dimmer cycle so a grid of dozens of
+   recipe cards doesn't turn into a busy light show. animation-delay is set
+   per-card in JS (see cardSheenDelay()) so a grid of many cards doesn't all
+   flash in unison. */
+.rc-sheen {
+  position: absolute; top: 0; left: -65%; width: 40%; height: 100%; pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.16), transparent);
+  transform: skewX(-18deg); animation: rcSheen 9s ease-in-out infinite;
+}
+@keyframes rcSheen { 0% { left: -65%; } 55%, 100% { left: 150%; } }
+@media (prefers-reduced-motion: reduce) {
+  .rc-sheen { display: none; }
 }
 .rc-icon { font-size: 24px; line-height: 1; filter: saturate(1.05); }
 
@@ -1222,7 +1239,17 @@ body.cooking .back-fab { display: none; }
   text-align: center; color: var(--on-dark-dim); font-size: 14px;
   padding: 60px 30px; line-height: 1.6;
 }
-.empty .empty-emoji { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.8; }
+/* A soft static glow behind the glyph, echoing .cc-glow's radial-gradient
+   technique (without the breathing animation — an empty state is calm, not
+   attention-seeking) — previously just one flat glyph floating on the dark
+   background with no illustration weight. */
+.empty .empty-emoji {
+  position: relative; font-size: 48px; display: block; margin-bottom: 14px; opacity: 0.92;
+}
+.empty .empty-emoji::before {
+  content: ""; position: absolute; inset: -16px; z-index: -1; border-radius: 50%;
+  background: radial-gradient(rgba(var(--accent-rgb),0.30) 0%, transparent 70%);
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    COLLECTION page (collection.html) — list + search / coming-soon
@@ -1268,6 +1295,26 @@ button.col-back { appearance: none; -webkit-appearance: none;
 
 .col-grid { display: grid; grid-template-columns: 1fr; gap: 13px; padding: 0 20px 24px; }
 @media (min-width: 560px) { .col-grid { grid-template-columns: 1fr 1fr; } }
+
+/* A brief settle-in on freshly-rendered results, reusing the same fade
+   keyframe already used for cooking-mode panes — content used to just pop
+   in with no transition at all. */
+.col-grid, .cards-wrap { animation: fade var(--dur) var(--ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  .col-grid, .cards-wrap { animation: none; }
+}
+
+/* Tracker skeleton (rare fallback — tracker.js loads before this can ever
+   really be hit in normal use, but a text apology read as an afterthought). */
+.tracker-skeleton { padding: 4px 0; }
+.skel-bar { border-radius: var(--r-md); background: var(--bg-elev); margin-bottom: 10px; animation: skelPulse 1.1s ease-in-out infinite; }
+.skel-bar-1 { height: 44px; }
+.skel-bar-2 { height: 64px; }
+.skel-bar-3 { height: 120px; }
+@keyframes skelPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.9; } }
+@media (prefers-reduced-motion: reduce) {
+  .skel-bar { animation: none; opacity: 0.7; }
+}
 
 /* Desserts collection: "similar desserts" cluster dividers (see
    collection.js renderDessertGroups). Span both grid columns so each
@@ -1946,7 +1993,10 @@ body.picking { overflow: hidden; }
   transition: transform var(--dur-fast) var(--ease-out);
 }
 .rf-swatch:active { transform: scale(0.9); }
-.rf-swatch.active { border-color: var(--on-dark); box-shadow: 0 0 0 2px var(--on-dark); }
+/* The ring reflects the swatch's own color (--sw, set inline per swatch)
+   rather than a generic on-dark ring, so the selection state itself
+   reinforces which accent is chosen instead of just a neutral highlight. */
+.rf-swatch.active { border-color: var(--sw, var(--on-dark)); box-shadow: 0 0 0 2px var(--sw, var(--on-dark)); }
 
 /* Prep / Cook / Servings — three compact number fields in a row */
 .rf-times { display: flex; gap: 10px; }

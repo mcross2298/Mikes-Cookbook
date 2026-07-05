@@ -223,10 +223,19 @@
     { image: "repeating-linear-gradient(-45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
     { image: "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 12px)", size: "auto" }
   ];
-  function cardPatternFor(recipeId) {
+  function hashStr(s) {
     var h = 0;
-    for (var i = 0; i < recipeId.length; i++) h = (h * 31 + recipeId.charCodeAt(i)) >>> 0;
-    return CARD_PATTERNS[h % CARD_PATTERNS.length];
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return h;
+  }
+  function cardPatternFor(recipeId) {
+    return CARD_PATTERNS[hashStr(recipeId) % CARD_PATTERNS.length];
+  }
+  // Desyncs the ported category-card sheen sweep (see .rc-sheen) so a grid
+  // of many recipe cards doesn't all flash in unison — same hash source as
+  // the pattern above, just a different modulus.
+  function cardSheenDelay(recipeId) {
+    return ((hashStr(recipeId) >>> 3) % 7) * 0.8 + "s";
   }
 
   // Retrigger a one-shot animation: drop the class, force reflow, re-add.
@@ -1556,7 +1565,10 @@
     }
 
     card.innerHTML =
-      '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
+      '<div class="rc-band">' +
+        '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
+        '<span class="rc-icon">' + recipeIconHtml(r.icon) + "</span>" +
+      "</div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
@@ -2190,7 +2202,17 @@
     var body = el("div", "tracker-body");
     s.appendChild(body);
     if (window.MCTracker && MCTracker.mount) MCTracker.mount(body);
-    else body.appendChild(el("p", "shell-sub", "Tracker is loading — reopen in a moment."));
+    else {
+      // tracker.js loads synchronously before this ever runs in normal use,
+      // so this is a rare defensive fallback — but a plain text apology read
+      // as an afterthought. A skeleton pulse at least hints at the shape of
+      // what's about to render, same as any other brief loading state.
+      var skel = el("div", "tracker-skeleton");
+      skel.appendChild(el("div", "skel-bar skel-bar-1"));
+      skel.appendChild(el("div", "skel-bar skel-bar-2"));
+      skel.appendChild(el("div", "skel-bar skel-bar-3"));
+      body.appendChild(skel);
+    }
   }
 
   /* ══ CATEGORIES screen — the 7 dish types, then a per-category grid ══ */
@@ -4064,6 +4086,7 @@
       var sw = el("button", "rf-swatch" + (i === 0 ? " active" : ""));
       sw.type = "button";
       sw.style.background = hex;
+      sw.style.setProperty("--sw", hex);   // lets the active ring match this swatch's own color
       sw.setAttribute("aria-label", "Accent color " + (i + 1));
       sw.addEventListener("click", function () {
         selectedAccent = hex;
