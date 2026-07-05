@@ -368,6 +368,94 @@
     document.body.appendChild(ov);
   }
 
+  /* ── Recipe header photo (one cover photo per recipe, any recipe) ────
+     mc-cookbook:photos → { [recipe_id]: dataURL }. Separate from the
+     cook-log photos above (those are per dated cook entry); this is a
+     single cover image shown in the sticky header. Same downscale
+     pipeline, same mc-cookbook: namespace so it rides along in backups. */
+  var RECIPE_PHOTOS_KEY = "mc-cookbook:photos";
+
+  function loadRecipePhotos() {
+    try {
+      var o = JSON.parse(localStorage.getItem(RECIPE_PHOTOS_KEY) || "{}");
+      return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
+    } catch (e) { return {}; }
+  }
+  function saveRecipePhotos(map) {
+    try { localStorage.setItem(RECIPE_PHOTOS_KEY, JSON.stringify(map)); return true; }
+    catch (e) { return false; }      // QuotaExceededError → caller alerts
+  }
+  function loadRecipePhoto(id) { return loadRecipePhotos()[id] || null; }
+
+  function attachRecipePhoto(r, dataUrl) {
+    var map = loadRecipePhotos();
+    map[r.recipe_id] = dataUrl;
+    if (!saveRecipePhotos(map)) {
+      window.alert("Storage is full — couldn’t save the photo. Remove another photo and try again.");
+      return;
+    }
+    renderHeader(r);
+  }
+  function removeRecipePhoto(r) {
+    var map = loadRecipePhotos();
+    delete map[r.recipe_id];
+    saveRecipePhotos(map);
+    renderHeader(r);
+  }
+
+  function pickRecipePhoto(r) {
+    var input = el("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.setAttribute("capture", "environment");
+    input.style.display = "none";
+    document.body.appendChild(input);
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (input.parentNode) input.parentNode.removeChild(input);
+      if (!file) return;
+      downscaleImage(file, function (dataUrl, err) {
+        if (err || !dataUrl) { window.alert("Couldn’t process that image — try another."); return; }
+        attachRecipePhoto(r, dataUrl);
+      });
+    });
+    input.click();
+  }
+
+  function renderPhotoWidget(r) {
+    var wrap = el("div", "r-photo");
+    var url = loadRecipePhoto(r.recipe_id);
+    if (url) {
+      var img = el("img", "r-photo-img");
+      img.src = url;
+      img.alt = "Photo of " + r.title;
+      img.addEventListener("click", function () { openPhotoView(url); });
+      wrap.appendChild(img);
+
+      var edit = el("button", "r-photo-btn r-photo-edit", "✎");
+      edit.type = "button";
+      edit.setAttribute("aria-label", "Replace photo");
+      edit.addEventListener("click", function (e) { e.stopPropagation(); pickRecipePhoto(r); });
+      wrap.appendChild(edit);
+
+      var rm = el("button", "r-photo-btn r-photo-remove", "✕");
+      rm.type = "button";
+      rm.setAttribute("aria-label", "Remove photo");
+      rm.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (window.confirm("Remove this photo?")) removeRecipePhoto(r);
+      });
+      wrap.appendChild(rm);
+    } else {
+      var add = el("button", "r-photo-add", "📷");
+      add.type = "button";
+      add.setAttribute("aria-label", "Add a photo");
+      add.addEventListener("click", function () { pickRecipePhoto(r); });
+      wrap.appendChild(add);
+    }
+    return wrap;
+  }
+
   /* ── App state ────────────────────────────────────────────────────── */
   var state = { recipe: null, serving: 2, tab: "overview" };
 
@@ -439,8 +527,11 @@
     h.appendChild(nav);
 
     var eyebrow = el("div", "r-eyebrow");
-    if (r.dish_category) eyebrow.appendChild(el("span", "r-tag", esc(r.dish_category)));
-    if (r.category) eyebrow.appendChild(el("span", "r-tag sage", esc(r.category)));
+    var tags = el("div", "r-eyebrow-tags");
+    if (r.dish_category) tags.appendChild(el("span", "r-tag", esc(r.dish_category)));
+    if (r.category) tags.appendChild(el("span", "r-tag sage", esc(r.category)));
+    eyebrow.appendChild(tags);
+    eyebrow.appendChild(renderPhotoWidget(r));
     h.appendChild(eyebrow);
 
     h.appendChild(el("h1", "r-title", esc(r.title)));
