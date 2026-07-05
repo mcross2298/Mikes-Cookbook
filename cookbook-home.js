@@ -623,6 +623,81 @@
     return streak;
   }
 
+  /* ── Weekly consistency recap (Home, Sun/Mon only) ────────────────────
+     A "wrapped"-style summary of the last 7 days — days active, meals
+     cooked, and (if tracker goals exist) how many of those days landed
+     within ±15% of the kcal goal. Pairs with the existing Sunday reminder
+     trigger without being formally wired to it. Dismissible per week so it
+     doesn't nag once seen. */
+  var RECAP_DISMISS_KEY = "mc-cookbook:mealplan:recap-dismissed";
+  function loadRecapDismissedWeek() {
+    try { return localStorage.getItem(RECAP_DISMISS_KEY) || ""; } catch (e) { return ""; }
+  }
+  function dismissRecapForWeek(weekKey) {
+    try { localStorage.setItem(RECAP_DISMISS_KEY, weekKey); } catch (e) {}
+  }
+  function weekKeyFor(d) {
+    var offset = (d.getDay() + 6) % 7;
+    var monday = new Date(d);
+    monday.setDate(d.getDate() - offset);
+    return ymd(monday);
+  }
+  function weeklyRecapStats() {
+    var cooked = loadCookedDateSet(), tracked = loadTrackedDateSet();
+    var cookedMap = loadCookedMap(), cookedCountByDate = {};
+    Object.keys(cookedMap).forEach(function (id) {
+      (cookedMap[id] || []).forEach(function (e) {
+        var at = typeof e === "string" ? e : (e && e.at);
+        if (!at) return;
+        var d = at.slice(0, 10);
+        cookedCountByDate[d] = (cookedCountByDate[d] || 0) + 1;
+      });
+    });
+    var goals = window.MCTrackerStore && MCTrackerStore.getGoals();
+    var daysLogged = 0, mealsCooked = 0, goalHitDays = 0, daysWithGoalData = 0;
+    for (var i = 0; i < 7; i++) {
+      var d = new Date();
+      d.setDate(d.getDate() - i);
+      var key = window.MCTrackerStore ? MCTrackerStore.keyFromDate(d) : ymd(d);
+      if (cooked[key] || tracked[key]) daysLogged++;
+      mealsCooked += cookedCountByDate[key] || 0;
+      if (goals && goals.kcal && window.MCTrackerStore) {
+        var totals = MCTrackerStore.totalsOf(MCTrackerStore.entriesFor(key));
+        if (totals.kcal > 0) {
+          daysWithGoalData++;
+          var pct = totals.kcal / goals.kcal;
+          if (pct >= 0.85 && pct <= 1.15) goalHitDays++;
+        }
+      }
+    }
+    return { daysLogged: daysLogged, mealsCooked: mealsCooked, goalHitDays: goalHitDays, daysWithGoalData: daysWithGoalData };
+  }
+  function renderWeeklyRecapCard() {
+    var code = todayDayCode();
+    if (code !== "Sun" && code !== "Mon") return null;
+    var weekKey = weekKeyFor(new Date());
+    if (loadRecapDismissedWeek() === weekKey) return null;
+    var stats = weeklyRecapStats();
+    if (!stats.daysLogged) return null;   // nothing happened this week — no recap to show
+
+    var card = el("div", "home-hero-card recap-card");
+    card.appendChild(el("p", "home-hero-eyebrow", "Past 7 Days"));
+    var line = stats.daysLogged + " of 7 days active · " +
+      stats.mealsCooked + (stats.mealsCooked === 1 ? " meal" : " meals") + " cooked";
+    if (stats.daysWithGoalData > 0) {
+      line += " · " + stats.goalHitDays + "/" + stats.daysWithGoalData + " goal days";
+    }
+    card.appendChild(el("p", "recap-line", line));
+    var dismiss = el("button", "recap-dismiss", "Dismiss");
+    dismiss.type = "button";
+    dismiss.addEventListener("click", function () {
+      dismissRecapForWeek(weekKey);
+      renderHome();
+    });
+    card.appendChild(dismiss);
+    return card;
+  }
+
   /* ── Pantry staples (items you always have → off the buy list) ─────────
      mc-cookbook:pantry → array of normalized item names. Keyed by item name
      (not category) so "salt" is a staple everywhere. Part of the mc-cookbook:
@@ -1984,6 +2059,24 @@
   function todayDayCode() {
     return DAYS[(new Date().getDay() + 6) % 7];   // JS getDay(): Sun=0..Sat=6
   }
+  // The empty-plan hero used to read the same at 7am Monday and 9pm Friday —
+  // varying it by day-of-week/time-of-day signals the app "knows" the
+  // moment instead of showing one static line year-round. Pure client-side
+  // Date() logic, no new state.
+  function emptyHeroCopy() {
+    var hour = new Date().getHours();
+    var isWeekend = todayDayCode() === "Sat" || todayDayCode() === "Sun";
+    if (isWeekend) {
+      return "Weekend's a good time to batch-plan the week ahead — pick meals and get one smart grocery list.";
+    }
+    if (hour < 11) {
+      return "Plan today's meals before the day gets away from you — one smart grocery list, every recipe included.";
+    }
+    if (hour < 17) {
+      return "Get ahead of tonight — pick a few meals now and build your grocery list.";
+    }
+    return "Plan tomorrow before you turn in — wake up to a week that's already sorted.";
+  }
   // Home-screen presence without opening the app — an installed PWA can
   // still show a count on its icon via the Badging API, no push/backend
   // needed. Purely client-side and degrades silently where unsupported.
@@ -2167,7 +2260,7 @@
         (planned
           ? esc(recipeCount + (recipeCount === 1 ? " recipe" : " recipes") +
                 " · tap to see your combined grocery list and cook the week.")
-          : "Pick meals for the week and get one smart grocery list — with every recipe in the module.") +
+          : emptyHeroCopy()) +
       "</p>";
     var cta = el("a", "home-cta", planned ? "Open planner →" : "Start planning →");
     cta.href = "#planner";
@@ -2191,6 +2284,9 @@
     var todayCard = renderTodayCard();
     if (todayCard) s.appendChild(todayCard);
 
+    var recapCard = renderWeeklyRecapCard();
+    if (recapCard) s.appendChild(recapCard);
+
     // Auto-drafted week: only when there's no plan yet and the offer isn't
     // on cooldown (dismissed recently). Sits right under the hero so it
     // reads as "here's a start" rather than competing with it.
@@ -2208,12 +2304,12 @@
     browse.appendChild(el("div", "tier-label", "Explore"));
     browse.appendChild(homeModule({
       icon: "🍽️", title: "Categories", accent: "#C87A53",
-      sub: presentCategories().length + " dish types",
+      sub: "By dish type · " + presentCategories().length + " types",
       onTap: function () { setTab("categories"); }
     }));
     browse.appendChild(homeModule({
       icon: "📖", title: "Recipes", accent: "#D9A05B",
-      sub: collections().length + " collections · " + recipes().length + " recipes",
+      sub: "By collection · " + collections().length + " collections · " + recipes().length + " recipes",
       onTap: function () { setTab("recipes"); }
     }));
 
@@ -2677,7 +2773,8 @@
 
     s.appendChild(el("p", "mikes-intro",
       "Mike's favorites from across the whole cookbook — every collection and diet. " +
-      "The recipes that actually worked, as a starting point for yours."));
+      "The recipes that actually worked, as a starting point for yours. " +
+      "This is separate from your own ❤ Favorites — tap the heart on any recipe to build that list."));
 
     if (isOwner()) s.appendChild(ownerToolbar());
 
