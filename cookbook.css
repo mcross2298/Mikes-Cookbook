@@ -961,6 +961,16 @@ body {
   color: var(--accent); text-decoration: none;
 }
 
+/* ── Weekly consistency recap (Home, Sun/Mon only) ────────────────── */
+.recap-card { margin: 0 20px 18px; padding: 16px 18px 14px; display: flex; flex-direction: column; }
+.recap-line { font-size: 13.5px; color: var(--on-dark); line-height: 1.5; margin: 0 0 12px; }
+.recap-dismiss {
+  align-self: flex-start; appearance: none; cursor: pointer; font-family: var(--sans);
+  background: transparent; border: 1px solid var(--line-dark); color: var(--on-dark-dim);
+  border-radius: 9px; padding: 6px 12px; font-size: 12px; font-weight: 700;
+}
+.recap-dismiss:active { transform: scale(0.97); }
+
 /* ── Auto-drafted week (Home): proactive Smart Week offer, empty-plan only ── */
 .autodraft-card {
   margin: 0 20px 18px; padding: 18px 18px 16px; border-radius: 16px;
