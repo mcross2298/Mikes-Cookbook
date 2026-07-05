@@ -15,6 +15,24 @@ recipes, collections, or dish categories), isolated bug fixes, single-line
 corrections, copy/wording tweaks, and CSS adjustments. See the skill for full
 scope guidance.
 
+## Documentation currency rule — keep the Quick Tour current
+
+**Permanent rule.** Any time a change adds or meaningfully alters a
+**user-facing feature** — something a cook would need to discover or learn how
+to use (a new screen, a new Smart Week/tracker capability, a new sub-tab,
+a new gesture or interaction pattern, etc.) — update **`quick-tour.html`**
+and/or **`quick-tour-overview.html`** in the same piece of work so the
+walkthrough never drifts out of date with what's actually shipped.
+
+- Purely internal changes (refactors, data-model additions that don't change
+  behavior a user notices, bug fixes that restore documented behavior, CSS/copy
+  tweaks) don't require a Quick Tour update.
+- If a feature is removed or changed enough that existing Quick Tour copy is
+  now wrong, update or remove that section rather than leaving stale copy.
+- This is independent of the executive-summary gate above — even a change
+  small enough to skip the executive summary still needs its Quick Tour entry
+  if it's user-facing.
+
 ## What this is
 
 A premium, tactile **mobile cookbook PWA** that bridges cherished heirloom
