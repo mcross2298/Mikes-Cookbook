@@ -40,6 +40,39 @@
     if (h.length !== 6) return "200,122,83";
     return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(",");
   }
+  // Authored accents range down to near-black; used as literal text/border color
+  // on dark surfaces (tags, labels, icons), so floor the lightness before it's
+  // ever set as a CSS var — otherwise a dark accent goes illegible.
+  function clampAccent(hex) {
+    var h = (hex || "").replace("#", "");
+    if (h.length !== 6) return hex || "#C87A53";
+    var r = parseInt(h.substr(0, 2), 16) / 255;
+    var g = parseInt(h.substr(2, 2), 16) / 255;
+    var b = parseInt(h.substr(4, 2), 16) / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2;
+    if (l >= 0.45) return "#" + h;
+    var d = max - min;
+    var s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+    var hue = 0;
+    if (d !== 0) {
+      if (max === r) hue = ((g - b) / d) % 6;
+      else if (max === g) hue = (b - r) / d + 2;
+      else hue = (r - g) / d + 4;
+      hue *= 60; if (hue < 0) hue += 360;
+    }
+    l = 0.45;
+    var c = (1 - Math.abs(2 * l - 1)) * s;
+    var x = c * (1 - Math.abs((hue / 60) % 2 - 1));
+    var m = l - c / 2, rp, gp, bp;
+    if (hue < 60) { rp = c; gp = x; bp = 0; }
+    else if (hue < 120) { rp = x; gp = c; bp = 0; }
+    else if (hue < 180) { rp = 0; gp = c; bp = x; }
+    else if (hue < 240) { rp = 0; gp = x; bp = c; }
+    else if (hue < 300) { rp = x; gp = 0; bp = c; }
+    else { rp = c; gp = 0; bp = x; }
+    function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
+    return "#" + toHex(rp) + toHex(gp) + toHex(bp);
+  }
   // Retrigger a one-shot animation: drop the class, force reflow, re-add.
   var pop = function (node) {
     node.classList.remove("pop");
@@ -295,6 +328,13 @@
   function removeMeal(uid) {
     var p = loadPlan();
     p.meals = p.meals.filter(function (m) { return m.uid !== uid; });
+    savePlan(p);
+  }
+  // Re-inserts a previously-removed meal object as-is (same uid/serving/day/
+  // slot/completed state) — powers the "Removed — Undo" toast on removeBtn.
+  function restoreMeal(meal) {
+    var p = loadPlan();
+    p.meals.push(meal);
     savePlan(p);
   }
   function clearPlan() { savePlan({ meals: [] }); }
@@ -1111,7 +1151,7 @@
   /* ── Shared: a recipe card (used by Categories / Recipes / Favorites) ── */
   function recipeCard(r, opts) {
     opts = opts || {};
-    var accent = r.accent || "#C87A53";
+    var accent = clampAccent(r.accent || "#C87A53");
     var card = el("a", "rc");
     card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
     card.style.setProperty("--rc-accent", accent);
@@ -1191,7 +1231,7 @@
   // glow), echoing the "Now Cooking" hero. A per-module accent (--hm) drives
   // the gradient, border, glow, and icon so the three read as a tactile set.
   function homeModule(opts) {
-    var accent = opts.accent || "#C87A53";
+    var accent = clampAccent(opts.accent || "#C87A53");
     var b = el("button", "home-mod");
     b.type = "button";
     b.setAttribute("aria-label", opts.title);
@@ -1592,7 +1632,7 @@
 
   function categoryCard(cat) {
     var meta = CATEGORY_META[cat] || {};
-    var accent = meta.accent || "#C87A53";
+    var accent = clampAccent(meta.accent || "#C87A53");
     var n = recipesInCategory(cat).length;
 
     var card = el("a", "cat-card");
@@ -1714,8 +1754,9 @@
     var soon = c.status !== "live";
     var card = el("a", "cat-card" + (soon ? " soon" : ""));
     card.href = "collection.html?c=" + encodeURIComponent(c.id);
-    card.style.setProperty("--cc", c.accent);
-    card.style.setProperty("--cc-rgb", rgbFromHex(c.accent));
+    var accent = clampAccent(c.accent || "#C87A53");
+    card.style.setProperty("--cc", accent);
+    card.style.setProperty("--cc-rgb", rgbFromHex(accent));
 
     var count = soon ? "Coming Soon →" : (recipesIn(c).length + " Recipes →");
 
@@ -1882,6 +1923,30 @@
   var plannerState = { view: "plan", planView: "list", pantryOpen: false, historyOpen: false, madeOpen: false };
   function refresh() { renderPlanner(); }
 
+  // Same visual language as the SW update toast (cookbook-sw.js), but its own
+  // .mc-toast class so the two never stack if both are on screen at once.
+  function plannerToast(msg, actionLabel, onAction) {
+    var t = el("div", "mc-toast");
+    var span = el("span", "mc-toast-msg", esc(msg));
+    t.appendChild(span);
+    if (actionLabel) {
+      var btn = el("button", "mc-toast-btn", esc(actionLabel));
+      btn.type = "button";
+      btn.addEventListener("click", function () {
+        onAction();
+        t.classList.remove("show");
+        setTimeout(function () { t.remove(); }, 300);
+      });
+      t.appendChild(btn);
+    }
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add("show"); });
+    setTimeout(function () {
+      t.classList.remove("show");
+      setTimeout(function () { t.remove(); }, 300);
+    }, 5000);
+  }
+
   // Segmented control reusing the recipe page's .servings / .serving-opt look.
   function segControl(cls, items, active, onPick) {
     var wrap = el("div", "servings" + (cls ? " " + cls : ""));
@@ -1917,7 +1982,11 @@
     b.setAttribute("aria-label", "Remove meal");
     b.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation();
+      var r = recipeById(m.id);
       removeMeal(m.uid); refresh();
+      plannerToast((r ? r.title : "Meal") + " removed", "Undo", function () {
+        restoreMeal(m); refresh();
+      });
     });
     return b;
   }
@@ -2427,8 +2496,9 @@
   function pickCard(r, ctx) {
     var card = el("button", "rc rc-pick");
     card.type = "button";
-    card.style.setProperty("--rc-accent", r.accent || "#C87A53");
-    card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
+    var accent = clampAccent(r.accent || "#C87A53");
+    card.style.setProperty("--rc-accent", accent);
+    card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
     var totalTime = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
     var meta = [];
     if (r.dish_category) meta.push(esc(r.dish_category));
@@ -2825,8 +2895,9 @@
         var t = (r.prep_time_mins || 0) + (r.cook_time_mins || 0);
         var card = el("button", "rc-pick rc sre-card");
         card.type = "button";
-        card.style.setProperty("--rc-accent", r.accent || "#C87A53");
-        card.style.setProperty("--rc-accent-rgb", rgbFromHex(r.accent || "#C87A53"));
+        var accent = clampAccent(r.accent || "#C87A53");
+        card.style.setProperty("--rc-accent", accent);
+        card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
         card.innerHTML =
           '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
           '<div class="rc-body">' +

@@ -32,6 +32,29 @@
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function num(v, d) { var n = parseFloat(v); return isFinite(n) ? n : (d || 0); }
 
+  // Same visual language as the SW update toast (cookbook-sw.js), but its own
+  // .mc-toast class so the two never stack if both are on screen at once.
+  function toast(msg, actionLabel, onAction) {
+    var t = el("div", "mc-toast");
+    t.appendChild(el("span", "mc-toast-msg", esc(msg)));
+    if (actionLabel) {
+      var btn = el("button", "mc-toast-btn", esc(actionLabel));
+      btn.type = "button";
+      btn.addEventListener("click", function () {
+        onAction();
+        t.classList.remove("show");
+        setTimeout(function () { t.remove(); }, 300);
+      });
+      t.appendChild(btn);
+    }
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add("show"); });
+    setTimeout(function () {
+      t.classList.remove("show");
+      setTimeout(function () { t.remove(); }, 300);
+    }, 5000);
+  }
+
   var selKey = S.todayKey();
   var addSlotMs = null;
 
@@ -514,7 +537,13 @@
     var save = el("button", "ckt-btn ckt-btn-accent", "Save");
     save.onclick = function () { S.updateQty(selKey, id, qStep.value()); s.close(); render(); };
     var del = el("button", "ckt-btn ckt-btn-danger", "Remove from log");
-    del.onclick = function () { S.removeEntry(selKey, id); s.close(); render(); };
+    del.onclick = function () {
+      S.removeEntry(selKey, id); s.close(); render();
+      toast(entry.name + " removed", "Undo", function () {
+        S.addEntry({ name: entry.name, source: entry.source, unit: entry.unit, qty: entry.qty, per: entry.per }, entry.at);
+        render();
+      });
+    };
     s.sh.appendChild(save); s.sh.appendChild(del);
   }
 
@@ -677,7 +706,20 @@
         else { S.addEntry({ name: food.name, source: food.source || "manual", unit: food.basis, qty: m, per: food.per, nutr: food.nutr, grams: food.grams, code: food.code }, addSlotMs); addSlotMs = null; }
         s.close(); render();
       };
-      if (editId) $("#cktDel", s.sh).onclick = function () { S.removeEntry(selKey, editId); s.close(); render(); };
+      if (editId) $("#cktDel", s.sh).onclick = function () {
+        var removed = null;
+        S.entriesFor(selKey).forEach(function (e) { if (e.id === editId) removed = e; });
+        S.removeEntry(selKey, editId); s.close(); render();
+        if (removed) {
+          toast(removed.name + " removed", "Undo", function () {
+            S.addEntry({
+              name: removed.name, source: removed.source, unit: removed.unit, qty: removed.qty,
+              per: removed.per, nutr: removed.nutr, grams: removed.grams, code: removed.code
+            }, removed.at);
+            render();
+          });
+        }
+      };
     }
     refresh();
   }
