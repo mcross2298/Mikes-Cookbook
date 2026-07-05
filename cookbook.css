@@ -84,9 +84,11 @@ body {
 .r-eyebrow {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin-bottom: 8px;
 }
+.r-eyebrow-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 .r-tag {
   display: inline-flex;
@@ -1161,6 +1163,27 @@ button.col-back { appearance: none; -webkit-appearance: none;
 }
 .r-fav-text { font-size: 13px; font-weight: 800; letter-spacing: 0.03em; }
 .r-fav.on { color: #ff5a6e; border-color: rgba(255,90,110,0.5); background: rgba(255,90,110,0.10); }
+
+/* ── Recipe detail: header cover photo (in the eyebrow tag row) ───── */
+.r-photo { position: relative; flex: 0 0 auto; }
+.r-photo-img {
+  display: block; width: 44px; height: 44px; object-fit: cover;
+  border-radius: 999px; border: 1px solid var(--line-dark); cursor: zoom-in;
+}
+.r-photo-add {
+  width: 44px; height: 44px; cursor: pointer;
+  display: grid; place-items: center; font-size: 18px;
+  background: var(--bg-elev); border: 1px dashed rgba(var(--accent-rgb),0.5);
+  border-radius: 999px; color: var(--on-dark-dim);
+}
+.r-photo-btn {
+  position: absolute; width: 20px; height: 20px; padding: 0;
+  display: grid; place-items: center; font-size: 10px; line-height: 1; cursor: pointer;
+  border-radius: 999px; border: 1px solid var(--line-dark);
+  background: var(--bg); color: var(--on-dark);
+}
+.r-photo-edit { bottom: -4px; right: -4px; }
+.r-photo-remove { top: -4px; right: -4px; }
 
 /* ── Reduced motion ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
