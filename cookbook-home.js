@@ -634,6 +634,38 @@
     }
   }
 
+  // Singularize an item name for merge-key purposes only (display keeps the
+  // recipe's original wording). Trivial wording differences like "Chicken
+  // breast" vs "Chicken breasts" are the SAME shopping item and must merge —
+  // but this is intentionally conservative. Broader "near-identical" fuzzy
+  // matching (e.g. "Onion" vs "Red onion", "Lemon" vs "Lemon juice") was
+  // tested against the real recipe data and rejected: those are genuinely
+  // different items to buy, and auto-merging them would silently under-count
+  // the list. True synonyms (same product, different wording) belong in
+  // ITEM_ALIASES below instead of a generic fuzzy rule.
+  function singularizeForMerge(s) {
+    if (/sses$/i.test(s)) return s;              // molasses — invariant, not a plural
+    if (/us$/i.test(s)) return s;                // hummus, asparagus — invariant
+    if (/ss$/i.test(s)) return s;                // swiss, glass — not a plural "s"
+    if (/[a-z]oes$/i.test(s)) return s.slice(0, -2);           // tomatoes -> tomato
+    if (/[a-z]ies$/i.test(s) && s.length > 4) return s.slice(0, -3) + "y"; // berries -> berry
+    if (/(ch|sh|x)es$/i.test(s)) return s.slice(0, -2);        // peaches -> peach
+    if (/[a-z]s$/i.test(s) && s.length > 3) return s.slice(0, -1); // breasts -> breast
+    return s;
+  }
+  // Curated synonym table for items that are the same product but authored
+  // with different wording across recipes — NOT auto-detected (see above).
+  // Add an entry here only when you've confirmed two item names really are
+  // interchangeable at the store; keys/values are matched after lowercasing
+  // and singularizing. Empty until specific pairs are confirmed.
+  var ITEM_ALIASES = {
+    // "fajita chicken seasoning": "fajita seasoning"
+  };
+  function groceryMergeName(item) {
+    var norm = singularizeForMerge(item.toLowerCase().trim());
+    return ITEM_ALIASES[norm] || norm;
+  }
+
   // Build the combined shopping list across every planned meal. Quantities for
   // the SAME item are merged into per-item buckets: amounts in a compatible
   // unit family are converted to a common base and summed; incompatible units
@@ -652,7 +684,7 @@
         if (!item) return;
         var unit = (ing.unit || "").trim();
         var cat  = ing.category || "Other";
-        var ikey = cat + "|" + item.toLowerCase();
+        var ikey = cat + "|" + groceryMergeName(item);
         var it = items[ikey];
         if (!it) { it = items[ikey] = { key: ikey, item: item, category: cat, buckets: {}, bucketOrder: [], texts: [], mealUids: [] }; order.push(ikey); }
         if (it.mealUids.indexOf(meal.uid) < 0) it.mealUids.push(meal.uid);
@@ -739,7 +771,7 @@
     list.forEach(function (ing) {
       var item = (ing.item || "").trim();
       if (!item) return;
-      keys[(ing.category || "Other") + "|" + item.toLowerCase()] = true;
+      keys[(ing.category || "Other") + "|" + groceryMergeName(item)] = true;
     });
     return keys;
   }
