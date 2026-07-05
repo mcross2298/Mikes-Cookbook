@@ -40,6 +40,12 @@
     var m = mp.serving_2 || mp.serving_4 || mp.serving_1 || null;
     if (!m) { for (var k in mp) { m = mp[k]; break; } }
     if (!m) return null;
+    // User-authored recipes store macro_profiles as { serving_2: {}, serving_4: {} }
+    // by design (macro-free) — {} is truthy, so the checks above don't catch it.
+    // Without this, a recipe with no macro data would still log a fake "0 kcal"
+    // entry into the tracker instead of just not offering to log at all.
+    var hasMacros = ["calories", "protein_g", "fat_g", "carbs_g"].some(function (k) { return m[k] != null; });
+    if (!hasMacros) return null;
     return { kcal: num(m.calories), p: num(m.protein_g), f: num(m.fat_g), c: num(m.carbs_g) };
   }
 

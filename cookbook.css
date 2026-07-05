@@ -1470,6 +1470,30 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .plan-swap:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
 .plan-swap:active { transform: scale(0.9); }
 
+/* Repeat-on-other-days trigger — same footprint as .plan-swap/.plan-remove. */
+.plan-repeat {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 30px; height: 30px; border-radius: var(--r-sm);
+  border: 1px solid var(--line-dark); background: transparent;
+  color: var(--on-dark-dim); font-size: 14px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.plan-repeat:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
+.plan-repeat:active { transform: scale(0.9); }
+
+/* Repeat-meal overlay: day chips the cook toggles on/off. */
+.rpt-copy { padding: 4px 20px 14px; font-size: 14px; color: var(--on-dark-dim); line-height: 1.5; margin: 0; }
+.rpt-days { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 8px; }
+.rpt-day {
+  appearance: none; cursor: pointer; flex: 1 1 calc(50% - 8px); min-width: 100px;
+  padding: 12px 10px; border-radius: var(--r-sm); text-align: center;
+  border: 1px solid var(--line-dark); background: transparent;
+  color: var(--on-dark); font-family: var(--sans); font-size: 13px; font-weight: 700;
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.rpt-day.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.rpt-day.current, .rpt-day:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* "Mark Completed" toggle — check-box look shared with grocery rows. */
 .plan-complete {
   flex: 0 0 auto; appearance: none; cursor: pointer;
@@ -1995,6 +2019,19 @@ body.picking { overflow: hidden; }
 .pantry-foot-list { padding: 0 16px 8px; }
 .pantry-foot-list .grocery-row { opacity: 0.85; }
 
+/* "You keep buying this — mark as staple?" suggestion (pantryCandidates()). */
+.pantry-suggest-copy { font-size: 13px; color: var(--ink-dim); margin: 0 0 10px; }
+.pantry-suggest-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; }
+.pantry-suggest-row + .pantry-suggest-row { border-top: 1px solid var(--line); }
+.pantry-suggest-item { font-size: 14px; font-weight: 600; color: var(--ink); }
+.pantry-suggest-btn {
+  appearance: none; cursor: pointer; flex: 0 0 auto;
+  font-family: var(--sans); font-size: 12px; font-weight: 800;
+  padding: 7px 12px; border-radius: var(--r-sm);
+  border: 1px solid var(--line); background: var(--surface-2); color: var(--accent);
+}
+.pantry-suggest-btn:active { transform: scale(0.95); }
+
 /* "Already made" collapsible footer — split-trip collapse for items whose
    contributing meals are all marked Completed. Mirrors .pantry-foot. */
 .made-foot {
@@ -2050,5 +2087,6 @@ button, a, input, select, textarea, [role="button"], .check-row {
 .plan-serv-opt { display: inline-flex; align-items: center; min-height: 32px; padding: 6px 12px; }
 /* .plan-swap sits 8px from .plan-remove, which already owns the shared floor
    above — a second centered floor here would collide with it, so grow this
-   one vertically only, same fix as .plan-serv-opt. */
-.plan-swap { min-height: 44px; }
+   one vertically only, same fix as .plan-serv-opt. .plan-repeat sits in the
+   same adjacent cluster (repeat · swap · remove), so it gets the same fix. */
+.plan-swap, .plan-repeat { min-height: 44px; }

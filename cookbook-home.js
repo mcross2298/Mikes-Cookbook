@@ -467,9 +467,33 @@
     var arr = loadHistory();
     var now = new Date();
     var label = (customLabel && customLabel.trim()) || tagFrequencyName(meals);
-    arr.unshift({ savedAt: now.toISOString(), label: label, meals: meals });
+    // Snapshot which grocery items were checked off this week (merge-keys, same
+    // shape as GROC_KEY) — feeds pantryCandidates()'s "you've bought this N
+    // weeks running" suggestion. Older archives predate this field and are
+    // simply skipped by that heuristic, not treated as "never checked."
+    arr.unshift({ savedAt: now.toISOString(), label: label, meals: meals, grocery: Array.from(loadGroc()) });
     if (arr.length > 8) arr = arr.slice(0, 8);
     saveHistory(arr);
+  }
+  // Grocery items checked off (bought) in each of the last few archived
+  // weeks running, not already marked a pantry staple — a real "you keep
+  // buying this every week, want to stop shopping for it?" signal, instead
+  // of requiring a manual 🧂 tap the first time every single item appears.
+  var PANTRY_SUGGEST_WEEKS = 3;
+  function pantryCandidates() {
+    var history = loadHistory().filter(function (w) { return Array.isArray(w.grocery); });
+    if (history.length < PANTRY_SUGGEST_WEEKS) return [];
+    var recent = history.slice(0, PANTRY_SUGGEST_WEEKS).map(function (w) { return new Set(w.grocery); });
+    var pantry = loadPantry();
+    var cats = buildGrocery(), out = [];
+    cats.forEach(function (c) {
+      c.rows.forEach(function (row) {
+        if (pantry.has(pantryKey(row.item))) return;
+        var boughtEveryWeek = recent.every(function (weekSet) { return weekSet.has(row.key); });
+        if (boughtEveryWeek) out.push(row);
+      });
+    });
+    return out;
   }
   // Has the active plan's 7-day window elapsed since its first meal was
   // added? Checked at app boot (no real background cron available).
@@ -525,6 +549,32 @@
   function unlogMealMacros(uid) {
     saveMacroHistory(loadMacroHistory().filter(function (e) { return e.uid !== uid; }));
   }
+  // Bridges "Mark Completed" to the in-app macro Tracker (tracker-store.js) —
+  // previously the planner only fed its own recency scoring (macrohistory
+  // above), so a completed meal never showed up in the day's actual macro
+  // totals unless separately re-logged from the recipe page. The planner
+  // already knows recipe/serving/time, so there's no reason to make the cook
+  // do that twice. m.trackerEntryId/trackerDayKey round-trip through the
+  // plan so un-completing removes the exact entry, not just any match.
+  function logMealToTracker(m) {
+    if (!window.MCTrackerStore) return;
+    var macros = mealMacros(m);
+    if (!macros) return;
+    var r = recipeById(m.id);
+    var slotMs = Date.parse(m.completedAt) || Date.now();
+    var entry = MCTrackerStore.addEntry({
+      name: (r && r.title) || m.id, source: "recipe", unit: "serving", qty: 1,
+      per: { kcal: macros.kcal, p: macros.p, f: macros.f, c: macros.c }
+    }, slotMs);
+    m.trackerEntryId = entry.id;
+    m.trackerDayKey = MCTrackerStore.keyFromDate(new Date(slotMs));
+  }
+  function unlogMealFromTracker(m) {
+    if (!window.MCTrackerStore || !m.trackerEntryId || !m.trackerDayKey) return;
+    MCTrackerStore.removeEntry(m.trackerDayKey, m.trackerEntryId);
+    m.trackerEntryId = null;
+    m.trackerDayKey = null;
+  }
   // Returns true when this tap just completed the final remaining meal of
   // the week, so the caller can surface the "Save Week Block?" prompt.
   function toggleMealCompleted(uid) {
@@ -536,11 +586,13 @@
     if (!m.completed) {
       unlogMealMacros(uid);
       if (m.cookLogAt) { removeCookEntry(m.id, m.cookLogAt); m.cookLogAt = null; }
+      unlogMealFromTracker(m);
       savePlan(p);
       return false;
     }
     logMealMacros(m);
     m.cookLogAt = logCookEntry(m.id);
+    logMealToTracker(m);
     savePlan(p);
     return p.meals.length > 0 && p.meals.every(function (x) { return x.completed; });
   }
@@ -850,6 +902,7 @@
   var SMW_HARD_EXCLUDE_DAYS = 7;   // cooked this recently: skip unless the pool would go empty
   var SMW_OVERLAP_WEIGHT = 4;      // points per shared ingredient with recipes already picked this week
   var SMW_OVERLAP_CAP = 6;         // cap the bonus so overlap nudges ties rather than steamrolling recency/variety
+  var SMW_FAVORITE_BONUS = 10;     // hearting a recipe should mean something beyond a filter tab
   function smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys) {
     var score = 0;
     if (usedIds.has(r.recipe_id)) score -= 1000;
@@ -861,6 +914,7 @@
       Object.keys(keys).forEach(function (k) { if (usedIngredientKeys[k]) overlap++; });
       score += Math.min(overlap, SMW_OVERLAP_CAP) * SMW_OVERLAP_WEIGHT;
     }
+    if (loadFavs().has(r.recipe_id)) score += SMW_FAVORITE_BONUS;
     score += Math.random() * 10; // jitter so Regenerate actually varies
     return score;
   }
@@ -947,6 +1001,7 @@
      greedy per-slot best-fit, not a true optimizer, matching Balanced
      mode's complexity. */
   var MSG_PROTEIN_WEIGHT = 2; // protein fit matters ~2x as much as calorie fit
+  var MSG_FAVORITE_BONUS = 8; // same signal Smart Week gets — a heart should nudge both generators
   function msgMacroFit(r) {
     var mp = (r && r.macro_profiles && r.macro_profiles.serving_2) || {};
     return { kcal: mp.calories || 0, p: mp.protein_g || 0 };
@@ -2113,6 +2168,18 @@
     });
     return b;
   }
+  // Batch-cooking shortcut: clone this meal onto other days without tapping
+  // through the recipe picker once per day.
+  function repeatBtn(m) {
+    var b = el("button", "plan-repeat", "⟳");
+    b.type = "button";
+    b.setAttribute("aria-label", "Repeat this meal on other days");
+    b.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      openRepeatMeal(m);
+    });
+    return b;
+  }
   // "Mark Completed" toggle: flips m.completed/completedAt, logs macros,
   // and surfaces "Save Week Block?" the moment this was the last meal left.
   function completeToggle(m) {
@@ -2171,6 +2238,7 @@
     pickers.appendChild(daySel);
     pickers.appendChild(slotSel);
     ctrl.appendChild(pickers);
+    ctrl.appendChild(repeatBtn(m));
     ctrl.appendChild(replaceBtn(m));
     ctrl.appendChild(removeBtn(m));
     row.appendChild(ctrl);
@@ -2532,6 +2600,26 @@
     return wrap;
   }
 
+  // "You've bought this N weeks running — stop shopping for it?" nudge.
+  function pantrySuggestCard() {
+    var candidates = pantryCandidates();
+    if (!candidates.length) return null;
+    var card = el("div", "card pantry-suggest");
+    card.appendChild(el("p", "card-label", "🧂 Always on your list"));
+    card.appendChild(el("p", "pantry-suggest-copy",
+      "Bought " + PANTRY_SUGGEST_WEEKS + " weeks running — worth marking as a staple?"));
+    candidates.forEach(function (row) {
+      var r = el("div", "pantry-suggest-row");
+      r.appendChild(el("span", "pantry-suggest-item", esc(row.item)));
+      var btn = el("button", "pantry-suggest-btn", "Mark as staple");
+      btn.type = "button";
+      btn.addEventListener("click", function () { togglePantry(row.item); refresh(); });
+      r.appendChild(btn);
+      card.appendChild(r);
+    });
+    return card;
+  }
+
   function renderGroceryPane(body) {
     var meals = planMeals();
 
@@ -2542,6 +2630,8 @@
       var cats = buildGrocery();
       var checked = loadGroc();
       var pantry = loadPantry();
+      var suggest = pantrySuggestCard();
+      if (suggest) body.appendChild(suggest);
 
       var buyCats = [], staples = [], madeRows = [];
       cats.forEach(function (c) {
@@ -2977,6 +3067,67 @@
       refresh();
     });
     actions.appendChild(save);
+    body.appendChild(actions);
+    ov.appendChild(body);
+
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
+  /* ── Repeat meal overlay: batch-cook one recipe onto several days ───── */
+  function closeRepeatMeal() {
+    var ov = document.querySelector(".rpt-overlay");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+  function openRepeatMeal(m) {
+    closeRepeatMeal();
+    var r = recipeById(m.id);
+    var picked = new Set();
+
+    var ov = el("div", "picker rpt-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "Repeat " + esc(r ? r.title : "this meal")));
+    var close = el("button", "picker-close", "Cancel");
+    close.type = "button";
+    close.addEventListener("click", closeRepeatMeal);
+    top.appendChild(close);
+    ov.appendChild(top);
+
+    var body = el("div", "picker-results rpt-body");
+    body.appendChild(el("p", "rpt-copy",
+      "Add the same recipe, same " + m.serving + "-serving size" +
+      (m.slot ? " and " + m.slot.toLowerCase() : "") + ", to any other days this week."));
+
+    var days = el("div", "rpt-days");
+    DAYS.forEach(function (d) {
+      var chip = el("button", "rpt-day" + (d === m.day ? " current" : ""), DAY_LONG[d]);
+      chip.type = "button";
+      if (d === m.day) {
+        chip.disabled = true; // already has this exact meal — nothing to add here
+      } else {
+        chip.addEventListener("click", function () {
+          if (picked.has(d)) picked.delete(d); else picked.add(d);
+          chip.classList.toggle("on", picked.has(d));
+        });
+      }
+      days.appendChild(chip);
+    });
+    body.appendChild(days);
+
+    var actions = el("div", "smw-actions");
+    var confirm = el("button", "cook-start rpt-confirm-btn", "Add to selected days");
+    confirm.type = "button";
+    confirm.addEventListener("click", function () {
+      var n = picked.size;
+      picked.forEach(function (d) {
+        addMeal(m.id, { serving: m.serving, day: d, slot: m.slot });
+      });
+      closeRepeatMeal();
+      refresh();
+      if (n) plannerToast((r ? r.title : "Meal") + " added to " + n + " more day" + (n === 1 ? "" : "s"));
+    });
+    actions.appendChild(confirm);
     body.appendChild(actions);
     ov.appendChild(body);
 
