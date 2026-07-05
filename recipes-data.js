@@ -7027,6 +7027,108 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "grilled-balsamic-chicken-strawberry-feta",
+    title: "Grilled Balsamic Chicken with Strawberries & Feta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍓",
+    tags: ["Meal-Prep", "High-Protein", "Grilled"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Balsamic-marinated grilled chicken thighs topped with a sweet-salty strawberry-feta salsa and fresh basil, plated with grilled asparagus and crispy air-fried sweet potatoes — the official start-of-summer plate.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#C1584A",
+
+    macro_profiles: {
+      serving_2: { calories: 540, protein_g: 40, fat_g: 25, carbs_g: 38 },
+      serving_4: { calories: 540, protein_g: 40, fat_g: 25, carbs_g: 38 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken thighs", prep: "boneless, skinless, for the marinade", quantity: "3/4", unit: "lb", category: "Meat" },
+        { item: "Balsamic vinegar", prep: "for the marinade", quantity: "2 1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "for the marinade", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced, for the marinade", quantity: "1 1/2", unit: "cloves", category: "Produce" },
+        { item: "Honey", prep: "for the marinade", quantity: "1 1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "for the marinade", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the marinade", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Strawberries", prep: "diced, for the topping", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Feta cheese", prep: "crumbled, for the topping", quantity: "2 1/2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped, for the topping", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Balsamic glaze", prep: "for drizzling", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Asparagus", prep: "ends trimmed", quantity: "1/2", unit: "bundle", category: "Produce" },
+        { item: "Avocado oil", prep: "for the asparagus", quantity: "1/4", unit: "tbsp", category: "Pantry" },
+        { item: "Sweet potatoes", prep: "cut into cubes", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Avocado oil", prep: "for the sweet potatoes", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste, for the sides", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Chicken thighs", prep: "boneless, skinless, for the marinade", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Balsamic vinegar", prep: "for the marinade", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Olive oil", prep: "for the marinade", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced, for the marinade", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Honey", prep: "for the marinade", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "for the marinade", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "for the marinade", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Strawberries", prep: "diced, for the topping", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Feta cheese", prep: "crumbled, for the topping", quantity: "1/3", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped, for the topping", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Balsamic glaze", prep: "for drizzling", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Asparagus", prep: "ends trimmed", quantity: "1", unit: "bundle", category: "Produce" },
+        { item: "Avocado oil", prep: "for the asparagus", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Sweet potatoes", prep: "cut into cubes", quantity: "2", unit: "large", category: "Produce" },
+        { item: "Avocado oil", prep: "for the sweet potatoes", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste, for the sides", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the chicken",
+        detail:
+          "Whisk together the balsamic vinegar, olive oil, garlic, honey, salt, and pepper. Add the chicken thighs and marinate at least 20-30 minutes, or up to overnight in the fridge."
+      },
+      {
+        step_number: 2,
+        title: "Make the strawberry-feta topping",
+        detail:
+          "Toss the diced strawberries, crumbled feta, and chopped basil together in a small bowl. Set aside."
+      },
+      {
+        step_number: 3,
+        title: "Grill the chicken",
+        detail:
+          "Heat a grill or grill pan to medium-high. Grill the chicken thighs 5-6 minutes per side, until charred and cooked through (165°F internal)."
+      },
+      {
+        step_number: 4,
+        title: "Grill the asparagus",
+        detail:
+          "Toss asparagus with oil and season generously with salt and pepper. Grill for 3-5 minutes until tender and slightly charred."
+      },
+      {
+        step_number: 5,
+        title: "Air fry the sweet potatoes",
+        detail:
+          "Toss sweet potato cubes in avocado oil and season generously with salt and black pepper. Air fry at 390°F for 20 minutes, flipping halfway through."
+      },
+      {
+        step_number: 6,
+        title: "Plate and serve",
+        detail:
+          "Top the grilled chicken with the strawberry-feta mixture and a drizzle of balsamic glaze. Serve alongside the grilled asparagus and air-fried sweet potatoes."
+      }
+    ]
+  },
+
+  {
     recipe_id: "creamy-lemon-parmesan-chicken-hasselback-potatoes",
     title: "Creamy Lemon Parmesan Chicken & Hasselback Potatoes",
     category: "Meal Prep",
@@ -14513,6 +14615,88 @@ const RECIPES = [
         step_number: 6,
         title: "Build the sandwich",
         detail: "Toasted brioche bun, sauce, lettuce, tomato, red onion, chicken patty, more sauce, top bun. Enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "crispy-honey-chipotle-chicken-tacos",
+    title: "Crispy Honey Chipotle Chicken Tacos",
+    category: "Macro-Friendly",
+    source: "Flexible Dieting",
+    icon: "🌮",
+    tags: ["High-Protein", "Copycat", "Air-Fryer"],
+    dish_category: "Sandwiches",
+    subsection: "Sandwiches",
+    description:
+      "Honey-chipotle glazed chicken and melted light cheese packed into crispy air-fried hard shells with a lime Greek yogurt drizzle — a macro-friendly taco fix for when a craving hits and you don't want to wreck the week.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 4,
+    accent: "#C2542E",
+
+    macro_profiles: {
+      serving_2: { calories: 440, protein_g: 40, fat_g: 16, carbs_g: 34 },
+      serving_4: { calories: 440, protein_g: 40, fat_g: 16, carbs_g: 34 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "diced", quantity: "300", unit: "g", category: "Meat" },
+        { item: "Hard taco shells", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chipotle paste", prep: "or smoked paprika + a pinch of cayenne", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Light cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain, for the drizzle", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Red onion", prep: "diced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Fresh coriander", prep: "chopped", quantity: "", unit: "to taste", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "diced", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Hard taco shells", prep: "", quantity: "8", unit: "", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Chipotle paste", prep: "or smoked paprika + a pinch of cayenne", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Light cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "plain, for the drizzle", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh coriander", prep: "chopped", quantity: "", unit: "to taste", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Glaze the chicken",
+        detail: "Toss the diced chicken with the honey and chipotle paste until evenly coated."
+      },
+      {
+        step_number: 2,
+        title: "Sear the chicken",
+        detail: "Sear the chicken in a hot pan over high heat, leaving it undisturbed for a minute at a time so it turns sticky and golden rather than watery."
+      },
+      {
+        step_number: 3,
+        title: "Mix the lime yogurt drizzle",
+        detail: "Stir the Greek yogurt with a squeeze of lime to make a quick drizzle, and dice the red onion."
+      },
+      {
+        step_number: 4,
+        title: "Fill the shells",
+        detail: "Fill the taco shells with the chicken and grated cheese, packing it in so every bite is loaded."
+      },
+      {
+        step_number: 5,
+        title: "Crisp the shells",
+        detail: "Crisp the filled shells in the air fryer or a hot oven for two to three minutes, until the cheese melts and the shells turn crunchy."
+      },
+      {
+        step_number: 6,
+        title: "Finish and serve",
+        detail: "Finish with the lime yogurt, red onion, and fresh coriander, and eat straight away while hot."
       }
     ]
   },
