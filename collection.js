@@ -212,10 +212,18 @@
     { image: "repeating-linear-gradient(-45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
     { image: "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 12px)", size: "auto" }
   ];
-  function cardPatternFor(recipeId) {
+  function hashStr(s) {
     var h = 0;
-    for (var i = 0; i < recipeId.length; i++) h = (h * 31 + recipeId.charCodeAt(i)) >>> 0;
-    return CARD_PATTERNS[h % CARD_PATTERNS.length];
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return h;
+  }
+  function cardPatternFor(recipeId) {
+    return CARD_PATTERNS[hashStr(recipeId) % CARD_PATTERNS.length];
+  }
+  // Desyncs the ported category-card sheen sweep (see .rc-sheen) so a grid
+  // of many recipe cards doesn't all flash in unison.
+  function cardSheenDelay(recipeId) {
+    return ((hashStr(recipeId) >>> 3) % 7) * 0.8 + "s";
   }
 
   /* ── Favorites store (same key as cookbook-home.js) ───────────────── */
@@ -339,7 +347,10 @@
       (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
 
     card.innerHTML =
-      '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
+      '<div class="rc-band">' +
+        '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
+        '<span class="rc-icon">' + recipeIconHtml(r.icon) + "</span>" +
+      "</div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
