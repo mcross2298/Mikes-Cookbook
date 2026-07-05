@@ -1223,6 +1223,16 @@
     state.recipe = r;
     state.serving = (r.scaling_options && r.scaling_options[0]) || 2;
     if (r.accent) {
+      // Deliberately a global override, not a scoped custom property —
+      // recipe.html only ever themes ONE recipe per page load, so overriding
+      // --accent's :root default at the document level is the correct tool
+      // here (58 rules across cookbook.css already cascade from it). This
+      // differs from cookbook-home.js's per-card scoped vars (--rc-accent
+      // etc.), which exist because Home/Categories/Recipes show many
+      // differently-accented cards on one screen at once — a case a single
+      // global override can't solve. The two "look" inconsistent but are
+      // each the right fit for their own single-item-page vs. multi-card-grid
+      // context; unifying them would break one or the other.
       var accentHex = clampAccent(r.accent);
       document.documentElement.style.setProperty("--accent", accentHex);
       // derive rgb for translucent fills

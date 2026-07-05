@@ -24,6 +24,15 @@
   --sage:          #7D8C77;   /* muted sage                                */
   --sage-rgb:      125,140,119;
 
+  /* Tracker macro colors — on-brand instead of a stock kcal/purple/gold/green
+     set; kcal reuses --accent (it's the "hero" metric everywhere else). */
+  --macro-protein:     #A8562E;
+  --macro-protein-rgb: 168,86,46;
+  --macro-fat:         #C99A2E;
+  --macro-fat-rgb:     201,154,46;
+  --macro-carb:        #7D8C77;   /* = --sage: carbs reuse the app's existing muted-green token */
+  --macro-carb-rgb:    125,140,119;
+
   /* Text */
   --on-dark:       #ECEAE6;   /* primary text on dark bg                   */
   --on-dark-dim:   #9CA0A2;   /* muted text on dark bg                     */
@@ -78,7 +87,7 @@ body {
   background:
     linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, rgba(30,32,34,0.96) 100%);
   border-bottom: 1px solid var(--line-dark);
-  padding: 18px 20px 14px;
+  padding: calc(18px + env(safe-area-inset-top)) 20px 14px;
 }
 
 .r-eyebrow {
@@ -728,7 +737,7 @@ body {
 /* ── Shell top bar ─────────────────────────────────────────────────── */
 .shell-top {
   position: sticky; top: 0; z-index: 20;
-  padding: 22px 20px 12px;
+  padding: calc(22px + env(safe-area-inset-top)) 20px 12px;
   background: linear-gradient(to bottom, var(--bg) 82%, transparent);
 }
 .shell-eyebrow {
@@ -741,7 +750,7 @@ body {
 /* Home's one-tap entry into Recipes' search — .shell-top is already the
    positioning context (sticky counts), so this just needs top/right. */
 .home-search-btn {
-  position: absolute; top: 20px; right: 20px; z-index: 21;
+  position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 20px; z-index: 21;
   width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: var(--bg-elev); border: 1px solid var(--line-dark);

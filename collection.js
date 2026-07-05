@@ -66,6 +66,18 @@
     function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
     return "#" + toHex(rp) + toHex(gp) + toHex(bp);
   }
+  // Mirrors icon.svg's book + page-lines motif for recipe cards with no
+  // authored icon, instead of falling back to a raw platform emoji.
+  var DEFAULT_RECIPE_ICON =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<rect x="5" y="4" width="14" height="16" rx="2.4" fill="#F9F8F6"/>' +
+      '<rect x="8" y="8" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.55"/>' +
+      '<rect x="8" y="11.4" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.4"/>' +
+      '<rect x="8" y="14.8" width="5" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
+    "</svg>";
+  function recipeIconHtml(icon) {
+    return icon ? esc(icon) : DEFAULT_RECIPE_ICON;
+  }
 
   /* ── Favorites store (same key as cookbook-home.js) ───────────────── */
   var FAV_KEY = "mc-cookbook:favorites";
@@ -135,7 +147,7 @@
       (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
 
     card.innerHTML =
-      '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+      '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
@@ -271,6 +283,9 @@
       return;
     }
 
+    // Global override is intentional here, same reasoning as cookbook.js:
+    // collection.html themes exactly one collection per page load, unlike
+    // cookbook-home.js's multi-card grids which need per-card scoped vars.
     var pageAccent = clampAccent(c.accent);
     document.documentElement.style.setProperty("--accent", pageAccent);
     document.documentElement.style.setProperty("--accent-rgb", rgbFromHex(pageAccent));

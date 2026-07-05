@@ -23,8 +23,21 @@
   var S = window.MCTrackerStore;
   var host = null;
 
-  // macro colors tuned for cream cards (terracotta cal + on-brand hues)
-  var COL = { kcal: "#C87A53", p: "#6D5BD0", f: "#C99A2E", c: "#5B8C5A" };
+  // Read from cookbook.css's :root tokens instead of hardcoding hex here —
+  // these used to be a stock kcal/purple/gold/green set with no relation to
+  // the rest of the app's palette.
+  function cssVar(name, fallback) {
+    try {
+      var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return v || fallback;
+    } catch (e) { return fallback; }
+  }
+  var COL = {
+    kcal: cssVar("--accent", "#C87A53"),
+    p: cssVar("--macro-protein", "#A8562E"),
+    f: cssVar("--macro-fat", "#C99A2E"),
+    c: cssVar("--macro-carb", "#7D8C77")
+  };
   var WD = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -211,18 +224,54 @@
   // ====================================================================== //
   //  SHEETS                                                                 //
   // ====================================================================== //
+  var sheetIdCounter = 0;
   function sheet(title, sub) {
     var ov = el("div", "ckt-overlay");
     var sh = el("div", "ckt-sheet");
+    sh.setAttribute("role", "dialog");
+    sh.setAttribute("aria-modal", "true");
+    var titleId = "ckt-sheet-title-" + (++sheetIdCounter);
     var handle = el("div", "ckt-handle");
     sh.appendChild(handle);
-    sh.appendChild(el("div", "ckt-sheet-title", esc(title)));
+    var titleEl = el("div", "ckt-sheet-title", esc(title));
+    titleEl.id = titleId;
+    sh.setAttribute("aria-labelledby", titleId);
+    sh.appendChild(titleEl);
     if (sub) sh.appendChild(el("div", "ckt-sheet-sub", esc(sub)));
     ov.appendChild(sh);
     ov.addEventListener("click", function (ev) { if (ev.target === ov) close(); });
     document.body.appendChild(ov);
-    requestAnimationFrame(function () { ov.classList.add("open"); });
-    function close() { ov.classList.remove("open"); setTimeout(function () { ov.remove(); }, 200); }
+
+    var prevFocus = document.activeElement;
+    var FOCUSABLE_SEL = 'input, textarea, select, button, a[href], [tabindex]:not([tabindex="-1"])';
+    requestAnimationFrame(function () {
+      ov.classList.add("open");
+      // Callers append their own fields/buttons right after sheet() returns,
+      // so this runs after that synchronous work is done — find the first
+      // real field/button (skip the drag handle) rather than the handle.
+      var items = sh.querySelectorAll(FOCUSABLE_SEL);
+      for (var i = 0; i < items.length; i++) {
+        if (!handle.contains(items[i])) { items[i].focus(); break; }
+      }
+    });
+
+    function trapFocus(e) {
+      if (e.key === "Escape") { close(); return; }
+      if (e.key !== "Tab") return;
+      var items = sh.querySelectorAll(FOCUSABLE_SEL);
+      if (!items.length) return;
+      var first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    document.addEventListener("keydown", trapFocus);
+
+    function close() {
+      document.removeEventListener("keydown", trapFocus);
+      ov.classList.remove("open");
+      setTimeout(function () { ov.remove(); }, 200);
+      if (prevFocus && typeof prevFocus.focus === "function") prevFocus.focus();
+    }
 
     // swipe-down to dismiss on the drag handle
     var startY = 0;
@@ -491,7 +540,9 @@
           openManual({ source: "barcode", note: "No match for barcode " + code + ". Enter its macros manually." });
         }
       }).catch(function () { s.close(); openManual({ source: "barcode", note: "Lookup failed (offline?). Enter macros manually." }); });
-    }).catch(function (err) { alert((err && err.message) || "Could not open the scanner."); });
+    }).catch(function (err) {
+      openManual({ source: "barcode", note: (err && err.message) || "Could not open the scanner. Enter macros manually." });
+    });
   }
 
   // ---- manual --------------------------------------------------------------

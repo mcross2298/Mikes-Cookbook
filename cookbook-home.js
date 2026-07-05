@@ -73,6 +73,20 @@
     function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
     return "#" + toHex(rp) + toHex(gp) + toHex(bp);
   }
+  // Recipe cards without an authored icon fell back to a raw platform emoji
+  // that renders differently per OS and clashes with icon.svg's crafted look.
+  // This mirrors icon.svg's own book + page-lines motif instead, so a missing
+  // icon still reads as on-brand rather than a generic system glyph.
+  var DEFAULT_RECIPE_ICON =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<rect x="5" y="4" width="14" height="16" rx="2.4" fill="#F9F8F6"/>' +
+      '<rect x="8" y="8" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.55"/>' +
+      '<rect x="8" y="11.4" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.4"/>' +
+      '<rect x="8" y="14.8" width="5" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
+    "</svg>";
+  function recipeIconHtml(icon) {
+    return icon ? esc(icon) : DEFAULT_RECIPE_ICON;
+  }
   // Retrigger a one-shot animation: drop the class, force reflow, re-add.
   var pop = function (node) {
     node.classList.remove("pop");
@@ -1305,7 +1319,7 @@
       (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
 
     card.innerHTML =
-      '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+      '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
@@ -1400,6 +1414,39 @@
   var BACKUP_KEY = "mc-cookbook:lastBackupAt";
   var BACKUP_FMT = 1;                         // backup-file schema version
   var backupBannerDismissed = false;          // per-session dismissal
+
+  /* ── First-launch Quick Tour nudge ────────────────────────────────── */
+  var TOUR_SEEN_KEY = "mc-cookbook:tourSeen";
+  function tourSeen() {
+    try { return localStorage.getItem(TOUR_SEEN_KEY) === "1"; }
+    catch (e) { return true; } // storage unavailable — fail quiet, not nagging
+  }
+  function markTourSeen() {
+    try { localStorage.setItem(TOUR_SEEN_KEY, "1"); } catch (e) {}
+  }
+  function tourBanner() {
+    var b = el("div", "backup-banner tour-banner");
+    b.innerHTML =
+      '<span class="backup-banner-icon">🎬</span>' +
+      '<span class="backup-banner-text">New here? Take the 3-minute Quick Tour ' +
+        "to see how the app works.</span>";
+    var cta = el("button", "backup-banner-cta", "Take the tour →");
+    cta.type = "button";
+    cta.addEventListener("click", function () {
+      markTourSeen();
+      location.href = "quick-tour.html";
+    });
+    var x = el("button", "backup-banner-dismiss", "✕");
+    x.type = "button";
+    x.setAttribute("aria-label", "Dismiss");
+    x.addEventListener("click", function () {
+      markTourSeen();
+      if (b.parentNode) b.parentNode.removeChild(b);
+    });
+    b.appendChild(cta);
+    b.appendChild(x);
+    return b;
+  }
 
   function namespacedKeys() {
     var out = [];
@@ -1655,6 +1702,12 @@
     });
     bar.appendChild(searchBtn);
     s.appendChild(bar);
+
+    // First-launch nudge: Quick Tour used to be reachable only via a Help-tier
+    // link at the very bottom of Home, with no signal a brand-new user should
+    // scroll all the way down to find it. Shows once, dismissed permanently by
+    // either taking the tour or explicitly closing it.
+    if (!tourSeen()) s.appendChild(tourBanner());
 
     // Safety-net nudge: stale backup + data worth protecting.
     if (!backupBannerDismissed && backupIsStale() && hasCookData()) {
@@ -2731,7 +2784,7 @@
     if (r.dish_category) meta.push(esc(r.dish_category));
     if (totalTime) meta.push(totalTime + " min");
     card.innerHTML =
-      '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+      '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         '<p class="rc-meta">' + meta.join(" · ") + "</p>" +
@@ -3187,7 +3240,7 @@
         card.style.setProperty("--rc-accent", accent);
         card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
         card.innerHTML =
-          '<div class="rc-band"><span class="rc-icon">' + esc(r.icon || "🍽️") + "</span></div>" +
+          '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
           '<div class="rc-body">' +
             '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
             '<p class="rc-meta">' + esc(r.dish_category || "") + (t ? " · " + t + " min" : "") + "</p>" +
@@ -3737,12 +3790,19 @@
     if (name === "mikes") renderMikes();
     if (name === "tracker") renderTracker();
 
-    // Sync persistent tab bar
+    // Sync persistent tab bar — aria-current mirrors the .active class so
+    // screen-reader/switch-control users can tell which tab is current too.
     var tabCookbook = document.getElementById("tab-cookbook");
     var tabTracker  = document.getElementById("tab-tracker");
     var isTracker   = (name === "tracker");
-    if (tabCookbook) tabCookbook.classList.toggle("active", !isTracker);
-    if (tabTracker)  tabTracker.classList.toggle("active",  isTracker);
+    if (tabCookbook) {
+      tabCookbook.classList.toggle("active", !isTracker);
+      if (isTracker) tabCookbook.removeAttribute("aria-current"); else tabCookbook.setAttribute("aria-current", "page");
+    }
+    if (tabTracker) {
+      tabTracker.classList.toggle("active", isTracker);
+      if (isTracker) tabTracker.setAttribute("aria-current", "page"); else tabTracker.removeAttribute("aria-current");
+    }
 
     history.replaceState(null, "", name === "home" ? location.pathname : "#" + name);
     window.scrollTo(0, 0);
