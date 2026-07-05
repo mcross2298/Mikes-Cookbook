@@ -23,8 +23,8 @@
   var S = window.MCTrackerStore;
   var host = null;
 
-  // macro colors tuned for cream cards (terracotta cal + on-brand hues)
-  var COL = { kcal: "#C87A53", p: "#6D5BD0", f: "#C99A2E", c: "#5B8C5A" };
+  // macro colors — theme-driven (cookbook.css :root), not hardcoded hex
+  var COL = { kcal: "var(--macro-kcal)", p: "var(--macro-protein)", f: "var(--macro-fat)", c: "var(--macro-carb)" };
   var WD = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -58,6 +58,7 @@
     root.appendChild(renderToolbar());
     root.appendChild(renderCalendar());
     root.appendChild(renderSummary(totals, goals));
+    root.appendChild(renderTrend());
     root.appendChild(renderFind());
     root.appendChild(renderTimeline(entries));
     host.appendChild(root);
@@ -89,7 +90,8 @@
     for (var i = 0; i < 7; i++) {
       (function (k) {
         var d = S.dateFromKey(k);
-        var cls = "ckt-day" + (k === selKey ? " sel" : "") + (k === tk ? " today" : "");
+        var hasEntries = S.entriesFor(k).length > 0;
+        var cls = "ckt-day" + (k === selKey ? " sel" : "") + (k === tk ? " today" : "") + (hasEntries ? " has" : "");
         var cell = el("div", cls,
           '<div class="ckt-day-wd">' + WD[(d.getDay() + 6) % 7] + "</div>" +
           '<div class="ckt-day-num">' + d.getDate() + "</div>" +
@@ -128,6 +130,24 @@
       "</div>" +
       '<div class="ckt-met-track"><div class="ckt-met-fill" style="width:' + pct + "%;background:" + (over ? "#C0473B" : color) + '"></div></div>';
     return m;
+  }
+
+  function renderTrend() {
+    var card = el("div", "ckt-trend");
+    if (!window.MCChart) return card;
+    var todayKey = S.todayKey();
+    var days = [];
+    for (var i = 6; i >= 0; i--) {
+      var k = S.addDays(todayKey, -i);
+      var d = S.dateFromKey(k);
+      days.push({ key: k, label: WD[(d.getDay() + 6) % 7], value: S.totalsOf(S.entriesFor(k)).kcal });
+    }
+    var hi = -1;
+    days.forEach(function (d, i) { if (d.key === selKey) hi = i; });
+    card.innerHTML =
+      '<div class="ckt-trend-h">Last 7 days · calories</div>' +
+      MCChart.bars(days.map(function (d) { return { label: d.label, value: d.value }; }), { height: 56, highlight: hi, color: COL.kcal });
+    return card;
   }
 
   function renderFind() {
@@ -584,9 +604,11 @@
     }
     function pct(have, goal) { return goal ? Math.min(999, Math.round((have / goal) * 100)) : null; }
     function ringTile(lbl, val, suf, color, p) {
+      var ringSvg = window.MCChart ? MCChart.ring(p == null ? 0 : p, { size: 52, stroke: 4, color: color }) : "";
       return '<div class="ckt-ring" style="--rc:' + color + '">' +
-        '<div class="ckt-ring-dot"></div>' +
-        '<div class="ckt-ring-val">' + val + "<span>" + suf + "</span></div>" +
+        '<div class="ckt-ring-circle">' + ringSvg +
+          '<div class="ckt-ring-center"><span class="ckt-ring-val">' + val + "<span>" + suf + "</span></span></div>" +
+        "</div>" +
         '<div class="ckt-ring-lbl">' + lbl + "</div>" +
         '<div class="ckt-ring-pct">' + (p == null ? "" : p + "%") + "</div></div>";
     }
@@ -643,8 +665,17 @@
       }
       var goalsArr = [goals && goals.kcal, goals && goals.p, goals && goals.f, goals && goals.c];
       var vals = [fmt(per.kcal * m), fmt(per.p * m), fmt(per.f * m), fmt(per.c * m)];
+      var pcArr = vals.map(function (v, i) { return pct(v, goalsArr[i]); });
       var pcts = s.sh.querySelectorAll(".ckt-ring-pct");
-      pcts.forEach(function (e, i) { var pc = pct(vals[i], goalsArr[i]); e.textContent = pc == null ? "" : pc + "%"; });
+      pcts.forEach(function (e, i) { e.textContent = pcArr[i] == null ? "" : pcArr[i] + "%"; });
+      var arcs = s.sh.querySelectorAll(".mcchart-ring-arc");
+      if (arcs.length === 4 && window.MCChart) {
+        var circ = MCChart.ringCircumference({ size: 52, stroke: 4 });
+        arcs.forEach(function (arc, i) {
+          var p = Math.max(0, Math.min(100, pcArr[i] || 0));
+          arc.setAttribute("stroke-dasharray", ((p / 100) * circ).toFixed(2) + " " + circ.toFixed(2));
+        });
+      }
       var nrows = s.sh.querySelectorAll(".ckt-nrow b");
       if (nrows.length === 4) {
         nrows[0].textContent = nu.fiber != null ? fmt(nu.fiber * m, 1) + " g" : "—";
@@ -751,6 +782,7 @@
       ".ckt-day-wd{font-size:9px;font-weight:800;letter-spacing:0.04em;color:var(--on-dark-dim);}" +
       ".ckt-day-num{font-size:15px;font-weight:800;color:var(--on-dark);}" +
       ".ckt-day-dot{width:4px;height:4px;border-radius:50%;background:transparent;}" +
+      ".ckt-day.has .ckt-day-dot{background:rgba(var(--accent-rgb),0.5);}" +
       ".ckt-day.today .ckt-day-dot{background:var(--accent);}" +
       ".ckt-day.sel{border-color:var(--accent);background:rgba(var(--accent-rgb),0.16);}" +
       ".ckt-day.sel .ckt-day-num{color:var(--accent);}" +
@@ -766,6 +798,9 @@
       ".ckt-met-track{height:3px;border-radius:2px;background:rgba(0,0,0,0.08);margin-top:6px;overflow:hidden;}" +
       ".ckt-met-fill{height:100%;border-radius:2px;transition:width 0.3s ease;}" +
       ".ckt-sum-exp{flex:0 0 auto;color:var(--ink-dim);font-size:20px;font-weight:800;line-height:1;}" +
+      /* 7-day trend (cream) */
+      ".ckt-trend{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px;}" +
+      ".ckt-trend-h{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;}" +
       /* find bar (cream) */
       ".ckt-find{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);" +
         "border-radius:var(--r-md);padding:10px 12px;margin-bottom:16px;}" +
@@ -831,24 +866,25 @@
       /* ── Nutrition Facts sheet (Phase 3) ── */
       ".ckt-facts{display:flex;flex-direction:column;gap:14px;}" +
       ".ckt-rings{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}" +
-      ".ckt-ring{position:relative;border:1.5px solid color-mix(in srgb, var(--rc) 55%, transparent);border-radius:var(--r-md);" +
-        "padding:12px 6px 9px;text-align:center;background:color-mix(in srgb, var(--rc) 10%, transparent);}" +
-      ".ckt-ring-dot{position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--rc);}" +
-      ".ckt-ring-val{font-size:19px;font-weight:900;color:var(--on-dark);line-height:1;}" +
-      ".ckt-ring-val span{font-size:11px;font-weight:800;color:var(--on-dark-dim);}" +
-      ".ckt-ring-lbl{font-size:10px;font-weight:800;color:var(--on-dark);margin-top:5px;}" +
-      ".ckt-ring-pct{font-size:11px;font-weight:900;color:var(--rc);margin-top:3px;min-height:13px;}" +
-      ".ckt-nutrients{border:1px solid var(--line-dark);border-radius:var(--r-md);padding:4px 14px;}" +
-      ".ckt-nutrients-h{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-dark-dim);padding:10px 0 4px;}" +
-      ".ckt-nrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line-dark);font-size:13px;font-weight:800;color:var(--on-dark);}" +
-      ".ckt-nrow b{color:var(--on-dark);font-weight:800;}" +
+      ".ckt-ring{position:relative;border:1.5px solid color-mix(in srgb, var(--rc) 45%, transparent);border-radius:var(--r-md);" +
+        "padding:10px 4px 9px;text-align:center;background:color-mix(in srgb, var(--rc) 8%, transparent);}" +
+      ".ckt-ring-circle{position:relative;width:52px;height:52px;margin:0 auto;}" +
+      ".ckt-ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}" +
+      ".ckt-ring-val{font-size:13px;font-weight:900;color:var(--ink);line-height:1.1;text-align:center;}" +
+      ".ckt-ring-val span{display:block;font-size:8px;font-weight:800;color:var(--ink-dim);margin-top:1px;}" +
+      ".ckt-ring-lbl{font-size:10px;font-weight:800;color:var(--ink);margin-top:6px;}" +
+      ".ckt-ring-pct{font-size:11px;font-weight:900;color:var(--rc);margin-top:2px;min-height:13px;}" +
+      ".ckt-nutrients{border:1px solid var(--line);border-radius:var(--r-md);padding:4px 14px;}" +
+      ".ckt-nutrients-h{font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-dim);padding:10px 0 4px;}" +
+      ".ckt-nrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13px;font-weight:800;color:var(--ink);}" +
+      ".ckt-nrow b{color:var(--ink);font-weight:800;}" +
       ".ckt-uomrow{display:flex;align-items:center;gap:12px;}" +
       ".ckt-uom{flex:1;display:flex;gap:6px;}" +
       ".ckt-uom button{flex:1;padding:10px 4px;border-radius:10px;border:1px solid var(--line-dark);background:var(--bg-elev);" +
         "color:var(--on-dark-dim);font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
       ".ckt-uom button.on{background:var(--accent);border-color:var(--accent);color:#fff;}" +
-      ".ckt-qty{flex:0 0 auto;display:flex;align-items:baseline;gap:4px;font-size:26px;font-weight:900;color:var(--on-dark);min-width:74px;justify-content:flex-end;}" +
-      ".ckt-qty small{font-size:13px;font-weight:800;color:var(--on-dark-dim);}" +
+      ".ckt-qty{flex:0 0 auto;display:flex;align-items:baseline;gap:4px;font-size:26px;font-weight:900;color:var(--ink);min-width:74px;justify-content:flex-end;}" +
+      ".ckt-qty small{font-size:13px;font-weight:800;color:var(--ink-dim);}" +
       ".ckt-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}" +
       ".ckt-keypad button{padding:15px 0;border-radius:12px;border:1px solid var(--line-dark);background:var(--bg-elev);" +
         "color:var(--on-dark);font-size:20px;font-weight:800;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}" +

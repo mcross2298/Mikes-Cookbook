@@ -23,6 +23,7 @@ const CACHE_URLS = [
   './recipes-data.js',
   './tracker-barcode.js',
   './tracker-calc.js',
+  './tracker-chart.js',
   './tracker-foodapi.js',
   './tracker-recipe.js',
   './tracker-store.js',

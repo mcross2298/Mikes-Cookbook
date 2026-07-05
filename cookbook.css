@@ -24,6 +24,12 @@
   --sage:          #7D8C77;   /* muted sage                                */
   --sage-rgb:      125,140,119;
 
+  /* Macro tracker palette (tracker.js reads these, not hardcoded hex)      */
+  --macro-kcal:    #C87A53;   /* terracotta — calories                     */
+  --macro-protein: #6D5BD0;   /* purple — protein                          */
+  --macro-fat:     #C99A2E;   /* gold — fat                                */
+  --macro-carb:    #5B8C5A;   /* green — carbs                             */
+
   /* Text */
   --on-dark:       #ECEAE6;   /* primary text on dark bg                   */
   --on-dark-dim:   #9CA0A2;   /* muted text on dark bg                     */
