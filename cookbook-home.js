@@ -209,6 +209,26 @@
     var group = EMOJI_ICON_GROUP[icon];
     return group ? RECIPE_ICON_SVGS[group] : DEFAULT_RECIPE_ICON;
   }
+
+  // Recipe cards have no photography — recipes-data.js has no image field,
+  // and the detail page's own cover photo is opt-in/user-uploaded, so most
+  // cards never get one. A deterministic (same recipe → same pattern every
+  // render) subtle texture over the existing accent band gives each card
+  // some visual distinction beyond "same tile, different title," without a
+  // photo pipeline. Four patterns is enough variety to read as "textured,"
+  // not so many it looks random/noisy across a grid.
+  var CARD_PATTERNS = [
+    { image: "repeating-linear-gradient(45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
+    { image: "radial-gradient(rgba(255,255,255,0.18) 1.4px, transparent 1.6px)", size: "14px 14px" },
+    { image: "repeating-linear-gradient(-45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
+    { image: "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 12px)", size: "auto" }
+  ];
+  function cardPatternFor(recipeId) {
+    var h = 0;
+    for (var i = 0; i < recipeId.length; i++) h = (h * 31 + recipeId.charCodeAt(i)) >>> 0;
+    return CARD_PATTERNS[h % CARD_PATTERNS.length];
+  }
+
   // Retrigger a one-shot animation: drop the class, force reflow, re-add.
   var pop = function (node) {
     node.classList.remove("pop");
@@ -420,6 +440,7 @@
       p.day7Dismissed = false;
     }
     try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+    updateAppBadge();   // every plan mutation funnels through here
   }
   // Home's auto-drafted-week offer (see renderAutoDraftCard): only offered
   // when the plan is empty, and dismissing it snoozes the offer for ~7 days
@@ -1513,6 +1534,9 @@
     card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
     card.style.setProperty("--rc-accent", accent);
     card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
+    var pattern = cardPatternFor(r.recipe_id);
+    card.style.setProperty("--rc-pattern", pattern.image);
+    card.style.setProperty("--rc-pattern-size", pattern.size);
 
     // macro_profiles are stored PER SINGLE SERVING and are identical across
     // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,
@@ -1926,6 +1950,18 @@
      hero/auto-draft card. */
   function todayDayCode() {
     return DAYS[(new Date().getDay() + 6) % 7];   // JS getDay(): Sun=0..Sat=6
+  }
+  // Home-screen presence without opening the app — an installed PWA can
+  // still show a count on its icon via the Badging API, no push/backend
+  // needed. Purely client-side and degrades silently where unsupported.
+  function updateAppBadge() {
+    if (!(navigator.setAppBadge || navigator.clearAppBadge)) return;
+    var code = todayDayCode();
+    var unlogged = planMeals().filter(function (m) { return m.day === code && !m.completed; }).length;
+    try {
+      if (unlogged > 0 && navigator.setAppBadge) navigator.setAppBadge(unlogged);
+      else if (navigator.clearAppBadge) navigator.clearAppBadge();
+    } catch (e) {}
   }
   function renderTodayCard() {
     var code = todayDayCode();
@@ -4220,6 +4256,7 @@
     if (tabTracker)  tabTracker.addEventListener("click",  function () { setTab("tracker"); });
 
     setTab((location.hash || "#home").slice(1));
+    updateAppBadge();   // corrects staleness from a day rollover while closed
 
     // Day-7 archive check: no background cron exists in a static PWA, so
     // this is evaluated once per app open instead. Deferred a tick so the
