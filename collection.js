@@ -203,6 +203,21 @@
     return group ? RECIPE_ICON_SVGS[group] : DEFAULT_RECIPE_ICON;
   }
 
+  // Recipe cards have no photography — see cookbook-home.js's matching
+  // cardPatternFor() for the full rationale. Deterministic per recipe_id so
+  // the same card always gets the same texture, not a reshuffle on repaint.
+  var CARD_PATTERNS = [
+    { image: "repeating-linear-gradient(45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
+    { image: "radial-gradient(rgba(255,255,255,0.18) 1.4px, transparent 1.6px)", size: "14px 14px" },
+    { image: "repeating-linear-gradient(-45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
+    { image: "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 12px)", size: "auto" }
+  ];
+  function cardPatternFor(recipeId) {
+    var h = 0;
+    for (var i = 0; i < recipeId.length; i++) h = (h * 31 + recipeId.charCodeAt(i)) >>> 0;
+    return CARD_PATTERNS[h % CARD_PATTERNS.length];
+  }
+
   /* ── Favorites store (same key as cookbook-home.js) ───────────────── */
   var FAV_KEY = "mc-cookbook:favorites";
   function loadFavs() {
@@ -312,6 +327,9 @@
     card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
     card.style.setProperty("--rc-accent", accent);
     card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
+    var pattern = cardPatternFor(r.recipe_id);
+    card.style.setProperty("--rc-pattern", pattern.image);
+    card.style.setProperty("--rc-pattern-size", pattern.size);
 
     // macro_profiles are stored PER SINGLE SERVING and are identical across
     // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,

@@ -641,15 +641,20 @@ body {
 
 /* Accent color band carries the food icon (stands in for a photo). Kept
    short and compact so the card reads as icon + name + a bottom macro
-   stat row, not a tall tile. */
+   stat row, not a tall tile. --rc-pattern is a per-recipe deterministic
+   subtle texture (see cardPatternFor()) layered over the accent gradient —
+   there's no recipe photography, so this gives each card some visual
+   distinction beyond "same tile, different title." */
 .rc-band {
   height: 52px;
   display: grid;
   place-items: center;
-  background:
+  background-image:
+    var(--rc-pattern, none),
     linear-gradient(135deg,
       rgba(var(--rc-accent-rgb), 0.95) 0%,
       rgba(var(--rc-accent-rgb), 0.70) 100%);
+  background-size: var(--rc-pattern-size, auto), auto;
   border-bottom: 1px solid var(--line);
 }
 .rc-icon { font-size: 24px; line-height: 1; filter: saturate(1.05); }
