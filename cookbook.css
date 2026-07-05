@@ -1096,6 +1096,20 @@ button.col-back { appearance: none; -webkit-appearance: none;
 .col-grid { display: grid; grid-template-columns: 1fr; gap: 13px; padding: 0 20px 24px; }
 @media (min-width: 560px) { .col-grid { grid-template-columns: 1fr 1fr; } }
 
+/* Desserts collection: "similar desserts" cluster dividers (see
+   collection.js renderDessertGroups). Span both grid columns so each
+   group reads as its own row. */
+.cluster-label {
+  grid-column: 1 / -1; margin: 10px 2px -2px; font-size: 12.5px;
+  font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--accent);
+}
+.cluster-label:first-child { margin-top: 0; }
+.cluster-label-more {
+  color: var(--on-dark-dim); text-transform: none; font-weight: 600;
+  letter-spacing: normal; font-size: 13px; margin-top: 18px;
+}
+
 /* ── Recipe detail: back + favorite row ───────────────────────────── */
 .r-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .r-back { text-decoration: none; color: var(--on-dark-dim); font-size: 14px; font-weight: 700; }

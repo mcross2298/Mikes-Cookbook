@@ -137,6 +137,84 @@
     return card;
   }
 
+  /* ── Desserts: "similar desserts" grouping ───────────────────────────
+     Desserts collection only. Groups the current (subtab-filtered) list
+     into clusters of 2-3 recipes that share several ingredients, so
+     browsing 28+ sweets surfaces the ones worth comparing side by side
+     instead of one long flat list. Reuses the same ingredient-identity
+     keying cookbook-home.js's Smart Week overlap scoring uses (category +
+     lowercased item name), just applied here as pure similarity instead
+     of a planner bonus. Anything that doesn't cluster still shows, under
+     a "More Desserts" divider — nothing is hidden. */
+  var DESSERT_CLUSTER_MIN_SHARED = 3;
+  function dessertIngredientEntries(r) {
+    var by = r.ingredients_by_serving || {};
+    var list = by[Object.keys(by)[0]] || [];
+    var map = {};
+    list.forEach(function (ing) {
+      var item = (ing.item || "").trim();
+      if (!item) return;
+      var key = (ing.category || "Other") + "|" + item.toLowerCase();
+      if (!map[key]) map[key] = item;
+    });
+    return map;
+  }
+  function sharedKeyCount(a, b) {
+    var n = 0;
+    Object.keys(a).forEach(function (k) { if (b[k]) n++; });
+    return n;
+  }
+  // Names the cluster after ingredients common to every member; falls back
+  // to the seed pair's overlap, then a generic label, so it never breaks.
+  function dessertClusterLabel(members) {
+    var maps = members.map(dessertIngredientEntries);
+    var common = Object.keys(maps[0]).filter(function (k) {
+      return maps.every(function (m) { return m[k]; });
+    });
+    if (!common.length && maps.length > 1) {
+      common = Object.keys(maps[0]).filter(function (k) { return maps[1][k]; });
+    }
+    if (!common.length) return "🔗 Similar Desserts";
+    return "🔗 Similar · " + common.slice(0, 2).map(function (k) { return maps[0][k]; }).join(", ");
+  }
+  // Greedy pairing: each unclustered recipe grabs up to 2 unclustered
+  // recipes that share the most ingredients with it (min threshold above).
+  // Whatever's left over is a "single" and renders in the flat list as usual.
+  function buildDessertClusters(items) {
+    var entries = {};
+    items.forEach(function (r) { entries[r.recipe_id] = dessertIngredientEntries(r); });
+    var remaining = items.slice();
+    var clusters = [], singles = [];
+    while (remaining.length) {
+      var seed = remaining.shift();
+      var ranked = remaining
+        .map(function (r) { return { r: r, n: sharedKeyCount(entries[seed.recipe_id], entries[r.recipe_id]) }; })
+        .filter(function (m) { return m.n >= DESSERT_CLUSTER_MIN_SHARED; })
+        .sort(function (a, b) { return b.n - a.n; })
+        .slice(0, 2);
+      if (ranked.length) {
+        ranked.forEach(function (m) { remaining.splice(remaining.indexOf(m.r), 1); });
+        clusters.push([seed].concat(ranked.map(function (m) { return m.r; })));
+      } else {
+        singles.push(seed);
+      }
+    }
+    return { clusters: clusters, singles: singles };
+  }
+  function renderDessertGroups(grid, items, onChange) {
+    var built = buildDessertClusters(items);
+    built.clusters.forEach(function (members) {
+      grid.appendChild(el("p", "cluster-label", esc(dessertClusterLabel(members))));
+      members.forEach(function (r) { grid.appendChild(recipeCard(r, onChange)); });
+    });
+    if (built.singles.length) {
+      if (built.clusters.length) {
+        grid.appendChild(el("p", "cluster-label cluster-label-more", "More Desserts"));
+      }
+      built.singles.forEach(function (r) { grid.appendChild(recipeCard(r, onChange)); });
+    }
+  }
+
   /* ── Render ───────────────────────────────────────────────────────── */
   function init() {
     var c = pickCollection();
@@ -248,7 +326,11 @@
           '<span class="empty-emoji">🔍</span>No recipes match “' + esc(q) + "”."));
         return;
       }
-      shown.forEach(function (r) { grid.appendChild(recipeCard(r, paint)); });
+      if (c.id === "desserts" && !q) {
+        renderDessertGroups(grid, shown, paint);
+      } else {
+        shown.forEach(function (r) { grid.appendChild(recipeCard(r, paint)); });
+      }
     }
     box.addEventListener("input", paint);
     paint();
