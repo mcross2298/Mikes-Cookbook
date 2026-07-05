@@ -1589,6 +1589,16 @@
     // Hidden owner unlock lives on the "Mike's" eyebrow (5 quick taps).
     var eyebrow = $(".shell-eyebrow", bar);
     if (eyebrow) wireOwnerUnlock(eyebrow);
+    // Search was only discoverable from inside the Recipes screen — give Home
+    // (the hub every visit starts from) a one-tap way in.
+    var searchBtn = el("button", "home-search-btn", "🔍");
+    searchBtn.type = "button";
+    searchBtn.setAttribute("aria-label", "Search recipes");
+    searchBtn.addEventListener("click", function () {
+      focusRecipesSearch = true;
+      setTab("recipes");
+    });
+    bar.appendChild(searchBtn);
     s.appendChild(bar);
 
     // Safety-net nudge: stale backup + data worth protecting.
@@ -1684,6 +1694,14 @@
   }
 
   /* ── Shared spoke top bar with a "‹ <label>" anchor ───────────────── */
+  // Deliberately a fixed-target button, not history.back() — setTab() uses
+  // replaceState (never pushState), so the shell has no real per-screen
+  // history stack to go back through. cookbook-nav.js's standalone-page Back
+  // FAB *is* history-based, which is correct there since recipe.html/
+  // collection.html are genuine separate page loads with real history
+  // entries. The two models look inconsistent but aren't interchangeable —
+  // making this one history-aware would navigate out of the app instead of
+  // to a previous screen.
   function backTopBar(backLabel, title, sub, onBack) {
     var t = el("div", "shell-top");
     var back = el("button", "col-back", backLabel);
@@ -1787,6 +1805,10 @@
     return false;
   }
 
+  // Set by Home's search button so this screen's box grabs focus (and the
+  // keyboard opens) the moment it renders, instead of landing on a static list.
+  var focusRecipesSearch = false;
+
   function renderRecipes() {
     var s = $("#screen-recipes");
     s.innerHTML = "";
@@ -1802,6 +1824,11 @@
     box.setAttribute("aria-label", "Search all recipes");
     searchWrap.appendChild(box);
     s.appendChild(searchWrap);
+
+    if (focusRecipesSearch) {
+      focusRecipesSearch = false;
+      requestAnimationFrame(function () { box.focus(); });
+    }
 
     var results = el("div", "browse-results");
     s.appendChild(results);
@@ -3568,6 +3595,12 @@
 
     history.replaceState(null, "", name === "home" ? location.pathname : "#" + name);
     window.scrollTo(0, 0);
+
+    // Breadcrumb for cookbook-nav.js's Home FAB on recipe.html/collection.html:
+    // sessionStorage survives the navigation to those standalone pages (unlike
+    // document.referrer, which drops the hash), so the FAB can return to
+    // wherever the user actually was instead of always resetting to Home.
+    try { sessionStorage.setItem("mc-cookbook:lastScreen", name); } catch (e) {}
   }
 
   // The currently visible screen, read from the DOM so it stays correct even
@@ -3599,9 +3632,16 @@
     wireFavSync();
 
     // Persistent tab bar: Cookbook tab → home; Tracker tab → tracker screen.
+    // The Cookbook tab reads "active" for every cookbook screen (Planner,
+    // Categories, Recipes, Favorites, Mikes), not just Home — so tapping it
+    // while already browsing one of those used to silently blow away whatever
+    // the user was doing (e.g. mid-search) and jump to Home. Make it a no-op
+    // unless the Tracker screen is what's actually active.
     var tabCookbook = document.getElementById("tab-cookbook");
     var tabTracker  = document.getElementById("tab-tracker");
-    if (tabCookbook) tabCookbook.addEventListener("click", function () { setTab("home"); });
+    if (tabCookbook) tabCookbook.addEventListener("click", function () {
+      if (activeScreen() === "tracker") setTab("home");
+    });
     if (tabTracker)  tabTracker.addEventListener("click",  function () { setTab("tracker"); });
 
     setTab((location.hash || "#home").slice(1));

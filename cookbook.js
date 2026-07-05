@@ -75,6 +75,19 @@
     '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" ' +
     'stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
 
+  // Brief, informational auto-dismissing toast (no action) — used to flag
+  // that switching servings landed on a fresh, unchecked checklist.
+  function toast(msg) {
+    var t = el("div", "mc-toast");
+    t.appendChild(el("span", "mc-toast-msg", esc(msg)));
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add("show"); });
+    setTimeout(function () {
+      t.classList.remove("show");
+      setTimeout(function () { t.remove(); }, 300);
+    }, 3200);
+  }
+
   /* ── Inline step timers ───────────────────────────────────────────── */
   // Cooks reach for a separate timer app for "simmer 20 minutes". Parse real
   // durations out of step text and offer a tappable countdown chip that pings
@@ -647,11 +660,23 @@
     function changeServing(n) {
       n = Math.max(SERVING_MIN, Math.min(SERVING_MAX, n));
       if (n === state.serving) return;
+      var prevServing = state.serving;
+      // Check-off state is kept per serving count, so a cook mid-checklist who
+      // bumps the count lands on a checklist that looks wiped (it isn't — the
+      // old count's progress is still there if they switch back). Flag it so
+      // that doesn't read as silent data loss.
+      var hadProgress = loadSet(r.recipe_id, prevServing, "grocery").size > 0 ||
+        loadSet(r.recipe_id, prevServing, "steps").size > 0;
+      var newIsFresh = loadSet(r.recipe_id, n, "grocery").size === 0 &&
+        loadSet(r.recipe_id, n, "steps").size === 0;
       state.serving = n;
       renderHeader(r);          // refresh count + disabled states + note
       renderMacros(r);
       renderGrocery(r);
       renderRecipe(r);
+      if (hadProgress && newIsFresh) {
+        toast("Checklist reset for " + n + " serving" + (n === 1 ? "" : "s"));
+      }
     }
 
     var ladder = el("div", "servings serving-stepper");

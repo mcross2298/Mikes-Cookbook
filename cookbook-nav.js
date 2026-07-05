@@ -15,13 +15,18 @@
 (function () {
   "use strict";
 
-  // Render (once) a fixed Home button into <main.app>.
+  // Render (once) a fixed Home button into <main.app>. Returns to whichever
+  // shell screen the user was last on (via a sessionStorage breadcrumb
+  // cookbook-home.js's setTab() writes on every switch), not always a hard
+  // reset to Home — reached via Favorites, it should land back on Favorites.
   function renderHomeLink() {
     var mount = document.querySelector("main.app");
     if (!mount || mount.querySelector(".home-fab")) return null;
     var a = document.createElement("a");
     a.className = "home-fab";
-    a.href = "index.html";
+    var lastScreen = null;
+    try { lastScreen = sessionStorage.getItem("mc-cookbook:lastScreen"); } catch (e) {}
+    a.href = (lastScreen && lastScreen !== "home") ? ("index.html#" + lastScreen) : "index.html";
     a.setAttribute("aria-label", "Home");
     a.innerHTML = '<span class="home-fab-icon">🏠</span>Home';
     mount.appendChild(a);
