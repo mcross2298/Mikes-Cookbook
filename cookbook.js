@@ -178,20 +178,20 @@
   // Parses common fraction/decimal quantities, scales by a factor, and returns
   // a tidy string ("1/2", "1 1/2", "3", "0.75"). Non-numeric quantities (e.g.
   // "to taste") pass through unchanged.
-  function scaleQuantity(qty, factor) {
-    if (qty == null) return qty;
+  function parseQtyNumber(qty) {
+    if (qty == null) return null;
     var s = String(qty).trim();
     var m = s.match(/^(\d+)\s+(\d+)\/(\d+)$/); // mixed: "1 1/2"
-    var val;
-    if (m) {
-      val = parseInt(m[1], 10) + parseInt(m[2], 10) / parseInt(m[3], 10);
-    } else if ((m = s.match(/^(\d+)\/(\d+)$/))) { // simple fraction
-      val = parseInt(m[1], 10) / parseInt(m[2], 10);
-    } else if (/^-?\d*\.?\d+$/.test(s)) { // integer / decimal
-      val = parseFloat(s);
-    } else {
-      return s; // not numeric — leave alone
-    }
+    if (m) return parseInt(m[1], 10) + parseInt(m[2], 10) / parseInt(m[3], 10);
+    if ((m = s.match(/^(\d+)\/(\d+)$/))) return parseInt(m[1], 10) / parseInt(m[2], 10); // simple fraction
+    if (/^-?\d*\.?\d+$/.test(s)) return parseFloat(s); // integer / decimal
+    return null; // not numeric
+  }
+
+  function scaleQuantity(qty, factor) {
+    if (qty == null) return qty;
+    var val = parseQtyNumber(qty);
+    if (val == null) return String(qty).trim(); // not numeric — leave alone
     return prettyNumber(val * factor);
   }
 
@@ -530,6 +530,72 @@
     return mp["serving_" + serving] || mp["serving_" + nativeServing(r)] || {};
   }
 
+  /* ── Estimated serving weight (grams) ─────────────────────────────────
+     There's no authored gram weight anywhere in recipes-data.js, so this is
+     computed live from each ingredient's quantity/unit/category — a best-
+     effort estimate for people weighing food, not a lab-verified figure.
+     Priority per ingredient: an explicit weight already written into the
+     item/unit text (e.g. "Salmon fillets (about 8 oz each)", "(14-oz) can")
+     beats the generic unit table, which beats a per-category default for
+     bare counts (e.g. "2" jalapeños, unit ""). Non-numeric quantities
+     ("to taste", "a little") contribute 0 g rather than guessing. */
+  var UNIT_GRAMS = {
+    g: 1, gram: 1, grams: 1, kg: 1000, ml: 1, l: 1000,
+    oz: 28.3, lb: 453.6, lbs: 453.6,
+    cup: 224, cups: 224, tbsp: 14.2, tablespoon: 14.2, tsp: 4.9, teaspoon: 4.9,
+    pinch: 0.4, pinches: 0.4, "big pinch": 0.8, "big pinches": 0.8, splash: 15,
+    clove: 3, cloves: 3, slice: 25, slices: 25, stick: 113, sticks: 113,
+    scoop: 30, scoops: 30, packet: 7, sachet: 28, can: 425, cans: 425,
+    bunch: 30, bunches: 30, "small bunch": 20, "small bunches": 20,
+    stalk: 40, stalks: 40, head: 500, heads: 500,
+    "small head": 350, "small heads": 350, "medium head": 500,
+    lemon: 100, lemons: 100, orange: 150, oranges: 150,
+    wedge: 30, wedges: 30, whole: 90, section: 30, container: 200,
+    handful: 20, handfuls: 20, leaf: 2, leaves: 2,
+    pack: 85, packs: 85, package: 150, packages: 150,
+    block: 225, box: 150, bag: 300, bags: 300, pint: 480,
+    small: 90, medium: 150, large: 200
+  };
+  var CATEGORY_DEFAULT_G = { Meat: 140, Dairy: 50, Produce: 80, Pantry: 5 };
+  var WEIGHT_ANNOTATION_RE = /([\d.]+)\s*-?\s*(oz|lb|lbs|kg|g|ml)\b/i;
+  // Bare counts (blank unit) default to a per-category "whole piece" weight,
+  // which is wrong for small counted items like pepperoni slices or olives —
+  // these override the category default when the ingredient name matches.
+  var ITEM_KEYWORD_GRAMS = [
+    [/pepperoni/i, 2], [/\bclove/i, 3], [/\bolive(?!.*\boil\b)/i, 4],
+    [/cracker/i, 7], [/pizzelle/i, 6]
+  ];
+
+  function gramsPerUnit(ing) {
+    var annotated = (ing.item + " " + ing.unit).match(WEIGHT_ANNOTATION_RE);
+    if (annotated) {
+      var n = parseFloat(annotated[1]);
+      return n * (UNIT_GRAMS[annotated[2].toLowerCase()] || 1);
+    }
+    var unit = (ing.unit || "").trim().toLowerCase();
+    if (UNIT_GRAMS[unit] != null) return UNIT_GRAMS[unit];
+    if (unit.charAt(unit.length - 1) === "s" && UNIT_GRAMS[unit.slice(0, -1)] != null) {
+      return UNIT_GRAMS[unit.slice(0, -1)];
+    }
+    for (var i = 0; i < ITEM_KEYWORD_GRAMS.length; i++) {
+      if (ITEM_KEYWORD_GRAMS[i][0].test(ing.item)) return ITEM_KEYWORD_GRAMS[i][1];
+    }
+    return CATEGORY_DEFAULT_G[ing.category] || 0;
+  }
+  function estimateServingWeightG(r, serving) {
+    var list = ingredientsFor(r, serving);
+    if (!list || !list.length) return null;
+    var total = 0;
+    list.forEach(function (ing) {
+      var qty = parseQtyNumber(ing.quantity);
+      if (qty == null) return; // "to taste" etc. — negligible, skip
+      total += qty * gramsPerUnit(ing);
+    });
+    if (!total) return null;
+    var perServing = total / serving;
+    return Math.max(5, Math.round(perServing / 5) * 5);
+  }
+
   /* ── Header (title, tags, times, servings stepper) ────────────────── */
   function renderHeader(r) {
     var h = $("#header");
@@ -653,6 +719,11 @@
     grid.appendChild(macroCell("", m.fat_g, "g", "Fat"));
     grid.appendChild(macroCell("", m.carbs_g, "g", "Carbs"));
     card.appendChild(grid);
+    var weightG = estimateServingWeightG(r, state.serving);
+    if (weightG != null) {
+      card.appendChild(el("p", "macro-weight",
+        "≈ " + weightG + " g per serving <span class=\"macro-weight-note\">(estimated from ingredients — for weighing food)</span>"));
+    }
     card.appendChild(el("p", "macro-foot",
       "Per single serving. The serving size changes how much the recipe makes, not the macros."));
     pane.appendChild(card);
