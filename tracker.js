@@ -45,7 +45,15 @@
   // ====================================================================== //
   //  MOUNT / RENDER                                                         //
   // ====================================================================== //
-  function mount(container) { host = container; injectStyles(); render(); }
+  function mount(container) { host = container; injectStyles(); render(); scrollToRelevant(); }
+
+  // land near "now" (or the first logged food) instead of always at 12 AM
+  function scrollToRelevant() {
+    if (!host) return;
+    var target = host.querySelector(".ckt-hr.now") || host.querySelector(".ckt-hr.has");
+    if (!target) return;
+    requestAnimationFrame(function () { target.scrollIntoView({ block: "center", behavior: "auto" }); });
+  }
 
   function render() {
     if (!host) return;
@@ -70,11 +78,11 @@
     var bar = el("div", "ckt-toolbar");
     bar.appendChild(el("div", "ckt-toolbar-date", esc(S.prettyDay(selKey))));
     var actions = el("div", "ckt-toolbar-actions");
-    var today = el("button", "ckt-ico", "◎"); today.title = "Jump to today";
+    var today = el("button", "ckt-ico", "◎"); today.title = "Jump to today"; today.setAttribute("aria-label", "Jump to today");
     today.onclick = function () { selKey = S.todayKey(); render(); };
-    var fav = el("button", "ckt-ico", "★"); fav.title = "Favorite foods";
+    var fav = el("button", "ckt-ico", "★"); fav.title = "Favorite foods"; fav.setAttribute("aria-label", "Favorite foods");
     fav.onclick = function () { addSlotMs = defaultSlot(); openFavorites(); };
-    var gear = el("button", "ckt-ico", "⚙"); gear.title = "Goals";
+    var gear = el("button", "ckt-ico", "⚙"); gear.title = "Goals"; gear.setAttribute("aria-label", "Goals");
     gear.onclick = openCalculator;
     actions.appendChild(today); actions.appendChild(fav); actions.appendChild(gear);
     bar.appendChild(actions);
@@ -83,9 +91,9 @@
 
   function renderCalendar() {
     var cal = el("div", "ckt-cal");
-    var prev = el("button", "ckt-cal-nav", "‹");
+    var prev = el("button", "ckt-cal-nav", "‹"); prev.setAttribute("aria-label", "Previous week");
     prev.onclick = function () { selKey = S.addDays(selKey, -7); render(); };
-    var next = el("button", "ckt-cal-nav", "›");
+    var next = el("button", "ckt-cal-nav", "›"); next.setAttribute("aria-label", "Next week");
     next.onclick = function () { selKey = S.addDays(selKey, 7); render(); };
     var days = el("div", "ckt-cal-days");
     var start = S.mondayOf(selKey), tk = S.todayKey();
@@ -178,7 +186,7 @@
     txt.onclick = function () { addSlotMs = defaultSlot(); openSearch(); };
     bar.appendChild(txt);
     if (window.MCBarcode && MCBarcode.supported()) {
-      var scan = el("button", "ckt-find-scan", "▦"); scan.title = "Scan barcode";
+      var scan = el("button", "ckt-find-scan", "▦"); scan.title = "Scan barcode"; scan.setAttribute("aria-label", "Scan barcode");
       scan.onclick = function () { addSlotMs = defaultSlot(); openScan(); };
       bar.appendChild(scan);
     }
@@ -199,7 +207,7 @@
       var row = el("div", "ckt-hr" + (list.length ? " has" : "") + (h === nowHour ? " now" : ""));
       var rail = el("div", "ckt-hr-rail");
       rail.appendChild(el("div", "ckt-hr-lbl", S.hourLabel(h)));
-      var add = el("button", "ckt-hr-add", "+");
+      var add = el("button", "ckt-hr-add", "+"); add.setAttribute("aria-label", "Add food at " + S.hourLabel(h));
       (function (hour) { add.onclick = function () { openHourAdd(hour); }; })(h);
       rail.appendChild(add);
       row.appendChild(rail);
@@ -272,31 +280,15 @@
     var row = el("div", "ckt-step");
     row.innerHTML = '<div class="ckt-step-lbl">' + esc(label) + "</div>";
     var ctl = el("div", "ckt-step-ctl");
-    var minus = el("button", "ckt-step-btn", "−");
+    var minus = el("button", "ckt-step-btn", "−"); minus.setAttribute("aria-label", "Decrease " + label);
     var val = el("div", "ckt-step-val", String(value));
-    var plus = el("button", "ckt-step-btn", "+");
+    var plus = el("button", "ckt-step-btn", "+"); plus.setAttribute("aria-label", "Increase " + label);
     function set(v) { v = Math.max(min, Math.round(v)); val.textContent = String(v); onChange(v); }
     minus.onclick = function () { set(num(val.textContent) - step); };
     plus.onclick = function () { set(num(val.textContent) + step); };
     ctl.appendChild(minus); ctl.appendChild(val); ctl.appendChild(plus);
     row.appendChild(ctl);
     row.setVal = function (v) { val.textContent = String(Math.round(v)); };
-    return row;
-  }
-
-  function stepperFloat(label, value) {
-    var row = el("div", "ckt-step");
-    row.innerHTML = '<div class="ckt-step-lbl">' + esc(label) + "</div>";
-    var ctl = el("div", "ckt-step-ctl");
-    var minus = el("button", "ckt-step-btn", "−");
-    var val = el("div", "ckt-step-val", String(value));
-    var plus = el("button", "ckt-step-btn", "+");
-    function set(v) { v = Math.max(0.5, Math.round(v * 2) / 2); val.textContent = String(v); }
-    minus.onclick = function () { set(num(val.textContent) - 0.5); };
-    plus.onclick = function () { set(num(val.textContent) + 0.5); };
-    ctl.appendChild(minus); ctl.appendChild(val); ctl.appendChild(plus);
-    row.appendChild(ctl);
-    row.value = function () { return num(val.textContent, 1); };
     return row;
   }
 
@@ -549,7 +541,12 @@
           openManual({ source: "barcode", note: "No match for barcode " + code + ". Enter its macros manually." });
         }
       }).catch(function () { s.close(); openManual({ source: "barcode", note: "Lookup failed (offline?). Enter macros manually." }); });
-    }).catch(function (err) { alert((err && err.message) || "Could not open the scanner."); });
+    }).catch(function (err) {
+      var s = sheet("Scanner unavailable", (err && err.message) || "Could not open the scanner.");
+      var ok = el("button", "ckt-btn ckt-btn-accent", "OK");
+      ok.onclick = function () { s.close(); };
+      s.sh.appendChild(ok);
+    });
   }
 
   // ---- manual --------------------------------------------------------------
@@ -580,23 +577,6 @@
       addSlotMs = null; s.close(); render();
     };
     s.sh.appendChild(add);
-  }
-
-  // ---- edit ----------------------------------------------------------------
-  function openEdit(id) {
-    var entry = null;
-    S.entriesFor(selKey).forEach(function (e) { if (e.id === id) entry = e; });
-    if (!entry) return;
-    var s = sheet(entry.name, "Logged at " + S.timeLabel(entry.at || entry.ts || Date.now()) + " · adjust quantity or remove.");
-    var qWrap = el("div", "ckt-form"); s.sh.appendChild(qWrap);
-    var qStep = stepperFloat("Servings", num(entry.qty, 1));
-    qWrap.appendChild(qStep);
-
-    var save = el("button", "ckt-btn ckt-btn-accent", "Save");
-    save.onclick = function () { S.updateQty(selKey, id, qStep.value()); s.close(); render(); };
-    var del = el("button", "ckt-btn ckt-btn-danger", "Remove from log");
-    del.onclick = function () { S.removeEntry(selKey, id); s.close(); render(); };
-    s.sh.appendChild(save); s.sh.appendChild(del);
   }
 
   // ====================================================================== //
@@ -639,7 +619,7 @@
       d.favorites.unshift({
         name: food.name, brand: food.brand, basis: food.basis, servingLabel: food.servingLabel,
         grams: food.grams, per: food.per, nutr: food.nutr, code: food.code,
-        source: food.source || "fav", kind: food.kind || "food"
+        source: food.source || "fav"
       });
     }
     S.write(d); return i < 0;
@@ -680,7 +660,8 @@
     function keypadHtml() {
       var keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "⌫"];
       return '<div class="ckt-keypad" id="cktPad">' + keys.map(function (k) {
-        return '<button data-k="' + k + '">' + k + "</button>";
+        var label = k === "⌫" ? ' aria-label="Backspace"' : (k === "." ? ' aria-label="Decimal point"' : "");
+        return '<button data-k="' + k + '"' + label + ">" + k + "</button>";
       }).join("") + "</div>";
     }
     function refresh() {
@@ -709,7 +690,7 @@
         "</div>" +
         keypadHtml() +
         '<div class="ckt-facts-btns">' +
-          '<button class="ckt-fav' + (fav ? " on" : "") + '" id="cktFav">' + (fav ? "★" : "☆") + "</button>" +
+          '<button class="ckt-fav' + (fav ? " on" : "") + '" id="cktFav" aria-label="' + (fav ? "Remove from favorites" : "Add to favorites") + '">' + (fav ? "★" : "☆") + "</button>" +
           '<button class="ckt-btn ckt-btn-accent" id="cktLog">' + (editId ? "Update" : "Log Food") + "</button>" +
         "</div>" +
         (editId ? '<button class="ckt-btn ckt-btn-danger" id="cktDel">Remove from log</button>' : "");
@@ -762,7 +743,11 @@
     function wire() {
       $("#cktPad", s.sh).onclick = function (e) { var b = e.target.closest("[data-k]"); if (b) press(b.dataset.k); };
       $("#cktUom", s.sh).onclick = function (e) { var b = e.target.closest("[data-u]"); if (b) setUnit(b.dataset.u); };
-      $("#cktFav", s.sh).onclick = function () { toggleFav(food); var on = isFav(food); this.textContent = on ? "★" : "☆"; this.classList.toggle("on", on); };
+      $("#cktFav", s.sh).onclick = function () {
+        toggleFav(food); var on = isFav(food);
+        this.textContent = on ? "★" : "☆"; this.classList.toggle("on", on);
+        this.setAttribute("aria-label", on ? "Remove from favorites" : "Add to favorites");
+      };
       $("#cktLog", s.sh).onclick = function () {
         var m = multBase(); if (!(m > 0)) return;
         if (editId) { S.updateQty(selKey, editId, m); }
@@ -780,10 +765,9 @@
   function openFavorites() {
     addSlotMs = addSlotMs || defaultSlot();
     var s = sheet("Favorite Foods", "Quick-log the foods you eat most.");
-    var tab = "food", pending = [];
+    var pending = [];
     var wrap = el("div", "ckt-fav-wrap"); s.sh.appendChild(wrap);
     var bar = el("div", "ckt-fav-bar"); s.sh.appendChild(bar);
-    function favsOf(kind) { return getFavs().filter(function (f) { return (f.kind || "food") === kind; }); }
     function paintBar() {
       bar.innerHTML =
         '<div class="ckt-fav-count">' + pending.length + " item" + (pending.length === 1 ? "" : "s") + " added</div>" +
@@ -795,29 +779,23 @@
       };
     }
     function paint() {
-      var favs = favsOf(tab);
+      var favs = getFavs();
       wrap.innerHTML =
-        '<div class="ckt-seg ckt-fav-tabs">' +
-          '<button data-t="food"' + (tab === "food" ? ' class="on"' : "") + ">🍽 Foods</button>" +
-          '<button data-t="meal"' + (tab === "meal" ? ' class="on"' : "") + ">🥗 Meals</button>" +
-        "</div>" +
         (favs.length ? '<div class="ckt-fav-list">' + favs.map(function (f, i) {
           var per = f.per || {};
           return '<div class="ckt-fav-row" data-i="' + i + '"><div class="ckt-fav-main">' +
             '<div class="ckt-fav-name">' + esc(f.name) + "</div>" +
             '<div class="ckt-fav-macros">🔥' + fmt(per.kcal) + " · P" + fmt(per.p) + " F" + fmt(per.f) + " C" + fmt(per.c) + "</div></div>" +
-            '<button class="ckt-fav-add" data-add="' + i + '">+</button></div>';
+            '<button class="ckt-fav-add" data-add="' + i + '" aria-label="Add ' + esc(f.name) + ' to log">+</button></div>';
         }).join("") + "</div>"
-        : '<div class="ckt-results-msg">No ' + (tab === "meal" ? "saved meals" : "favorite foods") + " yet. Tap ☆ on any food’s nutrition facts to save it here.</div>");
+        : '<div class="ckt-results-msg">No favorite foods yet. Tap ☆ on any food’s nutrition facts to save it here.</div>');
       paintBar();
     }
     wrap.onclick = function (e) {
-      var t = e.target.closest("[data-t]");
-      if (t) { tab = t.dataset.t; pending = []; paint(); return; }
       var add = e.target.closest("[data-add]");
-      if (add) { var f = favsOf(tab)[+add.dataset.add]; if (f) { pending.push(f); paintBar(); add.textContent = "✓"; setTimeout(function () { add.textContent = "+"; }, 700); } return; }
+      if (add) { var f = getFavs()[+add.dataset.add]; if (f) { pending.push(f); paintBar(); add.textContent = "✓"; setTimeout(function () { add.textContent = "+"; }, 700); } return; }
       var row = e.target.closest(".ckt-fav-row");
-      if (row) { var ff = favsOf(tab)[+row.dataset.i]; if (ff) openFacts(ff, {}); }
+      if (row) { var ff = getFavs()[+row.dataset.i]; if (ff) openFacts(ff, {}); }
     };
     paint();
   }
@@ -963,7 +941,6 @@
         "color:var(--on-dark-dim);font-size:22px;cursor:pointer;font-family:inherit;}" +
       ".ckt-fav.on{color:var(--accent);border-color:var(--accent);}" +
       /* ── Favorites library (Phase 3) ── */
-      ".ckt-fav-tabs{margin-bottom:12px;}" +
       ".ckt-fav-list{display:flex;flex-direction:column;gap:8px;max-height:54vh;overflow-y:auto;}" +
       ".ckt-fav-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:11px 13px;cursor:pointer;}" +
       ".ckt-fav-main{flex:1;min-width:0;}" +
