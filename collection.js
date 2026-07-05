@@ -66,8 +66,16 @@
     function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
     return "#" + toHex(rp) + toHex(gp) + toHex(bp);
   }
-  // Mirrors icon.svg's book + page-lines motif for recipe cards with no
-  // authored icon, instead of falling back to a raw platform emoji.
+  // Recipe/category/collection icons used to be raw platform emoji, which
+  // render differently per OS and clash with icon.svg's crafted look. Every
+  // authored emoji maps to one of a small set of cream/ink line icons (same
+  // two-tone palette as icon.svg) instead of the literal glyph; anything
+  // without a mapping — a handful of one-off novelty emoji like 🎉 or 🤠 —
+  // falls back to the book/page-lines glyph below rather than forcing a bad
+  // match. Sized with width/height:1em so the same markup drops cleanly into
+  // every context that used to size the emoji via font-size (.rc-icon at
+  // 24px, .cat-icon at 32px, .plan-meal-icon/.plan-chip-icon at their own
+  // sizes) with no separate icon set needed per size.
   var DEFAULT_RECIPE_ICON =
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
       '<rect x="5" y="4" width="14" height="16" rx="2.4" fill="#F9F8F6"/>' +
@@ -75,8 +83,124 @@
       '<rect x="8" y="11.4" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.4"/>' +
       '<rect x="8" y="14.8" width="5" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
     "</svg>";
+  var RECIPE_ICON_SVGS = {
+    protein:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<ellipse cx="14.5" cy="9" rx="6" ry="5" fill="#F9F8F6"/>' +
+        '<path d="M11 12.5c-2.6 2.1-5.4 4.9-6 6.9-.4 1.5.9 2.6 2.3 2 2-.8 4.6-3.4 6.6-6.2" fill="#F9F8F6"/>' +
+        '<circle cx="6.2" cy="19.6" r="1.3" fill="#2A2C2E" fill-opacity="0.28"/>' +
+      "</svg>",
+    seafood:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<ellipse cx="10.5" cy="12" rx="7" ry="4.2" fill="#F9F8F6"/>' +
+        '<path d="M17 9.5 21.5 6.5 19.5 12 21.5 17.5 17 14.5Z" fill="#F9F8F6"/>' +
+        '<circle cx="6.8" cy="11" r="1" fill="#2A2C2E" fill-opacity="0.4"/>' +
+      "</svg>",
+    dairy:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M3 17.5 11 5 21 10.5 21 17.5Z" fill="#F9F8F6"/>' +
+        '<circle cx="14" cy="12.5" r="1.1" fill="#2A2C2E" fill-opacity="0.3"/>' +
+        '<circle cx="10.5" cy="15.5" r="0.9" fill="#2A2C2E" fill-opacity="0.3"/>' +
+        '<circle cx="17" cy="15" r="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
+      "</svg>",
+    heat:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M12 2c1.8 3 3.6 5 3.6 8.4a3.6 3.6 0 1 1-7.2 0c0-1 .3-1.8.7-2.6-.1 1.6.8 2 1.3 1 .5-1-.2-2 .2-3.8.5 1.4 1.4 1.6 1.4 0Z" fill="#F9F8F6"/>' +
+        '<path d="M9 20c1.5.8 4.5.8 6 0-1 1.5-2 2-3 2s-2-.5-3-2Z" fill="#2A2C2E" fill-opacity="0.25"/>' +
+      "</svg>",
+    herb:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M12 21c0-8 2-13 8-16-1 7-3 12-8 16Z" fill="#F9F8F6"/>' +
+        '<path d="M12 21c0-8-2-13-8-16 1 7 3 12 8 16Z" fill="#F9F8F6" fill-opacity="0.75"/>' +
+        '<path d="M12 21V9" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.2"/>' +
+      "</svg>",
+    citrus:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<circle cx="12" cy="12" r="9" fill="#F9F8F6"/>' +
+        '<path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3 6.3 17.7" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1"/>' +
+      "</svg>",
+    berry:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<circle cx="9" cy="14" r="4" fill="#F9F8F6"/>' +
+        '<circle cx="15" cy="14" r="4" fill="#F9F8F6"/>' +
+        '<circle cx="12" cy="9.5" r="4" fill="#F9F8F6"/>' +
+        '<path d="M12 5.5c1-1.5 2.5-2 4-1.7" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.3" stroke-linecap="round"/>' +
+      "</svg>",
+    vegetable:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M9 8c4-4 9-5.5 11-3.5S16 10 12 14Z" fill="#2A2C2E" fill-opacity="0.22"/>' +
+        '<path d="M4 20c-1-4 1-9 5-11s7 1 6 5-7 8-11 6Z" fill="#F9F8F6"/>' +
+      "</svg>",
+    grain:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M3 11h18a9 6 0 0 1-18 0Z" fill="#F9F8F6"/>' +
+        '<path d="M6 8c1-1.5 2-2 2-3.5M11 7c1-1.5 2-2 2-3.5M16 8c1-1.5 2-2 2-3.5" stroke="#2A2C2E" stroke-opacity="0.25" stroke-width="1.3" stroke-linecap="round"/>' +
+      "</svg>",
+    sauce:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M7 3h7l-1 5 4 3.5c2 1.7 1.6 5.5-2.5 6.5-4.5 1.1-9.5-1-9.5-5.5 0-2.5 1.5-4 3-5Z" fill="#F9F8F6"/>' +
+        '<circle cx="12.5" cy="15" r="1" fill="#2A2C2E" fill-opacity="0.28"/>' +
+      "</svg>",
+    bread:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M4 13c0-5 3.6-8 8-8s8 3 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" fill="#F9F8F6"/>' +
+        '<path d="M8 8.5v5M12 7.5v6M16 8.5v5" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1.3" stroke-linecap="round"/>' +
+      "</svg>",
+    dessert:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M4 20 12 4l8 16Z" fill="#F9F8F6"/>' +
+        '<path d="M7 14h10M8.5 17h7" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1.3"/>' +
+        '<circle cx="12" cy="4" r="1.1" fill="#2A2C2E" fill-opacity="0.3"/>' +
+      "</svg>",
+    egg:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M12 5c4 0 8 3 8 7.5S17 20 12 20 3 16 3 12.5C3 8.5 7 5 12 5Z" fill="#F9F8F6" fill-opacity="0.85"/>' +
+        '<circle cx="13" cy="12" r="4" fill="#F9F8F6"/>' +
+        '<circle cx="13" cy="12" r="4" fill="#2A2C2E" fill-opacity="0.12"/>' +
+      "</svg>",
+    drink:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M5 8h11v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" fill="#F9F8F6"/>' +
+        '<path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" stroke="#F9F8F6" stroke-width="1.6" fill="none"/>' +
+        '<path d="M8 5.5c.4-.8-.2-1.3 0-2M11.5 5.5c.4-.8-.2-1.3 0-2" stroke="#2A2C2E" stroke-opacity="0.25" stroke-width="1.1" stroke-linecap="round"/>' +
+      "</svg>",
+    bowl:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M3 10.5h18a9 7.5 0 0 1-18 0Z" fill="#F9F8F6"/>' +
+        '<path d="M3 10.5a9 3 0 0 1 18 0" fill="#2A2C2E" fill-opacity="0.12"/>' +
+      "</svg>",
+    fruit:
+      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
+        '<path d="M12 9c3.5-2 7 .3 7 4.5S15.5 21 12 21s-7-3.3-7-7.5S8.5 7 12 9Z" fill="#F9F8F6"/>' +
+        '<path d="M12 9V5.5c1-1 2-1.2 3-1" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
+      "</svg>"
+  };
+  // Every emoji actually authored across recipes-data.js's 226 recipes plus
+  // CATEGORY_META/COLLECTIONS, grouped into the icon set above. A few
+  // one-off novelty glyphs (🌈🌌🎉🤠💍🌀🌴) have no sensible food mapping and
+  // are left out on purpose — they fall through to DEFAULT_RECIPE_ICON.
+  var EMOJI_ICON_GROUP = {
+    "🌶️": "heat", "🍯": "sauce", "🧀": "dairy", "🍋": "citrus", "🌮": "bread",
+    "🥗": "bowl", "🍗": "protein", "🐟": "seafood", "🍤": "seafood", "🍫": "dessert",
+    "🍓": "berry", "🥢": "grain", "🥩": "protein", "🍝": "grain", "🔥": "heat",
+    "🧄": "herb", "🥪": "bread", "🫑": "vegetable", "🥣": "bowl", "🥑": "vegetable",
+    "🍚": "grain", "🌯": "bread", "🌿": "herb", "🥦": "vegetable", "🍳": "egg",
+    "🍕": "bread", "🧈": "dairy", "🫐": "berry", "🍪": "dessert", "🥔": "vegetable",
+    "🧆": "protein", "🍖": "protein", "🥧": "dessert", "🍔": "bread", "🦐": "seafood",
+    "🍲": "bowl", "🍜": "grain", "🍍": "fruit", "🥜": "vegetable", "🍅": "vegetable",
+    "🌽": "vegetable", "🫘": "vegetable", "🥙": "bread", "🍰": "dessert", "🧂": "sauce",
+    "🍊": "citrus", "🍁": "herb", "🧇": "bread", "🍛": "grain", "🌭": "bread",
+    "🥬": "vegetable", "🥘": "bowl", "🎃": "vegetable", "🍌": "fruit", "🍨": "dessert",
+    "🍎": "fruit", "🍭": "dessert", "🥭": "fruit", "🥟": "bread", "🍒": "berry",
+    "🥨": "bread", "🍑": "fruit", "🥝": "fruit", "🦀": "seafood", "🦃": "protein",
+    "🍠": "vegetable", "🍢": "protein", "🍩": "dessert", "🥕": "vegetable", "☕": "drink",
+    "🍇": "fruit", "🫒": "vegetable", "🌱": "herb", "🍣": "seafood", "🥥": "fruit",
+    "🥖": "bread", "🥡": "bowl", "🍦": "dessert", "🍱": "bowl"
+  };
   function recipeIconHtml(icon) {
-    return icon ? esc(icon) : DEFAULT_RECIPE_ICON;
+    if (!icon) return DEFAULT_RECIPE_ICON;
+    var group = EMOJI_ICON_GROUP[icon];
+    return group ? RECIPE_ICON_SVGS[group] : DEFAULT_RECIPE_ICON;
   }
 
   /* ── Favorites store (same key as cookbook-home.js) ───────────────── */

@@ -156,17 +156,20 @@
     return sum;
   }
 
+  // A conic-gradient ring (pure CSS, no library) replaces the old flat 3px
+  // bar — the app already had a well-considered three-color macro palette
+  // (--macro-protein/-fat/-carb) but nothing but text/swatches to show it
+  // with; this is the "premium tracker" visual cue that palette was missing.
   function metric(ic, have, goal, color) {
     var pct = goal ? Math.min(100, Math.round((have / goal) * 100)) : 0;
     var over = goal && have > goal;
+    var ringColor = over ? "#C0473B" : color;
     var m = el("div", "ckt-met");
     m.innerHTML =
-      '<div class="ckt-met-top">' +
-        '<span class="ckt-met-ic" style="color:' + color + '">' + ic + "</span>" +
-        '<span class="ckt-met-val">' + have + "</span>" +
-        '<span class="ckt-met-goal">/' + (goal || "—") + "</span>" +
+      '<div class="ckt-met-ring" style="--pct:' + pct + '%;--rc:' + ringColor + '">' +
+        '<div class="ckt-met-ring-hole"><span class="ckt-met-ring-ic" style="color:' + color + '">' + ic + "</span></div>" +
       "</div>" +
-      '<div class="ckt-met-track"><div class="ckt-met-fill" style="width:' + pct + "%;background:" + (over ? "#C0473B" : color) + '"></div></div>';
+      '<div class="ckt-met-val">' + have + '<span class="ckt-met-goal">/' + (goal || "—") + "</span></div>";
     return m;
   }
 
@@ -987,14 +990,16 @@
       /* summary (cream card) */
       ".ckt-sum{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);" +
         "border-radius:var(--r-lg);padding:12px;margin-bottom:14px;cursor:pointer;}" +
-      ".ckt-sum-metrics{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;min-width:0;}" +
-      ".ckt-met{min-width:0;}" +
-      ".ckt-met-top{display:flex;align-items:baseline;gap:2px;white-space:nowrap;overflow:hidden;}" +
-      ".ckt-met-ic{font-size:11px;font-weight:900;flex:0 0 auto;}" +
-      ".ckt-met-val{font-size:13px;font-weight:900;color:var(--ink);}" +
+      ".ckt-sum-metrics{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-width:0;}" +
+      ".ckt-met{min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;}" +
+      ".ckt-met-ring{width:36px;height:36px;border-radius:50%;flex:0 0 auto;" +
+        "background:conic-gradient(var(--rc) var(--pct), rgba(0,0,0,0.09) 0);" +
+        "display:flex;align-items:center;justify-content:center;transition:background 0.3s ease;}" +
+      ".ckt-met-ring-hole{width:26px;height:26px;border-radius:50%;background:var(--surface);" +
+        "display:flex;align-items:center;justify-content:center;}" +
+      ".ckt-met-ring-ic{font-size:10px;font-weight:900;line-height:1;}" +
+      ".ckt-met-val{font-size:11.5px;font-weight:900;color:var(--ink);white-space:nowrap;}" +
       ".ckt-met-goal{font-size:10px;color:var(--ink-dim);font-weight:700;}" +
-      ".ckt-met-track{height:3px;border-radius:2px;background:rgba(0,0,0,0.08);margin-top:6px;overflow:hidden;}" +
-      ".ckt-met-fill{height:100%;border-radius:2px;transition:width 0.3s ease;}" +
       ".ckt-sum-exp{flex:0 0 auto;color:var(--ink-dim);font-size:20px;font-weight:800;line-height:1;}" +
       /* find bar (cream) */
       ".ckt-find{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);" +
@@ -1120,7 +1125,7 @@
       ".ckt-fav-count{flex:1;font-size:13px;font-weight:800;color:var(--on-dark-dim);}" +
       ".ckt-fav-log{width:auto;flex:0 0 auto;padding:13px 26px;}" +
       ".ckt-fav-log:disabled{opacity:0.4;}" +
-      "@media (prefers-reduced-motion: reduce){.ckt-overlay,.ckt-sheet,.ckt-met-fill{transition:none;}}";
+      "@media (prefers-reduced-motion: reduce){.ckt-overlay,.ckt-sheet,.ckt-met-ring{transition:none;}}";
     var st = document.createElement("style");
     st.id = "ckt-styles"; st.textContent = css;
     document.head.appendChild(st);
