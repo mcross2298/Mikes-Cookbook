@@ -490,6 +490,20 @@
     savePantry(set);
     return set.has(k);
   }
+  // Pantry data previously only suppressed grocery-list rows (write-only past
+  // that one screen) — this puts it to work a second way: how many of a
+  // recipe's ingredients are already staples, so "cook what you have" can be
+  // an actual browse filter on the Recipes screen, not just a shopping aid.
+  function pantryMatchInfo(r) {
+    var pantry = loadPantry();
+    var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
+    var by = r.ingredients_by_serving || {};
+    var list = by["serving_" + tier] || by["serving_" + (r.native_serving || 2)] || by[Object.keys(by)[0]] || [];
+    if (!list.length) return null;
+    var have = 0;
+    list.forEach(function (ing) { if (pantry.has(pantryKey(ing.item))) have++; });
+    return { total: list.length, have: have, need: list.length - have };
+  }
 
   /* ── Week history — archive finished plans, restore with one tap ──────
      Up to 8 weeks stored as { savedAt, label, meals[] }. "Clear week"
@@ -651,6 +665,31 @@
     logMealToTracker(m);
     savePlan(p);
     return p.meals.length > 0 && p.meals.every(function (x) { return x.completed; });
+  }
+
+  /* ── Post-log celebration ─────────────────────────────────────────────
+     Completing a plan meal used to just silently flip a checkbox — no
+     feedback moment for what's otherwise the app's core "did I actually do
+     the thing" action. beforeTotals is a snapshot taken by the caller BEFORE
+     toggleMealCompleted() runs, so this can tell "logging this meal is what
+     just pushed a macro over goal" apart from an ordinary log. */
+  function celebrateMealLogged(beforeTotals) {
+    var msg = "Logged for today.";
+    if (window.MCTrackerStore && beforeTotals) {
+      var goals = MCTrackerStore.getGoals();
+      var after = MCTrackerStore.totalsOf(MCTrackerStore.entriesFor(MCTrackerStore.todayKey()));
+      if (goals && goals.p && beforeTotals.p < goals.p && after.p >= goals.p) {
+        msg = "🎯 Protein goal hit for today!";
+      } else if (goals && goals.kcal && beforeTotals.kcal < goals.kcal && after.kcal >= goals.kcal) {
+        msg = "🎯 Calorie goal hit for today!";
+      }
+    }
+    plannerToast(msg);
+  }
+  function todayTotalsSnapshot() {
+    return window.MCTrackerStore
+      ? MCTrackerStore.totalsOf(MCTrackerStore.entriesFor(MCTrackerStore.todayKey()))
+      : null;
   }
 
   /* ── Custom grocery items — user-typed additions outside of recipes ── */
@@ -1360,11 +1399,22 @@
     var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
       (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
 
+    // Pantry-match badge — only passed in from the Recipes screen's
+    // "Low-shopping" filter, so this card doesn't change anywhere else.
+    var pantryBadge = "";
+    if (opts.pantryInfo) {
+      pantryBadge = '<div class="rc-pantry-badge">' +
+        (opts.pantryInfo.need === 0 ? "Have everything"
+          : "Need " + opts.pantryInfo.need + (opts.pantryInfo.need === 1 ? " item" : " items")) +
+        "</div>";
+    }
+
     card.innerHTML =
       '<div class="rc-band"><span class="rc-icon">' + recipeIconHtml(r.icon) + "</span></div>" +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
+        pantryBadge +
       "</div>";
 
     // A heart in the card's upper-right corner — favorite straight from the
@@ -1777,8 +1827,9 @@
         var logBtn = el("button", "today-meal-log", "Log");
         logBtn.type = "button";
         logBtn.addEventListener("click", function () {
+          var before = todayTotalsSnapshot();
           toggleMealCompleted(m.uid);
-          plannerToast("Logged “" + r.title + "” to today's tracker");
+          celebrateMealLogged(before);
           renderHome();
         });
         row.appendChild(logBtn);
@@ -2065,6 +2116,14 @@
   // keyboard opens) the moment it renders, instead of landing on a static list.
   var focusRecipesSearch = false;
 
+  // Persists only for the JS runtime (like catState/plannerState) — resets
+  // to off on a fresh load rather than sticking on silently across visits.
+  var recipesState = { lowShopping: false };
+  // "Need 2 or fewer" keeps the filter meaningfully narrower than "browse
+  // everything," while still surfacing real dishes, not just the ones with
+  // the shortest ingredient lists.
+  var LOW_SHOPPING_MAX_NEED = 2;
+
   function renderRecipes() {
     var s = $("#screen-recipes");
     s.innerHTML = "";
@@ -2081,6 +2140,23 @@
     searchWrap.appendChild(box);
     s.appendChild(searchWrap);
 
+    // "Cook what you have" — filters/sorts by pantry-staple ingredient
+    // overlap, so pantry data (previously write-only, feeding only the
+    // grocery list) does double duty as a browse filter here.
+    var filterBar = el("div", "recipe-filter-bar");
+    var pantryToggle = el("button", "pantry-filter-toggle" + (recipesState.lowShopping ? " on" : ""),
+      "🧂 Low-shopping");
+    pantryToggle.type = "button";
+    pantryToggle.setAttribute("aria-pressed", recipesState.lowShopping ? "true" : "false");
+    pantryToggle.addEventListener("click", function () {
+      recipesState.lowShopping = !recipesState.lowShopping;
+      pantryToggle.classList.toggle("on", recipesState.lowShopping);
+      pantryToggle.setAttribute("aria-pressed", recipesState.lowShopping ? "true" : "false");
+      paint();
+    });
+    filterBar.appendChild(pantryToggle);
+    s.appendChild(filterBar);
+
     if (focusRecipesSearch) {
       focusRecipesSearch = false;
       requestAnimationFrame(function () { box.focus(); });
@@ -2093,7 +2169,7 @@
       var q = box.value.trim();
       results.innerHTML = "";
 
-      if (!q) {                                       // default: collection cards
+      if (!q && !recipesState.lowShopping) {           // default: collection cards
         var wrap = el("div", "cards-wrap");
         wrap.appendChild(el("div", "tier-label", "★ Collections"));
         collections().forEach(function (c) { wrap.appendChild(collectionCard(c)); });
@@ -2101,16 +2177,31 @@
         return;
       }
 
-      var list = recipes().filter(function (r) { return recipesMatch(r, q); });
+      var list = q ? recipes().filter(function (r) { return recipesMatch(r, q); }) : recipes().slice();
+
+      if (recipesState.lowShopping) {
+        list = list
+          .map(function (r) { return { r: r, info: pantryMatchInfo(r) }; })
+          .filter(function (x) { return x.info && x.info.need <= LOW_SHOPPING_MAX_NEED; })
+          .sort(function (a, b) { return a.info.need - b.info.need; })
+          .map(function (x) { return x.r; });
+      }
+
       if (!list.length) {
         results.appendChild(el("div", "empty",
-          '<span class="empty-emoji">🔍</span>No recipes match your search.'));
+          '<span class="empty-emoji">' + (recipesState.lowShopping ? "🧂" : "🔍") + "</span>" +
+          (recipesState.lowShopping
+            ? "Nothing needs " + LOW_SHOPPING_MAX_NEED + " or fewer items you don't already have — mark more staples from the Grocery tab, or turn this filter off."
+            : "No recipes match your search.")));
         return;
       }
       results.appendChild(el("div", "browse-count",
-        list.length + (list.length === 1 ? " recipe" : " recipes")));
+        list.length + (list.length === 1 ? " recipe" : " recipes") +
+        (recipesState.lowShopping ? " · low-shopping" : "")));
       var grid = el("div", "col-grid");
-      list.forEach(function (r) { grid.appendChild(recipeCard(r)); });
+      list.forEach(function (r) {
+        grid.appendChild(recipeCard(r, { pantryInfo: recipesState.lowShopping ? pantryMatchInfo(r) : null }));
+      });
       results.appendChild(grid);
     }
 
@@ -2389,7 +2480,10 @@
     b.setAttribute("aria-label", m.completed ? "Mark meal not completed" : "Mark meal completed");
     b.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation();
+      var completing = !m.completed;
+      var before = completing ? todayTotalsSnapshot() : null;
       var weekJustFinished = toggleMealCompleted(m.uid);
+      if (completing) celebrateMealLogged(before);
       refresh();
       if (weekJustFinished) openSaveWeekPrompt();
     });
