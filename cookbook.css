@@ -407,6 +407,10 @@ body {
   line-height: 1.2;
 }
 .grocery-row.done .grocery-qty { color: var(--ink-dim); }
+/* Brief fade while a checked row drops to the bottom of its section (see
+   collapseGroceryRow in cookbook-home.js) so the reorder reads as a settle,
+   not a jump-cut. */
+.grocery-row.row-settling { opacity: 0.35; transition: opacity 220ms var(--ease-out); }
 .grocery-row .check-text { flex: 1; }
 
 /* ── INSTRUCTION GUIDE (stepper) ──────────────────────────────────── */
