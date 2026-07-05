@@ -59,6 +59,8 @@
     root.appendChild(renderCalendar());
     root.appendChild(renderSummary(totals, goals));
     root.appendChild(renderTrend());
+    var recentEl = renderRecent();
+    if (recentEl) root.appendChild(recentEl);
     root.appendChild(renderFind());
     root.appendChild(renderTimeline(entries));
     host.appendChild(root);
@@ -148,6 +150,25 @@
       '<div class="ckt-trend-h">Last 7 days · calories</div>' +
       MCChart.bars(days.map(function (d) { return { label: d.label, value: d.value }; }), { height: 56, highlight: hi, color: COL.kcal });
     return card;
+  }
+
+  function renderRecent() {
+    var recents = S.recentFoods(8);
+    if (!recents.length) return null;
+    var wrap = el("div", "ckt-recent");
+    wrap.appendChild(el("div", "ckt-recent-h", "Recent & Frequent"));
+    var row = el("div", "ckt-recent-row");
+    recents.forEach(function (e) {
+      var per = e.per || {};
+      var chip = el("button", "ckt-recent-chip");
+      chip.innerHTML =
+        '<div class="ckt-recent-name">' + esc(e.name) + "</div>" +
+        '<div class="ckt-recent-kcal">' + Math.round(num(per.kcal)) + " kcal</div>";
+      chip.onclick = function () { addSlotMs = defaultSlot(); openFacts(foodFromEntry(e), {}); };
+      row.appendChild(chip);
+    });
+    wrap.appendChild(row);
+    return wrap;
   }
 
   function renderFind() {
@@ -412,13 +433,49 @@
   }
 
   // ---- search --------------------------------------------------------------
+  function queryTokens(q) { return q.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean); }
+
   function tokenFilter(items, q) {
-    var tokens = q.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+    var tokens = queryTokens(q);
     if (tokens.length <= 1) return items;
     var threshold = tokens.length >= 4 ? tokens.length : Math.ceil(tokens.length / 2);
     var scored = items.map(function (it) {
       var hay = ((it.name || "") + " " + (it.brand || "")).toLowerCase();
       var score = tokens.filter(function (t) { return hay.indexOf(t) >= 0; }).length;
+      return { item: it, score: score };
+    }).filter(function (x) { return x.score >= threshold; });
+    scored.sort(function (a, b) { return b.score - a.score; });
+    return scored.map(function (x) { return x.item; });
+  }
+
+  // edit distance — typo-tolerant fallback when substring matching finds nothing
+  function levenshtein(a, b) {
+    a = a || ""; b = b || "";
+    var m = a.length, n = b.length;
+    if (!m) return n; if (!n) return m;
+    var prev = new Array(n + 1), cur = new Array(n + 1);
+    for (var j = 0; j <= n; j++) prev[j] = j;
+    for (var i = 1; i <= m; i++) {
+      cur[0] = i;
+      for (var j2 = 1; j2 <= n; j2++) {
+        var cost = a.charCodeAt(i - 1) === b.charCodeAt(j2 - 1) ? 0 : 1;
+        cur[j2] = Math.min(prev[j2] + 1, cur[j2 - 1] + 1, prev[j2 - 1] + cost);
+      }
+      var tmp = prev; prev = cur; cur = tmp;
+    }
+    return prev[n];
+  }
+  function fuzzyTokenMatch(hay, token) {
+    var maxDist = token.length <= 4 ? 1 : (token.length <= 8 ? 2 : 3);
+    var words = hay.split(/\s+/).filter(Boolean);
+    for (var i = 0; i < words.length; i++) { if (levenshtein(words[i], token) <= maxDist) return true; }
+    return false;
+  }
+  function fuzzyFilter(items, tokens) {
+    var threshold = tokens.length >= 4 ? tokens.length : Math.ceil(tokens.length / 2);
+    var scored = items.map(function (it) {
+      var hay = ((it.name || "") + " " + (it.brand || "")).toLowerCase();
+      var score = tokens.filter(function (t) { return hay.indexOf(t) >= 0 || fuzzyTokenMatch(hay, t); }).length;
       return { item: it, score: score };
     }).filter(function (x) { return x.score >= threshold; });
     scored.sort(function (a, b) { return b.score - a.score; });
@@ -444,9 +501,13 @@
       if (q.length < 2) { showEmpty(); return; }
       results.innerHTML = '<div class="ckt-results-msg">Searching…</div>';
       MCFoodAPI.search(q).then(function (items) {
+        var tokens = queryTokens(q);
         var filtered = tokenFilter(items, q);
+        if (!filtered.length && items.length && tokens.length > 1) {
+          filtered = fuzzyFilter(items, tokens);
+        }
         if (!filtered.length) {
-          var msg = items.length && q.split(/\s+/).length > 1
+          var msg = items.length && tokens.length > 1
             ? "No exact matches — try fewer keywords."
             : "No matches. Try a different term or add it manually.";
           results.innerHTML = '<div class="ckt-results-msg">' + esc(msg) + "</div>";
@@ -801,6 +862,14 @@
       /* 7-day trend (cream) */
       ".ckt-trend{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px;margin-bottom:14px;}" +
       ".ckt-trend-h{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;}" +
+      /* recent & frequent foods */
+      ".ckt-recent{margin-bottom:14px;}" +
+      ".ckt-recent-h{font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--on-dark-dim);margin-bottom:8px;}" +
+      ".ckt-recent-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;}" +
+      ".ckt-recent-chip{flex:0 0 auto;min-width:112px;max-width:150px;background:var(--surface);border:1px solid var(--line);" +
+        "border-radius:var(--r-md);padding:9px 12px;text-align:left;cursor:pointer;font-family:inherit;}" +
+      ".ckt-recent-name{font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+      ".ckt-recent-kcal{font-size:11px;font-weight:700;color:var(--ink-dim);margin-top:3px;}" +
       /* find bar (cream) */
       ".ckt-find{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);" +
         "border-radius:var(--r-md);padding:10px 12px;margin-bottom:16px;}" +

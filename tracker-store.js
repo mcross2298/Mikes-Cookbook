@@ -106,13 +106,31 @@
   }
   function entriesFor(dayKey) { return getDay(read(), dayKey).entries; }
 
+  // most-logged foods first, ties broken by most recent; for quick re-add
+  function recentFoods(limit) {
+    var days = read().days || {};
+    var map = {};
+    Object.keys(days).forEach(function (dk) {
+      (days[dk].entries || []).forEach(function (e) {
+        var key = e.code ? ("c:" + e.code) : ("n:" + String(e.name).toLowerCase());
+        var ts = e.ts || e.at || 0;
+        var rec = map[key];
+        if (!rec) { map[key] = { entry: e, count: 1, lastTs: ts }; }
+        else { rec.count++; if (ts > rec.lastTs) { rec.lastTs = ts; rec.entry = e; } }
+      });
+    });
+    var list = Object.keys(map).map(function (k) { return map[k]; });
+    list.sort(function (a, b) { return b.count - a.count || b.lastTs - a.lastTs; });
+    return list.slice(0, limit || 8).map(function (x) { return x.entry; });
+  }
+
   window.MCTrackerStore = {
     KEY: KEY,
     num: num,
     read: read, write: write, getDay: getDay,
     keyFromDate: keyFromDate, dateFromKey: dateFromKey, todayKey: todayKey,
     addDays: addDays, mondayOf: mondayOf, hourLabel: hourLabel, timeLabel: timeLabel, prettyDay: prettyDay,
-    totalsOf: totalsOf, entriesFor: entriesFor,
+    totalsOf: totalsOf, entriesFor: entriesFor, recentFoods: recentFoods,
     getGoals: getGoals, getProfile: getProfile, saveGoals: saveGoals, latestWeightLb: latestWeightLb,
     addEntry: addEntry, updateQty: updateQty, removeEntry: removeEntry
   };
