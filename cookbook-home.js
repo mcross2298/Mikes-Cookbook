@@ -666,6 +666,44 @@
     return ITEM_ALIASES[norm] || norm;
   }
 
+  // ── Purchase-unit rounding ────────────────────────────────────────────
+  // A recipe's cooking measurement ("1/4 cup", "1 tbsp") isn't how the item
+  // is actually bought. Two independent rules, both round UP (never down —
+  // it's always safe to have a little extra):
+  //
+  // 1. Discrete units (a size word, a package word, or no unit at all) can't
+  //    be bought fractionally — "1/2 small" onion means grab 1. Any unit not
+  //    on this list is a real cooking measurement (g, ml, tsp not otherwise
+  //    converted, etc.) and is left as the merged amount, unrounded.
+  // 2. A curated list of pantry items that are always bought as a single
+  //    whole product regardless of how much the recipe calls for — a
+  //    seasoning blend is a packet, guacamole is a tub — override the whole
+  //    line to "1 <purchase unit>". Deliberately conservative: only named
+  //    matches or an explicit "season(ing)" in the item name qualify: this
+  //    never applies to a normal bulk ingredient (olive oil, honey, rice…)
+  //    just because a fraction looks awkward — the rest of buildGrocery
+  //    already leaves those as their real called-for amount.
+  var DISCRETE_UNIT_RE = /^(|small|medium|large|whole)$|\b(packets?|sachets?|cans?|jars?|boxe?s?|bags?|bottles?|containers?|scoops?|packs?)\b/i;
+  function isDiscreteUnit(unit) {
+    return DISCRETE_UNIT_RE.test((unit || "").trim().toLowerCase());
+  }
+  var PANTRY_PURCHASE_UNITS = {
+    "ranch dip mix": "packet",
+    "taco seasoning": "packet",
+    "guacamole": "container",
+    "hummus": "container",
+    "salsa": "container",
+    "prepared salsa": "container",
+    "pesto": "container",
+    "basil pesto": "container"
+  };
+  function purchaseUnitFor(item) {
+    var norm = groceryMergeName(item);
+    if (PANTRY_PURCHASE_UNITS[norm]) return PANTRY_PURCHASE_UNITS[norm];
+    if (/season/i.test(item)) return "packet";
+    return null;
+  }
+
   // Build the combined shopping list across every planned meal. Quantities for
   // the SAME item are merged into per-item buckets: amounts in a compatible
   // unit family are converted to a common base and summed; incompatible units
@@ -727,14 +765,18 @@
             if (bk.kind === "conv") {
               if (bk.hasNum && bk.base > 0) parts.push(prettyMeasure(bk.base, bk.cls));
             } else if (bk.hasNum && bk.sum > 0) {
-              parts.push(prettyQty(bk.sum) + (bk.unit ? " " + bk.unit : ""));
+              var shown = isDiscreteUnit(bk.unit) ? Math.ceil(bk.sum - 1e-9) : prettyQty(bk.sum);
+              parts.push(shown + (bk.unit ? " " + bk.unit : ""));
             }
           });
           if (it.texts.length) {
             var uniq = it.texts.filter(function (t, i) { return it.texts.indexOf(t) === i; });
             parts.push(uniq.join(", "));
           }
-          return { key: it.key, item: it.item, qty: parts.join(" · "), mealUids: it.mealUids };
+          var qty = parts.join(" · ");
+          var pu = parts.length ? purchaseUnitFor(it.item) : null;
+          if (pu) qty = "1 " + pu;
+          return { key: it.key, item: it.item, qty: qty, mealUids: it.mealUids };
         })
       };
     });
@@ -2267,6 +2309,29 @@
     }
   }
 
+  // Auto-collapse: a checked row drops to the bottom of its own section (the
+  // category it's already grouped under, or the pantry/made list), leaving
+  // the still-need-to-buy rows together at the top. Un-checking reinserts it
+  // just above the first still-checked row rather than restoring its exact
+  // original position — good enough since shopping only rarely un-checks.
+  function collapseGroceryRow(rowEl, isDone) {
+    var parent = rowEl.parentNode;
+    if (!parent) return;
+    rowEl.classList.add("row-settling");
+    window.setTimeout(function () {
+      if (isDone) {
+        parent.appendChild(rowEl);
+      } else {
+        var kids = parent.children, firstDone = null;
+        for (var i = 0; i < kids.length; i++) {
+          if (kids[i] !== rowEl && kids[i].classList.contains("done")) { firstDone = kids[i]; break; }
+        }
+        if (firstDone) parent.insertBefore(rowEl, firstDone);
+      }
+      rowEl.classList.remove("row-settling");
+    }, 220);
+  }
+
   function groceryRow(row, checked, opts) {
     opts = opts || {};
     var isDone = checked.has(row.key);
@@ -2278,9 +2343,11 @@
       '<span class="check-text">' + esc(row.item) + "</span>";
     el2.addEventListener("click", function () {
       var set = loadGroc();
-      if (set.has(row.key)) { set.delete(row.key); el2.classList.remove("done"); }
-      else { set.add(row.key); el2.classList.add("done"); }
+      var nowDone = !set.has(row.key);
+      if (nowDone) set.add(row.key); else set.delete(row.key);
+      el2.classList.toggle("done", nowDone);
       saveGroc(set);
+      collapseGroceryRow(el2, nowDone);
     });
     // Staple toggle: lift an "always have" item off the buy list (or send a
     // staple back to it). Stops propagation so it never toggles the check-off.

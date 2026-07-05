@@ -776,6 +776,27 @@
     });
     pane.appendChild(card);
   }
+  // Auto-collapse: a checked row drops to the bottom of its own category
+  // section, leaving the still-need-to-buy rows together at the top.
+  // Un-checking reinserts it just above the first still-checked row rather
+  // than restoring its exact original position.
+  function collapseGroceryRow(rowEl, isDone) {
+    var parent = rowEl.parentNode;
+    if (!parent) return;
+    rowEl.classList.add("row-settling");
+    window.setTimeout(function () {
+      if (isDone) {
+        parent.appendChild(rowEl);
+      } else {
+        var kids = parent.children, firstDone = null;
+        for (var i = 0; i < kids.length; i++) {
+          if (kids[i] !== rowEl && kids[i].classList.contains("done")) { firstDone = kids[i]; break; }
+        }
+        if (firstDone) parent.insertBefore(rowEl, firstDone);
+      }
+      rowEl.classList.remove("row-settling");
+    }, 220);
+  }
   function groceryRow(r, ing, idx, done) {
     var isDone = done.has(idx);
     var row = el("div", "check-row grocery-row" + (isDone ? " done" : ""));
@@ -787,9 +808,11 @@
       '<span class="check-text">' + esc(ing.item) + "</span>";
     row.addEventListener("click", function () {
       var set = loadSet(r.recipe_id, state.serving, "grocery");
-      if (set.has(idx)) { set.delete(idx); row.classList.remove("done"); }
-      else { set.add(idx); row.classList.add("done"); }
+      var nowDone = !set.has(idx);
+      if (nowDone) set.add(idx); else set.delete(idx);
+      row.classList.toggle("done", nowDone);
       saveSet(r.recipe_id, state.serving, "grocery", set);
+      collapseGroceryRow(row, nowDone);
     });
     return row;
   }
