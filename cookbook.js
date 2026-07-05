@@ -240,6 +240,27 @@
     return set.has(id);
   }
 
+  /* ── This Week planner (shared store with cookbook-home.js) ────────
+     recipe.html doesn't load cookbook-home.js, so this mirrors just enough
+     of its addMeal() shape ({uid,id,serving,day,slot,completed,completedAt}
+     in mc-cookbook:mealplan) to add a recipe from the detail page without
+     scheduling it to a day — the planner's own "Add a meal" flow still owns
+     day/slot assignment. */
+  var PLAN_KEY = "mc-cookbook:mealplan";
+  function addToPlan(r, serving) {
+    var p;
+    try { p = JSON.parse(localStorage.getItem(PLAN_KEY) || "null"); } catch (e) { p = null; }
+    if (!p || !Array.isArray(p.meals)) p = { meals: [] };
+    p.meals.push({
+      uid: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      id: r.recipe_id,
+      serving: serving || nativeServing(r),
+      day: null, slot: null,
+      completed: false, completedAt: null
+    });
+    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+  }
+
   /* ── Persistence ──────────────────────────────────────────────────── */
   function storeKey(recipeId, serving, kind) {
     return "mc-cookbook:" + recipeId + ":s" + serving + ":" + kind;
@@ -635,7 +656,31 @@
       heart.innerHTML = favLabel(on);
       pop(heart);
     });
-    nav.appendChild(heart);
+
+    // One-tap plan-add, right beside the heart — previously the only way onto
+    // This Week's plan was leaving the recipe, going Home, and re-searching
+    // for it by name in the planner's picker.
+    var planBtn = el("button", "plan-toggle r-plan", "+ Week");
+    planBtn.type = "button";
+    planBtn.setAttribute("aria-label", "Add to This Week");
+    var planBtnTimer = null;
+    planBtn.addEventListener("click", function () {
+      addToPlan(r, state.serving);
+      planBtn.classList.add("added");
+      planBtn.textContent = "Added";
+      pop(planBtn);
+      toast("Added to This Week — open the Planner to schedule it");
+      clearTimeout(planBtnTimer);
+      planBtnTimer = setTimeout(function () {
+        planBtn.classList.remove("added");
+        planBtn.textContent = "+ Week";
+      }, 1800);
+    });
+
+    var actions = el("div", "r-nav-actions");
+    actions.appendChild(heart);
+    actions.appendChild(planBtn);
+    nav.appendChild(actions);
     h.appendChild(nav);
 
     var eyebrow = el("div", "r-eyebrow");

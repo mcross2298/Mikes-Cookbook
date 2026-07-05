@@ -1080,6 +1080,22 @@ body.cooking .back-fab { display: none; }
 @keyframes heartPop { 0% { transform: scale(1); } 35% { transform: scale(1.35); } 100% { transform: scale(1); } }
 @keyframes heartBurst { 0% { opacity: 0.5; transform: scale(0.6); } 100% { opacity: 0; transform: scale(1.8); } }
 
+/* One-tap "add to This Week", stacked directly below the card heart. Themed
+   by the card's own scoped --rc-accent (see recipeCard()) rather than the
+   heart's fixed red, so the "added" flash reads as this recipe's color. */
+.plan-toggle {
+  position: absolute; right: 12px; top: 52px; z-index: 3;
+  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-dark);
+  background: rgba(0,0,0,0.35); color: #fff; font-size: 18px; font-weight: 700; line-height: 1;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.plan-toggle:active { transform: scale(0.88); }
+.plan-toggle.added { color: var(--rc-accent, var(--accent)); border-color: rgba(var(--rc-accent-rgb, var(--accent-rgb)), 0.5); }
+.plan-toggle.pop { animation: heartPop var(--dur) var(--ease-out); }
+
 /* ═══════════════════════════════════════════════════════════════════
    MIKE'S FAVORITES — curated picks (badge on cards + dedicated screen)
    ═══════════════════════════════════════════════════════════════════ */
@@ -1195,8 +1211,9 @@ button.col-back { appearance: none; -webkit-appearance: none;
   letter-spacing: normal; font-size: 13px; margin-top: 18px;
 }
 
-/* ── Recipe detail: back + favorite row ───────────────────────────── */
+/* ── Recipe detail: back + favorite/plan row ──────────────────────── */
 .r-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.r-nav-actions { display: flex; align-items: center; gap: 8px; }
 .r-back { text-decoration: none; color: var(--on-dark-dim); font-size: 14px; font-weight: 700; }
 .r-back:active { color: var(--on-dark); }
 .r-fav {
@@ -1206,6 +1223,22 @@ button.col-back { appearance: none; -webkit-appearance: none;
 }
 .r-fav-text { font-size: 13px; font-weight: 800; letter-spacing: 0.03em; }
 .r-fav.on { color: #ff5a6e; border-color: rgba(255,90,110,0.5); background: rgba(255,90,110,0.10); }
+
+/* One-tap "add to This Week" — same pill shape as .r-fav, themed by the
+   page's own --accent (recipe.html sets one global accent per page load)
+   instead of the heart's fixed red, so it reads as a distinct action. */
+.r-plan {
+  position: static; width: auto; height: 38px; padding: 0 14px;
+  border-radius: 999px; font-size: 13px; font-weight: 800; letter-spacing: 0.03em;
+  background: var(--bg-elev); border: 1px solid var(--line-dark); color: var(--on-dark);
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.r-plan:active { transform: scale(0.94); }
+.r-plan.added {
+  color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); background: rgba(var(--accent-rgb), 0.12);
+}
+.r-plan.pop { animation: heartPop var(--dur) var(--ease-out); }
 
 /* ── Recipe detail: header cover photo (in the eyebrow tag row) ───── */
 .r-photo { position: relative; flex: 0 0 auto; }
