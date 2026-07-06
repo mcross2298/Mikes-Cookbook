@@ -33,6 +33,30 @@ walkthrough never drifts out of date with what's actually shipped.
   small enough to skip the executive summary still needs its Quick Tour entry
   if it's user-facing.
 
+## Recipe photo hand-off rule
+
+**Permanent rule.** Any time a user hands off a photo for a recipe (a new
+recipe or an existing one), upload the photo into the cookbook and update
+that recipe's data so the photo actually renders — don't just drop the file
+in the repo.
+
+- Save the image under `images/recipes/`, named by `recipe_id` (e.g.
+  `images/recipes/jalapeno-chicken-bake.jpg`). Create the `images/recipes/`
+  folder the first time this happens.
+- Add a `photo` field to that recipe's object in `recipes-data.js` holding
+  the relative path (e.g. `photo: "images/recipes/jalapeno-chicken-bake.jpg"`).
+  Leave `photo` absent on recipes that don't have one — don't backfill
+  placeholders for the rest of `RECIPES`.
+- A photo is a new top-level asset: run `tools/build-sw.py` (bump the
+  version) afterward per the Service worker & caching rules below.
+- If this is the first `photo` field added to the data model, also wire up
+  its rendering (e.g. a hero image on `recipe.html`, a card thumbnail
+  wherever recipe cards render) instead of leaving the field inert. Keep the
+  emoji `icon` as the fallback for recipes without a photo.
+- Adding real photos to recipe cards/detail pages is a user-facing change —
+  follow the Documentation currency rule above and update the Quick Tour
+  once photos are visibly part of the experience.
+
 ## What this is
 
 A premium, tactile **mobile cookbook PWA** that bridges cherished heirloom
@@ -246,3 +270,6 @@ for f in $(git ls-files '*.js'); do node --check "$f" || echo "FAIL $f"; done
   cache version.
 - Deep links: `recipe.html?id=<recipe_id>`, `collection.html?c=<collection_id>`,
   shell screens via `index.html#<screen>` (e.g. `#favorites`).
+- Recipe photo handed off → save to `images/recipes/<recipe_id>.<ext>`, add a
+  `photo` field to that recipe in `recipes-data.js`, and run
+  `tools/build-sw.py` (bump version). See the Recipe photo hand-off rule above.
