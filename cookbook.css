@@ -1308,6 +1308,26 @@ button.col-back { appearance: none; -webkit-appearance: none;
 .search-box::placeholder { color: var(--on-dark-dim); }
 .search-box:focus { border-color: rgba(var(--accent-rgb),0.5); }
 
+/* Workout-tracker macro handoff banner (Recipes screen, ?mkcal=&mp= deep
+   link from the training app's nutrition tab): remaining-macros suggestions. */
+.macro-handoff {
+  margin: 0 20px 16px; padding: 14px 14px 4px;
+  background: var(--bg-elev); border: 1px solid rgba(var(--accent-rgb),0.4);
+  border-radius: 16px;
+}
+.macro-handoff-head {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.macro-handoff-title { font-size: 14px; font-weight: 800; color: var(--on-dark); }
+.macro-handoff-sub { font-size: 12.5px; color: var(--on-dark-dim); flex: 1; min-width: 0; }
+.macro-handoff-close {
+  appearance: none; cursor: pointer; font-family: var(--sans);
+  background: transparent; border: none; color: var(--on-dark-dim);
+  font-size: 14px; line-height: 1; padding: 8px; margin: -8px -6px 0 0; min-width: 44px; min-height: 44px;
+}
+.macro-handoff .col-grid { padding: 0 0 10px; }
+.macro-handoff .empty { padding: 10px 4px 14px; }
+
 /* Faceted search chips (Recipes screen): pantry-match + macro thresholds
    share one scrollable row; dish categories get their own row below since
    11 categories won't fit inline with the others. */
