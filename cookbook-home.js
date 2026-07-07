@@ -2480,6 +2480,34 @@
   // Persists only for the JS runtime (like catState/plannerState) — resets
   // to off on a fresh load rather than sticking on silently across visits.
   var recipesState = { lowShopping: false, category: null, macro: null };
+
+  // ── Workout-app macro handoff (index.html?mkcal=620&mp=42#recipes) ────────
+  // The training app's nutrition tab links here with the day's remaining
+  // calories/protein; the Recipes screen answers with recipes that fit.
+  // Params are consumed once and stripped from the URL (mirrors the
+  // cookbook → tracker handoff in tracker-recipe.js, just pointed back).
+  var macroHandoff = (function () {
+    try {
+      var q = new URLSearchParams(location.search);
+      if (!q.has("mkcal")) return null;
+      var h = { kcal: parseInt(q.get("mkcal"), 10) || 0, p: parseInt(q.get("mp"), 10) || 0 };
+      q.delete("mkcal"); q.delete("mp");
+      var qs = q.toString();
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+      return h.kcal > 0 ? h : null;
+    } catch (e) { return null; }
+  })();
+
+  function macroHandoffMatches() {
+    // Recipes that fit inside what's left of the day (small tolerance so a
+    // 610-kcal plate still shows for 600 left), best protein payload first.
+    return recipes()
+      .map(function (r) { var m = recipeNativeMacros(r); return { r: r, m: m }; })
+      .filter(function (x) { return (x.m.calories || 0) > 0 && (x.m.calories || 0) <= macroHandoff.kcal + 25; })
+      .sort(function (a, b) { return (b.m.protein_g || 0) - (a.m.protein_g || 0); })
+      .slice(0, 6)
+      .map(function (x) { return x.r; });
+  }
   // "Need 2 or fewer" keeps the filter meaningfully narrower than "browse
   // everything," while still surfacing real dishes, not just the ones with
   // the shortest ingredient lists.
@@ -2500,6 +2528,30 @@
     s.appendChild(backTopBar("‹ Home", "Recipes",
       collections().length + " collections · " + recipes().length + " recipes",
       function () { setTab("home"); }));
+
+    // Workout-tracker handoff — remaining-macros suggestions, above everything
+    if (macroHandoff) {
+      var ho = el("div", "macro-handoff");
+      var hoHead = el("div", "macro-handoff-head",
+        '<span class="macro-handoff-title">🎯 Fits your day</span>' +
+        '<span class="macro-handoff-sub">' + macroHandoff.kcal + " kcal" +
+        (macroHandoff.p ? " · " + macroHandoff.p + " g protein" : "") + " left in your tracker</span>");
+      var hoClose = el("button", "macro-handoff-close", "✕");
+      hoClose.type = "button";
+      hoClose.setAttribute("aria-label", "Dismiss suggestions");
+      hoClose.addEventListener("click", function () { macroHandoff = null; renderRecipes(); });
+      hoHead.appendChild(hoClose);
+      ho.appendChild(hoHead);
+      var matches = macroHandoffMatches();
+      if (matches.length) {
+        var hoGrid = el("div", "col-grid");
+        matches.forEach(function (r) { hoGrid.appendChild(recipeCard(r)); });
+        ho.appendChild(hoGrid);
+      } else {
+        ho.appendChild(el("div", "empty", "Nothing fits under " + macroHandoff.kcal + " kcal — browse below."));
+      }
+      s.appendChild(ho);
+    }
 
     // Search box
     var searchWrap = el("div", "search-wrap");

@@ -1086,7 +1086,24 @@
   // large and user-scalable (persisted). Step done-state is the SAME store as
   // the checklist, so progress stays in sync when you exit.
   var COOK_FONT_KEY = "mc-cookbook:cookfont";
-  var cook = { active: false, index: 0, recipe: null };
+  var cook = { active: false, index: 0, recipe: null, _lastAnnounced: -1 };
+
+  // Screen-reader announcer for Cooking Mode — lives on <body>, outside the
+  // #cook overlay renderCook() rebuilds, so announcements survive re-renders.
+  // Polite: step changes and done-toggles only.
+  function cookAnnounce(msg) {
+    var n = document.getElementById("cookLive");
+    if (!n) {
+      n = document.createElement("div");
+      n.id = "cookLive";
+      n.setAttribute("role", "status");
+      n.setAttribute("aria-live", "polite");
+      n.style.cssText = "position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;";
+      document.body.appendChild(n);
+    }
+    n.textContent = "";
+    n.textContent = msg;
+  }
 
   function cookFont() {
     var v = parseFloat(localStorage.getItem(COOK_FONT_KEY));
@@ -1116,6 +1133,7 @@
       if (!done.has(steps[i].step_number)) { start = i; break; }
     }
     cook.index = start;
+    cook._lastAnnounced = -1;
     document.body.classList.add("cooking");
     wake.set(true);
     renderCook();
@@ -1205,6 +1223,15 @@
     ctl.appendChild(prev);
     ctl.appendChild(next);
     o.appendChild(ctl);
+
+    // Announce the step on navigation; on a same-step re-render (done toggle)
+    // announce the state change instead of repeating the whole step.
+    if (cook._lastAnnounced !== cook.index) {
+      cook._lastAnnounced = cook.index;
+      cookAnnounce("Step " + (cook.index + 1) + " of " + steps.length + ": " + st.title);
+    } else {
+      cookAnnounce(isDone ? "Step marked done" : "Step unmarked");
+    }
   }
 
   // Horizontal swipe inside cooking mode: left → next, right → prev (no marking).
