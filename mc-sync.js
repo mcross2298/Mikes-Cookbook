@@ -7,7 +7,10 @@
    keyed by (user_id, store_key), RLS-isolated per user. A trainee signed in
    here is the same identity as in the workout app, so mc_macros_v1 (the
    tracker) reconciles across both apps instead of living in two places that
-   never talk to each other.
+   never talk to each other. Phase 1.3 adds the cookbook's own meal-plan,
+   macro-history, and user-recipe stores — no workout-app equivalent, so
+   these keep their existing mc-cookbook: namespaced keys; only the sync
+   mechanism is new.
 
    Runs ONLY when a Supabase user is signed in (MC_SB.currentUser()). When
    nobody is signed in, the app stays exactly as it was — local only — and
@@ -23,10 +26,15 @@
   if (!window.MC_SB || !MC_SB.configured) return;
 
   var TABLE = 'user_sync';
-  // store_key -> merge strategy. Extended in Phase 1.3 with meal-plan/
-  // macro-history/user-recipe keys.
+  // store_key -> merge strategy.
   var STORES = {
-    'mc_macros_v1': 'macros'
+    'mc_macros_v1':                     'macros',
+    'mc-cookbook:mealplan':             'plan',
+    'mc-cookbook:mealplan:grocery':     'stringSet',
+    'mc-cookbook:mealplan:history':     'historyBySavedAt',
+    'mc-cookbook:mealplan:custom':      'arrayByUid',
+    'mc-cookbook:mealplan:macrohistory': 'arrayByUid',
+    'mc-cookbook:userrecipes':          'arrayByRecipeId'
   };
   var PUSH_MS = 30000;
 
@@ -82,8 +90,53 @@
     return out;
   }
 
+  // Generic union-by-field array merge: append-only stores with no in-place
+  // edit path (or where an edit losing to a stale copy on true cross-device
+  // conflict is an acceptable v1 tradeoff — same one mc-sync.js documents
+  // for macros' sibling stores upstream). First occurrence of a given id wins.
+  function mergeArrayByField(local, remote, field) {
+    local = Array.isArray(local) ? local : [];
+    remote = Array.isArray(remote) ? remote : [];
+    var seen = {}, out = [];
+    local.concat(remote).forEach(function (e) {
+      var id = e && e[field];
+      if (id == null) { out.push(e); return; }
+      if (!seen[id]) { seen[id] = 1; out.push(e); }
+    });
+    return out;
+  }
+
+  // mealplan: { meals: [ {uid,...} ] } — merge the meals array by uid.
+  function mergePlan(local, remote) {
+    local = local || {}; remote = remote || {};
+    return { meals: mergeArrayByField(local.meals, remote.meals, 'uid') };
+  }
+
+  // grocery: [ "checked merge-key", ... ] — plain string array, union+dedupe.
+  function mergeStringSet(local, remote) {
+    local = Array.isArray(local) ? local : [];
+    remote = Array.isArray(remote) ? remote : [];
+    var seen = {}, out = [];
+    local.concat(remote).forEach(function (k) {
+      if (k == null || seen[k]) return;
+      seen[k] = 1; out.push(k);
+    });
+    return out;
+  }
+
+  // saved week blocks: [ {savedAt,label,meals} ] — archival snapshots, never
+  // edited in place once saved, so union by savedAt is exact.
+  function mergeHistoryBySavedAt(local, remote) {
+    return mergeArrayByField(local, remote, 'savedAt');
+  }
+
   function mergeStore(strategy, local, remote) {
     if (strategy === 'macros') return mergeMacros(local, remote);
+    if (strategy === 'plan') return mergePlan(local, remote);
+    if (strategy === 'stringSet') return mergeStringSet(local, remote);
+    if (strategy === 'historyBySavedAt') return mergeHistoryBySavedAt(local, remote);
+    if (strategy === 'arrayByUid') return mergeArrayByField(local, remote, 'uid');
+    if (strategy === 'arrayByRecipeId') return mergeArrayByField(local, remote, 'recipe_id');
     return remote != null ? remote : local;
   }
 
