@@ -114,7 +114,8 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `cookbook-nav.js` | Renders the floating 🏠 Home button on `data-tabbar="page"` pages. Exposes `window.MCNav`. |
 | `recipes-data.js` | **The data layer** (~12.4k lines / ~600 KB). `RECIPES` array (160 recipes) + `COLLECTIONS` array. Decoupled from rendering; exposed as `window.RECIPES` / `window.COLLECTIONS`. |
 | `user-recipes.js` | "My Recipes" — lets a cook add their own recipes from the Home hub; stored in `localStorage` (`mc-cookbook:userrecipes`) and merged into `window.RECIPES`/`COLLECTIONS` at load so they behave like built-in recipes everywhere (search, planner, favorites, categories). Must load after `recipes-data.js`, before the page controllers. |
-| `tracker.js` / `tracker-store.js` / `tracker-calc.js` / `tracker-foodapi.js` / `tracker-barcode.js` / `tracker-recipe.js` | The in-app macro tracker (`#screen-tracker`): week calendar strip, hour-by-hour food log, calorie/macro goals from a suggest-then-adjust calculator, food entry via Open Food Facts search or barcode scan, and direct recipe logging from the recipe page. `localStorage`-only (`mc-cookbook:tracker:v1`), no login. Exposed as `window.MCTracker`. |
+| `tracker.js` / `tracker-store.js` / `tracker-calc.js` / `tracker-foodapi.js` / `tracker-barcode.js` / `tracker-recipe.js` | The in-app macro tracker (`#screen-tracker`): week calendar strip, hour-by-hour food log, calorie/macro goals from a suggest-then-adjust calculator, food entry via Open Food Facts search or barcode scan, and direct recipe logging from the recipe page. Store is `mc_macros_v1` — the same key and shape 4-Weeks-to-Open-'s workout app uses, so a signed-in trainee's tracker data is one store, not two (see Client-side state below). Exposed as `window.MCTracker`. |
+| `mc-supabase.js` / `mc-sync.js` / `mc-account.js` | Optional login + cross-device sync, ported from 4-Weeks-to-Open- (same Supabase project — one account works in both apps). `mc-supabase.js` is the client + auth (invite-only, no public sign-up); `mc-sync.js` mirrors a whitelist of localStorage stores to Supabase's `user_sync` table per signed-in user (currently just `mc_macros_v1`); `mc-account.js` is the sign-in-sheet UI, mounted into the Home top bar by `cookbook-home.js` via `window.MCAccount.mount(container)`. All three are no-ops when signed out — nothing changes for a cook who never logs in. `tracker-foodapi.js`/`tracker-calc.js`/`tracker-barcode.js` are generated copies of the workout app's `mc-foodapi.js`/`mc-macrocalc.js`/`mc-barcode.js` via `tools/sync-nutrition-modules.py` in that repo — don't hand-edit them here. |
 | `cookbook.css` | The entire design system + all component styles (~50 KB). Design tokens live in `:root`. |
 | `cookbook-sw.js` | Shared service-worker **registration** + update toasts; included on every page. |
 | `sw.js` | The service worker itself. `CACHE_URLS` is **auto-generated** — never hand-edit it. |
@@ -192,9 +193,15 @@ JSON-serialize directly — this was a real bug; keep the pattern).
 - `mc-cookbook:mealplan:custom` — ad-hoc (non-recipe) planner line items.
 - `mc-cookbook:mealplan:macrohistory` — macro history feeding Smart Week's
   Macro Smart Generator and cook-log awareness.
-- `mc-cookbook:tracker:v1` — the macro tracker's whole state (goals, logged
-  food/hour, week data); owned by `tracker-store.js`, exposed indirectly via
-  `window.MCTracker`.
+- `mc_macros_v1` — the macro tracker's whole state (goals, logged food/hour,
+  week data); owned by `tracker-store.js`, exposed indirectly via
+  `window.MCTracker`. **Not namespaced `mc-cookbook:`** — this is deliberately
+  the same key the workout app (`4-Weeks-to-Open-`) uses for its Nutrition
+  tab, so `mc-sync.js` can reconcile one trainee's tracker data across both
+  apps when they're signed in. Signed out, it's still local-only, same as
+  before. A one-time migration in `tracker-store.js` moves any data left
+  under the old `mc-cookbook:tracker:v1` key the first time it loads
+  post-upgrade.
 - `mc-cookbook:userrecipes` — JSON array of full user-authored recipe objects
   (`user-recipes.js`), merged into `window.RECIPES`/`COLLECTIONS` at load.
 - `mc-cookbook:<recipe_id>:s<serving>:<kind>` — recipe-detail check-off state

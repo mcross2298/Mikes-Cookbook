@@ -585,7 +585,7 @@
 
   /* ── Consistency streak (Home hero) ──────────────────────────────────
      Derived only — no new storage. A day "counts" if it has either a cook-log
-     entry (COOKED_KEY, any recipe) or a tracker entry (mc-cookbook:tracker:v1),
+     entry (COOKED_KEY, any recipe) or a tracker entry (mc_macros_v1),
      so cooking-only or tracking-only days both keep the streak alive. */
   function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   function loadCookedDateSet() {
@@ -2230,6 +2230,11 @@
       setTab("recipes");
     });
     bar.appendChild(searchBtn);
+
+    // Account entry point (sign in / sync) — no-op mount() if MC_SB isn't
+    // configured or mc-account.js isn't loaded.
+    if (window.MCAccount) MCAccount.mount(bar);
+
     s.appendChild(bar);
 
     // First-launch nudge: Quick Tour used to be reachable only via a Help-tier
