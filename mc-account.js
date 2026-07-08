@@ -57,7 +57,9 @@
       '.acct-note{font-size:12px;color:var(--on-dark-dim);margin-top:14px;line-height:1.5;text-align:center;}' +
       '.acct-info{font-size:13px;color:var(--sage);background:rgba(125,140,119,0.12);' +
         'border:1px solid rgba(125,140,119,0.3);border-radius:var(--r-sm);padding:11px 12px;margin-bottom:16px;line-height:1.5;}' +
-      '.acct-err{font-size:13px;color:#e0685a;margin-top:10px;min-height:18px;text-align:center;}';
+      '.acct-err{font-size:13px;color:#e0685a;margin-top:10px;min-height:18px;text-align:center;}' +
+      '.acct-hr{border-top:1px solid var(--line-dark);margin:18px 0 14px;}' +
+      '.acct-backup .acct-btn{margin-top:8px;}';
     var st = document.createElement('style');
     st.id = 'mcAcctStyles';
     st.textContent = css;
@@ -72,13 +74,13 @@
       body.innerHTML =
         '<div class="acct-title">Account</div>' +
         '<div class="acct-sub">Signed in as <b>' + (currentUserObj.email || 'your account') + '</b></div>' +
-        '<div class="acct-info">✓ Your macro tracker syncs across your devices, and with the workout app if you use both.</div>' +
+        '<div class="acct-info">✓ Your tracker, meal plan, macro history and My Recipes sync across your devices — and your tracker reconciles with the workout app if you use both.</div>' +
         '<button class="acct-btn acct-secondary" id="acctSignout">Sign out</button>';
       body.querySelector('#acctSignout').addEventListener('click', doSignOut);
     } else {
       body.innerHTML =
         '<div class="acct-title">Sign in</div>' +
-        '<div class="acct-sub">Sign in to sync your tracker across devices — the same account works in the workout app.</div>' +
+        '<div class="acct-sub">Sign in to sync your tracker, meal plan, and My Recipes across devices — the same account works in the workout app.</div>' +
         '<input id="acctEmail" type="email" autocomplete="email" placeholder="Email"/>' +
         '<input id="acctPw" type="password" autocomplete="current-password" placeholder="Password"/>' +
         '<button class="acct-btn acct-primary" id="acctSignin">Sign in</button>' +
@@ -87,6 +89,37 @@
       body.querySelector('#acctSignin').addEventListener('click', doSignIn);
       body.querySelector('#acctPw').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSignIn(); });
     }
+    appendBackupSection(body);
+  }
+
+  // Manual backup — available whether signed in or not (window.MCExport is
+  // a separate module; no-op here if it isn't loaded for some reason).
+  function appendBackupSection(body) {
+    if (!window.MCExport) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'acct-backup';
+    wrap.innerHTML =
+      '<div class="acct-hr"></div>' +
+      '<div class="acct-sub">Back up your data as a file, or restore from one — works whether you’re signed in or not.</div>' +
+      '<button class="acct-btn acct-secondary" id="acctExport">Export data</button>' +
+      '<button class="acct-btn acct-secondary" id="acctImport">Import data</button>' +
+      '<input type="file" id="acctImportFile" accept="application/json" style="display:none">' +
+      '<div class="acct-err" id="acctBackupMsg"></div>';
+    body.appendChild(wrap);
+    wrap.querySelector('#acctExport').addEventListener('click', function () { MCExport.exportJSON(); });
+    var fileInput = wrap.querySelector('#acctImportFile');
+    wrap.querySelector('#acctImport').addEventListener('click', function () { fileInput.click(); });
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      var msg = wrap.querySelector('#acctBackupMsg');
+      MCExport.importJSON(file).then(function () {
+        location.reload();
+      }).catch(function (e) {
+        msg.textContent = (e && e.message) || 'Import failed.';
+        msg.style.color = '#e0685a';
+      });
+    });
   }
 
   function openSheet() {
