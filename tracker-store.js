@@ -17,15 +17,32 @@
        ] } }
      }
 
-   `at` is the slot time (ms) a food sits at on the hourly timeline. No sync —
-   this is purely device-local (same model as cookbook favorites). Exposed as
-   window.MCTrackerStore.
+   `at` is the slot time (ms) a food sits at on the hourly timeline.
+
+   Phase 1.2: this is now the SAME store the workout app uses (mc_macros_v1),
+   so a signed-in trainee's tracker data reconciles across both apps via
+   mc-sync.js. Signed out, it's still purely device-local — nothing changes
+   for a cook who never logs in. A one-time migration copies any data left
+   under the old cookbook-only key (mc-cookbook:tracker:v1) the first time
+   this file runs post-upgrade, so nobody's existing log is stranded by the
+   key rename. Exposed as window.MCTrackerStore.
    ========================================================================== */
 (function () {
   "use strict";
   if (window.MCTrackerStore) return;
 
-  var KEY = "mc-cookbook:tracker:v1";
+  var KEY = "mc_macros_v1";
+  var OLD_KEY = "mc-cookbook:tracker:v1";
+
+  (function migrateOldKey() {
+    try {
+      if (localStorage.getItem(KEY) != null) return;          // already migrated / fresh install
+      var old = localStorage.getItem(OLD_KEY);
+      if (old == null) return;                                 // nothing to migrate
+      localStorage.setItem(KEY, old);
+      localStorage.removeItem(OLD_KEY);
+    } catch (e) {}
+  })();
 
   function num(v, d) { var n = parseFloat(v); return isFinite(n) ? n : (d || 0); }
   function pad(n) { return String(n).padStart(2, "0"); }
