@@ -670,7 +670,17 @@
         }
       }
     }
-    return { daysLogged: daysLogged, mealsCooked: mealsCooked, goalHitDays: goalHitDays, daysWithGoalData: daysWithGoalData };
+    // Planned-vs-cooked adherence: This Week's plan is a recurring Mon-Sun
+    // template (m.day is a day-code, not a date — see planMeals()), so
+    // "adherence" here means the active plan's own completion, not a
+    // rolling calendar window like the stats above.
+    var scheduled = planMeals().filter(function (m) { return m.day; });
+    var plannedCount = scheduled.length;
+    var completedCount = scheduled.filter(function (m) { return m.completed; }).length;
+    return {
+      daysLogged: daysLogged, mealsCooked: mealsCooked, goalHitDays: goalHitDays, daysWithGoalData: daysWithGoalData,
+      plannedCount: plannedCount, completedCount: completedCount
+    };
   }
   function renderWeeklyRecapCard() {
     var code = todayDayCode();
@@ -686,6 +696,9 @@
       stats.mealsCooked + (stats.mealsCooked === 1 ? " meal" : " meals") + " cooked";
     if (stats.daysWithGoalData > 0) {
       line += " · " + stats.goalHitDays + "/" + stats.daysWithGoalData + " goal days";
+    }
+    if (stats.plannedCount > 0) {
+      line += " · " + stats.completedCount + "/" + stats.plannedCount + " planned meals cooked";
     }
     card.appendChild(el("p", "recap-line", line));
     var dismiss = el("button", "recap-dismiss", "Dismiss");
@@ -2495,8 +2508,11 @@
     try {
       var q = new URLSearchParams(location.search);
       if (!q.has("mkcal")) return null;
-      var h = { kcal: parseInt(q.get("mkcal"), 10) || 0, p: parseInt(q.get("mp"), 10) || 0 };
-      q.delete("mkcal"); q.delete("mp");
+      // dt (day-type) is optional — the workout app only sends it when it can
+      // confidently tell what today's session trained; 'legs' biases the
+      // suggestions toward carb-forward recipes (see macroHandoffMatches).
+      var h = { kcal: parseInt(q.get("mkcal"), 10) || 0, p: parseInt(q.get("mp"), 10) || 0, dt: q.get("dt") || null };
+      q.delete("mkcal"); q.delete("mp"); q.delete("dt");
       var qs = q.toString();
       history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
       return h.kcal > 0 ? h : null;
@@ -2506,9 +2522,18 @@
   function macroHandoffMatches() {
     // Recipes that fit inside what's left of the day (small tolerance so a
     // 610-kcal plate still shows for 600 left), best protein payload first.
-    return recipes()
+    var pool = recipes()
       .map(function (r) { var m = recipeNativeMacros(r); return { r: r, m: m }; })
-      .filter(function (x) { return (x.m.calories || 0) > 0 && (x.m.calories || 0) <= macroHandoff.kcal + 25; })
+      .filter(function (x) { return (x.m.calories || 0) > 0 && (x.m.calories || 0) <= macroHandoff.kcal + 25; });
+    // Leg day → carb-forward first, replenishing what a heavy lower-body
+    // session actually burns — but only if that leaves enough real options,
+    // same "prefer, don't force" guard as the workout app's own history-aware
+    // Quick Pump biasing.
+    if (macroHandoff.dt === "legs") {
+      var carbForward = pool.filter(function (x) { return MACRO_FACETS.carbforward.test(x.m); });
+      if (carbForward.length >= 3) pool = carbForward;
+    }
+    return pool
       .sort(function (a, b) { return (b.m.protein_g || 0) - (a.m.protein_g || 0); })
       .slice(0, 6)
       .map(function (x) { return x.r; });
@@ -2519,7 +2544,8 @@
   var LOW_SHOPPING_MAX_NEED = 2;
   var MACRO_FACETS = {
     protein: { label: "🍗 High Protein", test: function (m) { return (m.protein_g || 0) >= 30; } },
-    lowcarb: { label: "🥑 Low Carb", test: function (m) { return m.carbs_g != null && m.carbs_g <= 15; } }
+    lowcarb: { label: "🥑 Low Carb", test: function (m) { return m.carbs_g != null && m.carbs_g <= 15; } },
+    carbforward: { label: "🍚 Carb-Forward", test: function (m) { return (m.carbs_g || 0) >= 35; } }
   };
   function recipeNativeMacros(r) {
     var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
@@ -2540,7 +2566,8 @@
       var hoHead = el("div", "macro-handoff-head",
         '<span class="macro-handoff-title">🎯 Fits your day</span>' +
         '<span class="macro-handoff-sub">' + macroHandoff.kcal + " kcal" +
-        (macroHandoff.p ? " · " + macroHandoff.p + " g protein" : "") + " left in your tracker</span>");
+        (macroHandoff.p ? " · " + macroHandoff.p + " g protein" : "") + " left in your tracker" +
+        (macroHandoff.dt === "legs" ? " · carb-forward for leg day" : "") + "</span>");
       var hoClose = el("button", "macro-handoff-close", "✕");
       hoClose.type = "button";
       hoClose.setAttribute("aria-label", "Dismiss suggestions");

@@ -10,7 +10,9 @@
    never talk to each other. Phase 1.3 adds the cookbook's own meal-plan,
    macro-history, and user-recipe stores — no workout-app equivalent, so
    these keep their existing mc-cookbook: namespaced keys; only the sync
-   mechanism is new.
+   mechanism is new. Phase 2.6 adds the cook log (mc-cookbook:cooked) — it
+   feeds the weekly planned-vs-cooked adherence stat, so it needs to survive
+   a device switch same as everything else adherence is computed from.
 
    Runs ONLY when a Supabase user is signed in (MC_SB.currentUser()). When
    nobody is signed in, the app stays exactly as it was — local only — and
@@ -34,7 +36,8 @@
     'mc-cookbook:mealplan:history':     'historyBySavedAt',
     'mc-cookbook:mealplan:custom':      'arrayByUid',
     'mc-cookbook:mealplan:macrohistory': 'arrayByUid',
-    'mc-cookbook:userrecipes':          'arrayByRecipeId'
+    'mc-cookbook:userrecipes':          'arrayByRecipeId',
+    'mc-cookbook:cooked':               'cookedByRecipe'
   };
   var PUSH_MS = 30000;
 
@@ -130,11 +133,33 @@
     return mergeArrayByField(local, remote, 'savedAt');
   }
 
+  // cook log: { [recipe_id]: [{at,photo}] } — a dict of per-recipe arrays.
+  // Legacy entries may be bare ISO strings rather than {at,photo} objects
+  // (cookbook-home.js's own readers already handle this defensively); union
+  // each recipe's entries by `at`, their only real identity, after
+  // normalizing both shapes to the same object form.
+  function normalizeCookedEntry(e) {
+    return typeof e === 'string' ? { at: e, photo: null } : e;
+  }
+  function mergeCookedByRecipe(local, remote) {
+    local = local || {}; remote = remote || {};
+    var out = {}, ids = {}, id;
+    for (id in local) ids[id] = 1;
+    for (id in remote) ids[id] = 1;
+    for (id in ids) {
+      var l = (local[id] || []).map(normalizeCookedEntry);
+      var r = (remote[id] || []).map(normalizeCookedEntry);
+      out[id] = mergeArrayByField(l, r, 'at');
+    }
+    return out;
+  }
+
   function mergeStore(strategy, local, remote) {
     if (strategy === 'macros') return mergeMacros(local, remote);
     if (strategy === 'plan') return mergePlan(local, remote);
     if (strategy === 'stringSet') return mergeStringSet(local, remote);
     if (strategy === 'historyBySavedAt') return mergeHistoryBySavedAt(local, remote);
+    if (strategy === 'cookedByRecipe') return mergeCookedByRecipe(local, remote);
     if (strategy === 'arrayByUid') return mergeArrayByField(local, remote, 'uid');
     if (strategy === 'arrayByRecipeId') return mergeArrayByField(local, remote, 'recipe_id');
     return remote != null ? remote : local;
