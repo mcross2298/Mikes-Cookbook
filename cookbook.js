@@ -1123,6 +1123,98 @@
     saveSet(r.recipe_id, state.serving, "steps", set);
   }
 
+  /* ── Cooking Mode voice control (roadmap 4.4) ──────────────────────────
+     Opt-in, scoped to Cooking Mode only: off by default, mic button lives in
+     the .cook-top bar, and recognition stops the moment Cooking Mode exits —
+     no reason to keep a mic open once you've left. Small fixed grammar, not
+     free-form parsing: "next step", "previous step", "read ingredients"
+     (spoken aloud via SpeechSynthesis so a cook with messy hands never has to
+     touch the screen), "exit"/"stop cooking". Commands call the SAME
+     cookGo()/exitCook() the on-screen buttons use — no duplicated logic. */
+  var cookVoiceSR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var cookRecognition = null;
+  var cookListening = false;
+
+  function cookVoiceSupported() { return !!cookVoiceSR; }
+
+  function speakIngredients() {
+    if (!("speechSynthesis" in window)) return;
+    var r = cook.recipe;
+    var list = ingredientsFor(r, state.serving) || [];
+    if (!list.length) { window.speechSynthesis.speak(new SpeechSynthesisUtterance("No ingredients listed for this recipe.")); return; }
+    var text = "You'll need: " + list.map(function (ing) {
+      var qty = ing.quantity ? ing.quantity + " " : "";
+      var unit = ing.unit ? ing.unit + " " : "";
+      return qty + unit + ing.item;
+    }).join(", ") + ".";
+    window.speechSynthesis.cancel(); // don't stack utterances if tapped/said twice
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+    cookAnnounce("Reading ingredients");
+  }
+
+  var COOK_VOICE_COMMANDS = [
+    { re: /\b(next|done)( step)?\b/i, run: function () { cookGo(1); } },
+    { re: /\b(previous|prev|back|go back)( step)?\b/i, run: function () { cookGo(-1); } },
+    { re: /\bread( the)? ingredients?\b/i, run: function () { speakIngredients(); } },
+    { re: /\b(exit|stop cooking|done cooking|finish cooking)\b/i, run: function () { exitCook(); } }
+  ];
+  function handleCookTranscript(text) {
+    text = (text || "").trim();
+    if (!text) return;
+    for (var i = 0; i < COOK_VOICE_COMMANDS.length; i++) {
+      var m = text.match(COOK_VOICE_COMMANDS[i].re);
+      if (m) { COOK_VOICE_COMMANDS[i].run(m); return; }
+    }
+  }
+
+  function setCookListening(on) {
+    cookListening = on;
+    var btn = document.getElementById("cookVoiceBtn");
+    if (btn) btn.classList.toggle("listening", on);
+  }
+  function startCookVoice() {
+    if (!cookVoiceSupported()) return;
+    if (!cookRecognition) {
+      cookRecognition = new cookVoiceSR();
+      cookRecognition.continuous = true;
+      cookRecognition.interimResults = false;
+      cookRecognition.lang = "en-US";
+      cookRecognition.onresult = function (ev) {
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          if (ev.results[i].isFinal) handleCookTranscript(ev.results[i][0].transcript);
+        }
+      };
+      cookRecognition.onerror = function (ev) {
+        if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
+          setCookListening(false);
+          cookAnnounce("Microphone permission denied");
+        }
+      };
+      cookRecognition.onend = function () {
+        if (cookListening && cook.active) { try { cookRecognition.start(); } catch (e) {} } // mobile drops continuous mode; resume
+        else setCookListening(false);
+      };
+    }
+    try { cookRecognition.start(); setCookListening(true); cookAnnounce("Voice control on"); } catch (e) {}
+  }
+  function stopCookVoice() {
+    setCookListening(false);
+    if (cookRecognition) { try { cookRecognition.stop(); } catch (e) {} }
+  }
+  function toggleCookVoice() {
+    if (cookListening) stopCookVoice(); else startCookVoice();
+  }
+  function mountCookVoiceBtn(top) {
+    if (!cookVoiceSupported()) return;
+    var btn = el("button", "cook-voice-btn" + (cookListening ? " listening" : ""), "🎙️");
+    btn.id = "cookVoiceBtn";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Toggle voice control");
+    btn.title = 'Voice control — try "next step", "read ingredients", "exit"';
+    btn.addEventListener("click", toggleCookVoice);
+    top.appendChild(btn);
+  }
+
   function enterCook(r) {
     var steps = r.instructions || [];
     if (!steps.length) return;
@@ -1140,6 +1232,7 @@
   }
   function exitCook() {
     cook.active = false;
+    stopCookVoice(); // no reason to keep the mic open once Cooking Mode is closed
     document.body.classList.remove("cooking");
     var o = $("#cook");
     if (o) o.parentNode.removeChild(o);
@@ -1187,6 +1280,7 @@
     aPlus.addEventListener("click", function () { setCookFont(cookFont() + 0.1); });
     fonts.appendChild(aMinus); fonts.appendChild(aPlus);
     top.appendChild(fonts);
+    mountCookVoiceBtn(top);
     o.appendChild(top);
 
     // Progress

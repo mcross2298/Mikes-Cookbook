@@ -1509,6 +1509,14 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
   transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
 }
 .cook-font-btn:active { transform: scale(0.92); background: rgba(var(--accent-rgb), 0.15); }
+.cook-voice-btn {
+  appearance: none; cursor: pointer; width: 40px; height: 32px; margin-left: 6px;
+  border: 1px solid var(--line-dark); background: transparent; color: var(--on-dark);
+  border-radius: var(--r-sm); font-size: 15px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.cook-voice-btn:active { transform: scale(0.92); }
+.cook-voice-btn.listening { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.15); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15); }
 
 .cook-progress { height: 3px; background: var(--bg-elev); }
 .cook-progress-bar { height: 100%; background: var(--accent); transition: width var(--dur) var(--ease-out); }
