@@ -18801,6 +18801,731 @@ const RECIPES = [
         detail: "Crack the chocolate shell with a spoon and enjoy the creamy, crunchy texture combination."
       }
     ]
+  },
+
+  {
+    recipe_id: "slow-cooker-sausage-lasagna",
+    title: "Slow Cooker Sausage Lasagna",
+    category: "Comfort Food",
+    source: "Family Recipes",
+    icon: "🍝",
+    tags: ["Slow-Cooker", "Comfort Food", "Make-Ahead"],
+    dish_category: "Casseroles & Bakes",
+    description:
+      "A hands-off, layered sausage lasagna that builds itself in the slow cooker — browned Italian sausage and marinara layered with uncooked noodles, ricotta, and mozzarella, ready after six low-and-slow hours.",
+    prep_time_mins: 20,
+    cook_time_mins: 360,
+    native_serving: 8,
+    accent: "#8B3A3A",
+
+    macro_profiles: {
+      serving_8: { calories: 600, protein_g: 30, fat_g: 27, carbs_g: 56 }
+    },
+
+    scaling_options: [8],
+
+    ingredients_by_serving: {
+      serving_8: [
+        { item: "Sweet Italian sausage", prep: "browned", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Yellow onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Minced garlic", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Marinara sauce", prep: "", quantity: "2", unit: "(24 oz) jars", category: "Pantry" },
+        { item: "Lasagna noodles", prep: "uncooked, broken to fit", quantity: "1", unit: "lb", category: "Pantry" },
+        { item: "Whole milk ricotta cheese", prep: "", quantity: "1", unit: "(15 oz) tub", category: "Dairy" },
+        { item: "Shredded mozzarella cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Water", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the sausage",
+        detail:
+          "In a large frying pan, brown the sausage over medium-high heat. When almost cooked through, add the onion, garlic, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Build the meat sauce",
+        detail: "Stir in one jar of marinara sauce and combine with the sausage and onions."
+      },
+      {
+        step_number: 3,
+        title: "Prep the slow cooker",
+        detail:
+          "Spray the slow cooker (or a cooking bag, if using one) with cooking spray to prevent sticking."
+      },
+      {
+        step_number: 4,
+        title: "Layer it up",
+        detail:
+          "Spread 1/3 of the meat sauce on the bottom of the slow cooker. Top with 1/3 of the uncooked lasagna noodles, breaking pieces to make them fit, then 1/3 of the ricotta and 1/2 cup of mozzarella. Repeat these layers two more times."
+      },
+      {
+        step_number: 5,
+        title: "Finish and cook",
+        detail:
+          "Pour the second jar of marinara over the top and finish with the remaining mozzarella. Pour the water in around the sides. Cook on low for 6 hours."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "carne-asada-steak-fajita-bowl",
+    title: "Carne Asada Steak Fajita Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥩",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
+    description:
+      "A build-your-own carne asada bowl over cilantro-lime jasmine rice with charred peppers and onions, roasted corn, guacamole, feta, and a Greek yogurt drizzle — four containers of grab-and-go protein.",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#B5652E",
+
+    macro_profiles: {
+      serving_4: { calories: 850, protein_g: 47, fat_g: 42, carbs_g: 74 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Jasmine rice", prep: "microwaved and fluffed", quantity: "1", unit: "(30 oz) box", category: "Pantry" },
+        { item: "Tri-color bell peppers", prep: "sliced into strips", quantity: "1", unit: "(20 oz) bag", category: "Produce" },
+        { item: "Red onion", prep: "sliced thin", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Carne asada", prep: "seared and sliced into strips", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Roasted corn", prep: "", quantity: "1", unit: "(16 oz) bag", category: "Produce" },
+        { item: "Avocado", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Chunky guacamole", prep: "", quantity: "1", unit: "(16 oz) tub", category: "Produce" },
+        { item: "Crumbled feta cheese", prep: "", quantity: "1", unit: "(6 oz) tub", category: "Dairy" },
+        { item: "Nonfat Greek yogurt", prep: "", quantity: "1", unit: "(5.3 oz) cup", category: "Dairy" },
+        { item: "Lime", prep: "", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "1", unit: "small bunch", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the rice",
+        detail: "Microwave the jasmine rice according to package directions, then fluff and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Char the peppers and onion",
+        detail:
+          "Heat 1 tbsp olive oil in a large skillet over medium-high heat. Add the peppers and onion and cook 6 to 8 minutes until soft and lightly charred, seasoning with salt and pepper."
+      },
+      {
+        step_number: 3,
+        title: "Sear the steak",
+        detail:
+          "Push the vegetables aside, add the remaining olive oil, then sear the carne asada 3 to 4 minutes per side until cooked through. Slice into strips."
+      },
+      {
+        step_number: 4,
+        title: "Heat the corn",
+        detail: "Heat the roasted corn in the skillet or microwave until hot, about 3 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Build the bowls",
+        detail:
+          "Divide the rice, carne asada, peppers and onions, and corn evenly across four containers."
+      },
+      {
+        step_number: 6,
+        title: "Top each bowl",
+        detail: "Top each bowl with avocado, guacamole, and feta."
+      },
+      {
+        step_number: 7,
+        title: "Finish bright",
+        detail: "Drizzle each bowl with Greek yogurt, squeeze fresh lime over the top, and finish with cilantro."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "high-protein-beef-bean-chili",
+    title: "High Protein Beef & Bean Chili",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍲",
+    tags: ["Meal-Prep", "High-Protein", "High-Fiber"],
+    dish_category: "Soups, Stews & Chilis",
+    subsection: "Beef & Steak",
+    description:
+      "A meal-prep chili that leans on kidney beans, pinto beans, and red lentils alongside lean ground beef to clear 40g of protein and 12g of fiber per bowl — no sad, one-note meal prep here.",
+    prep_time_mins: 15,
+    cook_time_mins: 40,
+    native_serving: 5,
+    accent: "#8C3B2E",
+
+    macro_profiles: {
+      serving_5: { calories: 480, protein_g: 40, fat_g: 16, carbs_g: 44 }
+    },
+
+    scaling_options: [5],
+
+    ingredients_by_serving: {
+      serving_5: [
+        { item: "Lean ground beef", prep: "5% fat, browned", quantity: "500", unit: "g", category: "Meat" },
+        { item: "Kidney beans", prep: "drained", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Pinto or black beans", prep: "drained", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Dry red lentils", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Chopped tomatoes", prep: "canned", quantity: "2", unit: "cans", category: "Pantry" },
+        { item: "Tomato paste", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Chili powder", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Beef or vegetable stock", prep: "", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Avocado", prep: "to top", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cheddar cheese", prep: "grated, to top", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "to top", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Chili flakes", prep: "to top", quantity: "", unit: "", category: "Pantry" },
+        { item: "Dark chocolate", prep: "flavor upgrade", quantity: "1", unit: "square", category: "Pantry" },
+        { item: "Coffee", prep: "a splash, flavor upgrade", quantity: "1", unit: "splash", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the beef",
+        detail: "Brown the beef in a large pot over high heat until deeply colored, then push it to one side."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the aromatics",
+        detail: "Add the onion, pepper, and garlic to the same pot and cook until softened and fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Toast the spices",
+        detail: "Stir in the tomato paste, chili powder, cumin, and smoked paprika and cook for a minute so they toast and stop tasting raw."
+      },
+      {
+        step_number: 4,
+        title: "Simmer",
+        detail:
+          "Add the tomatoes, stock, lentils, and beans, bring to a simmer, and cook 30 to 40 minutes until the lentils break down and the chili thickens to a spoon-coating texture."
+      },
+      {
+        step_number: 5,
+        title: "Cool and portion",
+        detail: "Cool, then divide into five containers."
+      },
+      {
+        step_number: 6,
+        title: "Top and serve",
+        detail: "Top each bowl fresh with avocado, cheddar, yogurt, and chili flakes when you eat."
+      },
+      {
+        step_number: 7,
+        title: "Flavor upgrade (optional)",
+        detail: "Stir a square of dark chocolate and a splash of coffee into the pot at the end — it deepens the chili into something that tastes slow-cooked, not meal-prepped."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "copycat-chipotle-chicken-burrito-bowl",
+    title: "Copycat Chipotle Chicken Burrito Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌯",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "A macro-matched copycat of the drive-thru chicken burrito bowl — chipotle-seasoned chicken, cilantro-lime rice, black beans, corn, and pico for 42g of protein and 12g of fiber a bowl, for less than half the price.",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C2703A",
+
+    macro_profiles: {
+      serving_4: { calories: 520, protein_g: 42, fat_g: 20, carbs_g: 46 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken thighs or breast", prep: "", quantity: "600", unit: "g", category: "Meat" },
+        { item: "Chipotle or fajita seasoning", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Black beans", prep: "drained", quantity: "1", unit: "can", category: "Pantry" },
+        { item: "Cooked rice", prep: "tossed with lime zest and cilantro", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Lime", prep: "zested", quantity: "1", unit: "", category: "Produce" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "1", unit: "handful", category: "Produce" },
+        { item: "Sweetcorn", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Pico de gallo", prep: "tomato, onion, cilantro, lime", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Avocado", prep: "mashed into guacamole", quantity: "1", unit: "", category: "Produce" },
+        { item: "Cheddar cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "in place of sour cream", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Shredded lettuce", prep: "to fill", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Toss the chicken in the chipotle seasoning and cook in a hot pan until charred at the edges and cooked through, then rest and chop."
+      },
+      {
+        step_number: 2,
+        title: "Season the rice",
+        detail: "Stir the lime zest and chopped cilantro through the warm rice."
+      },
+      {
+        step_number: 3,
+        title: "Warm the beans and corn",
+        detail: "Warm the black beans and corn, seasoning both with a pinch of salt."
+      },
+      {
+        step_number: 4,
+        title: "Build the base",
+        detail: "Build the base in four containers with rice, then the chicken and beans on top."
+      },
+      {
+        step_number: 5,
+        title: "Add the rest",
+        detail: "Add the corn, cheddar, and shredded lettuce, keeping the wet toppings separate."
+      },
+      {
+        step_number: 6,
+        title: "Pack the toppings",
+        detail: "Pack the pico, guacamole, and Greek yogurt in small pots on the side so nothing goes soggy before you eat. Squeeze fresh lime over the bowl before eating."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "bbq-chicken-stuffed-sweet-potato",
+    title: "BBQ Chicken Stuffed Sweet Potato",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍠",
+    tags: ["Meal-Prep", "High-Protein", "High-Fiber"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "A whole roasted sweet potato loaded with shredded BBQ chicken, corn, and cheddar for a full meal that clears 42g of protein and 12g of fiber — no beige, sad desk lunch here.",
+    prep_time_mins: 15,
+    cook_time_mins: 45,
+    native_serving: 2,
+    accent: "#C9772E",
+
+    macro_profiles: {
+      serving_2: { calories: 460, protein_g: 42, fat_g: 12, carbs_g: 48 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sweet potato", prep: "large", quantity: "1", unit: "", category: "Produce" },
+        { item: "Chicken breast", prep: "cooked and shredded", quantity: "250", unit: "g", category: "Meat" },
+        { item: "BBQ sauce", prep: "low-sugar", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Sweetcorn", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cheddar cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Spring onion", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potato",
+        detail: "Prick the sweet potato and roast or air-fry it whole until completely soft, then let it cool."
+      },
+      {
+        step_number: 2,
+        title: "Coat the chicken",
+        detail: "Toss the shredded chicken with the BBQ sauce until fully coated."
+      },
+      {
+        step_number: 3,
+        title: "Caramelize the onion",
+        detail: "Caramelize the sliced red onion in the olive oil until soft and sweet."
+      },
+      {
+        step_number: 4,
+        title: "Split and fluff",
+        detail: "Split the cooled potato in half lengthwise and fluff the insides with a fork."
+      },
+      {
+        step_number: 5,
+        title: "Stuff the potato",
+        detail: "Stuff both halves with the BBQ chicken, corn, and cheddar, then pack into two containers."
+      },
+      {
+        step_number: 6,
+        title: "Finish and serve",
+        detail: "Reheat when ready to eat and finish fresh with red onion and spring onion on top."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "hot-honey-bbq-crunch-wrap",
+    title: "Hot Honey BBQ Crunch Wrap",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌯",
+    tags: ["Meal-Prep", "High-Protein", "Spicy-Sweet"],
+    dish_category: "Sandwiches",
+    subsection: "Chicken",
+    description:
+      "A crispy, seared high-protein wrap loaded with breaded chicken chunks, BBQ sauce, crushed protein chips, and a drizzle of hot honey for a sweet-heat crunch wrap.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 1,
+    accent: "#D98A1E",
+
+    macro_profiles: {
+      serving_1: { calories: 650, protein_g: 66, fat_g: 16, carbs_g: 72 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "High-protein wrap", prep: "", quantity: "1", unit: "", category: "Pantry" },
+        { item: "Breaded chicken chunks", prep: "air-fried", quantity: "1", unit: "cup", category: "Meat" },
+        { item: "Shredded lettuce", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fat-free shredded cheddar cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "BBQ sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Protein chips", prep: "crushed", quantity: "1", unit: "small bag", category: "Pantry" },
+        { item: "Hot honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Air fry the chicken",
+        detail: "Air fry the breaded chicken chunks at 400°F for 10 to 12 minutes."
+      },
+      {
+        step_number: 2,
+        title: "Toss the filling",
+        detail: "Toss the chicken, lettuce, cheddar, BBQ sauce, and crushed protein chips together in a bowl."
+      },
+      {
+        step_number: 3,
+        title: "Fill the wrap",
+        detail: "Add everything to the wrap."
+      },
+      {
+        step_number: 4,
+        title: "Drizzle and wrap",
+        detail: "Drizzle hot honey on top, then wrap it up tight."
+      },
+      {
+        step_number: 5,
+        title: "Sear",
+        detail: "Sear the wrap in a pan until crispy on both sides."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "air-fryer-garlic-parmesan-chicken-bites",
+    title: "Air Fryer Garlic Parmesan Chicken Bites",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🧄",
+    tags: ["Meal-Prep", "High-Protein", "Air-Fryer"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Breaded chicken bites air-fried until golden and crisp, then tossed hot in garlic-parmesan butter — nearly 60g of protein with no oil and one basket to clean.",
+    prep_time_mins: 10,
+    cook_time_mins: 12,
+    native_serving: 1,
+    accent: "#B8860B",
+
+    macro_profiles: {
+      serving_1: { calories: 540, protein_g: 58, fat_g: 22, carbs_g: 24 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Chicken breast", prep: "cut into bite-size chunks, patted dry", quantity: "200", unit: "g", category: "Meat" },
+        { item: "Breadcrumbs", prep: "", quantity: "40", unit: "g", category: "Pantry" },
+        { item: "Grated parmesan", prep: "", quantity: "30", unit: "g", category: "Dairy" },
+        { item: "Egg", prep: "beaten", quantity: "1", unit: "", category: "Dairy" },
+        { item: "Butter", prep: "", quantity: "20", unit: "g", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "", unit: "", category: "Produce" },
+        { item: "Chili flakes", prep: "a pinch", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Bread the chicken",
+        detail: "Dip each chicken piece in the beaten egg, then roll it in the breadcrumbs mixed with half the parmesan until fully coated."
+      },
+      {
+        step_number: 2,
+        title: "Air fry",
+        detail: "Lay the bites in a single layer in the air fryer basket with a little space between each one. Air fry at 400°F for about 12 minutes, shaking the basket halfway, until golden and crisp."
+      },
+      {
+        step_number: 3,
+        title: "Make the garlic butter",
+        detail: "While the bites cook, melt the butter with the minced garlic and stir in the rest of the parmesan."
+      },
+      {
+        step_number: 4,
+        title: "Toss and finish",
+        detail: "Toss the hot bites in the garlic-parmesan butter and finish with chopped parsley and a pinch of chili flakes."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "garlic-butter-turkey-rice-bowl",
+    title: "Garlic Butter Turkey Rice Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🦃",
+    tags: ["Meal-Prep", "High-Protein", "Quick"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Bowls & Other",
+    description:
+      "Garlic-butter ground turkey and steamed broccoli layered over jasmine rice — a fast, simple skillet bowl for weeknight meal prep.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#B8963E",
+
+    macro_profiles: {
+      serving_2: { calories: 420, protein_g: 35, fat_g: 14, carbs_g: 38 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground turkey", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Cooked jasmine rice", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Broccoli", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Melt the butter",
+        detail: "Heat a large skillet over medium heat and add the butter, allowing it to melt completely and coat the pan evenly."
+      },
+      {
+        step_number: 2,
+        title: "Add the garlic",
+        detail: "Add the minced garlic and cook briefly until fragrant, being careful not to burn it."
+      },
+      {
+        step_number: 3,
+        title: "Brown the turkey",
+        detail: "Add the ground turkey, breaking it apart with a spatula, and cook until browned and fully cooked through. Season with salt and pepper."
+      },
+      {
+        step_number: 4,
+        title: "Steam the broccoli",
+        detail: "Steam or sauté the broccoli separately until tender but still slightly crisp."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowls",
+        detail: "Layer rice first, then turkey, then broccoli evenly across the top. Finish with a squeeze of lemon to brighten it up."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "turkey-sweet-potato-skillet",
+    title: "Turkey Sweet Potato Skillet",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍠",
+    tags: ["Meal-Prep", "High-Protein", "One-Pan"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Bowls & Other",
+    description:
+      "A one-pan skillet of browned ground turkey, tender diced sweet potato, and bell peppers — simple, high-protein meal prep with easy cleanup.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#C1652E",
+
+    macro_profiles: {
+      serving_2: { calories: 390, protein_g: 33, fat_g: 14, carbs_g: 35 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ground turkey", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Sweet potato", prep: "diced", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Bell peppers", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the sweet potato",
+        detail: "Heat olive oil in a skillet and add the diced sweet potato, cooking until it begins to soften and develop slight browning."
+      },
+      {
+        step_number: 2,
+        title: "Continue cooking",
+        detail: "Stir occasionally and cook for several minutes until the potatoes are fork-tender but not mushy."
+      },
+      {
+        step_number: 3,
+        title: "Brown the turkey",
+        detail: "Add the ground turkey to the skillet, breaking it apart and cooking until fully browned."
+      },
+      {
+        step_number: 4,
+        title: "Add the peppers",
+        detail: "Add the bell peppers and garlic powder, mixing thoroughly to combine all ingredients evenly."
+      },
+      {
+        step_number: 5,
+        title: "Finish and serve",
+        detail: "Continue cooking until the peppers are slightly softened while still maintaining some texture. Season with salt and pepper before serving hot."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chimichurri-steak-rice-bowl",
+    title: "Chimichurri Steak Rice Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥩",
+    tags: ["Meal-Prep", "High-Protein", "Gluten-Free"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
+    description:
+      "Seared sirloin steak sliced over rice, black beans, corn, and guacamole, finished with a bright fresh-herb chimichurri — 48g of protein a bowl, naturally gluten-free.",
+    prep_time_mins: 15,
+    cook_time_mins: 10,
+    native_serving: 4,
+    accent: "#5C7A3A",
+
+    macro_profiles: {
+      serving_2: { calories: 510, protein_g: 48, fat_g: 28, carbs_g: 12 },
+      serving_4: { calories: 510, protein_g: 48, fat_g: 28, carbs_g: 12 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Sirloin steak", prep: "", quantity: "10", unit: "oz", category: "Meat" },
+        { item: "Cooked white rice", prep: "", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Black beans", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Corn", prep: "", quantity: "2/3", unit: "cup", category: "Produce" },
+        { item: "Pico de gallo", prep: "", quantity: "2/3", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Guacamole", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "finely chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Fresh cilantro", prep: "finely chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Garlic", prep: "grated", quantity: "2", unit: "small cloves", category: "Produce" },
+        { item: "Red chili flakes", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Sirloin steak", prep: "", quantity: "1.25", unit: "lbs", category: "Meat" },
+        { item: "Cooked white rice", prep: "", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Black beans", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Corn", prep: "", quantity: "1 1/3", unit: "cups", category: "Produce" },
+        { item: "Pico de gallo", prep: "", quantity: "1 1/3", unit: "cups", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Guacamole", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "finely chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh cilantro", prep: "finely chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "4", unit: "tsp", category: "Produce" },
+        { item: "Garlic", prep: "grated", quantity: "4", unit: "small cloves", category: "Produce" },
+        { item: "Red chili flakes", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the chimichurri",
+        detail: "Mix the parsley, cilantro, olive oil, lime juice, garlic, chili flakes, salt, and pepper in a small bowl."
+      },
+      {
+        step_number: 2,
+        title: "Season the steak",
+        detail: "Season the steak on both sides with salt, pepper, and garlic powder."
+      },
+      {
+        step_number: 3,
+        title: "Sear the steak",
+        detail: "Heat a pan over medium-high heat and lightly coat with cooking spray or oil. Cook the steak 3 to 4 minutes per side, depending on thickness, until browned outside and cooked to your liking."
+      },
+      {
+        step_number: 4,
+        title: "Rest and slice",
+        detail: "Rest the steak for 5 minutes so the juices stay in, then slice into bite-sized strips."
+      },
+      {
+        step_number: 5,
+        title: "Warm the sides",
+        detail: "Warm the rice, beans, and corn if needed."
+      },
+      {
+        step_number: 6,
+        title: "Assemble the bowl",
+        detail: "Layer rice first, then black beans, corn, pico, onion, and guacamole."
+      },
+      {
+        step_number: 7,
+        title: "Top and finish",
+        detail: "Top with steak and spoon the chimichurri over the top. Finish with extra lime zest or chili flakes if you want it brighter."
+      }
+    ]
   }
 ];
 
