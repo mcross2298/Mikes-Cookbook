@@ -21217,6 +21217,419 @@ const RECIPES = [
         detail: "Finish with chili flakes and freshly ground black pepper before serving."
       }
     ]
+  },
+
+  {
+    recipe_id: "chicken-alla-vodka-sauce-pasta",
+    title: "Chicken Alla Vodka Sauce Pasta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍝",
+    tags: ["Meal-Prep", "High-Protein", "Comfort Food"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "A protein-boosted vodka sauce built on blended cottage cheese and parmesan, tossed with pasta, chicken, spinach, and grape tomatoes.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 6,
+    accent: "#8C3A4A",
+
+    macro_profiles: {
+      serving_6: { calories: 488, protein_g: 41, fat_g: 19, carbs_g: 42 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Banza rotini or any pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Onion or shallots", prep: "chopped", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Minced garlic", prep: "", quantity: "1 1/2", unit: "tbsp", category: "Produce" },
+        { item: "Tomato paste", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Vodka", prep: "or 2 tbsp white wine vinegar", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Cottage cheese", prep: "blended, whisked with 1/4 cup warm water", quantity: "2/3", unit: "cup", category: "Dairy" },
+        { item: "Grated parmesan", prep: "", quantity: "2/3", unit: "cup", category: "Dairy" },
+        { item: "Red pepper flakes", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cooked chicken", prep: "cubed", quantity: "2", unit: "cups", category: "Meat" },
+        { item: "Spinach", prep: "loosely chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Grape tomatoes", prep: "halved", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "chopped, optional topping", quantity: "1/4", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Bring a large pot of salted water to a boil and cook the pasta to al dente per the package directions. Drain, rinse with cold water, and set aside."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the aromatics",
+        detail: "Heat the olive oil in a large sauté pan over medium heat and add the onion. Cook 3 to 4 minutes, then add the garlic and cook another 1 to 2 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail: "Stir in the tomato paste and cook 2 to 3 minutes to deepen the flavor. Pour in the vodka, stir, and simmer until most of the liquid cooks off, about 3 to 4 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Add the cottage cheese",
+        detail:
+          "Lower the heat. Whisk the blended cottage cheese with the warm water, then slowly stir it into the pan. Add the parmesan, red pepper flakes, salt, and pepper and stir quickly. Simmer a couple of minutes, then leave it as is or blend until smooth with an immersion blender for a silkier sauce."
+      },
+      {
+        step_number: 5,
+        title: "Combine",
+        detail: "Stir in the cooked pasta, chicken, spinach, and tomatoes. Let the spinach wilt over low heat for 1 to 2 minutes."
+      },
+      {
+        step_number: 6,
+        title: "Garnish",
+        detail: "Remove from the heat and top with fresh basil, extra parmesan, and a pinch more red pepper flakes. Serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-chicken-parm-pasta",
+    title: "Lemon Chicken Parm Pasta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍋",
+    tags: ["Meal-Prep", "High-Protein", "Comfort Food"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Cornflake-crusted chicken cutlets sliced over lemon-brightened, parmesan-doctored jarred Alfredo pasta.",
+    prep_time_mins: 20,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_4: { calories: 640, protein_g: 48, fat_g: 20, carbs_g: 66 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken breasts", prep: "pounded to even thickness", quantity: "4", unit: "(600g total)", category: "Meat" },
+        { item: "Oat flour", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Eggs", prep: "beaten", quantity: "2", unit: "", category: "Dairy" },
+        { item: "Cornflakes or panko", prep: "finely crushed", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Spaghetti or linguine", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Light Alfredo or garlic-parmesan pasta sauce", prep: "jarred", quantity: "1", unit: "(15 oz) jar", category: "Pantry" },
+        { item: "Cream cheese", prep: "softened", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Grated parmesan cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Lemon", prep: "juiced and zested", quantity: "1", unit: "", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped, for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prepare the chicken coating",
+        detail: "In one shallow dish, mix oat flour, salt, pepper, garlic powder, and oregano. In another dish, beat the eggs. In a third dish, place the crushed cornflakes or panko."
+      },
+      {
+        step_number: 2,
+        title: "Coat the chicken",
+        detail: "Dip each chicken breast in the flour mixture, then the egg wash, then press into the cornflake or panko crumbs until evenly coated."
+      },
+      {
+        step_number: 3,
+        title: "Cook the chicken",
+        detail: "Heat olive oil in a skillet over medium heat. Cook the chicken breasts 4 to 5 minutes per side until golden brown and cooked through (165°F internal). Remove and set aside."
+      },
+      {
+        step_number: 4,
+        title: "Cook the pasta",
+        detail: "Bring a pot of salted water to a boil and cook pasta until al dente. Reserve 1/2 cup pasta cooking water, then drain."
+      },
+      {
+        step_number: 5,
+        title: "Elevate the jarred sauce",
+        detail:
+          "In the same skillet used for the chicken, heat olive oil and sauté garlic 1 minute. Add the jar of pasta sauce and bring to a gentle simmer. Stir in cream cheese until melted and smooth. Add parmesan, lemon juice, and zest, stirring until combined. If the sauce is too thick, loosen with reserved pasta water. Adjust seasoning with salt and pepper."
+      },
+      {
+        step_number: 6,
+        title: "Combine pasta and sauce",
+        detail: "Toss the cooked pasta with the elevated sauce until evenly coated."
+      },
+      {
+        step_number: 7,
+        title: "Assemble and serve",
+        detail: "Slice the chicken and serve it on top of the pasta. Garnish with parsley and extra parmesan if desired."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "marry-me-shrimp-pasta",
+    title: "Marry Me Shrimp Pasta",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍤",
+    tags: ["Meal-Prep", "High-Protein", "Seafood"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Seafood",
+    description:
+      "Crispy guanciale and seared shrimp folded into a creamy smoked-paprika parmesan sauce, tossed with pasta.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#B5432E",
+
+    macro_profiles: {
+      serving_2: { calories: 580, protein_g: 33, fat_g: 26, carbs_g: 47 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Dry pasta", prep: "spaghetti, bucatini, or linguine", quantity: "160", unit: "g", category: "Pantry" },
+        { item: "Guanciale", prep: "diced, or substitute 2 tbsp olive oil", quantity: "140", unit: "g", category: "Meat" },
+        { item: "Medium shrimp", prep: "peeled and deveined", quantity: "225", unit: "g (16-20 shrimp)", category: "Meat" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Italian seasoning", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried parsley", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Onion", prep: "finely diced", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Grated parmesan cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Bring a pot of salted water to a boil. Cook pasta according to package instructions until al dente. Reserve 1/2 cup of pasta water, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Prepare the shrimp",
+        detail: "Pat shrimp dry. Season lightly with smoked paprika and garlic salt. Set aside."
+      },
+      {
+        step_number: 3,
+        title: "Cook the guanciale",
+        detail: "Heat a large skillet over medium heat. Add diced guanciale and cook until crispy, about 5 to 6 minutes. Remove and set aside, leaving rendered fat in the pan (if skipping guanciale, heat olive oil instead)."
+      },
+      {
+        step_number: 4,
+        title: "Sauté the aromatics",
+        detail: "Add the onion to the skillet and cook 2 to 3 minutes until softened. Stir in garlic and cook 30 seconds until fragrant."
+      },
+      {
+        step_number: 5,
+        title: "Build the sauce",
+        detail:
+          "Add smoked paprika, Italian seasoning, dried parsley, and cayenne. Stir 30 seconds to bloom the spices. Pour in the heavy cream and bring to a gentle simmer. Stir in parmesan until melted and smooth. Season with salt and pepper."
+      },
+      {
+        step_number: 6,
+        title: "Cook the shrimp",
+        detail: "Add shrimp to the skillet and cook 2 minutes per side, or until pink and cooked through. Return guanciale to the sauce."
+      },
+      {
+        step_number: 7,
+        title: "Combine with pasta",
+        detail: "Add cooked pasta to the skillet, tossing well to coat. Add reserved pasta water as needed to loosen the sauce."
+      },
+      {
+        step_number: 8,
+        title: "Serve",
+        detail: "Divide into plates and garnish with fresh parsley. Serve immediately."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chipotle-chicken-elote-rice-bowl",
+    title: "Chipotle Chicken Elote Rice Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌽",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Chipotle-marinated chicken over rice with a creamy Mexican street-corn elote mixture, avocado, and cotija.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#C2703A",
+
+    macro_profiles: {
+      serving_4: { calories: 540, protein_g: 46, fat_g: 18, carbs_g: 48 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken thighs or breasts", prep: "", quantity: "1.5", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Chipotle adobo paste", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Minced garlic", prep: "", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cumin", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Corn", prep: "frozen or canned", quantity: "1.5", unit: "cups", category: "Produce" },
+        { item: "Light butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Light mayonnaise", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Plain Greek yogurt or light sour cream", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Lime juice", prep: "", quantity: "1/2", unit: "tbsp", category: "Produce" },
+        { item: "Chili powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cotija cheese", prep: "crumbled", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Cooked white or brown rice", prep: "", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Shredded romaine lettuce", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Avocado", prep: "sliced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Cotija cheese", prep: "for garnish", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh cilantro", prep: "for garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Marinate the chicken",
+        detail: "In a large bowl, combine the olive oil, minced garlic, chipotle adobo paste, smoked paprika, dried oregano, cumin, salt, black pepper, and onion powder. Add the chicken and toss until evenly coated."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail: "Heat a large skillet over medium heat with a light drizzle of oil. Add the chicken and cook 6 to 8 minutes per side until browned and fully cooked through. Let it rest a few minutes, then chop into bite-sized pieces."
+      },
+      {
+        step_number: 3,
+        title: "Toast the corn",
+        detail: "In a separate skillet over medium heat, melt the butter. Add the corn and sauté until hot, toasty, and lightly golden around the edges. Transfer to a mixing bowl."
+      },
+      {
+        step_number: 4,
+        title: "Mix the elote",
+        detail: "To the bowl with the corn, stir in the light mayonnaise, Greek yogurt, lime juice, chili powder, cotija cheese, and chopped cilantro. Mix until creamy and fully combined."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowls",
+        detail: "Divide the cooked rice evenly among four bowls. Top each bowl with shredded lettuce, sliced avocado, the creamy elote corn mixture, and the chopped chipotle chicken."
+      },
+      {
+        step_number: 6,
+        title: "Garnish and serve",
+        detail: "Finish each bowl with an extra sprinkle of cotija cheese and fresh cilantro before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-pepper-chicken-bowl-hummus-honey-garlic-carrots",
+    title: "Lemon Pepper Chicken Bowl with Rice, Hummus & Honey Garlic Carrots",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥙",
+    tags: ["Meal-Prep", "High-Protein", "Mediterranean"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Lemon pepper chicken over rice with honey-garlic roasted carrots, a quick cucumber-parsley salad, and a hummus drizzle — a single-serving Mediterranean-style bowl.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#D6A93A",
+
+    macro_profiles: {
+      serving_1: { calories: 560, protein_g: 42, fat_g: 22, carbs_g: 52 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Boneless skinless chicken thighs or breasts", prep: "", quantity: "6", unit: "oz", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Lemon pepper seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano or parsley", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cooked white rice", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Dried parsley or mixed herbs", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Baby carrots", prep: "or sliced carrots", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cucumber", prep: "finely diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Fresh parsley", prep: "finely chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Red onion", prep: "finely diced", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Hummus", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Olive oil", prep: "for drizzling", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Season the chicken with lemon pepper seasoning, garlic powder, dried herbs, and salt. Heat olive oil in a skillet over medium heat and cook the chicken 4 to 6 minutes per side until golden brown and fully cooked. Set aside to rest, then slice."
+      },
+      {
+        step_number: 2,
+        title: "Prepare the carrots",
+        detail: "Toss carrots with olive oil, honey, garlic powder, salt, and pepper. Roast at 425°F for 18 to 22 minutes until tender and caramelized, or pan-sear in a skillet for 8 to 10 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Make the cucumber salad",
+        detail: "In a small bowl, mix cucumber, parsley, red onion, lemon juice, and salt. Set aside."
+      },
+      {
+        step_number: 4,
+        title: "Warm the rice",
+        detail: "Heat the cooked rice and sprinkle lightly with dried herbs."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowl",
+        detail: "Add rice to a bowl, arrange sliced lemon pepper chicken, honey garlic carrots, cucumber salad, and hummus. Drizzle hummus with olive oil."
+      },
+      {
+        step_number: 6,
+        title: "Serve",
+        detail: "Enjoy immediately while warm, or pack for meal prep."
+      }
+    ]
   }
 ];
 
