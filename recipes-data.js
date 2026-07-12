@@ -14797,6 +14797,276 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "kansas-city-bbq-chicken-marinade",
+    title: "Kansas City BBQ Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍖",
+    tags: ["No-Cook", "Sweet & Smoky", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A thick, sweet, and smoky ketchup-and-molasses marinade that caramelizes into a sticky Kansas City-style crust on the grill.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8B4A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 105, protein_g: 1, fat_g: 4, carbs_g: 19 },
+      serving_4: { calories: 105, protein_g: 1, fat_g: 4, carbs_g: 19 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Ketchup", prep: "", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Molasses", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cider vinegar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Mustard powder", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Ketchup", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Molasses", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Cider vinegar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Mustard powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the ketchup, molasses, brown sugar, cider vinegar, Worcestershire, olive oil, mustard powder, cayenne, smoked paprika, garlic powder, onion powder, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cuban-mojo-chicken-marinade",
+    title: "Cuban Mojo Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍊",
+    tags: ["No-Cook", "Citrus", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A bright citrus-garlic mojo with orange, lime, cumin, and cilantro — a Cuban classic that keeps grilled chicken juicy.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#DDA53B",
+
+    macro_profiles: {
+      serving_2: { calories: 50, protein_g: 0, fat_g: 4, carbs_g: 3 },
+      serving_4: { calories: 50, protein_g: 0, fat_g: 4, carbs_g: 3 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Orange juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "grated", quantity: "3", unit: "", category: "Produce" },
+        { item: "Orange and lime zest", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Orange juice", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "grated", quantity: "6", unit: "", category: "Produce" },
+        { item: "Orange and lime zest", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Cumin", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dried oregano", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the orange juice, lime juice, olive oil, garlic, orange and lime zest, cilantro, cumin, dried oregano, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "carolina-gold-chicken-marinade",
+    title: "Carolina Gold Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A tangy South Carolina-style mustard BBQ marinade with honey and cider vinegar — sweet, sharp, and grill-ready.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#D9A62E",
+
+    macro_profiles: {
+      serving_2: { calories: 85, protein_g: 0, fat_g: 4, carbs_g: 11 },
+      serving_4: { calories: 85, protein_g: 0, fat_g: 4, carbs_g: 11 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Yellow mustard", prep: "", quantity: "2.5", unit: "tbsp", category: "Pantry" },
+        { item: "Cider vinegar", prep: "", quantity: "1.5", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Yellow mustard", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Cider vinegar", prep: "", quantity: "3", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Chili powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cayenne pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the yellow mustard, cider vinegar, honey, olive oil, Worcestershire, chili powder, smoked paprika, cayenne, garlic powder, onion powder, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "alabama-white-bbq-chicken-marinade",
+    title: "Alabama White BBQ Chicken Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥣",
+    tags: ["No-Cook", "Creamy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Chicken",
+    description:
+      "A creamy, peppery mayo-and-Greek-yogurt marinade with horseradish and cider vinegar — the classic Alabama white BBQ tang.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C4B896",
+
+    macro_profiles: {
+      serving_2: { calories: 50, protein_g: 3, fat_g: 2, carbs_g: 4 },
+      serving_4: { calories: 50, protein_g: 3, fat_g: 2, carbs_g: 4 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Light mayo", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Cider vinegar", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Horseradish", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cracked black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and cayenne", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Light mayo", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "plain", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Cider vinegar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Horseradish", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cracked black pepper", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and cayenne", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the light mayo, Greek yogurt, cider vinegar, lemon juice, horseradish, Dijon, Worcestershire, cracked black pepper, garlic powder, onion powder, salt, and cayenne."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the chicken",
+        detail:
+          "Pour over chicken thighs or breasts in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling or baking."
+      }
+    ]
+  },
+
+  {
     recipe_id: "miso-ginger-salmon-marinade",
     title: "Miso Ginger Salmon Marinade",
     category: "Marinade",
