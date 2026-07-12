@@ -11614,6 +11614,520 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "peanut-butter-jelly-overnight-oats",
+    title: "Peanut Butter & Jelly Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥜",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of oats, yogurt, and protein swirled with peanut butter and a quick mashed-berry chia jam — sweet, creamy, and ridiculously filling.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#7A2E4A",
+
+    macro_profiles: {
+      serving_1: { calories: 410, protein_g: 30, fat_g: 15, carbs_g: 42 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Peanut butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Mixed berries", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Peanuts", prep: "chopped, for topping", quantity: "", unit: "to taste", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Make the quick jam",
+        detail: "Mash the berries with the chia seeds to make a quick jam."
+      },
+      {
+        step_number: 2,
+        title: "Mix the oats",
+        detail: "Mix the oats, milk, yogurt, and protein, then swirl in the peanut butter."
+      },
+      {
+        step_number: 3,
+        title: "Layer",
+        detail: "Layer the berry mixture through the oats."
+      },
+      {
+        step_number: 4,
+        title: "Cover & chill",
+        detail: "Cover and refrigerate overnight."
+      },
+      {
+        step_number: 5,
+        title: "Top & serve",
+        detail: "Top with fresh berries and a few chopped peanuts."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cinnamon-roll-overnight-oats",
+    title: "Cinnamon Roll Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌀",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of cinnamon-spiced oats topped with a vanilla yogurt \"icing\" swirl the next morning — dessert for breakfast, without the guilt.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#C08A4E",
+
+    macro_profiles: {
+      serving_1: { calories: 360, protein_g: 31, fat_g: 8, carbs_g: 40 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "for the topping", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Vanilla extract", prep: "for the topping", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the oats",
+        detail: "Mix the oats, milk, yogurt, protein, cinnamon, and maple syrup."
+      },
+      {
+        step_number: 2,
+        title: "Cover & chill",
+        detail: "Cover and refrigerate overnight."
+      },
+      {
+        step_number: 3,
+        title: "Make the icing",
+        detail: "In the morning, stir the topping yogurt with the vanilla."
+      },
+      {
+        step_number: 4,
+        title: "Top like icing",
+        detail: "Spoon the vanilla yogurt over the oats like icing."
+      },
+      {
+        step_number: 5,
+        title: "Finish & serve",
+        detail: "Finish with a final swirl of cinnamon."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-peanut-butter-overnight-oats",
+    title: "Chocolate Peanut Butter Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍫",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of cocoa oats ribboned with peanut butter and topped with banana and chocolate chips — the one that destroys dessert cravings.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#5A3824",
+
+    macro_profiles: {
+      serving_1: { calories: 400, protein_g: 31, fat_g: 15, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Chocolate protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Peanut butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Banana", prep: "sliced, for topping", quantity: "", unit: "to taste", category: "Produce" },
+        { item: "Chocolate chips", prep: "for topping", quantity: "", unit: "to taste", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail: "Mix the oats, milk, yogurt, protein powder, and chia in a jar."
+      },
+      {
+        step_number: 2,
+        title: "Stir in the cocoa",
+        detail: "Stir in the cocoa until the mixture is smooth and evenly chocolatey."
+      },
+      {
+        step_number: 3,
+        title: "Swirl the peanut butter",
+        detail: "Swirl through the peanut butter in ribbons."
+      },
+      {
+        step_number: 4,
+        title: "Cover & chill",
+        detail: "Cover and refrigerate overnight."
+      },
+      {
+        step_number: 5,
+        title: "Top & serve",
+        detail: "Top with banana slices, a few chocolate chips, and an extra drizzle of peanut butter."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "blueberry-overnight-oats",
+    title: "Blueberry Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🫐",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of oats folded with blueberries and a touch of lemon zest — the easiest fruity breakfast you'll make.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#4B5FA0",
+
+    macro_profiles: {
+      serving_1: { calories: 340, protein_g: 28, fat_g: 7, carbs_g: 42 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Blueberries", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Lemon zest", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Blueberries", prep: "for topping", quantity: "", unit: "to taste", category: "Produce" },
+        { item: "Granola", prep: "for topping", quantity: "1", unit: "spoon", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the oats",
+        detail: "Mix the oats, milk, yogurt, protein, and maple syrup."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the blueberries",
+        detail: "Fold the blueberries through the oats."
+      },
+      {
+        step_number: 3,
+        title: "Add the lemon zest",
+        detail: "Add the lemon zest for brightness."
+      },
+      {
+        step_number: 4,
+        title: "Cover & chill",
+        detail: "Cover and refrigerate overnight."
+      },
+      {
+        step_number: 5,
+        title: "Top & serve",
+        detail: "Top with more blueberries and a spoon of granola."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "strawberries-and-cream-overnight-oats",
+    title: "Strawberries & Cream Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍓",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of vanilla oats folded with chopped strawberries — fresh, creamy, and ridiculously good.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#D45C6E",
+
+    macro_profiles: {
+      serving_1: { calories: 330, protein_g: 29, fat_g: 7, carbs_g: 38 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Strawberries", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Strawberries", prep: "fresh, for topping", quantity: "", unit: "to taste", category: "Produce" },
+        { item: "Granola", prep: "for topping", quantity: "1", unit: "spoon", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the oats",
+        detail: "Mix the oats, milk, yogurt, protein, honey, and vanilla."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the strawberries",
+        detail: "Fold through the chopped strawberries."
+      },
+      {
+        step_number: 3,
+        title: "Cover & chill",
+        detail: "Cover and refrigerate overnight."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail: "Top with more fresh strawberries and a spoon of granola."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "apple-pie-overnight-oats",
+    title: "Apple Pie Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍎",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of cinnamon oats folded with diced apple — like apple pie for breakfast.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#A8522E",
+
+    macro_profiles: {
+      serving_1: { calories: 350, protein_g: 27, fat_g: 8, carbs_g: 46 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Apple", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Cinnamon", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Apple", prep: "fresh, for topping", quantity: "", unit: "to taste", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the oats",
+        detail: "Mix the oats, milk, yogurt, protein, cinnamon, and maple syrup."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the apple",
+        detail: "Fold through the diced apple."
+      },
+      {
+        step_number: 3,
+        title: "Cover & chill",
+        detail: "Cover and refrigerate overnight."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail: "Top with fresh apple and an extra dusting of cinnamon."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "banana-bread-overnight-oats",
+    title: "Banana Bread Overnight Oats",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍌",
+    tags: ["Make-Ahead", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A make-ahead jar of oats built on mashed ripe banana and chia, topped with walnuts and a little peanut butter — uses up those brown bananas perfectly.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#C99A3E",
+
+    macro_profiles: {
+      serving_1: { calories: 360, protein_g: 28, fat_g: 9, carbs_g: 44 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Rolled oats", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Banana", prep: "ripe, mashed", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Chia seeds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cinnamon", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Walnuts", prep: "chopped", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Banana", prep: "sliced, for topping", quantity: "", unit: "to taste", category: "Produce" },
+        { item: "Peanut butter", prep: "for topping", quantity: "", unit: "to taste", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mash the banana",
+        detail: "Mash the banana until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Mix the oats",
+        detail: "Mix it with the oats, milk, yogurt, protein, and chia."
+      },
+      {
+        step_number: 3,
+        title: "Stir in the cinnamon",
+        detail: "Stir in the cinnamon."
+      },
+      {
+        step_number: 4,
+        title: "Cover & chill",
+        detail: "Cover and chill overnight."
+      },
+      {
+        step_number: 5,
+        title: "Top & serve",
+        detail: "Top with banana slices, walnuts, and a little peanut butter."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "hashbrown-egg-bowl-meal-prep",
+    title: "Hashbrown Egg Bowl Meal Prep",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥔",
+    tags: ["Meal-Prep", "High-Protein", "Breakfast"],
+    dish_category: "Breakfast",
+    subsection: "Bowls & Other",
+    description:
+      "A crispy baked hash brown base layered with breakfast sausage, baked eggs, and melted cheese, sliced into four grab-and-go breakfast bowls.",
+    prep_time_mins: 15,
+    cook_time_mins: 45,
+    native_serving: 4,
+    accent: "#C67C2E",
+
+    macro_profiles: {
+      serving_4: { calories: 410, protein_g: 29, fat_g: 23, carbs_g: 24 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Frozen shredded hash browns", prep: "", quantity: "4", unit: "cups", category: "Pantry" },
+        { item: "Olive oil or butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Eggs", prep: "large", quantity: "8", unit: "", category: "Dairy" },
+        { item: "Milk", prep: "or egg whites", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Breakfast sausage", prep: "cooked and sliced", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Shredded cheese", prep: "cheddar or Colby jack", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh chives", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the hash browns",
+        detail: "Preheat the oven to 375°F (190°C). Toss the hash browns with olive oil, salt, and pepper, then press evenly into the bottom of a greased baking dish. Bake for 18-22 minutes until golden and crispy."
+      },
+      {
+        step_number: 2,
+        title: "Prepare the eggs",
+        detail: "Whisk the eggs with the milk, salt, and pepper until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Assemble the bowls",
+        detail: "Remove the hash browns from the oven, layer the sausage evenly on top, then pour the egg mixture over everything. Sprinkle the shredded cheese across the surface."
+      },
+      {
+        step_number: 4,
+        title: "Bake",
+        detail: "Return the dish to the oven and bake for 20-25 minutes, until the eggs are fully set in the center."
+      },
+      {
+        step_number: 5,
+        title: "Finish & portion",
+        detail: "Sprinkle with chopped chives, cool slightly, then slice into 4 equal portions."
+      },
+      {
+        step_number: 6,
+        title: "Store & reheat",
+        detail: "Store in airtight containers in the refrigerator for up to 4 days. Reheat for 60-90 seconds in the microwave."
+      }
+    ]
+  },
+
+  {
     recipe_id: "lemon-herb-dill-protein-sauce",
     title: "Lemon Herb Dill Protein Sauce",
     category: "Sauce",
