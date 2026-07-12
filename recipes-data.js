@@ -16586,6 +16586,786 @@ const RECIPES = [
         detail: "Freeze another 30 to 45 minutes, until the shell sets with a snap, before serving."
       }
     ]
+  },
+
+  {
+    recipe_id: "strawberry-cheesecake-yogurt-cup",
+    title: "Strawberry Cheesecake Yogurt Cup",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍓",
+    tags: ["No-Bake", "High-Protein", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A layered no-bake yogurt cup with Greek yogurt, cream cheese, honey, and diced strawberries, finished with a sprinkle of crushed graham crackers for that classic cheesecake crunch.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#E68A9C",
+
+    macro_profiles: {
+      serving_1: { calories: 180, protein_g: 18, fat_g: 5, carbs_g: 16 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "softened", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Strawberries", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Graham crackers", prep: "crushed", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail: "Whisk the Greek yogurt, cream cheese, and honey together until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Layer with strawberries",
+        detail: "Spoon a layer of the yogurt mixture into a cup, add a layer of diced strawberries, and repeat until the cup is full."
+      },
+      {
+        step_number: 3,
+        title: "Top it off",
+        detail: "Sprinkle the crushed graham crackers over the top."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail: "Chill for 20 minutes before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-peanut-butter-yogurt-cup",
+    title: "Chocolate Peanut Butter Yogurt Cup",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍫",
+    tags: ["No-Bake", "High-Protein", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A rich, chocolatey yogurt cup blended with cocoa powder, peanut butter, and a touch of maple syrup, topped with dark chocolate shavings.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#5E3A28",
+
+    macro_profiles: {
+      serving_1: { calories: 195, protein_g: 20, fat_g: 7, carbs_g: 13 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Cocoa powder", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Natural peanut butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Dark chocolate", prep: "shaved, for topping", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix until smooth",
+        detail: "Whisk the Greek yogurt, cocoa powder, peanut butter, and maple syrup together until completely smooth."
+      },
+      {
+        step_number: 2,
+        title: "Spoon into a cup",
+        detail: "Spoon the mixture into a serving cup."
+      },
+      {
+        step_number: 3,
+        title: "Top it off",
+        detail: "Top with dark chocolate shavings."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail: "Chill before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "blueberry-vanilla-yogurt-cup",
+    title: "Blueberry Vanilla Yogurt Cup",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🫐",
+    tags: ["No-Bake", "High-Protein", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A bright, creamy yogurt cup layered with fresh blueberries and vanilla, finished with sliced almonds for crunch.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#5470A6",
+
+    macro_profiles: {
+      serving_1: { calories: 170, protein_g: 17, fat_g: 5, carbs_g: 14 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Blueberries", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Sliced almonds", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail: "Whisk the Greek yogurt, vanilla, and honey together."
+      },
+      {
+        step_number: 2,
+        title: "Layer with blueberries",
+        detail: "Layer the yogurt mixture with the blueberries in a cup."
+      },
+      {
+        step_number: 3,
+        title: "Top with almonds",
+        detail: "Top with the sliced almonds."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail: "Chill for 20 minutes and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-cheesecake-yogurt-cup",
+    title: "Lemon Cheesecake Yogurt Cup",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍋",
+    tags: ["No-Bake", "High-Protein", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A tangy no-bake yogurt cup swirled with cream cheese, lemon juice, and zest, topped with graham cracker crumbs.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#E3C24E",
+
+    macro_profiles: {
+      serving_1: { calories: 185, protein_g: 18, fat_g: 6, carbs_g: 15 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Light cream cheese", prep: "softened", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Lemon zest", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Graham cracker crumbs", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix until smooth",
+        detail: "Mix the Greek yogurt, cream cheese, lemon juice, and lemon zest until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Layer into a cup",
+        detail: "Layer the mixture into a cup."
+      },
+      {
+        step_number: 3,
+        title: "Top it off",
+        detail: "Top with graham cracker crumbs."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail: "Chill for 20 minutes and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mango-coconut-yogurt-cup",
+    title: "Mango Coconut Yogurt Cup",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🥭",
+    tags: ["No-Bake", "High-Protein", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A tropical no-bake yogurt cup layered with sweet mango and finished with a sprinkle of shredded coconut.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#F2A63D",
+
+    macro_profiles: {
+      serving_1: { calories: 180, protein_g: 16, fat_g: 5, carbs_g: 18 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Mango", prep: "diced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Unsweetened shredded coconut", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail: "Mix the Greek yogurt and honey until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Layer with mango",
+        detail: "Layer the yogurt mixture with the mango cubes."
+      },
+      {
+        step_number: 3,
+        title: "Top with coconut",
+        detail: "Sprinkle the shredded coconut on top."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail: "Chill for 20 minutes and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cookies-and-cream-yogurt-cup",
+    title: "Cookies & Cream Yogurt Cup",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍪",
+    tags: ["No-Bake", "High-Protein", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A cookies-and-cream yogurt cup blended with vanilla protein powder and folded with crushed chocolate sandwich cookies.",
+    prep_time_mins: 5,
+    cook_time_mins: 20,
+    native_serving: 1,
+    accent: "#57534E",
+
+    macro_profiles: {
+      serving_1: { calories: 195, protein_g: 19, fat_g: 7, carbs_g: 14 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Greek yogurt", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Chocolate sandwich cookies", prep: "crushed", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Chocolate sandwich cookies", prep: "crushed, for topping", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix until smooth",
+        detail: "Mix the Greek yogurt, protein powder, and vanilla until smooth."
+      },
+      {
+        step_number: 2,
+        title: "Fold in the cookies",
+        detail: "Fold in the crushed cookies."
+      },
+      {
+        step_number: 3,
+        title: "Spoon & top",
+        detail: "Spoon into a cup and top with extra cookie crumbs."
+      },
+      {
+        step_number: 4,
+        title: "Chill & serve",
+        detail: "Chill for 20 minutes and enjoy."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "black-bean-brownie-batter",
+    title: "Black Bean Brownie Batter",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍫",
+    tags: ["No-Bake", "High-Protein", "Vegan-Friendly"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A fudgy, no-bake brownie batter blended from black beans, cocoa powder, peanut butter, and maple syrup, folded with dark chocolate chips — brownie flavor with zero oven and no raw-egg worry.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#2E1D12",
+
+    macro_profiles: {
+      serving_2: { calories: 285, protein_g: 12, fat_g: 10, carbs_g: 38 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Black beans", prep: "canned, drained and rinsed", quantity: "240", unit: "g", category: "Pantry" },
+        { item: "Cocoa powder", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "40", unit: "g", category: "Pantry" },
+        { item: "Natural peanut butter", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "30", unit: "g", category: "Pantry" },
+        { item: "Salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Rinse the beans",
+        detail: "Drain and thoroughly rinse the black beans, then shake off as much water as you can — do this well and you genuinely can't taste them."
+      },
+      {
+        step_number: 2,
+        title: "Add to the blender",
+        detail: "Add the beans, cocoa powder, maple syrup, peanut butter, and a pinch of salt to a blender or food processor."
+      },
+      {
+        step_number: 3,
+        title: "Blend until silky",
+        detail: "Blend until completely smooth, scraping down the sides a couple of times until there's no grit left. Blend longer than feels necessary — that's the difference between gritty and silky brownie batter."
+      },
+      {
+        step_number: 4,
+        title: "Fold in the chips",
+        detail: "Spoon it into a jar and fold most of the chocolate chips through by hand, off the blender, so they stay whole instead of getting chopped up."
+      },
+      {
+        step_number: 5,
+        title: "Top & serve",
+        detail: "Top with the rest of the chips and eat as is, or chill briefly if you like it firmer."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "peanut-butter-chocolate-rice-cake-bars",
+    title: "Peanut Butter Chocolate Rice Cake Bars",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🥜",
+    tags: ["No-Bake", "Make-Ahead", "Kid-Friendly"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "No-bake bars of crispy rice cereal bound with warmed peanut butter and honey, topped with a melted dark chocolate and peanut butter swirl.",
+    prep_time_mins: 10,
+    cook_time_mins: 60,
+    native_serving: 8,
+    accent: "#7A4B24",
+
+    macro_profiles: {
+      serving_8: { calories: 215, protein_g: 6, fat_g: 12, carbs_g: 24 }
+    },
+
+    scaling_options: [8],
+
+    ingredients_by_serving: {
+      serving_8: [
+        { item: "Crispy rice cereal", prep: "", quantity: "90", unit: "g", category: "Pantry" },
+        { item: "Natural peanut butter", prep: "", quantity: "120", unit: "g", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "60", unit: "g", category: "Pantry" },
+        { item: "Dark chocolate", prep: "", quantity: "80", unit: "g", category: "Pantry" },
+        { item: "Salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Warm the peanut butter and honey",
+        detail: "Gently warm the peanut butter and honey together with a pinch of salt until loose and pourable, then stir in the crispy rice cereal until every piece is coated. Don't overheat, or the bars set rock-hard instead of chewy."
+      },
+      {
+        step_number: 2,
+        title: "Press into a pan",
+        detail: "Tip it into a lined pan and press down firmly with the back of a spoon, really compacting it so the bars hold their shape — loosely packed bars fall apart the second you pick one up."
+      },
+      {
+        step_number: 3,
+        title: "Add the chocolate",
+        detail: "Melt the dark chocolate, spread it over the top, then drizzle a little extra peanut butter across and swirl it through."
+      },
+      {
+        step_number: 4,
+        title: "Chill & cut",
+        detail: "Chill in the fridge (not the freezer, so it doesn't crack when you cut it) until the chocolate sets, then lift it out and cut into bars."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dark-chocolate-walnut-sea-salt-bark",
+    title: "Dark Chocolate & Walnut Bark with Sea Salt",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🧂",
+    tags: ["No-Bake", "Make-Ahead", "Freezer"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A snappy dark chocolate bark scattered with toasted walnuts, cacao nibs, and flaky sea salt — a freezer-ready fix for a chocolate craving that settles the urge without the sugar spike and crash.",
+    prep_time_mins: 10,
+    cook_time_mins: 60,
+    native_serving: 4,
+    accent: "#362419",
+
+    macro_profiles: {
+      serving_4: { calories: 220, protein_g: 4, fat_g: 16, carbs_g: 16 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Dark chocolate", prep: "70% or higher", quantity: "100", unit: "g", category: "Pantry" },
+        { item: "Walnuts", prep: "roughly chopped", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Flaky sea salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Cacao nibs", prep: "optional", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Melt the chocolate",
+        detail: "Melt the dark chocolate gently, either in short bursts in the microwave or over a pan of barely simmering water, stirring until smooth so it does not catch and turn grainy."
+      },
+      {
+        step_number: 2,
+        title: "Toast the walnuts",
+        detail: "Toast the walnuts in a dry pan for a minute until fragrant, because the warmth deepens their flavor and adds crunch against the smooth chocolate."
+      },
+      {
+        step_number: 3,
+        title: "Spread it thin",
+        detail: "Pour the melted chocolate onto a lined tray and spread it into an even layer, thin enough to snap cleanly once it sets."
+      },
+      {
+        step_number: 4,
+        title: "Scatter the toppings",
+        detail: "Scatter the walnuts and cacao nibs over the surface and press them in lightly, so they anchor into the chocolate instead of falling off later."
+      },
+      {
+        step_number: 5,
+        title: "Salt & chill",
+        detail: "Sprinkle the flaky salt over as the chocolate begins to set — wait until it's just started setting or the salt will dissolve — then chill until firm and break into shards."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "frozen-banana-nice-cream",
+    title: "Frozen Banana Nice Cream",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍌",
+    tags: ["No-Bake", "Dairy-Free", "Quick"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A soft-serve-style nice cream blended from frozen bananas, almond butter, vanilla, and cinnamon, topped with cacao nibs and walnuts — zero added sugar, whipped up with no ice cream tub required.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 1,
+    accent: "#D6A75B",
+
+    macro_profiles: {
+      serving_1: { calories: 320, protein_g: 6, fat_g: 12, carbs_g: 48 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Bananas", prep: "ripe, frozen", quantity: "2", unit: "", category: "Produce" },
+        { item: "Almond butter", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Ground cinnamon", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Almond milk", prep: "splash", quantity: "", unit: "", category: "Dairy" },
+        { item: "Cacao nibs", prep: "optional", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Walnuts", prep: "chopped, optional", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Blend the frozen bananas",
+        detail: "Blend the banana chunks with the almond butter, vanilla, cinnamon, and a splash of almond milk."
+      },
+      {
+        step_number: 2,
+        title: "Scrape and re-blend",
+        detail: "Stop, scrape down the sides, and blend again until it turns smooth and creamy like soft-serve."
+      },
+      {
+        step_number: 3,
+        title: "Scoop",
+        detail: "Spoon it into a bowl while it's still soft."
+      },
+      {
+        step_number: 4,
+        title: "Top & serve",
+        detail: "Finish with cacao nibs, walnuts, and a little extra cinnamon."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "date-peanut-butter-protein-bars",
+    title: "Date Peanut Butter Protein Bars",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🥜",
+    tags: ["No-Bake", "High-Protein", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "No-bake protein bars blended from Medjool dates and peanut butter, bound with protein powder and oats, and studded with dark chocolate chips — a grab-and-go answer to a sweet craving.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 8,
+    accent: "#6F4A30",
+
+    macro_profiles: {
+      serving_8: { calories: 240, protein_g: 9, fat_g: 12, carbs_g: 26 }
+    },
+
+    scaling_options: [8],
+
+    ingredients_by_serving: {
+      serving_8: [
+        { item: "Medjool dates", prep: "pitted", quantity: "10", unit: "", category: "Produce" },
+        { item: "Natural peanut butter", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Vanilla protein powder", prep: "", quantity: "1", unit: "scoop", category: "Pantry" },
+        { item: "Rolled oats", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Sea salt", prep: "pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "optional", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Soften the dates",
+        detail: "If the dates are firm, soak them in warm water for 10 minutes and drain, so they blend into a smooth paste."
+      },
+      {
+        step_number: 2,
+        title: "Blend the base",
+        detail: "Blend the dates and peanut butter until a thick, sticky paste forms."
+      },
+      {
+        step_number: 3,
+        title: "Add the dry ingredients",
+        detail: "Mix in the protein powder, oats, and a pinch of salt until a stiff dough comes together."
+      },
+      {
+        step_number: 4,
+        title: "Fold in the chocolate",
+        detail: "Stir in the chocolate chips and melted coconut oil."
+      },
+      {
+        step_number: 5,
+        title: "Press firmly",
+        detail: "Press the mixture into a lined loaf pan in an even layer."
+      },
+      {
+        step_number: 6,
+        title: "Chill",
+        detail: "Chill 30 minutes until firm enough to slice cleanly."
+      },
+      {
+        step_number: 7,
+        title: "Slice & store",
+        detail: "Cut into 8 bars and keep them in the fridge."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "greek-yogurt-berry-cheesecake-cups",
+    title: "Greek Yogurt Berry Cheesecake Cups",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🍇",
+    tags: ["No-Bake", "High-Protein", "Make-Ahead"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A no-bake cheesecake cup built on Greek yogurt and almond butter with lemon zest, topped with mixed berries and crushed toasted almonds for a crust-like crunch.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 2,
+    accent: "#C1466B",
+
+    macro_profiles: {
+      serving_2: { calories: 290, protein_g: 18, fat_g: 14, carbs_g: 22 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Almond butter", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Raw honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon zest", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Mixed berries", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Almonds", prep: "crushed", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Toast the almonds",
+        detail: "Lightly toast the crushed almonds for crunch and a crust-like feel."
+      },
+      {
+        step_number: 2,
+        title: "Make the cheesecake base",
+        detail: "Whisk the Greek yogurt, almond butter, vanilla, honey, and lemon zest until smooth and thick."
+      },
+      {
+        step_number: 3,
+        title: "Taste",
+        detail: "Adjust the honey to your sweetness."
+      },
+      {
+        step_number: 4,
+        title: "Spoon into cups",
+        detail: "Divide the mixture between two small glasses or jars."
+      },
+      {
+        step_number: 5,
+        title: "Top it off",
+        detail: "Add the berries and crushed almonds over the top."
+      },
+      {
+        step_number: 6,
+        title: "Chill",
+        detail: "Chill 15 minutes so it sets into a cheesecake-like texture."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chocolate-walnut-blueberry-yogurt-bowl",
+    title: "Chocolate Walnut Blueberry Yogurt Bowl",
+    category: "Dessert",
+    source: "Desserts",
+    icon: "🫐",
+    tags: ["No-Bake", "High-Protein", "Freezer"],
+    dish_category: "Desserts",
+    subsection: "Protein Dessert",
+    description:
+      "A Greek yogurt bowl topped with blueberries and walnuts, sealed under a cracking dark chocolate shell for a creamy, crunchy combination.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 1,
+    accent: "#47372A",
+
+    macro_profiles: {
+      serving_1: { calories: 420, protein_g: 32, fat_g: 22, carbs_g: 30 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Plain Greek yogurt", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Vanilla extract", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1.5", unit: "tbsp", category: "Pantry" },
+        { item: "Blueberries", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Walnuts", prep: "chopped", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prepare the yogurt base",
+        detail: "In a bowl, mix the Greek yogurt with vanilla extract and honey until smooth and creamy."
+      },
+      {
+        step_number: 2,
+        title: "Add the toppings",
+        detail: "Top the yogurt evenly with blueberries and chopped walnuts."
+      },
+      {
+        step_number: 3,
+        title: "Melt the chocolate",
+        detail: "In a microwave-safe bowl, melt the dark chocolate chips with coconut oil in 20-second intervals, stirring until smooth."
+      },
+      {
+        step_number: 4,
+        title: "Create the shell",
+        detail: "Pour the melted chocolate evenly over the yogurt and toppings, spreading gently to cover."
+      },
+      {
+        step_number: 5,
+        title: "Chill",
+        detail: "Place the bowl in the freezer for 10–15 minutes until the chocolate hardens into a shell."
+      },
+      {
+        step_number: 6,
+        title: "Serve",
+        detail: "Crack the chocolate shell with a spoon and enjoy the creamy, crunchy texture combination."
+      }
+    ]
   }
 ];
 
