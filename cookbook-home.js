@@ -1594,7 +1594,7 @@
     "Sandwiches":            { icon: "🥪", accent: "#B98A4B", blurb: "Stacked, handheld, low-carb-friendly bites." },
     "Desserts":              { icon: "🍰", accent: "#C9738B", blurb: "Icebox cakes, trifles, and sweet make-ahead treats." },
     "Salsas & Dips":         { icon: "🌶️", accent: "#C1442E", blurb: "Fresh, no-cook salsas and dips for chips, tacos, and grilled everything." },
-    "Sauces":                { icon: "🥄", accent: "#BF7A3D", blurb: "Creamy, protein-packed yogurt sauces to top any meal." },
+    "Sauces":                { icon: "🥄", accent: "#BF7A3D", blurb: "Sauces for any meal — protein-packed yogurt drizzles and buttery pasta sauces alike." },
     "Marinades":             { icon: "🧂", accent: "#A63D2F", blurb: "No-cook marinades to build a crust and lock in flavor before the grill." }
   };
   // A small curated month→category weight table (no data-model change — no

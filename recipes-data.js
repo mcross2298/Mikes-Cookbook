@@ -12616,6 +12616,657 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "tuscan-cream-sauce",
+    title: "Tuscan Cream Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🍃",
+    tags: ["Creamy", "Comfort", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "A rich, garlicky cream sauce with wilted spinach and sun-dried tomatoes, finished with Parmesan. Toss with your favorite pasta for an Italian-inspired night in.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#6F8F5B",
+
+    macro_profiles: {
+      serving_2: { calories: 560, protein_g: 15, fat_g: 32, carbs_g: 54 },
+      serving_4: { calories: 560, protein_g: 15, fat_g: 32, carbs_g: 54 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Sun-dried tomatoes", prep: "chopped", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Baby spinach", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Sun-dried tomatoes", prep: "chopped", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Baby spinach", prep: "", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions. Reserve 1/2 cup pasta water, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the garlic",
+        detail: "Melt the butter in a large skillet over medium heat. Add the garlic and cook for 30 seconds until fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail: "Stir in the heavy cream and sun-dried tomatoes. Simmer for 3-4 minutes, thinning with reserved pasta water if needed."
+      },
+      {
+        step_number: 4,
+        title: "Wilt & finish",
+        detail: "Stir in the spinach until wilted, then the Parmesan. Season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the drained pasta in the sauce until well coated. Divide and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cheesy-garlic-sauce",
+    title: "Cheesy Garlic Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🧈",
+    tags: ["Creamy", "Comfort", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "A silky homemade cheese sauce built on butter, garlic, and Parmesan — pure comfort-food pasta night.",
+    prep_time_mins: 5,
+    cook_time_mins: 12,
+    native_serving: 4,
+    accent: "#D8B34A",
+
+    macro_profiles: {
+      serving_2: { calories: 520, protein_g: 18, fat_g: 26, carbs_g: 50 },
+      serving_4: { calories: 520, protein_g: 18, fat_g: 26, carbs_g: 50 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "All-purpose flour", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Whole milk", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Cheddar cheese", prep: "shredded", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "All-purpose flour", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Whole milk", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Cheddar cheese", prep: "shredded", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Make the roux",
+        detail: "Melt the butter in a saucepan over medium heat. Add the garlic and cook 30 seconds, then whisk in the flour and cook 1 minute."
+      },
+      {
+        step_number: 3,
+        title: "Thicken with milk",
+        detail: "Whisk in the milk gradually and simmer, stirring often, until thickened, about 3-4 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Melt in the cheese",
+        detail: "Remove from heat and stir in the cheddar and Parmesan until smooth. Season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the drained pasta in the cheese sauce until coated. Divide and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-garlic-sauce",
+    title: "Honey Garlic Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🍯",
+    tags: ["Sweet & Savory", "Comfort", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "A sticky, glossy butter sauce with honey, garlic, and soy sauce — a sweet-savory glaze for pasta or noodles.",
+    prep_time_mins: 5,
+    cook_time_mins: 10,
+    native_serving: 4,
+    accent: "#C98A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 380, protein_g: 8, fat_g: 14, carbs_g: 58 },
+      serving_4: { calories: 380, protein_g: 8, fat_g: 14, carbs_g: 58 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "3", unit: "", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "6", unit: "", category: "Produce" },
+        { item: "Honey", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Red pepper flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the garlic",
+        detail: "Melt the butter in a skillet over medium heat. Add the garlic and cook 30 seconds until fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Simmer the glaze",
+        detail: "Stir in the honey, soy sauce, and red pepper flakes. Simmer 2-3 minutes until glossy and slightly thickened."
+      },
+      {
+        step_number: 4,
+        title: "Toss & serve",
+        detail: "Toss the pasta in the sauce until coated. Garnish with sesame seeds."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "pink-sauce-pasta",
+    title: "Pink Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🍅",
+    tags: ["Creamy", "Comfort", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "Tomato sauce meets heavy cream and Parmesan for a blush-pink, restaurant-style pasta sauce.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C96B5A",
+
+    macro_profiles: {
+      serving_2: { calories: 480, protein_g: 14, fat_g: 22, carbs_g: 55 },
+      serving_4: { calories: 480, protein_g: 14, fat_g: 22, carbs_g: 55 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Tomato sauce", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Tomato sauce", prep: "", quantity: "2", unit: "cups", category: "Pantry" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Fresh basil", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the garlic",
+        detail: "Heat the olive oil in a skillet over medium heat. Add the garlic and cook 30 seconds until fragrant."
+      },
+      {
+        step_number: 3,
+        title: "Simmer the tomato base",
+        detail: "Stir in the tomato sauce and simmer 5 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Turn it pink",
+        detail: "Stir in the heavy cream and Parmesan. Simmer until smooth and blush pink. Season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the pasta in the sauce until coated. Garnish with fresh basil."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "buffalo-chicken-pasta-sauce",
+    title: "Buffalo Chicken Pasta Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🔥",
+    tags: ["Creamy", "Spicy", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "A creamy, spicy buffalo sauce loaded with seared chicken and Parmesan — buffalo wing flavor, pasta night style.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B23A2E",
+
+    macro_profiles: {
+      serving_2: { calories: 560, protein_g: 32, fat_g: 28, carbs_g: 48 },
+      serving_4: { calories: 560, protein_g: 32, fat_g: 28, carbs_g: 48 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Boneless skinless chicken breast", prep: "diced", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Buffalo sauce", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Boneless skinless chicken breast", prep: "diced", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Buffalo sauce", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Heavy cream", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Sear the chicken",
+        detail: "Melt the butter in a large skillet over medium-high heat. Season the chicken and cook until it reaches 165°F internally. Set aside."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail: "In the same skillet, sauté the garlic 30 seconds, then stir in the buffalo sauce and heavy cream. Simmer 3-4 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Finish & combine",
+        detail: "Melt in the Parmesan and return the chicken to the sauce. Season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the pasta in the sauce until coated. Divide and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "roasted-red-pepper-pasta-sauce",
+    title: "Roasted Red Pepper Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🫑",
+    tags: ["Creamy", "Comfort", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "A velvety blended sauce of roasted red peppers, cream, garlic, and Parmesan — smoky-sweet and restaurant-smooth.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#A8452F",
+
+    macro_profiles: {
+      serving_2: { calories: 470, protein_g: 13, fat_g: 22, carbs_g: 54 },
+      serving_4: { calories: 470, protein_g: 13, fat_g: 22, carbs_g: 54 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Roasted red peppers", prep: "jarred", quantity: "2", unit: "whole", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Roasted red peppers", prep: "jarred", quantity: "4", unit: "whole", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Blend the peppers",
+        detail: "Purée the roasted red peppers in a blender or food processor until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail: "Heat the olive oil in a skillet over medium heat. Sauté the garlic 30 seconds, then stir in the pepper purée and heavy cream. Simmer 4-5 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Finish",
+        detail: "Stir in the Parmesan until smooth. Season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the pasta in the sauce until coated. Divide and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "carbonara-sauce",
+    title: "Carbonara",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🥓",
+    tags: ["Comfort", "Stovetop", "Classic"],
+    dish_category: "Sauces",
+    description:
+      "Classic Roman carbonara — crisp bacon and a glossy egg-and-Parmesan sauce that clings to hot spaghetti, no cream needed.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_2: { calories: 620, protein_g: 26, fat_g: 30, carbs_g: 58 },
+      serving_4: { calories: 620, protein_g: 26, fat_g: 30, carbs_g: 58 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Spaghetti", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Bacon", prep: "chopped", quantity: "2", unit: "slices", category: "Meat" },
+        { item: "Eggs", prep: "lightly beaten", quantity: "1", unit: "large", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Spaghetti", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Bacon", prep: "chopped", quantity: "4", unit: "slices", category: "Meat" },
+        { item: "Eggs", prep: "lightly beaten", quantity: "2", unit: "large", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Black pepper", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the spaghetti in salted water according to package directions. Reserve 1 cup pasta water before draining."
+      },
+      {
+        step_number: 2,
+        title: "Crisp the bacon",
+        detail: "Cook the bacon in a skillet over medium heat until crisp. Keep the rendered fat in the pan."
+      },
+      {
+        step_number: 3,
+        title: "Whisk the egg mixture",
+        detail: "In a bowl, whisk together the eggs, Parmesan, and black pepper."
+      },
+      {
+        step_number: 4,
+        title: "Combine off heat",
+        detail: "Off heat, toss the hot pasta with the bacon and its fat, then quickly stir in the egg mixture, adding splashes of reserved pasta water until glossy and creamy. Don't let the eggs scramble."
+      },
+      {
+        step_number: 5,
+        title: "Serve",
+        detail: "Plate immediately, finishing with extra black pepper and Parmesan."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cajun-cream-sauce",
+    title: "Cajun Cream Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🌶️",
+    tags: ["Creamy", "Spicy", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "A bold, peppery cream sauce built on Cajun seasoning and Parmesan — quick heat for pasta night.",
+    prep_time_mins: 5,
+    cook_time_mins: 12,
+    native_serving: 4,
+    accent: "#A85D2E",
+
+    macro_profiles: {
+      serving_2: { calories: 500, protein_g: 14, fat_g: 26, carbs_g: 50 },
+      serving_4: { calories: 500, protein_g: 14, fat_g: 26, carbs_g: 50 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Cajun seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Cajun seasoning", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Heavy cream", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Bloom the spices",
+        detail: "Melt the butter in a skillet over medium heat. Sauté the garlic 30 seconds, then stir in the Cajun seasoning and cook 30 seconds more."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail: "Stir in the heavy cream and simmer 3-4 minutes until slightly thickened."
+      },
+      {
+        step_number: 4,
+        title: "Finish",
+        detail: "Melt in the Parmesan and season with salt."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the pasta in the sauce until coated. Divide and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mushroom-cream-sauce",
+    title: "Mushroom Cream Sauce",
+    category: "Sauce",
+    source: "Pasta Sauces",
+    icon: "🍄",
+    tags: ["Creamy", "Comfort", "Stovetop"],
+    dish_category: "Sauces",
+    description:
+      "Browned mushrooms simmered in garlicky cream with a hint of thyme and Parmesan — an earthy, savory pasta night classic.",
+    prep_time_mins: 5,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#7A6A54",
+
+    macro_profiles: {
+      serving_2: { calories: 470, protein_g: 13, fat_g: 25, carbs_g: 48 },
+      serving_4: { calories: 470, protein_g: 13, fat_g: 25, carbs_g: 48 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Penne pasta", prep: "", quantity: "6", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Mushrooms", prep: "sliced", quantity: "8", unit: "oz", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Fresh thyme", prep: "", quantity: "1/2", unit: "tsp", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Mushrooms", prep: "sliced", quantity: "1", unit: "lb", category: "Produce" },
+        { item: "Garlic cloves", prep: "minced", quantity: "4", unit: "", category: "Produce" },
+        { item: "Heavy cream", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Fresh thyme", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta in salted water according to package directions, then drain."
+      },
+      {
+        step_number: 2,
+        title: "Brown the mushrooms",
+        detail: "Melt the butter in a skillet over medium-high heat. Cook the mushrooms until browned, 5-6 minutes."
+      },
+      {
+        step_number: 3,
+        title: "Add the garlic",
+        detail: "Stir in the garlic and cook 30 seconds until fragrant."
+      },
+      {
+        step_number: 4,
+        title: "Build the sauce",
+        detail: "Stir in the heavy cream and thyme. Simmer 4-5 minutes until slightly thickened, then melt in the Parmesan. Season with salt and pepper."
+      },
+      {
+        step_number: 5,
+        title: "Toss & serve",
+        detail: "Toss the pasta in the sauce until coated. Divide and serve."
+      }
+    ]
+  },
+
+  {
     recipe_id: "chimichurri-steak-marinade",
     title: "Chimichurri Steak Marinade",
     category: "Marinade",
@@ -18021,6 +18672,19 @@ const COLLECTIONS = [
     icon: "🥄",
     status: "live",
     source_match: "Sauces"
+  },
+  {
+    id: "pasta-sauces",
+    title: "Pasta Sauces",
+    tag: "★ Collection · Mix & Match",
+    blurb:
+      "Rich, buttery stovetop cream sauces to toss with pasta — comfort-food " +
+      "night in, from Tuscan cream to classic carbonara.",
+    designer: "📖 Saved From Around the Web",
+    accent: "#C98A2B",          // honey-butter gold
+    icon: "🍝",
+    status: "live",
+    source_match: "Pasta Sauces"
   },
   {
     id: "marinades",
