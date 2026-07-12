@@ -19526,6 +19526,781 @@ const RECIPES = [
         detail: "Top with steak and spoon the chimichurri over the top. Finish with extra lime zest or chili flakes if you want it brighter."
       }
     ]
+  },
+
+  {
+    recipe_id: "crispy-chicken-rice-bowl-spicy-cream-drizzle",
+    title: "Crispy Chicken Rice Bowl with Spicy Cream Drizzle",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍗",
+    tags: ["Meal-Prep", "High-Protein", "Air-Fryer"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Panko-crusted chicken strips, air-fried crisp and piled over rice with cucumber, carrot, and avocado, finished with a Greek-yogurt-sriracha drizzle and sesame seeds.",
+    prep_time_mins: 15,
+    cook_time_mins: 15,
+    native_serving: 4,
+    accent: "#C2793A",
+
+    macro_profiles: {
+      serving_2: { calories: 510, protein_g: 48, fat_g: 28, carbs_g: 12 },
+      serving_4: { calories: 510, protein_g: 48, fat_g: 28, carbs_g: 12 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken breast", prep: "cut into strips", quantity: "10", unit: "oz", category: "Meat" },
+        { item: "Cooked white rice", prep: "", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Avocado", prep: "", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Cucumber", prep: "chopped", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Carrot", prep: "shredded", quantity: "2/3", unit: "cup", category: "Produce" },
+        { item: "Fresh cilantro", prep: "", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Green onion", prep: "sliced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Black sesame seeds", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Panko breadcrumbs", prep: "", quantity: "2/3", unit: "cup", category: "Pantry" },
+        { item: "Egg", prep: "beaten", quantity: "2", unit: "small", category: "Dairy" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cooking spray or oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Light mayo", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "2", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Chicken breast", prep: "cut into strips", quantity: "1.25", unit: "lbs", category: "Meat" },
+        { item: "Cooked white rice", prep: "", quantity: "3", unit: "cups", category: "Pantry" },
+        { item: "Avocado", prep: "", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Cucumber", prep: "chopped", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Carrot", prep: "shredded", quantity: "1 1/3", unit: "cups", category: "Produce" },
+        { item: "Fresh cilantro", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Green onion", prep: "sliced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Black sesame seeds", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Panko breadcrumbs", prep: "", quantity: "1 1/3", unit: "cups", category: "Pantry" },
+        { item: "Egg", prep: "beaten", quantity: "4", unit: "small", category: "Dairy" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Cooking spray or oil", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Light mayo", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "4", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Season the chicken",
+        detail: "Season the chicken strips with garlic powder, paprika, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Bread it",
+        detail: "Dip in beaten egg, then panko, until coated on all sides."
+      },
+      {
+        step_number: 3,
+        title: "Air fry or bake",
+        detail: "Air fry or bake at 400°F for 12 to 15 minutes until golden and cooked through."
+      },
+      {
+        step_number: 4,
+        title: "Mix the drizzle",
+        detail: "Whisk together the Greek yogurt, mayo, sriracha, and lime juice."
+      },
+      {
+        step_number: 5,
+        title: "Warm the rice",
+        detail: "Warm the rice and add it to the bowl."
+      },
+      {
+        step_number: 6,
+        title: "Arrange the vegetables",
+        detail: "Arrange the cucumber, carrot, and avocado around the rice."
+      },
+      {
+        step_number: 7,
+        title: "Top and finish",
+        detail: "Add the crispy chicken on top, drizzle with the spicy sauce, and finish with cilantro, green onion, and sesame seeds."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "loaded-burger-power-bowl",
+    title: "Loaded Burger Power Bowl",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍔",
+    tags: ["Meal-Prep", "High-Protein", "Low-Carb"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
+    description:
+      "All the flavor of a loaded cheeseburger in a bowl — roasted baby potatoes and seasoned ground beef over romaine with tomato, pickles, and avocado, finished with a tangy burger-sauce drizzle.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 4,
+    accent: "#A6472E",
+
+    macro_profiles: {
+      serving_2: { calories: 510, protein_g: 48, fat_g: 28, carbs_g: 12 },
+      serving_4: { calories: 510, protein_g: 48, fat_g: 28, carbs_g: 12 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "93% lean ground beef", prep: "", quantity: "9", unit: "oz", category: "Meat" },
+        { item: "Baby potatoes", prep: "cubed", quantity: "300", unit: "g", category: "Produce" },
+        { item: "Romaine lettuce", prep: "chopped", quantity: "3", unit: "cups", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "2/3", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Pickles", prep: "sliced", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "", quantity: "1/2", unit: "medium", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Paprika", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Light mayo", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Ketchup", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Pickle juice", prep: "", quantity: "2", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "93% lean ground beef", prep: "", quantity: "18", unit: "oz", category: "Meat" },
+        { item: "Baby potatoes", prep: "cubed", quantity: "600", unit: "g", category: "Produce" },
+        { item: "Romaine lettuce", prep: "chopped", quantity: "6", unit: "cups", category: "Produce" },
+        { item: "Tomato", prep: "diced", quantity: "1 1/3", unit: "cups", category: "Produce" },
+        { item: "Red onion", prep: "thinly sliced", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Pickles", prep: "sliced", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Avocado", prep: "", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Garlic powder", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Paprika", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Greek yogurt", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Light mayo", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Ketchup", prep: "", quantity: "4", unit: "tsp", category: "Pantry" },
+        { item: "Mustard", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Pickle juice", prep: "", quantity: "4", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the potatoes",
+        detail: "Heat the oven to 425°F. Toss the potatoes with olive oil, paprika, garlic powder, salt, and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Roast",
+        detail: "Roast for 25 to 30 minutes until browned and crisp, flipping halfway."
+      },
+      {
+        step_number: 3,
+        title: "Cook the beef",
+        detail: "Cook the beef in a nonstick pan over medium-high heat, breaking it into small crumbles."
+      },
+      {
+        step_number: 4,
+        title: "Season",
+        detail: "Season the beef while cooking with salt, pepper, and a pinch of garlic powder."
+      },
+      {
+        step_number: 5,
+        title: "Mix the drizzle",
+        detail: "Mix the Greek yogurt, mayo, ketchup, mustard, and pickle juice."
+      },
+      {
+        step_number: 6,
+        title: "Build the base",
+        detail: "Build the base with chopped romaine."
+      },
+      {
+        step_number: 7,
+        title: "Add the toppings",
+        detail: "Add the potatoes, beef, tomato, red onion, pickles, and avocado."
+      },
+      {
+        step_number: 8,
+        title: "Finish",
+        detail: "Drizzle the sauce over the bowl right before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sausage-sweet-potato-skillet",
+    title: "Sausage Sweet Potato Skillet",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌭",
+    tags: ["Meal-Prep", "One-Pan", "Quick"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Bowls & Other",
+    description:
+      "A breakfast-for-dinner skillet of roasted sweet potato, seared chicken-apple sausage, bell pepper, and onion — filling, colorful, and easy Costco-pantry cooking.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 2,
+    accent: "#B8632E",
+
+    macro_profiles: {
+      serving_2: { calories: 480, protein_g: 32, fat_g: 22, carbs_g: 38 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Chicken and apple sausage", prep: "sliced", quantity: "1", unit: "(12 oz) package", category: "Meat" },
+        { item: "Sweet potato", prep: "cubed", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Bell peppers", prep: "chopped", quantity: "1", unit: "", category: "Produce" },
+        { item: "Yellow onion", prep: "diced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Egg whites", prep: "optional", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and black pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Spring onion", prep: "sliced, to garnish", quantity: "1", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Roast the sweet potato",
+        detail: "Cube the sweet potato and roast with olive oil, paprika, salt, and pepper until browned."
+      },
+      {
+        step_number: 2,
+        title: "Sear the sausage",
+        detail: "Slice the sausage and brown it in a hot pan with the onion until golden."
+      },
+      {
+        step_number: 3,
+        title: "Add the peppers",
+        detail: "Stir in the chopped bell peppers and cook until softened but still a little crisp."
+      },
+      {
+        step_number: 4,
+        title: "Bring it together",
+        detail: "Fold in the sweet potato and a splash of water so the seasoning coats everything."
+      },
+      {
+        step_number: 5,
+        title: "Finish it",
+        detail: "Add spring onion and black pepper before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "high-protein-chicken-pasta-bake",
+    title: "High Protein Chicken Pasta Bake",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍝",
+    tags: ["Meal-Prep", "High-Protein", "Comfort Food"],
+    dish_category: "Casseroles & Bakes",
+    subsection: "Pasta Dishes",
+    description:
+      "Shredded rotisserie chicken and high-protein pasta baked in marinara under melted mozzarella and parmesan — comfort food that tastes like more than meal prep.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 4,
+    accent: "#C9772E",
+
+    macro_profiles: {
+      serving_4: { calories: 530, protein_g: 43, fat_g: 14, carbs_g: 56 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "High-protein pasta", prep: "", quantity: "1", unit: "(8 oz) box", category: "Pantry" },
+        { item: "Rotisserie chicken", prep: "shredded", quantity: "1", unit: "", category: "Meat" },
+        { item: "Marinara sauce", prep: "", quantity: "1", unit: "(24 oz) jar", category: "Pantry" },
+        { item: "Shredded mozzarella cheese", prep: "", quantity: "1", unit: "cup", category: "Dairy" },
+        { item: "Shredded parmesan cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic cloves", prep: "minced", quantity: "2", unit: "", category: "Produce" },
+        { item: "Chili flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "to garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Boil the pasta until just al dente, since it keeps cooking once it goes into the bake."
+      },
+      {
+        step_number: 2,
+        title: "Warm the sauce",
+        detail: "Cook the garlic in olive oil, then add the marinara, chili flakes, and shredded rotisserie chicken."
+      },
+      {
+        step_number: 3,
+        title: "Mix it together",
+        detail: "Toss the pasta into the sauce with a splash of pasta water so everything gets glossy."
+      },
+      {
+        step_number: 4,
+        title: "Bake it cheesy",
+        detail: "Add to a baking dish, top with mozzarella and parmesan, then bake at 375°F until bubbling and golden."
+      },
+      {
+        step_number: 5,
+        title: "Finish it",
+        detail: "Scatter parsley over the top before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-avocado-protein-wrap",
+    title: "Chicken Avocado Protein Wrap",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌯",
+    tags: ["Meal-Prep", "High-Protein", "Quick"],
+    dish_category: "Sandwiches",
+    subsection: "Chicken",
+    description:
+      "A grilled chicken and mashed avocado wrap with a Greek yogurt base instead of heavy sauces — quick, portable, and high-protein.",
+    prep_time_mins: 10,
+    cook_time_mins: 10,
+    native_serving: 1,
+    accent: "#7A9B54",
+
+    macro_profiles: {
+      serving_1: { calories: 420, protein_g: 42, fat_g: 14, carbs_g: 32 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Whole wheat tortilla", prep: "", quantity: "1", unit: "large", category: "Pantry" },
+        { item: "Grilled chicken breast", prep: "sliced thin", quantity: "4", unit: "oz", category: "Meat" },
+        { item: "Avocado", prep: "mashed", quantity: "1/4", unit: "", category: "Produce" },
+        { item: "Lettuce", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Salsa", prep: "", quantity: "1", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Warm the tortilla",
+        detail: "Heat the tortilla slightly in a pan or microwave until warm and flexible, making it easier to fold without cracking."
+      },
+      {
+        step_number: 2,
+        title: "Slice the chicken",
+        detail: "Slice the grilled chicken into thin strips so it distributes evenly across every bite of the wrap."
+      },
+      {
+        step_number: 3,
+        title: "Mash the avocado",
+        detail: "Mash the avocado lightly in a bowl, keeping some texture for creaminess without making it overly smooth."
+      },
+      {
+        step_number: 4,
+        title: "Spread the base",
+        detail: "Spread Greek yogurt evenly across the tortilla as a high-protein, tangy base layer."
+      },
+      {
+        step_number: 5,
+        title: "Fill the wrap",
+        detail: "Add lettuce, chicken, avocado, and salsa evenly across the center of the tortilla."
+      },
+      {
+        step_number: 6,
+        title: "Roll it up",
+        detail: "Fold the sides inward and roll tightly from the bottom to create a secure wrap."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chicken-enchilada-casserole",
+    title: "Chicken Enchilada Casserole",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌮",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Casseroles & Bakes",
+    subsection: "Chicken",
+    description:
+      "Layered flour tortillas and shredded chicken baked in enchilada sauce with black beans, corn, green chiles, and zucchini, topped with melted cheese.",
+    prep_time_mins: 10,
+    cook_time_mins: 35,
+    native_serving: 4,
+    accent: "#B5432E",
+
+    macro_profiles: {
+      serving_4: { calories: 340, protein_g: 28, fat_g: 11, carbs_g: 28 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken breast", prep: "", quantity: "2-3", unit: "", category: "Meat" },
+        { item: "Black beans", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Corn", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Diced green chiles", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Onion", prep: "diced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Zucchini", prep: "chopped", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Enchilada sauce", prep: "", quantity: "2-3", unit: "cups", category: "Pantry" },
+        { item: "Flour tortillas", prep: "", quantity: "4", unit: "", category: "Pantry" },
+        { item: "Shredded cheese", prep: "", quantity: "3/4", unit: "cup", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the oven",
+        detail: "Preheat the oven to 400°F."
+      },
+      {
+        step_number: 2,
+        title: "Bake the filling",
+        detail: "In a baking dish, add the raw chicken, beans, corn, green chiles, onion, zucchini, and enchilada sauce."
+      },
+      {
+        step_number: 3,
+        title: "Cook the chicken",
+        detail: "Bake uncovered for 25 minutes or until the chicken is fully cooked."
+      },
+      {
+        step_number: 4,
+        title: "Shred the chicken",
+        detail: "Transfer all the ingredients to a separate bowl and shred the chicken."
+      },
+      {
+        step_number: 5,
+        title: "Layer the casserole",
+        detail: "In the casserole dish, layer tortillas, half the chicken mix, tortillas, then the remaining chicken mixture."
+      },
+      {
+        step_number: 6,
+        title: "Bake again",
+        detail: "Top with cheese and bake for another 10 minutes or until the cheese is melted and bubbly."
+      },
+      {
+        step_number: 7,
+        title: "Serve",
+        detail: "Slice, serve, and enjoy — pairs well with pico de gallo, street corn salsa, avocado, or guac."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sweet-chili-chicken-meal-prep-bowls",
+    title: "Sweet Chili Chicken Meal Prep Bowls",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥡",
+    tags: ["Meal-Prep", "High-Protein", "Asian-Inspired"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Cornstarch-crisped chicken glazed in sweet chili and sriracha over buttered jasmine rice, with crunchy stir-fried carrots, cabbage, and bell pepper — topped with peanuts and sesame seeds.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#CC5B3F",
+
+    macro_profiles: {
+      serving_4: { calories: 495, protein_g: 38, fat_g: 14, carbs_g: 47 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Chicken breasts", prep: "cubed", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Cornstarch", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Sweet chili sauce", prep: "", quantity: "3/4", unit: "cup", category: "Pantry" },
+        { item: "Sriracha", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Jasmine rice", prep: "uncooked", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Water", prep: "", quantity: "1 1/4", unit: "cups", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tsp", category: "Dairy" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Matchstick carrots", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Shredded red cabbage", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Bean sprouts", prep: "optional topping", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Scallions", prep: "sliced, optional topping", quantity: "4", unit: "", category: "Produce" },
+        { item: "Crushed peanuts", prep: "optional topping", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sesame seeds", prep: "optional topping", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh cilantro", prep: "chopped, optional topping", quantity: "1/2", unit: "cup", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail:
+          "Toss the chicken with cornstarch until evenly coated. Heat olive oil in a large skillet over medium-high heat, add the chicken, season with salt, and sauté 5 to 6 minutes until lightly browned. Add sweet chili sauce and sriracha, stirring to coat, then cook another 3 to 4 minutes until fully glazed."
+      },
+      {
+        step_number: 2,
+        title: "Cook the rice",
+        detail:
+          "Meanwhile, combine rice, water, butter, and salt in a pot. Bring to a boil, then cover and reduce heat to low. Simmer 12 to 15 minutes until water is absorbed. Fluff with a fork."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the vegetables",
+        detail:
+          "Remove the chicken from the skillet and set aside. In the same pan, heat a little more oil, then add carrots, red pepper, and cabbage. Add soy sauce and stir-fry about 5 minutes until tender-crisp."
+      },
+      {
+        step_number: 4,
+        title: "Assemble the bowls",
+        detail: "Divide jasmine rice evenly among four containers. Top with sautéed vegetables, then the sweet chili chicken."
+      },
+      {
+        step_number: 5,
+        title: "Add toppings",
+        detail: "Garnish with your choice of bean sprouts, scallions, crushed peanuts, sesame seeds, and cilantro."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cajun-chicken-stuffed-sweet-potato",
+    title: "Cajun Chicken Stuffed Sweet Potato",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌶️",
+    tags: ["Meal-Prep", "High-Protein", "High-Fiber"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Whole roasted sweet potatoes stuffed with blackened Cajun chicken and charred corn, finished with a smoky chipotle-yogurt sauce and a lime wedge.",
+    prep_time_mins: 15,
+    cook_time_mins: 50,
+    native_serving: 4,
+    accent: "#C0532E",
+
+    macro_profiles: {
+      serving_4: { calories: 545, protein_g: 46, fat_g: 18, carbs_g: 47 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Boneless skinless chicken thighs", prep: "", quantity: "680", unit: "g", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Cajun seasoning", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Sweet potatoes", prep: "", quantity: "4", unit: "medium", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Corn kernels", prep: "fresh or frozen", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1/2", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Plain Greek yogurt", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Mayonnaise", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Lime juice", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Chipotle in adobo sauce", prep: "or chipotle powder to taste", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Lime wedges", prep: "to serve", quantity: "4", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Bake the sweet potatoes",
+        detail:
+          "Preheat oven to 400°F. Scrub sweet potatoes, pierce with a fork, and rub lightly with olive oil and salt. Roast on a baking sheet for 40 to 50 minutes until tender. Let cool slightly."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail:
+          "While potatoes bake, heat olive oil in a skillet over medium-high heat. Toss chicken thighs with Cajun seasoning, smoked paprika, garlic powder, salt, and pepper. Cook 5 to 6 minutes per side until golden and cooked through. Rest 5 minutes, then chop into bite-sized pieces."
+      },
+      {
+        step_number: 3,
+        title: "Prepare the corn topping",
+        detail: "In the same skillet, add a little olive oil. Sauté corn with smoked paprika, salt, and pepper for 3 to 4 minutes until lightly charred."
+      },
+      {
+        step_number: 4,
+        title: "Make the chipotle yogurt sauce",
+        detail: "In a small bowl, mix Greek yogurt, mayonnaise, lime juice, chipotle sauce, and salt. Stir until smooth."
+      },
+      {
+        step_number: 5,
+        title: "Assemble",
+        detail: "Cut each sweet potato open and fluff the inside with a fork. Top with chopped Cajun chicken and charred corn. Serve with a side of chipotle yogurt sauce and a lime wedge."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "fiesta-potato-bowls",
+    title: "Fiesta Potato Bowls",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🥔",
+    tags: ["Meal-Prep", "High-Protein", "Tex-Mex"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Beef & Steak",
+    description:
+      "Roasted potatoes and taco-seasoned ground beef topped with queso and homemade pico de gallo — a fiesta-flavored bowl with a little leftover.",
+    prep_time_mins: 15,
+    cook_time_mins: 30,
+    native_serving: 2,
+    accent: "#B5652E",
+
+    macro_profiles: {
+      serving_2: { calories: 580, protein_g: 41, fat_g: 25, carbs_g: 47 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Potatoes", prep: "chopped", quantity: "3", unit: "medium (~1 lb)", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Ground beef", prep: "", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Taco seasoning", prep: "1 packet", quantity: "2.5", unit: "tbsp", category: "Pantry" },
+        { item: "Queso", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Tomato", prep: "diced", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Red onion", prep: "diced", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Jalapeño", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Fresh cilantro", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Lime", prep: "juiced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Taco Bell fire sauce", prep: "optional, to top", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Preheat the oven",
+        detail: "Preheat oven to 450°F."
+      },
+      {
+        step_number: 2,
+        title: "Roast the potatoes",
+        detail: "Chop the potatoes and toss with olive oil, salt, and garlic powder. Spread evenly on a baking sheet and roast for 30 minutes, flipping halfway, until golden and crispy."
+      },
+      {
+        step_number: 3,
+        title: "Cook the beef",
+        detail: "While potatoes cook, brown the ground beef in a skillet over medium heat. Drain if needed, then stir in the taco seasoning with a splash of water. Simmer until thickened."
+      },
+      {
+        step_number: 4,
+        title: "Make the pico",
+        detail: "In a small bowl, mix together the tomato, onion, jalapeño, cilantro, lime juice, and salt."
+      },
+      {
+        step_number: 5,
+        title: "Assemble",
+        detail: "Assemble bowls by layering roasted potatoes, seasoned beef, queso, spoonfuls of pico, and any extra toppings you like."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "sriracha-chicken-caesar-flatbreads",
+    title: "Sriracha Chicken Caesar Flatbreads",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🫓",
+    tags: ["Meal-Prep", "High-Protein", "Quick"],
+    dish_category: "Grilled & Sheet-Pan",
+    subsection: "Chicken",
+    description:
+      "Crispy baked flatbreads topped with a sriracha-kissed chicken Caesar salad — quick weeknight meal prep built from a store-bought salad kit and whatever chicken is on hand.",
+    prep_time_mins: 10,
+    cook_time_mins: 12,
+    native_serving: 2,
+    accent: "#8A2E2E",
+
+    macro_profiles: {
+      serving_2: { calories: 560, protein_g: 44, fat_g: 27, carbs_g: 30 }
+    },
+
+    scaling_options: [2],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Caesar salad kit", prep: "or lettuce, Caesar dressing, cheese, and croutons", quantity: "1", unit: "kit", category: "Produce" },
+        { item: "Cooked chicken", prep: "chopped or shredded (nuggets, rotisserie, or leftovers)", quantity: "2", unit: "cups", category: "Meat" },
+        { item: "Flatbreads or pizza crusts", prep: "", quantity: "2", unit: "", category: "Pantry" },
+        { item: "Sriracha", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Cook the chicken your preferred way (breaded chicken chunks in the air fryer work well)."
+      },
+      {
+        step_number: 2,
+        title: "Bake the flatbreads",
+        detail: "Preheat oven to 425°F and add the flatbreads. Cook 10 to 12 minutes or until crispy."
+      },
+      {
+        step_number: 3,
+        title: "Prepare the salad",
+        detail: "Chop the lettuce into smaller pieces before adding the crushed croutons and cheese."
+      },
+      {
+        step_number: 4,
+        title: "Add the chicken",
+        detail: "When the chicken is cooked, chop or shred and add it to the salad."
+      },
+      {
+        step_number: 5,
+        title: "Toss",
+        detail: "Toss the salad in Caesar dressing, mixing to coat evenly. Optionally add sriracha directly to the salad, starting with 1 to 2 tsp at a time."
+      },
+      {
+        step_number: 6,
+        title: "Assemble",
+        detail: "Add the salad to the flatbreads, drizzle with sriracha, and enjoy."
+      }
+    ]
   }
 ];
 
