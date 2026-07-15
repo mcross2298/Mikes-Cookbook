@@ -22024,6 +22024,888 @@ const RECIPES = [
         detail: "Enjoy immediately while warm, or pack for meal prep."
       }
     ]
+  },
+
+  {
+    recipe_id: "tortilla-pizza",
+    title: "Tortilla Pizza",
+    category: "Quick Meals",
+    source: "Simple High-Protein Recipes",
+    icon: "🍕",
+    tags: ["Air-Fryer", "Quick", "High-Protein"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "A whole wheat tortilla crisped in the air fryer under pizza sauce, chopped chicken, mozzarella, and bell pepper, red onion, and olive toppings — a single-serving flatbread pizza ready in under 15 minutes.",
+    prep_time_mins: 5,
+    cook_time_mins: 7,
+    native_serving: 1,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_1: { calories: 456, protein_g: 33, fat_g: 18, carbs_g: 40 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Large whole wheat tortilla", prep: "", quantity: "1", unit: "", category: "Pantry" },
+        { item: "Pizza sauce", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Cooked chicken", prep: "chopped", quantity: "1/2", unit: "cup", category: "Meat" },
+        { item: "Shredded mozzarella cheese", prep: "", quantity: "1/3", unit: "cup", category: "Dairy" },
+        { item: "Bell pepper", prep: "diced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "diced, for topping", quantity: "", unit: "", category: "Produce" },
+        { item: "Sliced olives", prep: "for topping", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep the tortilla",
+        detail: "Press the tortilla into the air fryer basket and spread the pizza sauce evenly to the edges."
+      },
+      {
+        step_number: 2,
+        title: "Layer the toppings",
+        detail: "Top with the chopped chicken, shredded mozzarella, and bell pepper, red onion, and olives."
+      },
+      {
+        step_number: 3,
+        title: "Air fry",
+        detail: "Air fry at 400°F for 4 to 7 minutes until the cheese is melted and the crust is crisp."
+      },
+      {
+        step_number: 4,
+        title: "Rest and serve",
+        detail: "Let rest 5 minutes, then slice and serve."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "cajun-chicken-pasta",
+    title: "Cajun Chicken Pasta",
+    category: "Quick Meals",
+    source: "Simple High-Protein Recipes",
+    icon: "🍝",
+    tags: ["Cajun", "High-Protein", "Weeknight"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Blackened cajun chicken, bell pepper, and red onion tossed with penne in a creamy blended cottage cheese sauce — a one-skillet weeknight pasta with a full spice-blend kick.",
+    prep_time_mins: 10,
+    cook_time_mins: 20,
+    native_serving: 4,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_4: { calories: 406, protein_g: 35, fat_g: 8, carbs_g: 42 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Penne pasta", prep: "", quantity: "1/2", unit: "lb", category: "Pantry" },
+        { item: "Chicken breast", prep: "cubed", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Red bell peppers", prep: "sliced", quantity: "1 1/2", unit: "", category: "Produce" },
+        { item: "Red onion", prep: "sliced", quantity: "1/2", unit: "", category: "Produce" },
+        { item: "Milk", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Blended cottage cheese", prep: "", quantity: "1/3", unit: "cup", category: "Dairy" },
+        { item: "Cajun spice blend", prep: "smoked paprika, oregano, garlic powder, onion powder, salt, and cayenne", quantity: "2", unit: "tbsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Cook the penne pasta al dente according to package directions, reserving some pasta water before draining. Set aside."
+      },
+      {
+        step_number: 2,
+        title: "Sear the chicken",
+        detail: "Season the chicken with half of the cajun spice blend and sear in a large skillet until cooked through."
+      },
+      {
+        step_number: 3,
+        title: "Sauté the vegetables",
+        detail: "In the same pan, sauté the sliced red onion and bell pepper until softened."
+      },
+      {
+        step_number: 4,
+        title: "Build the sauce",
+        detail: "Add the milk, reserved pasta water, and remaining cajun spice blend to the pan; simmer 5 minutes."
+      },
+      {
+        step_number: 5,
+        title: "Combine and serve",
+        detail: "Stir in the cooked chicken, pasta, and blended cottage cheese; toss to combine and serve warm."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "protein-mac-and-cheese",
+    title: "Protein Mac & Cheese",
+    category: "Meal Prep",
+    source: "Simple High-Protein Recipes",
+    icon: "🧀",
+    tags: ["High-Protein", "Baked", "Comfort Food"],
+    dish_category: "Casseroles & Bakes",
+    description:
+      "Chickpea pasta baked in a blended cottage cheese and cheddar sauce, finished with a buttered panko topping — a golden, bubbly high-protein spin on baked mac and cheese.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 6,
+    accent: "#C87A53",
+
+    macro_profiles: {
+      serving_6: { calories: 440, protein_g: 32, fat_g: 20, carbs_g: 39 }
+    },
+
+    scaling_options: [6],
+
+    ingredients_by_serving: {
+      serving_6: [
+        { item: "Chickpea pasta", prep: "or high-protein pasta", quantity: "12", unit: "oz", category: "Pantry" },
+        { item: "Cottage cheese", prep: "", quantity: "16", unit: "oz", category: "Dairy" },
+        { item: "Shredded sharp cheddar cheese", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Milk", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Onion powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Panko breadcrumbs", prep: "", quantity: "1/3", unit: "cup", category: "Pantry" },
+        { item: "Melted butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the pasta",
+        detail: "Cook the pasta according to package directions and drain."
+      },
+      {
+        step_number: 2,
+        title: "Blend the cheese sauce",
+        detail: "Blend the cottage cheese, cheddar, milk, garlic powder, onion powder, paprika, salt, and pepper until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Combine",
+        detail: "Stir the cheese sauce into the cooked pasta."
+      },
+      {
+        step_number: 4,
+        title: "Top and bake",
+        detail: "Transfer to a baking dish, top with the panko mixed with melted butter, and bake at 400°F for 10 to 15 minutes until golden and bubbly."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "honey-bbq-glazed-chicken-mac-and-cheese",
+    title: "Honey BBQ Glazed Chicken & Creamy Mac and Cheese",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🍯",
+    tags: ["Meal-Prep", "High-Protein", "Sweet & Smoky"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Pasta Dishes",
+    description:
+      "Seared honey BBQ glazed chicken thighs over a creamy mozzarella mac and cheese, finished with chives and smoked paprika — a single-serving, macro-counted bowl.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 1,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_1: { calories: 587, protein_g: 59, fat_g: 15, carbs_g: 54 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Boneless skinless chicken thighs", prep: "", quantity: "7", unit: "oz", category: "Meat" },
+        { item: "High-protein pasta", prep: "", quantity: "3", unit: "oz", category: "Pantry" },
+        { item: "Low-sugar BBQ sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Light mozzarella cheese", prep: "shredded", quantity: "1", unit: "oz", category: "Dairy" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Fresh chives", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Sear the chicken",
+        detail: "Season the chicken thighs with smoked paprika and garlic powder, then sear in a hot pan over medium-high heat 5 to 6 minutes per side until charred and fully cooked."
+      },
+      {
+        step_number: 2,
+        title: "Glaze the chicken",
+        detail: "Add the BBQ sauce and honey to the cooked chicken and cook 1 to 2 minutes until the glaze thickens and coats evenly."
+      },
+      {
+        step_number: 3,
+        title: "Cook the pasta",
+        detail: "Boil the pasta according to package directions until al dente, reserving 2 tablespoons of pasta water before draining."
+      },
+      {
+        step_number: 4,
+        title: "Make the mac and cheese",
+        detail: "Toss the drained pasta with the reserved pasta water and mozzarella until the cheese melts into a creamy sauce."
+      },
+      {
+        step_number: 5,
+        title: "Assemble and serve",
+        detail: "Top the mac and cheese with the honey BBQ glazed chicken. Garnish with chives and extra smoked paprika."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-garlic-parmesan-chicken-baby-potatoes",
+    title: "Creamy Garlic Parmesan Chicken & Crispy Baby Potatoes",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🧄",
+    tags: ["Meal-Prep", "High-Protein", "Garlic Parmesan"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Chicken",
+    description:
+      "Seared chicken and air-fried crispy baby potatoes tossed in a creamy garlic parmesan sauce, finished with mozzarella, parsley, and chili flakes — a single-serving, macro-counted plate.",
+    prep_time_mins: 10,
+    cook_time_mins: 25,
+    native_serving: 1,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_1: { calories: 502, protein_g: 53, fat_g: 16, carbs_g: 36 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Chicken breast", prep: "cubed", quantity: "7", unit: "oz", category: "Meat" },
+        { item: "Baby potatoes", prep: "halved", quantity: "7", unit: "oz", category: "Produce" },
+        { item: "Garlic paste", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Grated parmesan cheese", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Light cream", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Mozzarella cheese", prep: "", quantity: "1/2", unit: "oz", category: "Dairy" },
+        { item: "Garlic chips", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Chili flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Air fry the potatoes",
+        detail: "Air fry the halved baby potatoes at 392°F for 18 to 20 minutes until golden brown and crispy."
+      },
+      {
+        step_number: 2,
+        title: "Cook the chicken",
+        detail: "Cook the cubed chicken breast in a skillet over medium-high heat 6 to 8 minutes until golden brown and fully cooked; remove from the skillet."
+      },
+      {
+        step_number: 3,
+        title: "Make the sauce",
+        detail: "Reduce the heat to low and stir the garlic paste, light cream, and parmesan into the skillet for 2 to 3 minutes until creamy."
+      },
+      {
+        step_number: 4,
+        title: "Combine",
+        detail: "Add the crispy potatoes and cooked chicken to the sauce and toss until evenly coated."
+      },
+      {
+        step_number: 5,
+        title: "Melt the cheese",
+        detail: "Sprinkle mozzarella over the top, cover, and cook 1 minute until melted."
+      },
+      {
+        step_number: 6,
+        title: "Garnish and serve",
+        detail: "Garnish with fresh parsley, chili flakes, and garlic chips before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "chipotle-beef-crispy-potato-bowl",
+    title: "Chipotle Beef & Crispy Potato Bowl with Cheese Sauce",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌶️",
+    tags: ["Meal-Prep", "High-Protein", "Chipotle"],
+    dish_category: "Skillets & Stir-Fries",
+    subsection: "Beef & Steak",
+    description:
+      "Chipotle-seasoned ground beef and crispy roasted baby potatoes in a bowl with nacho cheese sauce, pico de gallo, jalapeños, and sour cream — a single-serving, macro-counted bowl.",
+    prep_time_mins: 15,
+    cook_time_mins: 25,
+    native_serving: 1,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_1: { calories: 567, protein_g: 54, fat_g: 19, carbs_g: 42 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Lean ground beef", prep: "", quantity: "6", unit: "oz", category: "Meat" },
+        { item: "Baby potatoes", prep: "cubed", quantity: "7", unit: "oz", category: "Produce" },
+        { item: "Nacho cheese sauce", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Pico de gallo", prep: "", quantity: "1/4", unit: "cup", category: "Produce" },
+        { item: "Jalapeños", prep: "sliced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Sour cream", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh coriander", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Chipotle seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Crisp the potatoes",
+        detail: "Soak the cubed baby potatoes in cold water for 10 minutes, pat dry, then roast or air fry at 428°F for 20 to 25 minutes until golden brown and crispy."
+      },
+      {
+        step_number: 2,
+        title: "Cook the beef",
+        detail: "Cook the ground beef with chipotle seasoning in a skillet over medium-high heat 6 to 8 minutes until browned and fully cooked."
+      },
+      {
+        step_number: 3,
+        title: "Assemble the bowl",
+        detail: "Add the crispy potatoes and cooked beef to a serving bowl."
+      },
+      {
+        step_number: 4,
+        title: "Add the cheese sauce",
+        detail: "Drizzle the nacho cheese sauce evenly over the beef and potatoes."
+      },
+      {
+        step_number: 5,
+        title: "Top and serve",
+        detail: "Top with pico de gallo, sour cream, sliced jalapeños, and fresh coriander before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-honey-chipotle-chicken-burrito",
+    title: "Creamy Honey Chipotle Chicken Burritos",
+    category: "Meal Prep",
+    source: "High-Protein Meal Prep",
+    icon: "🌯",
+    tags: ["Meal-Prep", "High-Protein", "Handheld"],
+    dish_category: "Sandwiches",
+    subsection: "Chicken",
+    description:
+      "Honey chipotle glazed chicken, cilantro lime rice, and melted mozzarella rolled into a high-protein tortilla and crisped seam-side down — a single-serving, macro-counted burrito.",
+    prep_time_mins: 10,
+    cook_time_mins: 15,
+    native_serving: 1,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_1: { calories: 533, protein_g: 57, fat_g: 14, carbs_g: 44 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Chicken breast", prep: "finely diced", quantity: "7", unit: "oz", category: "Meat" },
+        { item: "High-protein flour tortilla", prep: "large", quantity: "1", unit: "", category: "Pantry" },
+        { item: "Greek yogurt", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Chipotle paste", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Light mozzarella cheese", prep: "", quantity: "1", unit: "oz", category: "Dairy" },
+        { item: "Cilantro lime rice", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Fresh jalapeño", prep: "sliced", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Fresh chives", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Salt", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the chicken",
+        detail: "Season the diced chicken with salt and cook in a hot skillet over medium-high heat 6 to 8 minutes until golden brown and fully cooked."
+      },
+      {
+        step_number: 2,
+        title: "Glaze the chicken",
+        detail: "Add the chipotle paste and honey to the cooked chicken and cook 1 minute until evenly coated."
+      },
+      {
+        step_number: 3,
+        title: "Make it creamy",
+        detail: "Reduce the heat to low and stir in the Greek yogurt and half the mozzarella until creamy."
+      },
+      {
+        step_number: 4,
+        title: "Fill the tortilla",
+        detail: "Lay the tortilla flat and add the cilantro lime rice and the honey chipotle chicken mixture to the center."
+      },
+      {
+        step_number: 5,
+        title: "Roll and crisp",
+        detail: "Sprinkle the remaining mozzarella over the filling, then fold and roll tightly. Cook seam-side down in a skillet over medium heat 2 minutes per side until golden and crispy."
+      },
+      {
+        step_number: 6,
+        title: "Garnish and serve",
+        detail: "Garnish with fresh jalapeño slices and chopped chives before serving."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "peanut-butter-chocolate-freezer-bites",
+    title: "Peanut Butter Chocolate Freezer Bites",
+    category: "Dessert",
+    source: "Clean Eat Guide",
+    icon: "🍫",
+    tags: ["No-Bake", "Freezer", "Make-Ahead"],
+    dish_category: "Desserts",
+    description:
+      "No-bake peanut butter and coconut oil bites coated in melted dark chocolate and firmed up in the freezer — a quick make-ahead sweet treat with a pinch of sea salt on top.",
+    prep_time_mins: 10,
+    cook_time_mins: 0,
+    native_serving: 4,
+    accent: "#8B5A3C",
+
+    macro_profiles: {
+      serving_4: { calories: 210, protein_g: 6, fat_g: 15, carbs_g: 14 }
+    },
+
+    scaling_options: [4],
+
+    ingredients_by_serving: {
+      serving_4: [
+        { item: "Peanut butter", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Coconut oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dark chocolate chips", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Sea salt", prep: "a pinch, optional", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Mix the base",
+        detail: "Combine the peanut butter, coconut oil, and maple syrup in a bowl, mixing until fully smooth and creamy."
+      },
+      {
+        step_number: 2,
+        title: "Melt the chocolate",
+        detail: "Melt the dark chocolate chips separately in short intervals, stirring to avoid burning."
+      },
+      {
+        step_number: 3,
+        title: "Shape the bites",
+        detail: "Spoon small portions of the peanut butter mixture onto a lined tray in bite-sized shapes."
+      },
+      {
+        step_number: 4,
+        title: "Coat and freeze",
+        detail: "Drizzle or pour the melted chocolate over each bite to fully or partially coat, then freeze at least 30 minutes until firm."
+      },
+      {
+        step_number: 5,
+        title: "Serve",
+        detail: "Let sit briefly after removing from the freezer for the best texture. Add a pinch of sea salt on top to balance the sweetness."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "creamy-red-pepper-pasta-spicy-beef",
+    title: "Creamy Red Pepper Pasta + Spicy Beef",
+    category: "Comfort Food",
+    source: "Eating Healthy Mag",
+    icon: "🍝",
+    tags: ["High-Protein", "Comfort Food", "Weeknight"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Spicy seared ground beef and blistered cherry tomatoes tossed with paccheri in a roasted red pepper and cottage cheese sauce — a rich, creamy pasta that skips the heavy cream.",
+    prep_time_mins: 10,
+    cook_time_mins: 18,
+    native_serving: 1,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_1: { calories: 460, protein_g: 40, fat_g: 14, carbs_g: 48 }
+    },
+
+    scaling_options: [1],
+
+    ingredients_by_serving: {
+      serving_1: [
+        { item: "Calamarata or paccheri pasta", prep: "", quantity: "5", unit: "oz", category: "Pantry" },
+        { item: "Lean ground beef", prep: "", quantity: "1/2", unit: "lb", category: "Meat" },
+        { item: "Roasted red peppers", prep: "", quantity: "1", unit: "cup", category: "Produce" },
+        { item: "Cottage cheese", prep: "", quantity: "1/2", unit: "cup", category: "Dairy" },
+        { item: "Cherry tomatoes", prep: "", quantity: "1/2", unit: "cup", category: "Produce" },
+        { item: "Garlic clove", prep: "minced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Parmesan cheese", prep: "grated", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Chili flakes", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Fresh rosemary", prep: "", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Brown the beef",
+        detail: "Brown the ground beef hard in a hot pan until crisp at the edges — that deep sear is where most of the dish's savory flavor comes from."
+      },
+      {
+        step_number: 2,
+        title: "Blend the sauce",
+        detail: "Blend the roasted red peppers with the cottage cheese until smooth — this silky, protein-packed base replaces a heavy cream sauce."
+      },
+      {
+        step_number: 3,
+        title: "Build the sauce",
+        detail: "Pour the red pepper blend into the pan with the beef and cherry tomatoes, then warm gently so it turns into a glossy, creamy sauce without splitting."
+      },
+      {
+        step_number: 4,
+        title: "Cook the pasta",
+        detail: "Cook the pasta according to package directions, reserving some pasta water before draining."
+      },
+      {
+        step_number: 5,
+        title: "Toss and finish",
+        detail: "Toss the cooked pasta through the sauce with a splash of pasta water and finish with parmesan and rosemary."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "lemon-garlic-shrimp-rice-bowl",
+    title: "Lemon Garlic Shrimp Rice Bowl with Sautéed Peppers, Onions and Avocado",
+    category: "Meal Prep",
+    source: "Eating Healthy Mag",
+    icon: "🍤",
+    tags: ["Seafood", "High-Protein", "Bowl"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Lemon garlic shrimp and caramelized peppers and onions over buttered rice, finished with avocado and a lemon wedge — a bright, protein-packed bowl.",
+    prep_time_mins: 15,
+    cook_time_mins: 20,
+    native_serving: 3,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_3: { calories: 540, protein_g: 41, fat_g: 18, carbs_g: 45 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Long-grain rice", prep: "uncooked", quantity: "1 1/2", unit: "cups", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Salt", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Shrimp", prep: "peeled and deveined", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "3", unit: "cloves", category: "Produce" },
+        { item: "Lemon", prep: "juiced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Red bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Green bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Onion", prep: "sliced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Avocado", prep: "sliced", quantity: "1", unit: "large", category: "Produce" },
+        { item: "Lemon wedge", prep: "for garnish", quantity: "", unit: "", category: "Produce" },
+        { item: "Black pepper", prep: "for garnish", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Cook the rice",
+        detail: "Rinse the rice if desired and cook according to package instructions. Fluff with a fork and stir in the butter and parsley; season with salt."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the peppers and onion",
+        detail: "Heat oil in a skillet over medium heat. Add the onion and peppers and cook 6 to 8 minutes until softened and slightly caramelized. Season with salt."
+      },
+      {
+        step_number: 3,
+        title: "Marinate the shrimp",
+        detail: "Toss the shrimp with oil, garlic, lemon juice, paprika, salt, and pepper; let sit 5 minutes."
+      },
+      {
+        step_number: 4,
+        title: "Sear the shrimp",
+        detail: "Heat a skillet until hot and cook the shrimp 1 to 2 minutes per side until opaque. Finish with extra lemon juice."
+      },
+      {
+        step_number: 5,
+        title: "Assemble the bowls",
+        detail: "Divide the rice between bowls, top with the peppers and onions, arrange 6 to 8 shrimp per person, add avocado slices, and finish with a lemon wedge and a grind of black pepper."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "bbq-beef-short-ribs-corn-succotash-rotini-salad",
+    title: "BBQ Beef Short Ribs with Corn Succotash and Creamy Rotini Salad",
+    category: "Comfort Food",
+    source: "Eating Healthy Mag",
+    icon: "🍖",
+    tags: ["Grilled", "Comfort Food", "High-Protein"],
+    dish_category: "Grilled & Sheet-Pan",
+    description:
+      "Oven-braised BBQ glazed beef short ribs served with a buttery corn and red pepper succotash and a creamy mayo-dijon rotini salad.",
+    prep_time_mins: 20,
+    cook_time_mins: 80,
+    native_serving: 3,
+    accent: "#A65A3A",
+
+    macro_profiles: {
+      serving_3: { calories: 750, protein_g: 48, fat_g: 29, carbs_g: 46 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Beef short ribs", prep: "about 3 large ribs", quantity: "2", unit: "lbs", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Salt", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Barbecue sauce", prep: "", quantity: "1", unit: "cup", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Smoked paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Corn kernels", prep: "fresh or frozen", quantity: "2", unit: "cups", category: "Produce" },
+        { item: "Red bell pepper", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Shallot", prep: "or 1/2 small onion, minced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Butter", prep: "", quantity: "1", unit: "tbsp", category: "Dairy" },
+        { item: "Fresh parsley", prep: "chopped", quantity: "1", unit: "tbsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Rotini pasta", prep: "uncooked", quantity: "9", unit: "oz", category: "Pantry" },
+        { item: "Mayonnaise", prep: "", quantity: "1/2", unit: "cup", category: "Pantry" },
+        { item: "Plain yogurt or sour cream", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Cucumber", prep: "diced", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Carrot", prep: "grated", quantity: "1", unit: "small", category: "Produce" },
+        { item: "Fresh chives", prep: "chopped", quantity: "2", unit: "tbsp", category: "Produce" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Prep and sear",
+        detail: "Preheat the oven to 325°F. Pat the ribs dry and season all over with salt and pepper. Heat oil in an ovenproof skillet until shimmering; sear the ribs 2 to 3 minutes per side without crowding the pan so a brown crust forms."
+      },
+      {
+        step_number: 2,
+        title: "Roast with the glaze",
+        detail: "Whisk the glaze ingredients together. Brush the ribs with half the glaze, cover tightly with foil, and roast 1 1/4 to 1 1/2 hours until the meat is very tender and pulls at the bone."
+      },
+      {
+        step_number: 3,
+        title: "Finish and rest",
+        detail: "Uncover for the last 15 minutes, brush with the remaining glaze, and broil 2 to 3 minutes to caramelize. Let rest 5 minutes before slicing."
+      },
+      {
+        step_number: 4,
+        title: "Cook the succotash",
+        detail: "Melt butter in a skillet over medium heat; cook the shallot 1 to 2 minutes until soft. Add the corn and red pepper; cook 4 to 6 minutes, stirring occasionally, until the kernels show light browning. Season and stir in parsley."
+      },
+      {
+        step_number: 5,
+        title: "Cook the rotini",
+        detail: "Boil the rotini to al dente, drain, and rinse under cold water to stop the cooking."
+      },
+      {
+        step_number: 6,
+        title: "Make the rotini salad",
+        detail: "Whisk the mayonnaise, yogurt, dijon, salt, and pepper. Toss the pasta with the dressing, cucumber, carrot, and chives; chill 15 minutes so the flavors meld."
+      },
+      {
+        step_number: 7,
+        title: "Serve",
+        detail: "Plate one third of the ribs per person with a scoop of succotash and a portion of rotini salad."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "shrimp-baked-mac-and-cheese-sauteed-spinach",
+    title: "Shrimp with Baked Mac and Cheese and Sautéed Spinach",
+    category: "Comfort Food",
+    source: "Eating Healthy Mag",
+    icon: "🍤",
+    tags: ["Seafood", "Baked", "Comfort Food"],
+    dish_category: "Casseroles & Bakes",
+    description:
+      "Seared paprika shrimp and quick sautéed garlic spinach served alongside a bubbly baked elbow mac and cheese — a comforting, protein-packed plate.",
+    prep_time_mins: 20,
+    cook_time_mins: 35,
+    native_serving: 3,
+    accent: "#C87A53",
+
+    macro_profiles: {
+      serving_3: { calories: 720, protein_g: 40, fat_g: 30, carbs_g: 50 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Shrimp", prep: "peeled and deveined", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "cloves", category: "Produce" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Lemon wedge", prep: "for serving", quantity: "", unit: "", category: "Produce" },
+        { item: "Elbow macaroni", prep: "", quantity: "9", unit: "oz", category: "Pantry" },
+        { item: "Butter", prep: "", quantity: "2", unit: "tbsp", category: "Dairy" },
+        { item: "Flour", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Milk", prep: "", quantity: "2", unit: "cups", category: "Dairy" },
+        { item: "Shredded cheddar cheese", prep: "", quantity: "1 1/2", unit: "cups", category: "Dairy" },
+        { item: "Grated parmesan cheese", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Breadcrumbs", prep: "", quantity: "1/4", unit: "cup", category: "Pantry" },
+        { item: "Fresh spinach", prep: "", quantity: "10", unit: "oz", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "sliced", quantity: "1", unit: "clove", category: "Produce" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Par-cook the pasta",
+        detail: "Preheat the oven to 375°F. Cook the pasta 1 to 2 minutes less than package directions; drain."
+      },
+      {
+        step_number: 2,
+        title: "Make the cheese sauce",
+        detail: "Melt the butter in a saucepan, whisk in the flour, and cook 1 minute. Gradually whisk in the milk and simmer until thickened. Remove from heat and stir in the cheeses until smooth."
+      },
+      {
+        step_number: 3,
+        title: "Assemble and bake",
+        detail: "Mix the sauce with the pasta, transfer to a baking dish, top with breadcrumbs and extra cheese, and bake 15 to 18 minutes until bubbly and golden."
+      },
+      {
+        step_number: 4,
+        title: "Wilt the spinach",
+        detail: "Heat oil in a skillet, add garlic, and cook 30 seconds. Add spinach in batches, tossing until just wilted, 2 to 3 minutes. Season lightly."
+      },
+      {
+        step_number: 5,
+        title: "Sear the shrimp",
+        detail: "Toss the shrimp with oil, garlic, paprika, salt, and pepper. Heat a skillet until hot and cook the shrimp 1 to 2 minutes per side until pink and curled. Finish with a squeeze of lemon."
+      },
+      {
+        step_number: 6,
+        title: "Serve",
+        detail: "Spoon the mac and cheese onto plates, add a portion of spinach, and arrange 6 to 8 shrimp per person."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mixed-grill-skillet-peppers-onions-mashed-potatoes",
+    title: "Mixed Grill Skillet with Sautéed Peppers, Onions and Mashed Potatoes",
+    category: "Comfort Food",
+    source: "Eating Healthy Mag",
+    icon: "🥘",
+    tags: ["Skillet", "High-Protein", "Surf & Turf"],
+    dish_category: "Skillets & Stir-Fries",
+    description:
+      "Seared chicken, steak, and shrimp with caramelized peppers and onions over buttery mashed potatoes — a mixed grill skillet plate covering three proteins in one pan.",
+    prep_time_mins: 20,
+    cook_time_mins: 30,
+    native_serving: 3,
+    accent: "#B5894E",
+
+    macro_profiles: {
+      serving_3: { calories: 680, protein_g: 50, fat_g: 25, carbs_g: 43 }
+    },
+
+    scaling_options: [3],
+
+    ingredients_by_serving: {
+      serving_3: [
+        { item: "Chicken breasts", prep: "halved or sliced", quantity: "1", unit: "lb", category: "Meat" },
+        { item: "Shrimp", prep: "peeled and deveined", quantity: "8", unit: "oz", category: "Meat" },
+        { item: "Beef patty or small steak", prep: "", quantity: "7", unit: "oz", category: "Meat" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Paprika", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic powder", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Red bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Green bell pepper", prep: "sliced", quantity: "1", unit: "", category: "Produce" },
+        { item: "Onion", prep: "sliced", quantity: "1", unit: "medium", category: "Produce" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Italian seasoning", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Salt", prep: "a pinch", quantity: "", unit: "", category: "Pantry" },
+        { item: "Potatoes", prep: "peeled and chopped", quantity: "1 1/3", unit: "lbs", category: "Produce" },
+        { item: "Butter", prep: "", quantity: "3", unit: "tbsp", category: "Dairy" },
+        { item: "Milk", prep: "", quantity: "1/4", unit: "cup", category: "Dairy" },
+        { item: "Salt and pepper", prep: "to taste", quantity: "", unit: "", category: "Pantry" },
+        { item: "Fresh parsley", prep: "chopped, to garnish", quantity: "", unit: "", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Boil and mash the potatoes",
+        detail: "Place the potatoes in cold salted water, bring to a boil, and simmer 12 to 15 minutes until fork-tender. Drain well, then return to the pot off heat, add butter and warm milk, and mash to desired texture; season with salt and pepper."
+      },
+      {
+        step_number: 2,
+        title: "Sauté the peppers and onion",
+        detail: "Heat oil in a large skillet over medium-high heat. Add the onion and peppers and cook 6 to 8 minutes, stirring occasionally, until softened and the edges caramelize. Season with Italian seasoning and salt."
+      },
+      {
+        step_number: 3,
+        title: "Season the proteins",
+        detail: "Pat the chicken, steak, and shrimp dry and season with paprika, garlic powder, salt, and pepper."
+      },
+      {
+        step_number: 4,
+        title: "Cook in batches",
+        detail: "Using the same skillet, add a little oil if needed. Cook the chicken slices 4 to 6 minutes per side until cooked through; remove and rest. Sear the beef 3 to 4 minutes per side for medium, then rest 5 minutes. Quickly cook the shrimp 1 to 2 minutes per side until pink and opaque."
+      },
+      {
+        step_number: 5,
+        title: "Slice and plate",
+        detail: "Slice the chicken and steak against the grain; arrange with the shrimp, peppers and onions, and a scoop of mashed potatoes. Garnish with parsley."
+      }
+    ]
   }
 ];
 
