@@ -497,7 +497,12 @@
     var tier = serving || defaultServingFor(id);
     var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
       (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || null;
-    return { title: r.title || null, icon: r.icon || null, macros: m };
+    // Normalize recipes-data.js's field names (calories/protein_g/fat_g/carbs_g)
+    // to the {kcal,p,f,c} shape mc_macros_v1 entries already use natively, so
+    // the workout side (mc-bridge.js) can pass this straight into an addEntry()
+    // `per:` field with zero further translation.
+    var macros = m ? { kcal: m.calories || 0, p: m.protein_g || 0, f: m.fat_g || 0, c: m.carbs_g || 0 } : null;
+    return { title: r.title || null, icon: r.icon || null, macros: macros };
   }
   function addMeal(id, opts) {
     opts = opts || {};
@@ -693,9 +698,25 @@
     var scheduled = planMeals().filter(function (m) { return m.day; });
     var plannedCount = scheduled.length;
     var completedCount = scheduled.filter(function (m) { return m.completed; }).length;
+    // Roadmap B2 — fuse in workouts completed over the same rolling 7-day
+    // window as the stats above (today back through 6 days ago), from the
+    // bridge's pulled mc_workout_log_v1. null (not 0) when that store has
+    // never been pulled at all — i.e. never signed in / never linked the
+    // workout app — so the line doesn't claim "0 workouts" to someone who's
+    // never connected the two apps; a real 0 for a linked-but-rest week is
+    // still shown, since that's genuine fused signal.
+    var hasWorkoutData = false;
+    try { hasWorkoutData = localStorage.getItem('mc_workout_log_v1') != null; } catch (e) {}
+    var workoutsThisWeek = null;
+    if (hasWorkoutData && window.MCBridge) {
+      var recapStart = new Date();
+      recapStart.setDate(recapStart.getDate() - 6);
+      recapStart.setHours(0, 0, 0, 0);
+      workoutsThisWeek = MCBridge.workoutsSince(recapStart.getTime());
+    }
     return {
       daysLogged: daysLogged, mealsCooked: mealsCooked, goalHitDays: goalHitDays, daysWithGoalData: daysWithGoalData,
-      plannedCount: plannedCount, completedCount: completedCount
+      plannedCount: plannedCount, completedCount: completedCount, workoutsThisWeek: workoutsThisWeek
     };
   }
   function renderWeeklyRecapCard() {
@@ -715,6 +736,9 @@
     }
     if (stats.plannedCount > 0) {
       line += " · " + stats.completedCount + "/" + stats.plannedCount + " planned meals cooked";
+    }
+    if (stats.workoutsThisWeek != null) {
+      line += " · " + stats.workoutsThisWeek + (stats.workoutsThisWeek === 1 ? " workout" : " workouts");
     }
     card.appendChild(el("p", "recap-line", line));
     var dismiss = el("button", "recap-dismiss", "Dismiss");
@@ -1254,7 +1278,29 @@
   var SMW_OVERLAP_WEIGHT = 4;      // points per shared ingredient with recipes already picked this week
   var SMW_OVERLAP_CAP = 6;         // cap the bonus so overlap nudges ties rather than steamrolling recency/variety
   var SMW_FAVORITE_BONUS = 10;     // hearting a recipe should mean something beyond a filter tab
-  function smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys) {
+  // Roadmap B2 — training-day-aware bias. dayBias is true (likely training
+  // day, per MCBridge.likelyTrainingDays()'s real historical pattern), false
+  // (likely rest day), or null/undefined (no bridge / no established pattern
+  // yet / signed out) — null means "no bias," identical to pre-B2 behavior.
+  var SMW_TRAIN_PROTEIN_CAP = 60;      // grams; diminishing return past this
+  var SMW_TRAIN_PROTEIN_WEIGHT = 0.35; // -> up to +21 for a 60g-protein recipe
+  var SMW_REST_KCAL_TARGET = 650;      // "lighter" reference point for a rest day
+  var SMW_REST_KCAL_WEIGHT = 0.03;
+  var SMW_REST_KCAL_CAP = 8;
+  function recipeMacrosRaw(r) {
+    if (!r || !r.macro_profiles) return null;
+    for (var k in r.macro_profiles) if (r.macro_profiles[k]) return r.macro_profiles[k];
+    return null;
+  }
+  function smwTrainBias(r, dayBias) {
+    if (dayBias == null) return 0;
+    var m = recipeMacrosRaw(r);
+    if (!m) return 0;
+    if (dayBias) return Math.min(m.protein_g || 0, SMW_TRAIN_PROTEIN_CAP) * SMW_TRAIN_PROTEIN_WEIGHT;
+    var delta = (SMW_REST_KCAL_TARGET - (m.calories || 0)) * SMW_REST_KCAL_WEIGHT;
+    return Math.max(-SMW_REST_KCAL_CAP, Math.min(SMW_REST_KCAL_CAP, delta));
+  }
+  function smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys, dayBias) {
     var score = 0;
     if (usedIds.has(r.recipe_id)) score -= 1000;
     var days = daysSinceCooked(r.recipe_id);
@@ -1267,10 +1313,11 @@
     }
     if (loadFavs().has(r.recipe_id)) score += SMW_FAVORITE_BONUS;
     score += seasonalWeight(r.dish_category);
+    score += smwTrainBias(r, dayBias);
     score += Math.random() * 10; // jitter so Regenerate actually varies
     return score;
   }
-  function smwPickForSlot(slot, usedIds, prevCategory, excludeId, usedIngredientKeys) {
+  function smwPickForSlot(slot, usedIds, prevCategory, excludeId, usedIngredientKeys, dayBias) {
     var pool = mealEligibleRecipes(slot);
     if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
     if (!pool.length) return null;
@@ -1281,10 +1328,22 @@
     var candidates = fresh.length ? fresh : pool;
     var best = null, bestScore = -Infinity;
     candidates.forEach(function (r) {
-      var s = smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys);
+      var s = smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys, dayBias);
       if (s > bestScore) { bestScore = s; best = r; }
     });
     return best;
+  }
+  // Real historical training pattern from MCBridge (roadmap B2) — {} (no
+  // bias anywhere) until MC_SB/mc-sync has pulled enough real workout history
+  // to establish one. Never fabricates a future schedule.
+  function smwDayBiasMap() {
+    if (!window.MCBridge || !MCBridge.likelyTrainingDays) return {};
+    var pattern = MCBridge.likelyTrainingDays();
+    var hasPattern = Object.keys(pattern).some(function (k) { return pattern[k]; });
+    return hasPattern ? pattern : {};
+  }
+  function smwDayBiasFor(pattern, day) {
+    return (day in pattern) ? pattern[day] : null;
   }
   // Full 7-day grid for a scope: [{ day, slot, id }], best-effort no-repeat.
   function smwGenerateWeek(scopeKey) {
@@ -1292,10 +1351,12 @@
     var usedIds = new Set();
     var usedIngredientKeys = {};
     var prevCategoryBySlot = {};
+    var dayBiasPattern = smwDayBiasMap();
     var grid = [];
     DAYS.forEach(function (day) {
+      var dayBias = smwDayBiasFor(dayBiasPattern, day);
       scope.slots.forEach(function (slot) {
-        var pick = smwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, usedIngredientKeys);
+        var pick = smwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, usedIngredientKeys, dayBias);
         if (pick) {
           usedIds.add(pick.recipe_id);
           prevCategoryBySlot[slot] = pick.dish_category;
@@ -1325,7 +1386,8 @@
       ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
       : null;
     var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
-    var pick = smwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, usedIngredientKeys);
+    var dayBias = smwDayBiasFor(smwDayBiasMap(), day);
+    var pick = smwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, usedIngredientKeys, dayBias);
     return pick ? pick.recipe_id : null;
   }
   // Commits a generated grid into the plan: replaces any existing meals in
@@ -1358,6 +1420,43 @@
      mode's complexity. */
   var MSG_PROTEIN_WEIGHT = 2; // protein fit matters ~2x as much as calorie fit
   var MSG_FAVORITE_BONUS = 8; // same signal Smart Week gets — a heart should nudge both generators
+  var MSG_TRAIN_PROTEIN_BONUS = 15; // grams added to a likely-training day's protein goal (roadmap B2)
+  // Folds in ROADMAP.md Pillar C's deferred "macro-trend bias" fast-follow:
+  // read the planner's own completed-meal history (MACRO_HISTORY_KEY — what
+  // was actually cooked and marked done, not the Tracker's separate food
+  // log) and nudge the protein target up if the trailing trend is clearly
+  // under goal. Requires real history (MACRO_TREND_MIN_DAYS) before applying,
+  // so a fresh planner never gets biased off zero data. Its acceptance
+  // criterion is that this stays visible, never silent — see the
+  // "smw-trend-callout" banner in openSmartWeek()'s paint().
+  var MACRO_TREND_LOOKBACK_DAYS = 14;
+  var MACRO_TREND_MIN_DAYS = 4;      // days of real history needed to trust a trend
+  var MACRO_TREND_UNDER_PCT = 0.85;  // avg daily protein below this share of goal counts as "under"
+  var MACRO_TREND_BONUS = 12;        // grams
+  function macroTrendBias(goals) {
+    if (!goals || !goals.p) return { bonus: 0, reason: null };
+    var cutoffKey = ymd((function () { var d = new Date(); d.setDate(d.getDate() - MACRO_TREND_LOOKBACK_DAYS); return d; })());
+    var byDate = {};
+    loadMacroHistory().forEach(function (e) {
+      if (!e.date || e.date < cutoffKey) return;
+      byDate[e.date] = (byDate[e.date] || 0) + (e.p || 0);
+    });
+    var dates = Object.keys(byDate);
+    if (dates.length < MACRO_TREND_MIN_DAYS) return { bonus: 0, reason: null };
+    var avgP = dates.reduce(function (sum, d) { return sum + byDate[d]; }, 0) / dates.length;
+    if (avgP >= goals.p * MACRO_TREND_UNDER_PCT) return { bonus: 0, reason: null };
+    return { bonus: MACRO_TREND_BONUS, reason: "Trending under on protein lately — meals biased +" + MACRO_TREND_BONUS + "g" };
+  }
+  // Effective per-day protein goal — bumped on a likely-training day (real
+  // historical pattern from MCBridge.likelyTrainingDays(), same signal
+  // Smart Week's smwTrainBias uses) and/or by the macro-trend bias above.
+  // Falls back to the plain goal with no bridge / no pattern / no trend /
+  // signed out, unchanged from pre-B2.
+  function msgDayProteinGoal(goals, day, dayBiasPattern, trendBonus) {
+    var base = goals ? goals.p : 0;
+    var trainBonus = smwDayBiasFor(dayBiasPattern, day) ? MSG_TRAIN_PROTEIN_BONUS : 0;
+    return base + trainBonus + (trendBonus || 0);
+  }
   function msgMacroFit(r) {
     var mp = (r && r.macro_profiles && r.macro_profiles.serving_2) || {};
     return { kcal: mp.calories || 0, p: mp.protein_g || 0 };
@@ -1404,6 +1503,8 @@
   function msgGenerateWeek(scopeKey) {
     var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
     var goals = loadMacroGoals();
+    var dayBiasPattern = smwDayBiasMap();
+    var trendBonus = macroTrendBias(goals).bonus;
     var usedIds = new Set();
     var grid = [];
     DAYS.forEach(function (day) {
@@ -1411,7 +1512,7 @@
         var consumed = msgDayConsumed(grid, day, null);
         var remaining = {
           kcal: (goals ? goals.kcal : 0) - consumed.kcal,
-          p:    (goals ? goals.p    : 0) - consumed.p
+          p:    msgDayProteinGoal(goals, day, dayBiasPattern, trendBonus) - consumed.p
         };
         var slotsLeft = scope.slots.length - i;
         var budget = { kcal: remaining.kcal / slotsLeft, p: remaining.p / slotsLeft };
@@ -1429,13 +1530,15 @@
   function msgRegenerateSlot(grid, day, slot, scopeKey) {
     var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
     var goals = loadMacroGoals();
+    var dayBiasPattern = smwDayBiasMap();
+    var trendBonus = macroTrendBias(goals).bonus;
     var usedIds = new Set();
     grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
     var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
     var consumed = msgDayConsumed(grid, day, slot);
     var remaining = {
       kcal: (goals ? goals.kcal : 0) - consumed.kcal,
-      p:    (goals ? goals.p    : 0) - consumed.p
+      p:    msgDayProteinGoal(goals, day, dayBiasPattern, trendBonus) - consumed.p
     };
     var otherFilled = grid.filter(function (g) { return g.day === day && g.slot !== slot; }).length;
     var slotsLeft = Math.max(1, scope.slots.length - otherFilled);
@@ -2096,7 +2199,30 @@
   // varying it by day-of-week/time-of-day signals the app "knows" the
   // moment instead of showing one static line year-round. Pure client-side
   // Date() logic, no new state.
+  // Roadmap B2 — workout-aware Home nudge. Real training signal from the
+  // bridge takes priority over the generic time-of-day copy below: a
+  // trainee who actually trained today (or is mid-streak) gets a specific
+  // line instead of a generic prompt. Returns null with no bridge / signed
+  // out / no real signal today, so emptyHeroCopy() falls through unchanged.
+  function trainingNudgeCopy() {
+    if (!window.MCBridge) return null;
+    var workout = MCBridge.todaysWorkout();
+    if (workout.trainedToday) {
+      var todaysName = (MCBridge.recentActivity().recentWorkouts || [])
+        .filter(function (w) { return w.date && ymd(new Date(w.date)) === ymd(new Date()); })
+        .map(function (w) { return w.name; })[0];
+      return (todaysName ? esc(todaysName) + " today" : "You trained today") +
+        " — plan meals that fuel the recovery. A protein-forward day's ready when you are.";
+    }
+    var streak = MCBridge.recentActivity().streak;
+    if (streak >= 3) {
+      return "🔥 " + streak + "-day training streak — keep the fuel matching the work. Plan today's meals.";
+    }
+    return null;
+  }
   function emptyHeroCopy() {
+    var trainingCopy = trainingNudgeCopy();
+    if (trainingCopy) return trainingCopy;
     var hour = new Date().getHours();
     var isWeekend = todayDayCode() === "Sat" || todayDayCode() === "Sun";
     if (isWeekend) {
@@ -3800,6 +3926,16 @@
     function paint() {
       body.innerHTML = "";
       var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+
+      // Macro-trend bias reason (ROADMAP.md Pillar C fast-follow, folded into
+      // roadmap B2) — only applies in Macro-Targeted mode, and per that
+      // item's own acceptance criterion, must stay visible, never silent.
+      if (mode === "macro" && macroGoals) {
+        var trend = macroTrendBias(macroGoals);
+        if (trend.reason) {
+          body.appendChild(el("div", "smw-trend-callout", "📈 " + esc(trend.reason)));
+        }
+      }
 
       if (!grid.length) {
         body.appendChild(emptyState("🧊", "No recipes available for this scope yet."));

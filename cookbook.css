@@ -1847,6 +1847,16 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
   font-size: 15px; line-height: 1; padding: 4px 2px;
 }
 
+/* ── Macro-trend bias callout (Macro-Targeted mode, roadmap B2) ────────
+   Advisory only, non-dismissible (re-derived from real trend data every
+   paint, unlike the prep-day suggestion above) — its whole purpose is to
+   keep the bias visible per ROADMAP.md Pillar C's acceptance criterion. */
+.smw-trend-callout {
+  margin: 0 20px 14px; padding: 10px 14px;
+  background: rgba(var(--accent-rgb), 0.10); border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: 12px; font-size: 12.5px; font-weight: 700; line-height: 1.4; color: var(--on-dark);
+}
+
 /* ── Save Week Block prompt (final-meal completion / day-7 boot check) ── */
 .swp-body { padding-top: 4px; }
 .swp-copy { padding: 4px 20px 14px; font-size: 14px; color: var(--on-dark-dim); line-height: 1.5; margin: 0; }

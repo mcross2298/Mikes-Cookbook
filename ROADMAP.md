@@ -119,7 +119,7 @@ matters.
 
 ---
 
-## Pillar C — Smarter, Proactive Meal Planning ✅ (auto-draft shipped, bias deferred)
+## Pillar C — Smarter, Proactive Meal Planning ✅ (auto-draft + macro-trend bias both shipped)
 
 ### Problem
 Smart Week and the Macro Smart Generator are Mike's most differentiated features and they're
@@ -135,12 +135,13 @@ generation automatically.
   top of code that already existed (`smw*` scoring in `cookbook-home.js`), not new generation
   logic. New `mc-cookbook:mealplan:autodraft-dismissed` key backs the cooldown; it clears the
   moment a real plan is built.
-- **Macro-trend bias.** *Not started — deferred fast-follow.* Read
-  `mc-cookbook:mealplan:macrohistory` before generating and nudge the Macro Smart Generator's
-  targets if a trend is clear (e.g. protein consistently under goal → bias selection toward
-  higher-protein recipes next week). Surface *why* a recipe was picked ("+protein vs. last week")
-  so it doesn't feel like a black box. The auto-draft ships plain (Balanced only) until this
-  lands.
+- **Macro-trend bias.** ✅ **Shipped (2026-07-15, via bridge roadmap B2).** Reads
+  `mc-cookbook:mealplan:macrohistory` (last 14 days, needs ≥4 days of real data to trust a trend)
+  and bumps the Macro Smart Generator's per-day protein target +12g when the trailing average is
+  clearly under goal (<85%). Surfaced as a visible reason line ("📈 Trending under on protein
+  lately — meals biased +12g") in the Smart Week overlay's Macro-Targeted mode — never silent,
+  absent entirely with no real trend to report. Additive with (not a replacement for) B2's
+  training-day protein bump on the same target.
 - **Pairs with Pillar B:** the shipped weekly check-in already asks whether Mike wants a fresh
   Smart Week draft, which naturally points at this feature — not formally wired together (the
   trigger's question is templated, not aware the auto-draft card exists), but conceptually
@@ -152,8 +153,8 @@ generation automatically.
 - Accepting a draft behaves like the existing "commit" flow; discarding it clears cleanly with no
   orphaned state. ✅ (verified in a headless-browser pass: accept/regenerate/dismiss/reload/re-empty
   all behave as specified)
-- Any macro-trend bias is visible in the UI (a short reason string), not silent. — N/A until the
-  bias fast-follow ships.
+- Any macro-trend bias is visible in the UI (a short reason string), not silent. ✅ (the
+  Macro-Targeted overlay's trend callout, present only when a real trend is detected)
 - No regression to the existing on-demand Smart Week / Macro Smart Generator flows — this adds an
   automatic trigger for the same code path, it doesn't replace manual use. ✅
 
@@ -168,10 +169,10 @@ under-surfaced because it's opt-in only).
 |------:|--------|----------------|:------:|:------:|
 | **1** | ✅ This roadmap + `CLAUDE.md` refresh | Align before building (done as part of this pass) | — | — |
 | **2** | ✅ **Pillar B, tier 1** — dumb weekly reminder trigger | No app-code risk, ships immediately, gives fast feedback on whether reminders are actually useful before investing further | Low | Med–High |
-| **3** | ✅ **Pillar C** — auto-drafted week (macro-trend bias not yet) | Builds on code that already exists; biggest differentiation payoff | Med | High |
+| **3** | ✅ **Pillar C** — auto-drafted week | Builds on code that already exists; biggest differentiation payoff | Med | High |
 | **4** | ✅ **Pillar B, tier 2** — informed reminders, shipped as "ask-when-it-fires" | Sidesteps the data-bridge question entirely by asking Mike directly instead of reading his state remotely | Low | Med–High |
 | **5** | ✅ **Pillar A** — recipe-data validation script | Greenlit alongside Phase 4; hard-fail gate in CI, `tools/validate-recipes.js` | Low–Med | Med |
-| **Backlog** | Macro-trend bias (Pillar C fast-follow) | Deferred by choice in Phase 3 — ship once the plain auto-draft has been used for a bit | Med | Med–High |
+| **6** | ✅ **Pillar C fast-follow** — macro-trend bias | Shipped via bridge roadmap B2, once real cross-app training signal existed to bias alongside it | Med | Med–High |
 | **Backlog** | A real data-bridge/export/sync mechanism for Pillar B | Only if ask-when-it-fires proves insufficient — still requires a separate go-ahead per the "no backend" constraint | Med–High | Med–High |
 
 **Already done (no work):** persistent nav, screen wake lock, Cooking Mode, arbitrary serving
@@ -182,8 +183,9 @@ design-token system.
 
 ## Pillar D — Cookbook ↔ Workout data bridge (governed by the joint roadmap)
 
-**Status:** 🔄 In progress — **B0 (foundation & data contract)** and **B1 (cookbook→workout:
-meals inform training)** shipped 2026-07-15; B2–B5 gated. Approved 2026-07-15 as a phased,
+**Status:** 🔄 In progress — **B0 (foundation & data contract)**, **B1 (cookbook→workout:
+meals inform training)**, and **B2 (workout→cookbook: training informs meals)** shipped
+2026-07-15; B3–B5 gated. Approved 2026-07-15 as a phased,
 two-way bridge toward a **joint launch** of the cookbook and 4 Weeks to Open as **two linked
 PWAs**. B0 added a pull-only `CONSUME` map to `mc-sync.js` (this app pulls `mc_activity` +
 `mc_workout_log_v1` read-only from the workout app; never pushed) and `mc-bridge.js`, the
@@ -207,14 +209,23 @@ widening + `mc-bridge.js`, B2 training-aware Smart Week, B3 Today strip + recipr
 docs) land here in `Mikes-Cookbook` on their own branch; each needs its own executive summary
 and owner approval before code, same gate as every phase here.
 
-**B2 absorbs the deferred macro-trend-bias fast-follow** (Pillar C backlog below) — biasing on
-real cross-app training signal is the natural home for it, rather than shipping the bias blind.
+**B2 shipped (2026-07-15) — training informs meals.** `mc-bridge.js` gained
+`likelyTrainingDays()` (a real historical weekday-training pattern from `mc_workout_log_v1`,
+not a fabricated future schedule) feeding a protein-up/kcal-lighter bias into both Smart Week's
+`smw*` scoring and the Macro Smart Generator's per-day protein target. **Also absorbed the
+deferred macro-trend-bias fast-follow** (Pillar C backlog below) into the same
+`msgDayProteinGoal()` seam — biasing on real cross-app training signal turned out to be the
+natural home for both. The cookbook Home hero also gained a workout-aware nudge (specific line
+when trained today or on a real streak, e.g. "Legs today — plan meals that fuel the recovery"),
+and the "Past 7 Days" recap card now fuses in workouts completed the same week. All verified
+live in headless Chromium against the real app + real recipe data (statistically confirmed
+protein bias, Home-nudge branches, recap fusion, and the trend-bias callout's presence/absence).
 
 **Effort:** Med–High (phased) · **Impact:** High (this is the joint-launch product).
 
 ## Open questions (backlog only)
-- Macro-trend bias (Pillar C fast-follow) is now folded into the bridge roadmap's Phase B2 —
-  ship it there, biased on real training signal, rather than as a standalone cookbook-only tweak.
+- ~~Macro-trend bias (Pillar C fast-follow)~~ **Resolved** — shipped 2026-07-15 via bridge
+  roadmap B2, biased on real training signal per the note above, not as a standalone tweak.
 - ~~How should app state get from `localStorage` to a scheduled trigger / a real data bridge?~~
   **Resolved** by Pillar D: the bridge is signed-in Supabase sync, not trigger-readable
   `localStorage`. See `4-Weeks-to-Open-/cookbook-bridge-roadmap.md`.
