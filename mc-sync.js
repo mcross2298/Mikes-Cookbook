@@ -185,19 +185,22 @@
         var remoteByKey = {};
         (r.data || []).forEach(function (row) { remoteByKey[row.store_key] = row.data; });
         // Owned stores (STORES) are pulled+merged and later pushed; consumed
-        // stores (CONSUME) are pulled read-only and never pushed. Only an
-        // owned-store change arms the one-shot reload — workout data arriving
-        // here has no rendered surface to refresh yet (that lands in B2/B3).
-        function pullKey(key, strategy, owned) {
+        // stores (CONSUME) are pulled read-only and never pushed (push() below
+        // only ever iterates STORES). Both kinds now have real rendered
+        // surfaces (roadmap B2's training-aware Smart Week / Home nudge read
+        // the pulled CONSUME data), so a change in either arms the one-shot
+        // reload — a fresh sign-in shouldn't need a manual navigation to show
+        // cross-app data that just arrived.
+        function pullKey(key, strategy) {
           var local = parse(readRaw(key));
           var remote = remoteByKey[key];
           var before = readRaw(key);
           if (remote != null) writeVal(key, mergeStore(strategy, local, remote));
-          if (owned && readRaw(key) !== before) pulledChange = true;
+          if (readRaw(key) !== before) pulledChange = true;
           snapshot[key] = remote != null ? JSON.stringify(remote) : null;
         }
-        Object.keys(STORES).forEach(function (key) { pullKey(key, STORES[key], true); });
-        Object.keys(CONSUME).forEach(function (key) { pullKey(key, CONSUME[key], false); });
+        Object.keys(STORES).forEach(function (key) { pullKey(key, STORES[key]); });
+        Object.keys(CONSUME).forEach(function (key) { pullKey(key, CONSUME[key]); });
         status.lastPull = Date.now();
       });
   }
