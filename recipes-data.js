@@ -13707,6 +13707,400 @@ const RECIPES = [
   },
 
   {
+    recipe_id: "honey-bourbon-steak-marinade",
+    title: "Honey Bourbon Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🥃",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Bourbon, honey, and soy sauce reduce down to a sweet, boozy edge — a glaze-in-waiting for ribeye or New York strip.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#8B5A2B",
+
+    macro_profiles: {
+      serving_2: { calories: 71, protein_g: 0, fat_g: 0, carbs_g: 10 },
+      serving_4: { calories: 71, protein_g: 0, fat_g: 0, carbs_g: 10 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Bourbon", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Bourbon", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Honey", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the bourbon, honey, soy sauce, garlic, and black pepper until the honey dissolves."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge. Pat dry before searing for the best crust."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "soy-ginger-steak-marinade",
+    title: "Soy Ginger Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🫚",
+    tags: ["No-Cook", "Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "A clean, savory soak of soy sauce, rice vinegar, and fresh ginger — lighter and sharper than a sweet Korean-style glaze.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#4A6B5A",
+
+    macro_profiles: {
+      serving_2: { calories: 71, protein_g: 1, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 71, protein_g: 1, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Soy sauce", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Ginger", prep: "grated", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" }
+      ],
+      serving_4: [
+        { item: "Soy sauce", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Rice vinegar", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Ginger", prep: "grated", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the soy sauce, olive oil, rice vinegar, ginger, and garlic."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "maple-mustard-steak-marinade",
+    title: "Maple Mustard Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍁",
+    tags: ["No-Cook", "Sweet-Savory", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Maple syrup and Dijon mustard balance sweet against tangy, with Worcestershire and garlic rounding out a glossy steak marinade.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#B8752E",
+
+    macro_profiles: {
+      serving_2: { calories: 38, protein_g: 0, fat_g: 1, carbs_g: 8 },
+      serving_4: { calories: 38, protein_g: 0, fat_g: 1, carbs_g: 8 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Maple syrup", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Maple syrup", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Dijon mustard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the maple syrup, Dijon mustard, Worcestershire sauce, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "red-wine-rosemary-steak-marinade",
+    title: "Red Wine Rosemary Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍷",
+    tags: ["No-Cook", "Herby", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Red wine, olive oil, and rosemary make a classic steakhouse soak — deeply savory with a fragrant herbal edge.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#6B2737",
+
+    macro_profiles: {
+      serving_2: { calories: 75, protein_g: 0, fat_g: 7, carbs_g: 1 },
+      serving_4: { calories: 75, protein_g: 0, fat_g: 7, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Red wine", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Dried rosemary", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Red wine", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Dried rosemary", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the red wine, olive oil, garlic, rosemary, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "mediterranean-lemon-herb-steak-marinade",
+    title: "Mediterranean Lemon Herb Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍋",
+    tags: ["No-Cook", "Bright", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Lemon juice, olive oil, and a trio of Mediterranean herbs — oregano, thyme, and rosemary — brighten steak before the grill.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#9CAA4E",
+
+    macro_profiles: {
+      serving_2: { calories: 124, protein_g: 0, fat_g: 14, carbs_g: 1 },
+      serving_4: { calories: 124, protein_g: 0, fat_g: 14, carbs_g: 1 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Dried thyme", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" },
+        { item: "Dried rosemary", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Olive oil", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Lemon juice", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Dried oregano", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried thyme", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" },
+        { item: "Dried rosemary", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the olive oil, lemon juice, garlic, oregano, thyme, and rosemary."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "dijon-herb-steak-marinade",
+    title: "Dijon Herb Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🫙",
+    tags: ["No-Cook", "Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Dijon mustard, Worcestershire, and thyme whisk into a tangy, herby marinade with real steakhouse backbone.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#C9A227",
+
+    macro_profiles: {
+      serving_2: { calories: 72, protein_g: 0, fat_g: 7, carbs_g: 2 },
+      serving_4: { calories: 72, protein_g: 0, fat_g: 7, carbs_g: 2 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Dijon mustard", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Dried thyme", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Dijon mustard", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Worcestershire sauce", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Dried thyme", prep: "", quantity: "1", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the Dijon mustard, olive oil, Worcestershire sauce, garlic, and thyme."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Rub over steak and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
+    recipe_id: "balsamic-brown-sugar-steak-marinade",
+    title: "Balsamic Brown Sugar Steak Marinade",
+    category: "Marinade",
+    source: "Marinades",
+    icon: "🍯",
+    tags: ["No-Cook", "Sweet-Tangy", "Grill-Ready"],
+    dish_category: "Marinades",
+    subsection: "Beef & Steak",
+    description:
+      "Balsamic vinegar sweetened with brown sugar and garlic — a glossy, caramelized finish that's perfect for a hot sear.",
+    prep_time_mins: 5,
+    cook_time_mins: 0,
+    native_serving: 2,
+    accent: "#7A3B2E",
+
+    macro_profiles: {
+      serving_2: { calories: 85, protein_g: 0, fat_g: 7, carbs_g: 6 },
+      serving_4: { calories: 85, protein_g: 0, fat_g: 7, carbs_g: 6 }
+    },
+
+    scaling_options: [2, 4],
+
+    ingredients_by_serving: {
+      serving_2: [
+        { item: "Balsamic vinegar", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "1", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "1", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "1", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/4", unit: "tsp", category: "Pantry" }
+      ],
+      serving_4: [
+        { item: "Balsamic vinegar", prep: "", quantity: "4", unit: "tbsp", category: "Pantry" },
+        { item: "Olive oil", prep: "", quantity: "2", unit: "tbsp", category: "Pantry" },
+        { item: "Brown sugar", prep: "", quantity: "2", unit: "tsp", category: "Pantry" },
+        { item: "Garlic", prep: "minced", quantity: "2", unit: "tsp", category: "Produce" },
+        { item: "Black pepper", prep: "", quantity: "1/2", unit: "tsp", category: "Pantry" }
+      ]
+    },
+
+    instructions: [
+      {
+        step_number: 1,
+        title: "Whisk it together",
+        detail:
+          "In a small bowl, whisk together the balsamic vinegar, olive oil, brown sugar, garlic, and black pepper."
+      },
+      {
+        step_number: 2,
+        title: "Marinate the steak",
+        detail:
+          "Pour over steak in a resealable bag or dish and marinate 30 minutes to 2 hours in the fridge before grilling."
+      }
+    ]
+  },
+
+  {
     recipe_id: "buffalo-garlic-chicken-marinade",
     title: "Buffalo Garlic Chicken Marinade",
     category: "Marinade",
