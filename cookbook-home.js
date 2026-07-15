@@ -484,17 +484,33 @@
     if (!r) return 2;
     return (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
   }
+  // Roadmap B1 (cookbook->workout bridge) — a denormalized {title,icon,macros}
+  // snapshot stored ON each meal entry, not just its recipe_id. The workout
+  // app pulls mc-cookbook:mealplan read-only (see mc-bridge.js) but never
+  // loads recipes-data.js, so without this snapshot it could show a bare
+  // recipe id and nothing else. macro_profiles are per single serving and
+  // identical across every authored tier (CLAUDE.md "Serving ladder"), so a
+  // snapshot never goes stale even if the meal's serving count changes later.
+  function mealSnapshot(id, serving) {
+    var r = recipeById(id);
+    if (!r) return { title: null, icon: null, macros: null };
+    var tier = serving || defaultServingFor(id);
+    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
+      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || null;
+    return { title: r.title || null, icon: r.icon || null, macros: m };
+  }
   function addMeal(id, opts) {
     opts = opts || {};
     var p = loadPlan();
-    var meal = {
+    var serving = opts.serving || defaultServingFor(id);
+    var meal = Object.assign({
       uid: newUid(), id: id,
-      serving: opts.serving || defaultServingFor(id),
+      serving: serving,
       day: opts.day || null,
       slot: opts.slot || null,
       completed: false,
       completedAt: null
-    };
+    }, mealSnapshot(id, serving));
     p.meals.push(meal);
     savePlan(p);
     return meal;
@@ -1320,7 +1336,11 @@
     var p = loadPlan();
     p.meals = p.meals.filter(function (m) { return scopeSlots.indexOf(m.slot) < 0; });
     grid.forEach(function (g) {
-      p.meals.push({ uid: newUid(), id: g.id, serving: defaultServingFor(g.id), day: g.day, slot: g.slot });
+      var serving = defaultServingFor(g.id);
+      p.meals.push(Object.assign(
+        { uid: newUid(), id: g.id, serving: serving, day: g.day, slot: g.slot },
+        mealSnapshot(g.id, serving)
+      ));
     });
     savePlan(p);
     saveGroc(new Set());
@@ -3183,7 +3203,10 @@
           reuseBtn.addEventListener("click", function () {
             if (window.confirm("Replace this week with “" + week.label + "”?")) {
               savePlan({ meals: week.meals.map(function (m) {
-                return { uid: newUid(), id: m.id, serving: m.serving, day: m.day || null, slot: m.slot || null };
+                return Object.assign(
+                  { uid: newUid(), id: m.id, serving: m.serving, day: m.day || null, slot: m.slot || null },
+                  mealSnapshot(m.id, m.serving)
+                );
               }) });
               saveGroc(new Set());
               plannerState.historyOpen = false;

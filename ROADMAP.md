@@ -182,11 +182,18 @@ design-token system.
 
 ## Pillar D — Cookbook ↔ Workout data bridge (governed by the joint roadmap)
 
-**Status:** 🔄 In progress — **B0 (foundation & data contract) shipped 2026-07-15**; B1–B5
-gated. Approved 2026-07-15 as a phased, two-way bridge toward a **joint launch** of the
-cookbook and 4 Weeks to Open as **two linked PWAs**. B0 added a pull-only `CONSUME` map to
-`mc-sync.js` (this app pulls `mc_activity` + `mc_workout_log_v1` read-only from the workout
-app; never pushed) and `mc-bridge.js`, the shared read-only cross-app view. This resolves the
+**Status:** 🔄 In progress — **B0 (foundation & data contract)** and **B1 (cookbook→workout:
+meals inform training)** shipped 2026-07-15; B2–B5 gated. Approved 2026-07-15 as a phased,
+two-way bridge toward a **joint launch** of the cookbook and 4 Weeks to Open as **two linked
+PWAs**. B0 added a pull-only `CONSUME` map to `mc-sync.js` (this app pulls `mc_activity` +
+`mc_workout_log_v1` read-only from the workout app; never pushed) and `mc-bridge.js`, the
+shared read-only cross-app view. B1 added `cookbook-home.js`'s `mealSnapshot()` — every meal
+added to the plan (`addMeal`, `commitSmartWeek`, and the plan-history "Reuse" flow) now
+denormalizes `{title, icon, macros}` onto the meal entry itself, since the workout app never
+loads `recipes-data.js` and has no other way to resolve a bare `recipe_id`; this is what makes
+the workout app's new "Today's Planned Meals" card (in `4-Weeks-to-Open-/mc-macros.js`) able
+to show a real title and macros instead of a bare id. Purely additive to the plan's data shape
+— no cookbook UI changed, so no Quick Tour update was needed for B1. This resolves the
 "real data bridge" open question below: the bridge is the signed-in Supabase sync layer both
 apps already share (`user_sync` table, `mc_macros_v1` already reconciled), widened so each app
 *pulls* the other's stores read-only. It is **not** a way for a scheduled trigger to read
