@@ -182,8 +182,11 @@ design-token system.
 
 ## Pillar D — Cookbook ↔ Workout data bridge (governed by the joint roadmap)
 
-**Status:** 🔲 Planned — approved 2026-07-15 as a phased, two-way bridge toward a **joint
-launch** of the cookbook and 4 Weeks to Open as **two linked PWAs**. This resolves the
+**Status:** 🔄 In progress — **B0 (foundation & data contract) shipped 2026-07-15**; B1–B5
+gated. Approved 2026-07-15 as a phased, two-way bridge toward a **joint launch** of the
+cookbook and 4 Weeks to Open as **two linked PWAs**. B0 added a pull-only `CONSUME` map to
+`mc-sync.js` (this app pulls `mc_activity` + `mc_workout_log_v1` read-only from the workout
+app; never pushed) and `mc-bridge.js`, the shared read-only cross-app view. This resolves the
 "real data bridge" open question below: the bridge is the signed-in Supabase sync layer both
 apps already share (`user_sync` table, `mc_macros_v1` already reconciled), widened so each app
 *pulls* the other's stores read-only. It is **not** a way for a scheduled trigger to read
