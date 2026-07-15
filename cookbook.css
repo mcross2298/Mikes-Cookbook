@@ -684,11 +684,16 @@ body {
   line-height: 1.15;
   color: var(--ink);
   margin: 0;
-  /* Clamp to one line — the compact card has no room for a title to wrap. */
+  /* Clamp to one line — the compact card has no room for a title to wrap.
+     padding-right reserves the .plan-toggle "+" circle's footprint (34px
+     wide, right:12px, top:52px — lands right where this line sits) so a
+     long title truncates before the button instead of running full-width
+     and getting clipped underneath it. */
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  padding-right: 42px;
 }
 .rc-meta {
   font-size: 12.5px;
@@ -1367,7 +1372,11 @@ button.col-back { appearance: none; -webkit-appearance: none;
   color: var(--sage); letter-spacing: 0.02em;
 }
 
-.col-grid { display: grid; grid-template-columns: 1fr; gap: 13px; padding: 0 20px 24px; }
+/* Bottom padding bumped 24px -> 48px: on top of main.app's own 64px
+   data-tabbar clearance, this gives the last card a comfortable margin
+   above the floating .back-fab/.home-fab pills at full scroll instead of
+   the two nearly touching. */
+.col-grid { display: grid; grid-template-columns: 1fr; gap: 13px; padding: 0 20px 48px; }
 @media (min-width: 560px) { .col-grid { grid-template-columns: 1fr 1fr; } }
 
 /* A brief settle-in on freshly-rendered results, reusing the same fade

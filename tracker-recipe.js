@@ -58,6 +58,13 @@
         "box-shadow:0 6px 20px rgba(0,0,0,0.40);transition:transform var(--dur-fast,120ms) var(--ease-out,ease);}" +
       ".ckr-fab:active{transform:scale(0.95);}" +
       "body.cooking .ckr-fab{display:none;}" +
+      /* The fab sits at bottom:78px and stands ~39px tall (top edge ~117px),
+         well above the page's default 64px content clearance (--tab-h) — so
+         scrolling content (e.g. the Cook Log's "Cooked it" button) regularly
+         lands underneath it. Reusing --tab-h (already read by every fixed
+         bottom element on the page, including the SW update toast) lifts
+         everything that needs to clear the fab, not just the content. */
+      "body.has-ckr-fab{--tab-h:130px;}" +
       ".ckr-ov{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);" +
         "display:flex;align-items:flex-end;justify-content:center;z-index:1200;opacity:0;transition:opacity 0.2s;}" +
       ".ckr-ov.open{opacity:1;}" +
@@ -162,6 +169,7 @@
     btn.innerHTML = "＋ Log to tracker";
     btn.onclick = function () { openSheet(recipe, per); };
     mount.appendChild(btn);
+    document.body.classList.add("has-ckr-fab");
   }
 
   if (document.readyState === "loading") {
