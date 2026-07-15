@@ -180,9 +180,31 @@ Generator, batch-prep suggestion, cook log, macro tracker (goals/food search/bar
 "My Recipes", PWA install + offline service worker + CI regen, favorites store, collections,
 design-token system.
 
+## Pillar D — Cookbook ↔ Workout data bridge (governed by the joint roadmap)
+
+**Status:** 🔲 Planned — approved 2026-07-15 as a phased, two-way bridge toward a **joint
+launch** of the cookbook and 4 Weeks to Open as **two linked PWAs**. This resolves the
+"real data bridge" open question below: the bridge is the signed-in Supabase sync layer both
+apps already share (`user_sync` table, `mc_macros_v1` already reconciled), widened so each app
+*pulls* the other's stores read-only. It is **not** a way for a scheduled trigger to read
+`localStorage` — that idea stays retired; ask-when-it-fires (Pillar B tier 2) remains the
+reminder mechanism.
+
+The full phased plan (B0 foundation/data-contract → B1 cookbook→workout → B2 workout→cookbook
+→ B3 unified "Today" view → B4 suite UI/UX → B5 joint launch hardening) lives in the master
+repo: **`4-Weeks-to-Open-/cookbook-bridge-roadmap.md`**. Cookbook-side phases (B0 sync-whitelist
+widening + `mc-bridge.js`, B2 training-aware Smart Week, B3 Today strip + reciprocal nav, B4
+docs) land here in `Mikes-Cookbook` on their own branch; each needs its own executive summary
+and owner approval before code, same gate as every phase here.
+
+**B2 absorbs the deferred macro-trend-bias fast-follow** (Pillar C backlog below) — biasing on
+real cross-app training signal is the natural home for it, rather than shipping the bias blind.
+
+**Effort:** Med–High (phased) · **Impact:** High (this is the joint-launch product).
+
 ## Open questions (backlog only)
-- How should app state (meal plan, macro history) get from the phone's `localStorage` to
-  somewhere a scheduled trigger can read it, if at all — only relevant if "ask-when-it-fires"
-  (Pillar B tier 2, shipped) turns out to be insufficient and a real data bridge is wanted.
-- Should the two backlog items (macro-trend bias, a real data bridge) be picked up next, or is
-  this round of continuous improvement done for now?
+- Macro-trend bias (Pillar C fast-follow) is now folded into the bridge roadmap's Phase B2 —
+  ship it there, biased on real training signal, rather than as a standalone cookbook-only tweak.
+- ~~How should app state get from `localStorage` to a scheduled trigger / a real data bridge?~~
+  **Resolved** by Pillar D: the bridge is signed-in Supabase sync, not trigger-readable
+  `localStorage`. See `4-Weeks-to-Open-/cookbook-bridge-roadmap.md`.
