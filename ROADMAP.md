@@ -184,8 +184,8 @@ design-token system.
 ## Pillar D — Cookbook ↔ Workout data bridge (governed by the joint roadmap)
 
 **Status:** 🔄 In progress — **B0 (foundation & data contract)**, **B1 (cookbook→workout:
-meals inform training)**, and **B2 (workout→cookbook: training informs meals)** shipped
-2026-07-15; B3–B5 gated. Approved 2026-07-15 as a phased,
+meals inform training)**, **B2 (workout→cookbook: training informs meals)**, and **B3
+(unified "Today" view & reciprocal nav)** shipped 2026-07-15; B4–B5 gated. Approved 2026-07-15 as a phased,
 two-way bridge toward a **joint launch** of the cookbook and 4 Weeks to Open as **two linked
 PWAs**. B0 added a pull-only `CONSUME` map to `mc-sync.js` (this app pulls `mc_activity` +
 `mc_workout_log_v1` read-only from the workout app; never pushed) and `mc-bridge.js`, the
@@ -220,6 +220,20 @@ when trained today or on a real streak, e.g. "Legs today — plan meals that fue
 and the "Past 7 Days" recap card now fuses in workouts completed the same week. All verified
 live in headless Chromium against the real app + real recipe data (statistically confirmed
 protein bias, Home-nudge branches, recap fusion, and the trend-bias callout's presence/absence).
+
+**B3 shipped (2026-07-15) — unified "Today" view & reciprocal nav.** A real architecture
+finding first: the two apps are actually **same-origin** (`mcross2298.github.io`, different
+path — not two separate origins as B0 assumed), so same-device `localStorage` and the Supabase
+session are already shared by the browser natively; the sync bridge (B0–B2) remains necessary
+for cross-device use and isn't made redundant by this. The existing "Today" card
+(`renderTodayCard()`) gained a real workout-status badge (`todayWorkoutBadge()`) and now
+renders even on a day with a workout logged but no meals planned — previously it returned
+`null` in that case, silently dropping the signal. Home's topbar gained a persistent,
+reciprocal nav link to the workout app (`.home-workout-btn`), `MARKET:STRIP`/`MARKET:ADD`-gated
+the same way the workout app's own cookbook-nav link already is (absolute URL in the standalone
+build, relative `../dashboard.html` when mounted in the Rolodex market build) — verified by
+running the actual market-build regex transform against the file, confirming clean toggling.
+Sign-in continuity across the new link needed zero extra code, per the same-origin finding.
 
 **Effort:** Med–High (phased) · **Impact:** High (this is the joint-launch product).
 

@@ -786,6 +786,18 @@ body {
 }
 .home-search-btn:active { transform: scale(0.92); }
 
+/* Reciprocal nav to the workout app (roadmap B3) — same chip, offset to the
+   left of the search button so neither overlaps. */
+.home-workout-btn {
+  position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 68px; z-index: 21;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-elev); border: 1px solid var(--line-dark);
+  color: var(--on-dark); font-size: 16px; cursor: pointer; text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.home-workout-btn:active { transform: scale(0.92); }
+
 /* ── BOTTOM TAB BAR (4WTO style) ──────────────────────────────────── */
 .tab-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -936,6 +948,14 @@ body {
    (not inside .home-hero's padded wrapper) — matches .autodraft-card. ── */
 .today-card {
   margin: 0 20px 18px; padding: 18px 18px 16px;
+}
+/* Cross-app workout status (roadmap B3) — a short chip, not a full row, so
+   it reads as a status badge alongside the meal list rather than a fourth
+   meal entry. */
+.today-workout-badge {
+  display: inline-block; margin: -2px 0 10px; padding: 4px 10px; border-radius: 999px;
+  background: rgba(167,139,250,0.14); border: 1px solid rgba(167,139,250,0.3);
+  color: #c4b5fd; font-size: 12px; font-weight: 800;
 }
 .today-meals { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
 .today-meal {
