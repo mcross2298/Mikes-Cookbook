@@ -184,8 +184,9 @@ design-token system.
 ## Pillar D — Cookbook ↔ Workout data bridge (governed by the joint roadmap)
 
 **Status:** 🔄 In progress — **B0 (foundation & data contract)**, **B1 (cookbook→workout:
-meals inform training)**, **B2 (workout→cookbook: training informs meals)**, and **B3
-(unified "Today" view & reciprocal nav)** shipped 2026-07-15; B4–B5 gated. Approved 2026-07-15 as a phased,
+meals inform training)**, **B2 (workout→cookbook: training informs meals)**, **B3
+(unified "Today" view & reciprocal nav)**, and **B4 (suite UI/UX unification)** shipped
+2026-07-15; B5 gated. Approved 2026-07-15 as a phased,
 two-way bridge toward a **joint launch** of the cookbook and 4 Weeks to Open as **two linked
 PWAs**. B0 added a pull-only `CONSUME` map to `mc-sync.js` (this app pulls `mc_activity` +
 `mc_workout_log_v1` read-only from the workout app; never pushed) and `mc-bridge.js`, the
@@ -234,6 +235,26 @@ the same way the workout app's own cookbook-nav link already is (absolute URL in
 build, relative `../dashboard.html` when mounted in the Rolodex market build) — verified by
 running the actual market-build regex transform against the file, confirming clean toggling.
 Sign-in continuity across the new link needed zero extra code, per the same-origin finding.
+
+**B4 shipped (2026-07-15) — suite UI/UX unification.** An audit-first pass: checked what
+already existed before building, and found two real parity gaps plus one real defect rather
+than doing a purely cosmetic pass. This app had **no install-prompt mechanism at all** —
+`mc-install.js` (fully app-agnostic) ported byte-identical from the workout repo and wired into
+`mc-account.js`'s new Install section. Also had **no ambient sync-status indicator** — the
+workout app's persistent "☁️ Backed up · Nm ago" line on Home had no cookbook equivalent;
+`mc-backup-status.js` ported too, but adapted at the shared-module level first: the original
+cached its target element once at load, which would have gone stale after this app's very first
+Home re-render (this is a hub-and-spoke SPA that rebuilds Home's whole DOM on every visit) — now
+re-queries the DOM on every `render()` call, plus a new `refresh()` hook this app calls
+immediately after each Home render instead of waiting up to 15s for the interval. **A real
+defect found and fixed:** the new `.home-workout-btn` from B3 silently overlapped the
+pre-existing `.home-account-btn` at the identical position — since the account button mounts
+after it in Home's render order, it fully occluded the workout-nav icon. Moved to its own slot,
+verified via an actual bounding-rect check in headless Chromium. Sign-in copy is now symmetric
+in both directions (this app's copy already mentioned the workout app; the workout app's own
+copy didn't mention this one — now it does). `quick-tour-overview.html` gained an explicit
+suite-framing sentence and stat chip (previously the workout app was only ever mentioned
+feature-by-feature); fixed a stale recipe count noticed in the same paragraph (144 → 318).
 
 **Effort:** Med–High (phased) · **Impact:** High (this is the joint-launch product).
 

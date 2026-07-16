@@ -786,10 +786,14 @@ body {
 }
 .home-search-btn:active { transform: scale(0.92); }
 
-/* Reciprocal nav to the workout app (roadmap B3) — same chip, offset to the
-   left of the search button so neither overlaps. */
+/* Reciprocal nav to the workout app (roadmap B3) — same chip, offset further
+   left than the search button. Bug fix (roadmap B4): this used to sit at
+   right:68px, the exact same slot mc-account.js's .home-account-btn occupies
+   — since that button mounts after this one in Home's render order, it fully
+   occluded the workout icon behind it. right:116px gives each of the three
+   topbar buttons (search 20px, account 68px, workout 116px) its own slot. */
 .home-workout-btn {
-  position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 68px; z-index: 21;
+  position: absolute; top: calc(20px + env(safe-area-inset-top)); right: 116px; z-index: 21;
   width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: var(--bg-elev); border: 1px solid var(--line-dark);
