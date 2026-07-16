@@ -429,8 +429,27 @@
       if (!Array.isArray(p.meals)) p.meals = [];
       if (!("startedAt" in p)) p.startedAt = null;
       if (!("day7Dismissed" in p)) p.day7Dismissed = false;
+      backfillMealSnapshots(p);
       return p;
     } catch (e) { return { meals: [], startedAt: null, day7Dismissed: false }; }
+  }
+  // Self-heal meal entries missing their {title,icon,macros} bridge snapshot
+  // (e.g. restored from an older export/import predating mealSnapshot, or any
+  // future write path that skips it). The workout app never loads
+  // recipes-data.js, so a snapshot-less entry shows as a bare "Planned meal"
+  // with no macros and a disabled Log button there, even though this app can
+  // resolve the real recipe fine. Runs on every plan load; only re-saves (and
+  // so only re-syncs to Supabase) when something actually changed.
+  function backfillMealSnapshots(p) {
+    var changed = false;
+    p.meals.forEach(function (m) {
+      if (m.macros) return;
+      var snap = mealSnapshot(m.id, m.serving);
+      if (!snap.macros) return;   // recipe genuinely unresolvable — leave as-is
+      m.title = snap.title; m.icon = snap.icon; m.macros = snap.macros;
+      changed = true;
+    });
+    if (changed) savePlan(p);
   }
   // Auto-stamps startedAt the moment a plan first gets meals, and clears it
   // (plus the day-7 dismissal flag) once the plan empties out, so a fresh
@@ -491,17 +510,37 @@
   // recipe id and nothing else. macro_profiles are per single serving and
   // identical across every authored tier (CLAUDE.md "Serving ladder"), so a
   // snapshot never goes stale even if the meal's serving count changes later.
+  // Shared tier resolution: NOT every recipe authors a serving_2 tier (batch-
+  // yield/single-serving recipes author just one serving_N matching
+  // native_serving/scaling_options — see CLAUDE.md's "Serving ladder").
+  // mealMacros()/computeWeekMacros() below used to hardcode
+  // r.macro_profiles.serving_2 directly — for a serving_1-only recipe (e.g.
+  // Baked Berry Protein Breakfast Bowl, Buffalo Ranch Turkey Burrito Bowl,
+  // Chicken Fajita Sweet Potato Bowl) that resolved to {} and silently logged
+  // 0 kcal/0g everything. Centralized here so every macro consumer falls back
+  // the same way mealSnapshot always has.
+  function perServingMacroTier(r, serving) {
+    if (!r || !r.macro_profiles) return null;
+    var tier = serving || defaultServingFor(r.recipe_id);
+    return r.macro_profiles["serving_" + tier] ||
+      r.macro_profiles["serving_" + (r.native_serving || 2)] || null;
+  }
+  // Normalize recipes-data.js's field names (calories/protein_g/fat_g/carbs_g)
+  // to the {kcal,p,f,c} shape mc_macros_v1 entries already use natively, so
+  // the workout side (mc-bridge.js) can pass this straight into an addEntry()
+  // `per:` field with zero further translation. macro_profiles values are
+  // already per SINGLE serving and identical across every authored tier
+  // (CLAUDE.md "Serving ladder") — never scale these by meal.serving.
+  function macrosFromTier(m) {
+    return m ? {
+      kcal: Math.round(m.calories || 0), p: Math.round(m.protein_g || 0),
+      f: Math.round(m.fat_g || 0), c: Math.round(m.carbs_g || 0)
+    } : null;
+  }
   function mealSnapshot(id, serving) {
     var r = recipeById(id);
     if (!r) return { title: null, icon: null, macros: null };
-    var tier = serving || defaultServingFor(id);
-    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
-      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || null;
-    // Normalize recipes-data.js's field names (calories/protein_g/fat_g/carbs_g)
-    // to the {kcal,p,f,c} shape mc_macros_v1 entries already use natively, so
-    // the workout side (mc-bridge.js) can pass this straight into an addEntry()
-    // `per:` field with zero further translation.
-    var macros = m ? { kcal: m.calories || 0, p: m.protein_g || 0, f: m.fat_g || 0, c: m.carbs_g || 0 } : null;
+    var macros = macrosFromTier(perServingMacroTier(r, serving));
     return { title: r.title || null, icon: r.icon || null, macros: macros };
   }
   function addMeal(id, opts) {
@@ -862,8 +901,10 @@
      to MACRO_HISTORY_KEY, and appends a shared cook-log entry (feeding
      Smart Week's repeat-avoidance) — all keyed by uid/cookLogAt so
      re-toggling never double-counts. Un-marking removes both. Macro math
-     mirrors computeWeekMacros: serving_2 is the per-serving base, scaled to
-     the meal's planned serving count. */
+     mirrors computeWeekMacros: perServingMacroTier() resolves whichever tier
+     the recipe actually authored (never hardcodes serving_2), and the
+     resulting per-serving value is used as-is — macro_profiles is already
+     per single serving and never scales with meal.serving. */
   var MACRO_HISTORY_KEY = "mc-cookbook:mealplan:macrohistory";
   function loadMacroHistory() {
     try { return JSON.parse(localStorage.getItem(MACRO_HISTORY_KEY) || "[]"); }
@@ -874,15 +915,7 @@
   }
   function mealMacros(m) {
     var r = recipeById(m.id);
-    if (!r || !r.macro_profiles) return null;
-    var mp = r.macro_profiles.serving_2 || {};
-    var scale = (m.serving || 2) / 2;
-    return {
-      kcal: Math.round((mp.calories  || 0) * scale),
-      p:    Math.round((mp.protein_g || 0) * scale),
-      f:    Math.round((mp.fat_g     || 0) * scale),
-      c:    Math.round((mp.carbs_g   || 0) * scale)
-    };
+    return macrosFromTier(perServingMacroTier(r, m.serving));
   }
   function logMealMacros(m) {
     var macros = mealMacros(m);
@@ -3577,19 +3610,15 @@
   }
 
   /* ── C4: Sum the weekly planned macros from recipe data ──────────────
-     Uses serving_2 tier as the base (per-serving = calories/2) and scales
-     to the meal's planned serving count. Macros are constant per serving. */
+     perServingMacroTier() resolves whichever tier the recipe actually
+     authored (never hardcodes serving_2 — see the comment above it); macros
+     are constant per serving and never scale with meal.serving. */
   function computeWeekMacros(meals) {
     var kcal = 0, p = 0, f = 0, c = 0;
     meals.forEach(function (meal) {
-      var r = recipeById(meal.id);
-      if (!r || !r.macro_profiles) return;
-      var m = r.macro_profiles["serving_2"] || {};
-      var scale = (meal.serving || 2) / 2;
-      kcal += (m.calories   || 0) * scale;
-      p    += (m.protein_g  || 0) * scale;
-      f    += (m.fat_g      || 0) * scale;
-      c    += (m.carbs_g    || 0) * scale;
+      var macros = macrosFromTier(perServingMacroTier(recipeById(meal.id), meal.serving));
+      if (!macros) return;
+      kcal += macros.kcal; p += macros.p; f += macros.f; c += macros.c;
     });
     return { kcal: Math.round(kcal), p: Math.round(p), f: Math.round(f), c: Math.round(c) };
   }
