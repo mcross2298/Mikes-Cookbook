@@ -2248,13 +2248,27 @@
       else if (navigator.clearAppBadge) navigator.clearAppBadge();
     } catch (e) {}
   }
+  // Roadmap B3 — the reverse of the workout dashboard's own cross-app strip:
+  // a short line of real training status from the bridge, so this card
+  // becomes a genuine "what am I doing today, both apps" glance instead of
+  // meals-only. null with no bridge / no real signal today.
+  function todayWorkoutBadge() {
+    if (!window.MCBridge) return null;
+    var w = MCBridge.todaysWorkout();
+    if (w.trainedToday) return "🏋️ Trained today";
+    if (w.streak >= 1) return "🔥 " + w.streak + "-day training streak";
+    return null;
+  }
   function renderTodayCard() {
     var code = todayDayCode();
     var todays = planMeals().filter(function (m) { return m.day === code; });
-    if (!todays.length) return null;
+    var workoutBadge = todayWorkoutBadge();
+    if (!todays.length && !workoutBadge) return null;
 
     var card = el("div", "home-hero-card today-card");
     card.appendChild(el("p", "home-hero-eyebrow", "Today · " + DAY_LONG[code]));
+    if (workoutBadge) card.appendChild(el("div", "today-workout-badge", esc(workoutBadge)));
+    if (!todays.length) return card; // workout signal only — no meals planned today
 
     var list = el("div", "today-meals");
     todays.forEach(function (m) {
@@ -2389,6 +2403,29 @@
       setTab("recipes");
     });
     bar.appendChild(searchBtn);
+
+    // Reciprocal nav to the workout app (roadmap B3) — same origin as this
+    // app (different path), so the signed-in Supabase session there is
+    // already visible here via ordinary same-origin localStorage sharing;
+    // no token hand-off needed for this link to land signed in. The
+    // absolute URL names a specific personal deployment, so it's swapped
+    // for a relative link when this file is mounted inside the Rolodex
+    // market build (a separate, white-label product) — same treatment
+    // dashboard.html's own cookbook-nav link already gets in reverse.
+    /* MARKET:STRIP cookbook-workout-nav-standalone START */
+    var workoutBtn = el("a", "home-workout-btn", "🏋️");
+    workoutBtn.href = "https://mcross2298.github.io/4-Weeks-to-Open-/dashboard.html";
+    workoutBtn.setAttribute("aria-label", "Open the workout app");
+    workoutBtn.title = "4 Weeks to Open — workout app";
+    bar.appendChild(workoutBtn);
+    /* MARKET:STRIP cookbook-workout-nav-standalone END */
+    /* MARKET:ADD cookbook-workout-nav START
+    var workoutBtn = el("a", "home-workout-btn", "🏋️");
+    workoutBtn.href = "../dashboard.html";
+    workoutBtn.setAttribute("aria-label", "Open the workout app");
+    workoutBtn.title = "4 Weeks to Open — workout app";
+    bar.appendChild(workoutBtn);
+    MARKET:ADD cookbook-workout-nav END */
 
     // Account entry point (sign in / sync) — no-op mount() if MC_SB isn't
     // configured or mc-account.js isn't loaded.
