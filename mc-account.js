@@ -89,7 +89,51 @@
       body.querySelector('#acctSignin').addEventListener('click', doSignIn);
       body.querySelector('#acctPw').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSignIn(); });
     }
+    appendInstallSection(body);
     appendBackupSection(body);
+  }
+
+  // Add to Home Screen (roadmap B4 — ported from 4-Weeks-to-Open-'s
+  // mc-account.js so both apps offer the same install moment; mc-install.js
+  // captures the native Android prompt at page load, this just renders
+  // whatever state it stashed). Byte-for-byte the same section/copy pattern
+  // as the workout app's, app name swapped.
+  function appendInstallSection(body) {
+    if (!window.MC_INSTALL) return;
+    var wrap = document.createElement('div');
+    wrap.innerHTML =
+      '<div class="acct-hr"></div>' +
+      '<div class="acct-sub">Install — add Mike’s Cookbook to your home screen for a full-screen, app-like experience.</div>' +
+      '<div id="acctInstallBody"></div>';
+    body.appendChild(wrap);
+    renderInstallBody(wrap.querySelector('#acctInstallBody'));
+    MC_INSTALL.onChange(function () {
+      var slot = wrap.querySelector('#acctInstallBody');
+      if (slot) renderInstallBody(slot);
+    });
+  }
+
+  function renderInstallBody(slot) {
+    if (MC_INSTALL.isInstalled()) {
+      slot.innerHTML = '<div class="acct-info">✓ Already installed on this device.</div>';
+      return;
+    }
+    if (MC_INSTALL.platform === 'ios') {
+      slot.innerHTML =
+        '<div class="acct-sub" style="margin-bottom:0;line-height:1.7;">' +
+        '1. Tap the <b>Share</b> icon in Safari’s toolbar<br>' +
+        '2. Scroll down and tap <b>Add to Home Screen</b><br>' +
+        '3. Tap <b>Add</b> — Mike’s Cookbook now opens full-screen, just like an app</div>';
+      return;
+    }
+    if (MC_INSTALL.canPrompt()) {
+      slot.innerHTML = '<button type="button" class="acct-btn acct-secondary" id="acctInstall">Install app</button>';
+      slot.querySelector('#acctInstall').addEventListener('click', function () {
+        MC_INSTALL.prompt();
+      });
+      return;
+    }
+    slot.innerHTML = '<div class="acct-sub" style="margin-bottom:0;">Look for <b>Install app</b> or <b>Add to Home Screen</b> in your browser’s menu.</div>';
   }
 
   // Manual backup — available whether signed in or not (window.MCExport is

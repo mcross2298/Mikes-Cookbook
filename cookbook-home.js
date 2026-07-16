@@ -2550,6 +2550,20 @@
     s.appendChild(browse);
 
     s.appendChild(renderBackupSection());
+
+    // Ambient cloud-sync status (roadmap B4 — ported from 4-Weeks-to-Open-'s
+    // mc-backup-status.js so both apps give the same "is my data actually
+    // synced?" confidence signal). Distinct from the Backup & Restore card
+    // above (a manual local-file export/import), this is the live "☁️ Backed
+    // up · 2m ago" ticker fed by mc-sync.js. Hidden entirely signed-out.
+    var backupStatus = el("div", null, "");
+    backupStatus.id = "backupStatus";
+    backupStatus.style.display = "none";
+    s.appendChild(backupStatus);
+    // mc-backup-status.js caches nothing across renders (this SPA rebuilds
+    // Home's DOM every visit) — ask it to refresh immediately instead of
+    // waiting up to 15s for its own interval tick.
+    if (window.MC_BACKUP_STATUS) MC_BACKUP_STATUS.refresh();
   }
 
   /* ── Shared spoke top bar with a "‹ <label>" anchor ───────────────── */
