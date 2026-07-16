@@ -32,6 +32,10 @@ jobs:
           exit $fail
       - name: Validate recipes-data.js
         run: node tools/validate-recipes.js
+      - name: Cross-app bridge regression tests (mc-bridge.js read layer + mc-sync.js merge logic)
+        run: |
+          node tools/test-mc-bridge.js
+          node tools/test-mc-sync-merge.js
       - name: Regenerate service worker (auto version + precache list)
         run: python3 tools/build-sw.py --version "ci-${{ github.run_number }}"
       - name: Setup Pages

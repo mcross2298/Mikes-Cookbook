@@ -23,6 +23,24 @@
    ========================================================================== */
 (function () {
   "use strict";
+  // Roadmap B5 — Node-side hook so CI can regression-test the real
+  // sync-conflict merge functions (same convention as 4-Weeks-to-Open-'s
+  // mc-sync.js and mc-suggest.js), instead of a duplicated inline copy that
+  // could silently drift from the real logic. Placed before the early-return
+  // guards below on purpose: the merge functions are `function` declarations
+  // further down this same closure, so they're hoisted and already defined
+  // at this point regardless of whether MC_SB ends up configured — see
+  // tools/test-mc-sync-merge.js.
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+      mergeMacros: function () { return mergeMacros.apply(null, arguments); },
+      mergeArrayByField: function () { return mergeArrayByField.apply(null, arguments); },
+      mergePlan: function () { return mergePlan.apply(null, arguments); },
+      mergeStringSet: function () { return mergeStringSet.apply(null, arguments); },
+      mergeHistoryBySavedAt: function () { return mergeHistoryBySavedAt.apply(null, arguments); },
+      mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); }
+    };
+  }
   if (window.__mcSync) return;
   window.__mcSync = true;
   if (!window.MC_SB || !MC_SB.configured) return;

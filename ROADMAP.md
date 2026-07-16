@@ -186,7 +186,9 @@ design-token system.
 **Status:** 🔄 In progress — **B0 (foundation & data contract)**, **B1 (cookbook→workout:
 meals inform training)**, **B2 (workout→cookbook: training informs meals)**, **B3
 (unified "Today" view & reciprocal nav)**, and **B4 (suite UI/UX unification)** shipped
-2026-07-15; B5 gated. Approved 2026-07-15 as a phased,
+2026-07-15; **B5 (joint launch hardening)**'s session-verifiable half shipped 2026-07-16
+— real-device QA and production Supabase reconciliation remain, and only the owner can
+close those. Approved 2026-07-15 as a phased,
 two-way bridge toward a **joint launch** of the cookbook and 4 Weeks to Open as **two linked
 PWAs**. B0 added a pull-only `CONSUME` map to `mc-sync.js` (this app pulls `mc_activity` +
 `mc_workout_log_v1` read-only from the workout app; never pushed) and `mc-bridge.js`, the
@@ -255,6 +257,28 @@ in both directions (this app's copy already mentioned the workout app; the worko
 copy didn't mention this one — now it does). `quick-tour-overview.html` gained an explicit
 suite-framing sentence and stat chip (previously the workout app was only ever mentioned
 feature-by-feature); fixed a stale recipe count noticed in the same paragraph (144 → 318).
+
+**B5 shipped (2026-07-16) — joint launch hardening, session-verifiable half.** `mc-sync.js`
+gained a `module.exports` hook (before its `window.__mcSync`/`MC_SB` guards, exploiting that
+the merge functions are hoisted `function` declarations further down the same closure) so
+`tools/test-mc-sync-merge.js` can regression-test the real merge logic — `mergeMacros`,
+`mergePlan`, `mergeStringSet`, `mergeHistoryBySavedAt`, `mergeArrayByField`,
+`mergeCookedByRecipe` — via a `vm`-sandboxed real file, not a duplicated copy. A real CI gap
+was found: this repo never ran `test-mc-bridge.js` at all (no copy of the file even existed
+here, despite this repo owning a byte-identical `mc-bridge.js`) and neither repo's CI ran
+either bridge test before now — both fixed, both test files now blocking steps in
+`pages.yml`. A full cross-app QA loop was verified headlessly end-to-end for the first time
+(prior phases were each tested in isolation) — seeded workout activity into this app and
+confirmed the Home Today card's workout-badge-with-zero-planned-meals path (the exact B3 fix)
+renders correctly, cross-checked against `MCBridge.todaysWorkout()` directly, zero console
+errors. Offline behavior verified live in headless Chromium: kill the network, reload, the
+shell **and** the bridge modules still work from the SW cache. `mc-export.js` reconfirmed to
+already exclude the CONSUME-only workout stores (`mc_activity`, `mc_workout_log_v1`) from both
+export and import, zero code changes needed — one-writer-per-store holds through a manual
+backup round-trip too. **Not done, and can't be from a headless session:** the real-device QA
+matrix (iOS Safari, Android Chrome, installed-PWA mode) and confirming actual Supabase row
+reconciliation across two signed-in physical devices. Full breakdown in
+`4-Weeks-to-Open-/cookbook-bridge-roadmap.md`'s B5 section.
 
 **Effort:** Med–High (phased) · **Impact:** High (this is the joint-launch product).
 
