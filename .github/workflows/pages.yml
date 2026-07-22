@@ -36,6 +36,8 @@ jobs:
         run: |
           node tools/test-mc-bridge.js
           node tools/test-mc-sync-merge.js
+      - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
+        run: node tools/test-sw-strategy.js
       - name: Shared-module drift check (this repo's copies vs 4-Weeks-to-Open- canonical — audit LS-1)
         # Downloads the canonical shared modules (and the checker itself) from
         # the workout repo and fails if any local copy drifted. Never hand-edit
