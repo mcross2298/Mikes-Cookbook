@@ -35,44 +35,9 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   };
-  function rgbFromHex(hex) {
-    var h = (hex || "").replace("#", "");
-    if (h.length !== 6) return "200,122,83";
-    return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(",");
-  }
   // Authored accents range down to near-black; used as literal text/border color
   // on dark surfaces (tags, labels, icons), so floor the lightness before it's
   // ever set as a CSS var — otherwise a dark accent goes illegible.
-  function clampAccent(hex) {
-    var h = (hex || "").replace("#", "");
-    if (h.length !== 6) return hex || "#C87A53";
-    var r = parseInt(h.substr(0, 2), 16) / 255;
-    var g = parseInt(h.substr(2, 2), 16) / 255;
-    var b = parseInt(h.substr(4, 2), 16) / 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2;
-    if (l >= 0.45) return "#" + h;
-    var d = max - min;
-    var s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
-    var hue = 0;
-    if (d !== 0) {
-      if (max === r) hue = ((g - b) / d) % 6;
-      else if (max === g) hue = (b - r) / d + 2;
-      else hue = (r - g) / d + 4;
-      hue *= 60; if (hue < 0) hue += 360;
-    }
-    l = 0.45;
-    var c = (1 - Math.abs(2 * l - 1)) * s;
-    var x = c * (1 - Math.abs((hue / 60) % 2 - 1));
-    var m = l - c / 2, rp, gp, bp;
-    if (hue < 60) { rp = c; gp = x; bp = 0; }
-    else if (hue < 120) { rp = x; gp = c; bp = 0; }
-    else if (hue < 180) { rp = 0; gp = c; bp = x; }
-    else if (hue < 240) { rp = 0; gp = x; bp = c; }
-    else if (hue < 300) { rp = x; gp = 0; bp = c; }
-    else { rp = c; gp = 0; bp = x; }
-    function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
-    return "#" + toHex(rp) + toHex(gp) + toHex(bp);
-  }
   // Recipe/category/collection icons used to be raw platform emoji, which
   // render differently per OS and clash with icon.svg's crafted look. Every
   // authored emoji maps to one of a small set of cream/ink line icons (same
@@ -83,132 +48,19 @@
   // every context that used to size the emoji via font-size (.rc-icon at
   // 24px, .cat-icon at 32px, .plan-meal-icon/.plan-chip-icon at their own
   // sizes) with no separate icon set needed per size.
-  var DEFAULT_RECIPE_ICON =
-    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
-      '<rect x="5" y="4" width="14" height="16" rx="2.4" fill="#F9F8F6"/>' +
-      '<rect x="8" y="8" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.55"/>' +
-      '<rect x="8" y="11.4" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.4"/>' +
-      '<rect x="8" y="14.8" width="5" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
-    "</svg>";
-  var RECIPE_ICON_SVGS = {
-    protein:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<ellipse cx="14.5" cy="9" rx="6" ry="5" fill="#F9F8F6"/>' +
-        '<path d="M11 12.5c-2.6 2.1-5.4 4.9-6 6.9-.4 1.5.9 2.6 2.3 2 2-.8 4.6-3.4 6.6-6.2" fill="#F9F8F6"/>' +
-        '<circle cx="6.2" cy="19.6" r="1.3" fill="#2A2C2E" fill-opacity="0.28"/>' +
-      "</svg>",
-    seafood:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<ellipse cx="10.5" cy="12" rx="7" ry="4.2" fill="#F9F8F6"/>' +
-        '<path d="M17 9.5 21.5 6.5 19.5 12 21.5 17.5 17 14.5Z" fill="#F9F8F6"/>' +
-        '<circle cx="6.8" cy="11" r="1" fill="#2A2C2E" fill-opacity="0.4"/>' +
-      "</svg>",
-    dairy:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M3 17.5 11 5 21 10.5 21 17.5Z" fill="#F9F8F6"/>' +
-        '<circle cx="14" cy="12.5" r="1.1" fill="#2A2C2E" fill-opacity="0.3"/>' +
-        '<circle cx="10.5" cy="15.5" r="0.9" fill="#2A2C2E" fill-opacity="0.3"/>' +
-        '<circle cx="17" cy="15" r="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
-      "</svg>",
-    heat:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 2c1.8 3 3.6 5 3.6 8.4a3.6 3.6 0 1 1-7.2 0c0-1 .3-1.8.7-2.6-.1 1.6.8 2 1.3 1 .5-1-.2-2 .2-3.8.5 1.4 1.4 1.6 1.4 0Z" fill="#F9F8F6"/>' +
-        '<path d="M9 20c1.5.8 4.5.8 6 0-1 1.5-2 2-3 2s-2-.5-3-2Z" fill="#2A2C2E" fill-opacity="0.25"/>' +
-      "</svg>",
-    herb:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 21c0-8 2-13 8-16-1 7-3 12-8 16Z" fill="#F9F8F6"/>' +
-        '<path d="M12 21c0-8-2-13-8-16 1 7 3 12 8 16Z" fill="#F9F8F6" fill-opacity="0.75"/>' +
-        '<path d="M12 21V9" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.2"/>' +
-      "</svg>",
-    citrus:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<circle cx="12" cy="12" r="9" fill="#F9F8F6"/>' +
-        '<path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3 6.3 17.7" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1"/>' +
-      "</svg>",
-    berry:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<circle cx="9" cy="14" r="4" fill="#F9F8F6"/>' +
-        '<circle cx="15" cy="14" r="4" fill="#F9F8F6"/>' +
-        '<circle cx="12" cy="9.5" r="4" fill="#F9F8F6"/>' +
-        '<path d="M12 5.5c1-1.5 2.5-2 4-1.7" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.3" stroke-linecap="round"/>' +
-      "</svg>",
-    vegetable:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M9 8c4-4 9-5.5 11-3.5S16 10 12 14Z" fill="#2A2C2E" fill-opacity="0.22"/>' +
-        '<path d="M4 20c-1-4 1-9 5-11s7 1 6 5-7 8-11 6Z" fill="#F9F8F6"/>' +
-      "</svg>",
-    grain:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M3 11h18a9 6 0 0 1-18 0Z" fill="#F9F8F6"/>' +
-        '<path d="M6 8c1-1.5 2-2 2-3.5M11 7c1-1.5 2-2 2-3.5M16 8c1-1.5 2-2 2-3.5" stroke="#2A2C2E" stroke-opacity="0.25" stroke-width="1.3" stroke-linecap="round"/>' +
-      "</svg>",
-    sauce:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M7 3h7l-1 5 4 3.5c2 1.7 1.6 5.5-2.5 6.5-4.5 1.1-9.5-1-9.5-5.5 0-2.5 1.5-4 3-5Z" fill="#F9F8F6"/>' +
-        '<circle cx="12.5" cy="15" r="1" fill="#2A2C2E" fill-opacity="0.28"/>' +
-      "</svg>",
-    bread:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M4 13c0-5 3.6-8 8-8s8 3 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" fill="#F9F8F6"/>' +
-        '<path d="M8 8.5v5M12 7.5v6M16 8.5v5" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1.3" stroke-linecap="round"/>' +
-      "</svg>",
-    dessert:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M4 20 12 4l8 16Z" fill="#F9F8F6"/>' +
-        '<path d="M7 14h10M8.5 17h7" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1.3"/>' +
-        '<circle cx="12" cy="4" r="1.1" fill="#2A2C2E" fill-opacity="0.3"/>' +
-      "</svg>",
-    egg:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 5c4 0 8 3 8 7.5S17 20 12 20 3 16 3 12.5C3 8.5 7 5 12 5Z" fill="#F9F8F6" fill-opacity="0.85"/>' +
-        '<circle cx="13" cy="12" r="4" fill="#F9F8F6"/>' +
-        '<circle cx="13" cy="12" r="4" fill="#2A2C2E" fill-opacity="0.12"/>' +
-      "</svg>",
-    drink:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M5 8h11v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" fill="#F9F8F6"/>' +
-        '<path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" stroke="#F9F8F6" stroke-width="1.6" fill="none"/>' +
-        '<path d="M8 5.5c.4-.8-.2-1.3 0-2M11.5 5.5c.4-.8-.2-1.3 0-2" stroke="#2A2C2E" stroke-opacity="0.25" stroke-width="1.1" stroke-linecap="round"/>' +
-      "</svg>",
-    bowl:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M3 10.5h18a9 7.5 0 0 1-18 0Z" fill="#F9F8F6"/>' +
-        '<path d="M3 10.5a9 3 0 0 1 18 0" fill="#2A2C2E" fill-opacity="0.12"/>' +
-      "</svg>",
-    fruit:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 9c3.5-2 7 .3 7 4.5S15.5 21 12 21s-7-3.3-7-7.5S8.5 7 12 9Z" fill="#F9F8F6"/>' +
-        '<path d="M12 9V5.5c1-1 2-1.2 3-1" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
-      "</svg>"
-  };
-  // Every emoji actually authored across recipes-data.js's 226 recipes plus
-  // CATEGORY_META/COLLECTIONS, grouped into the icon set above. A few
-  // one-off novelty glyphs (🌈🌌🎉🤠💍🌀🌴) have no sensible food mapping and
-  // are left out on purpose — they fall through to DEFAULT_RECIPE_ICON.
-  var EMOJI_ICON_GROUP = {
-    "🌶️": "heat", "🍯": "sauce", "🧀": "dairy", "🍋": "citrus", "🌮": "bread",
-    "🥗": "bowl", "🍗": "protein", "🐟": "seafood", "🍤": "seafood", "🍫": "dessert",
-    "🍓": "berry", "🥢": "grain", "🥩": "protein", "🍝": "grain", "🔥": "heat",
-    "🧄": "herb", "🥪": "bread", "🫑": "vegetable", "🥣": "bowl", "🥑": "vegetable",
-    "🍚": "grain", "🌯": "bread", "🌿": "herb", "🥦": "vegetable", "🍳": "egg",
-    "🍕": "bread", "🧈": "dairy", "🫐": "berry", "🍪": "dessert", "🥔": "vegetable",
-    "🧆": "protein", "🍖": "protein", "🥧": "dessert", "🍔": "bread", "🦐": "seafood",
-    "🍲": "bowl", "🍜": "grain", "🍍": "fruit", "🥜": "vegetable", "🍅": "vegetable",
-    "🌽": "vegetable", "🫘": "vegetable", "🥙": "bread", "🍰": "dessert", "🧂": "sauce",
-    "🍊": "citrus", "🍁": "herb", "🧇": "bread", "🍛": "grain", "🌭": "bread",
-    "🥬": "vegetable", "🥘": "bowl", "🎃": "vegetable", "🍌": "fruit", "🍨": "dessert",
-    "🍎": "fruit", "🍭": "dessert", "🥭": "fruit", "🥟": "bread", "🍒": "berry",
-    "🥨": "bread", "🍑": "fruit", "🥝": "fruit", "🦀": "seafood", "🦃": "protein",
-    "🍠": "vegetable", "🍢": "protein", "🍩": "dessert", "🥕": "vegetable", "☕": "drink",
-    "🍇": "fruit", "🫒": "vegetable", "🌱": "herb", "🍣": "seafood", "🥥": "fruit",
-    "🥖": "bread", "🥡": "bowl", "🍦": "dessert", "🍱": "bowl"
-  };
-  function recipeIconHtml(icon) {
-    if (!icon) return DEFAULT_RECIPE_ICON;
-    var group = EMOJI_ICON_GROUP[icon];
-    return group ? RECIPE_ICON_SVGS[group] : DEFAULT_RECIPE_ICON;
-  }
+  /* Recipe-card rendering lives in mc-cards.js (audit C-07) — the icon SVG
+     table, CARD_PATTERNS, the accent clamp and the card itself were all
+     duplicated in collection.js. Local aliases keep this file's existing call
+     sites unchanged; MCCards.configure() below supplies the shell's behavior. */
+  var clampAccent    = MCCards.clampAccent;
+  var rgbFromHex     = MCCards.rgbFromHex;
+  var hashStr        = MCCards.hashStr;
+  var cardPatternFor = MCCards.cardPatternFor;
+  var cardSheenDelay = MCCards.cardSheenDelay;
+  var recipeIconHtml = MCCards.recipeIconHtml;
+  var macroStatsHtml = MCCards.macroStatsHtml;
+  function recipeCard(r, opts) { return MCCards.recipeCard(r, opts); }
+
 
   // Recipe cards have no photography — recipes-data.js has no image field,
   // and the detail page's own cover photo is opt-in/user-uploaded, so most
@@ -217,26 +69,9 @@
   // some visual distinction beyond "same tile, different title," without a
   // photo pipeline. Four patterns is enough variety to read as "textured,"
   // not so many it looks random/noisy across a grid.
-  var CARD_PATTERNS = [
-    { image: "repeating-linear-gradient(45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
-    { image: "radial-gradient(rgba(255,255,255,0.18) 1.4px, transparent 1.6px)", size: "14px 14px" },
-    { image: "repeating-linear-gradient(-45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
-    { image: "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 12px)", size: "auto" }
-  ];
-  function hashStr(s) {
-    var h = 0;
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h;
-  }
-  function cardPatternFor(recipeId) {
-    return CARD_PATTERNS[hashStr(recipeId) % CARD_PATTERNS.length];
-  }
   // Desyncs the ported category-card sheen sweep (see .rc-sheen) so a grid
   // of many recipe cards doesn't all flash in unison — same hash source as
   // the pattern above, just a different modulus.
-  function cardSheenDelay(recipeId) {
-    return ((hashStr(recipeId) >>> 3) % 7) * 0.8 + "s";
-  }
 
   // Retrigger a one-shot animation: drop the class, force reflow, re-add.
   var pop = function (node) {
@@ -285,21 +120,13 @@
     catch (e) { warnStorageFull(); return false; }
   }
 
-  /* ── Favorites (shared store, also read by collection.js / recipe page) ── */
-  var FAV_KEY = "mc-cookbook:favorites";
-  function loadFavs() {
-    try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
-    catch (e) { return new Set(); }
-  }
-  function saveFavs(set) {
-    writeStore(FAV_KEY, JSON.stringify(Array.from(set)));
-  }
-  function toggleFav(id) {
-    var set = loadFavs();
-    if (set.has(id)) set.delete(id); else set.add(id);
-    saveFavs(set);
-    return set.has(id);
-  }
+  /* ── Favorites — the store itself is mc-fav.js (audit C-07) ───────────
+     Three files carried their own copy of this over the same key. Aliases
+     keep this file's call sites unchanged. The write-failure hook is wired
+     in init() so a full quota still surfaces the C-12 toast. */
+  var FAV_KEY = MCFav.KEY;
+  function loadFavs()   { return MCFav.load(); }
+  function toggleFav(id) { return MCFav.toggle(id); }
 
   function recipeById(id) {
     return recipes().filter(function (r) { return r.recipe_id === id; })[0] || null;
@@ -1377,22 +1204,6 @@
     score += Math.random() * 10; // jitter so Regenerate actually varies
     return score;
   }
-  function smwPickForSlot(slot, usedIds, prevCategory, excludeId, usedIngredientKeys, dayBias) {
-    var pool = mealEligibleRecipes(slot);
-    if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
-    if (!pool.length) return null;
-    var fresh = pool.filter(function (r) {
-      var days = daysSinceCooked(r.recipe_id);
-      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
-    });
-    var candidates = fresh.length ? fresh : pool;
-    var best = null, bestScore = -Infinity;
-    candidates.forEach(function (r) {
-      var s = smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys, dayBias);
-      if (s > bestScore) { bestScore = s; best = r; }
-    });
-    return best;
-  }
   // Real historical training pattern from MCBridge (roadmap B2) — {} (no
   // bias anywhere) until MC_SB/mc-sync has pulled enough real workout history
   // to establish one. Never fabricates a future schedule.
@@ -1405,49 +1216,161 @@
   function smwDayBiasFor(pattern, day) {
     return (day in pattern) ? pattern[day] : null;
   }
+
+  /* ══ ONE week-generation engine, three biases (audit C-04) ═════════════
+     This used to be three near-verbatim implementations — smw* (Balanced),
+     msg* (Macro-Targeted) and tcw* (Time Check), ~375 lines producing the
+     identical { day, slot, id } grid. Their slot pickers were the same
+     function four times over: same eligible pool, same excludeId filter,
+     same SMW_HARD_EXCLUDE_DAYS freshness filter with the same
+     fall-back-to-the-full-pool rule, same argmax loop. Only the scorer
+     differed — and Time Check already called Balanced's own scorer, which
+     is what proved the seam was there. Any fix to repeat-avoidance or
+     seasonality had to be found and reapplied up to three times, and a fix
+     applied to two of three made the planner behave differently depending
+     on which button the cook pressed.
+
+     What differs per mode is declared in WEEK_MODES below and nothing else:
+       prepare()  once-per-run context (training pattern, goals, buckets)
+       skipDay()  Time Check skips days the cook gave no bucket for
+       narrow()   Time Check's time-bucket pre-filter on the candidate pool
+       score()    the actual bias
+       track()    Balanced/Time track category + ingredient state for their
+                  variety scoring; Macro doesn't read either, so it doesn't
+                  pay to compute them.
+
+     Behavior is intentionally identical to the three it replaces, including
+     one asymmetry worth naming: Time Check passes no dayBias to
+     smwScoreCandidate, so it has never had the training-day protein bias
+     that Balanced does. That's preserved here rather than quietly
+     "fixed" — changing it is a product decision, not a refactor. */
+
+  // Shared pool → argmax. `narrow` runs before the empty check, matching
+  // Time Check's original ordering (bucket filter, then bail if nothing).
+  function wkPickForSlot(slot, opts) {
+    var pool = mealEligibleRecipes(slot);
+    if (opts.excludeId) pool = pool.filter(function (r) { return r.recipe_id !== opts.excludeId; });
+    if (opts.narrow) pool = opts.narrow(pool);
+    if (!pool.length) return null;
+    var fresh = pool.filter(function (r) {
+      var days = daysSinceCooked(r.recipe_id);
+      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
+    });
+    var candidates = fresh.length ? fresh : pool;
+    var best = null, bestScore = -Infinity;
+    candidates.forEach(function (r) {
+      var s = opts.score(r);
+      if (s > bestScore) { bestScore = s; best = r; }
+    });
+    return best;
+  }
+
+  function wkTrackVariety(st, pick) {
+    st.prevCategoryBySlot[pick.slot] = pick.recipe.dish_category;
+    mergeIngredientKeys(st.usedIngredientKeys, recipeIngredientKeys(pick.recipe));
+  }
+
+  var WEEK_MODES = {
+    balanced: {
+      prepare: function () { return { dayBiasPattern: smwDayBiasMap() }; },
+      score: function (ctx) {
+        var dayBias = smwDayBiasFor(ctx.run.dayBiasPattern, ctx.day);
+        return function (r) {
+          return smwScoreCandidate(r, ctx.state.usedIds, ctx.state.prevCategoryBySlot[ctx.slot],
+                                   ctx.state.usedIngredientKeys, dayBias);
+        };
+      },
+      track: wkTrackVariety
+    },
+    macro: {
+      prepare: function () {
+        var goals = loadMacroGoals();
+        return { goals: goals, dayBiasPattern: smwDayBiasMap(), trendBonus: macroTrendBias(goals).bonus };
+      },
+      score: function (ctx) {
+        var budget = msgBudgetFor(ctx);
+        return function (r) { return msgScoreCandidate(r, ctx.state.usedIds, budget); };
+      },
+      track: null            // macro scoring reads neither category nor ingredients
+    },
+    time: {
+      prepare: function (args) { return { dayBuckets: (args && args.dayBuckets) || {} }; },
+      skipDay: function (day, run) { return !run.dayBuckets[day]; },
+      narrow: function (ctx) {
+        var bucket = BWQ_BUCKETS.filter(function (b) { return b.key === ctx.run.dayBuckets[ctx.day]; })[0];
+        if (!bucket) return null;
+        return function (pool) {
+          var fit = pool.filter(function (r) { return bucket.match(bwqTotalTime(r)); });
+          return fit.length ? fit : pool;
+        };
+      },
+      // No dayBias — Time Check has never applied the training-day bias.
+      score: function (ctx) {
+        return function (r) {
+          return smwScoreCandidate(r, ctx.state.usedIds, ctx.state.prevCategoryBySlot[ctx.slot],
+                                   ctx.state.usedIngredientKeys);
+        };
+      },
+      track: wkTrackVariety
+    }
+  };
+
+  function wkMode(modeKey) { return WEEK_MODES[modeKey] || WEEK_MODES.balanced; }
+
   // Full 7-day grid for a scope: [{ day, slot, id }], best-effort no-repeat.
-  function smwGenerateWeek(scopeKey) {
+  function wkGenerateWeek(scopeKey, modeKey, args) {
     var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
-    var usedIds = new Set();
-    var usedIngredientKeys = {};
-    var prevCategoryBySlot = {};
-    var dayBiasPattern = smwDayBiasMap();
-    var grid = [];
+    var mode = wkMode(modeKey);
+    var run = mode.prepare ? mode.prepare(args || {}) : {};
+    var st = { usedIds: new Set(), usedIngredientKeys: {}, prevCategoryBySlot: {}, grid: [] };
     DAYS.forEach(function (day) {
-      var dayBias = smwDayBiasFor(dayBiasPattern, day);
-      scope.slots.forEach(function (slot) {
-        var pick = smwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, usedIngredientKeys, dayBias);
-        if (pick) {
-          usedIds.add(pick.recipe_id);
-          prevCategoryBySlot[slot] = pick.dish_category;
-          mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(pick));
-          grid.push({ day: day, slot: slot, id: pick.recipe_id });
-        }
+      if (mode.skipDay && mode.skipDay(day, run)) return;
+      scope.slots.forEach(function (slot, slotIndex) {
+        var ctx = { day: day, slot: slot, slotIndex: slotIndex, scope: scope, state: st, run: run, isRegen: false };
+        var pick = wkPickForSlot(slot, {
+          excludeId: null,
+          narrow: mode.narrow ? mode.narrow(ctx) : null,
+          score: mode.score(ctx)
+        });
+        if (!pick) return;
+        st.usedIds.add(pick.recipe_id);
+        if (mode.track) mode.track(st, { recipe: pick, slot: slot });
+        st.grid.push({ day: day, slot: slot, id: pick.recipe_id });
       });
     });
-    return { scope: scope, grid: grid };
+    return { scope: scope, grid: st.grid };
   }
+
   // Re-pick a single day+slot, excluding its current recipe so the tap
-  // always changes something (when an alternative exists). Ingredient
-  // overlap is scored against every OTHER slot already in the grid, so a
-  // regenerated pick still tries to match the rest of the week.
-  function smwRegenerateSlot(grid, day, slot) {
-    var usedIds = new Set();
-    var usedIngredientKeys = {};
+  // always changes something (when an alternative exists). Used-id and
+  // ingredient state is rebuilt from every OTHER slot already in the grid,
+  // so a regenerated pick still tries to match the rest of the week;
+  // prevCategory comes from the previous DAY's same slot.
+  function wkRegenerateSlot(grid, day, slot, modeKey, args) {
+    var scope = SMART_SCOPES.filter(function (s) { return s.key === (args && args.scopeKey); })[0] || SMART_SCOPES[0];
+    var mode = wkMode(modeKey);
+    var run = mode.prepare ? mode.prepare(args || {}) : {};
+    var st = { usedIds: new Set(), usedIngredientKeys: {}, prevCategoryBySlot: {}, grid: grid };
     grid.forEach(function (g) {
       if (g.day === day && g.slot === slot) return;
-      usedIds.add(g.id);
+      st.usedIds.add(g.id);
+      if (!mode.track) return;
       var r = recipeById(g.id);
-      if (r) mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(r));
+      if (r) mergeIngredientKeys(st.usedIngredientKeys, recipeIngredientKeys(r));
     });
-    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
     var dayIdx = DAYS.indexOf(day);
     var prevEntry = dayIdx > 0
       ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
       : null;
-    var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
-    var dayBias = smwDayBiasFor(smwDayBiasMap(), day);
-    var pick = smwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, usedIngredientKeys, dayBias);
+    st.prevCategoryBySlot[slot] = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
+
+    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
+    var ctx = { day: day, slot: slot, slotIndex: 0, scope: scope, state: st, run: run, isRegen: true };
+    var pick = wkPickForSlot(slot, {
+      excludeId: current ? current.id : null,
+      narrow: mode.narrow ? mode.narrow(ctx) : null,
+      score: mode.score(ctx)
+    });
     return pick ? pick.recipe_id : null;
   }
   // Commits a generated grid into the plan: replaces any existing meals in
@@ -1531,22 +1454,6 @@
     score += Math.random() * 2; // small jitter so Regenerate still varies, without swamping macro fit
     return score;
   }
-  function msgPickForSlot(slot, usedIds, budget, excludeId) {
-    var pool = mealEligibleRecipes(slot);
-    if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
-    if (!pool.length) return null;
-    var fresh = pool.filter(function (r) {
-      var days = daysSinceCooked(r.recipe_id);
-      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
-    });
-    var candidates = fresh.length ? fresh : pool;
-    var best = null, bestScore = -Infinity;
-    candidates.forEach(function (r) {
-      var s = msgScoreCandidate(r, usedIds, budget);
-      if (s > bestScore) { bestScore = s; best = r; }
-    });
-    return best;
-  }
   // Sum of this day's already-picked slots' macro fit, optionally excluding
   // one slot (used to find what's left for that slot when regenerating it).
   function msgDayConsumed(grid, day, excludeSlot) {
@@ -1557,54 +1464,27 @@
         return acc;
       }, { kcal: 0, p: 0 });
   }
-  // Full 7-day grid for a scope, same shape as smwGenerateWeek's. Walks each
-  // day's slots in order, giving each an equal share of whatever's left of
-  // that day's kcal/protein goal after earlier slots in the same day.
-  function msgGenerateWeek(scopeKey) {
-    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
-    var goals = loadMacroGoals();
-    var dayBiasPattern = smwDayBiasMap();
-    var trendBonus = macroTrendBias(goals).bonus;
-    var usedIds = new Set();
-    var grid = [];
-    DAYS.forEach(function (day) {
-      scope.slots.forEach(function (slot, i) {
-        var consumed = msgDayConsumed(grid, day, null);
-        var remaining = {
-          kcal: (goals ? goals.kcal : 0) - consumed.kcal,
-          p:    msgDayProteinGoal(goals, day, dayBiasPattern, trendBonus) - consumed.p
-        };
-        var slotsLeft = scope.slots.length - i;
-        var budget = { kcal: remaining.kcal / slotsLeft, p: remaining.p / slotsLeft };
-        var pick = msgPickForSlot(slot, usedIds, budget, null);
-        if (pick) {
-          usedIds.add(pick.recipe_id);
-          grid.push({ day: day, slot: slot, id: pick.recipe_id });
-        }
-      });
-    });
-    return { scope: scope, grid: grid };
-  }
-  // Re-pick a single day+slot against what's left of that day's goal once
-  // its other slots are accounted for.
-  function msgRegenerateSlot(grid, day, slot, scopeKey) {
-    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
-    var goals = loadMacroGoals();
-    var dayBiasPattern = smwDayBiasMap();
-    var trendBonus = macroTrendBias(goals).bonus;
-    var usedIds = new Set();
-    grid.forEach(function (g) { if (!(g.day === day && g.slot === slot)) usedIds.add(g.id); });
-    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
-    var consumed = msgDayConsumed(grid, day, slot);
+  // This slot's share of whatever's left of the day's kcal/protein goal.
+  // Generating, the day fills left to right, so the share is over the slots
+  // still to come. Regenerating, the day is already full apart from this one
+  // slot, so the share is over the slots not currently filled (min 1).
+  function msgBudgetFor(ctx) {
+    var run = ctx.run;
+    var consumed = msgDayConsumed(ctx.state.grid, ctx.day, ctx.isRegen ? ctx.slot : null);
     var remaining = {
-      kcal: (goals ? goals.kcal : 0) - consumed.kcal,
-      p:    msgDayProteinGoal(goals, day, dayBiasPattern, trendBonus) - consumed.p
+      kcal: (run.goals ? run.goals.kcal : 0) - consumed.kcal,
+      p:    msgDayProteinGoal(run.goals, ctx.day, run.dayBiasPattern, run.trendBonus) - consumed.p
     };
-    var otherFilled = grid.filter(function (g) { return g.day === day && g.slot !== slot; }).length;
-    var slotsLeft = Math.max(1, scope.slots.length - otherFilled);
-    var budget = { kcal: remaining.kcal / slotsLeft, p: remaining.p / slotsLeft };
-    var pick = msgPickForSlot(slot, usedIds, budget, current ? current.id : null);
-    return pick ? pick.recipe_id : null;
+    var slotsLeft;
+    if (ctx.isRegen) {
+      var otherFilled = ctx.state.grid.filter(function (g) {
+        return g.day === ctx.day && g.slot !== ctx.slot;
+      }).length;
+      slotsLeft = Math.max(1, ctx.scope.slots.length - otherFilled);
+    } else {
+      slotsLeft = ctx.scope.slots.length - ctx.slotIndex;
+    }
+    return { kcal: remaining.kcal / slotsLeft, p: remaining.p / slotsLeft };
   }
   // Whole-day protein fit vs. goal, for the preview's "~92% of daily
   // protein goal" readout. Null when there's no goal to compare against.
@@ -1812,139 +1692,8 @@
   // Compact bottom stat row for a recipe card — one authored serving's
   // Cal/Protein/Fat/Carbs, matching recipe.html's macro card exactly (no
   // division by serving count; see macrosFor() there).
-  function macroStatsHtml(m) {
-    var stats = [
-      { cls: "cal", v: m.calories, label: "Cal" },
-      { cls: "", v: m.protein_g, label: "Protein" },
-      { cls: "", v: m.fat_g, label: "Fat" },
-      { cls: "", v: m.carbs_g, label: "Carbs" }
-    ].filter(function (s) { return s.v != null; });
-    if (!stats.length) return "";
-    return '<div class="rc-stats">' + stats.map(function (s) {
-      return '<div class="rc-stat ' + s.cls + '">' +
-        '<span class="rc-stat-num">' + Math.round(s.v) + "</span>" +
-        '<span class="rc-stat-label">' + s.label + "</span></div>";
-    }).join("") + "</div>";
-  }
 
   /* ── Shared: a recipe card (used by Categories / Recipes / Favorites) ── */
-  function recipeCard(r, opts) {
-    opts = opts || {};
-    var accent = clampAccent(r.accent || "#C87A53");
-    var card = el("a", "rc");
-    card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
-    card.style.setProperty("--rc-accent", accent);
-    card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
-    var pattern = cardPatternFor(r.recipe_id);
-    card.style.setProperty("--rc-pattern", pattern.image);
-    card.style.setProperty("--rc-pattern-size", pattern.size);
-
-    // macro_profiles are stored PER SINGLE SERVING and are identical across
-    // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,
-    // the same way recipe.html's macro card does. Do not divide by serving count.
-    var tier = (opts.serving || (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2);
-    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
-      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
-
-    // Pantry-match badge — only passed in from the Recipes screen's
-    // "Low-shopping" filter, so this card doesn't change anywhere else.
-    var pantryBadge = "";
-    if (opts.pantryInfo) {
-      pantryBadge = '<div class="rc-pantry-badge">' +
-        (opts.pantryInfo.need === 0 ? "Have everything"
-          : "Need " + opts.pantryInfo.need + (opts.pantryInfo.need === 1 ? " item" : " items")) +
-        "</div>";
-    }
-
-    card.innerHTML =
-      '<div class="rc-band">' +
-        '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
-        '<span class="rc-icon">' + recipeIconHtml(r.icon) + "</span>" +
-      "</div>" +
-      '<div class="rc-body">' +
-        '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
-        macroStatsHtml(m) +
-        pantryBadge +
-      "</div>";
-
-    // A heart in the card's upper-right corner — favorite straight from the
-    // grid. Filled when saved, outline when not; tapping flips it in place. On
-    // the Favorites screen, un-saving also drops the card out of the list.
-    var saved = loadFavs().has(r.recipe_id);
-    var heart = el("button", "fav-toggle" + (saved ? " on" : ""), saved ? "❤" : "♡");
-    heart.type = "button";
-    heart.setAttribute("aria-label", saved ? "Remove from favorites" : "Add to favorites");
-    heart.addEventListener("click", function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var on = toggleFav(r.recipe_id);
-      if (opts.fav) { renderFavorites(); return; }   // drop out of the favorites grid
-      heart.classList.toggle("on", on);
-      heart.textContent = on ? "❤" : "♡";
-      heart.setAttribute("aria-label", on ? "Remove from favorites" : "Add to favorites");
-      pop(heart);
-    });
-    card.appendChild(heart);
-
-    // One-tap plan-add, stacked below the heart — previously the only way
-    // onto This Week's plan was leaving the card, going Home, and re-
-    // searching for the same recipe by name in the planner's picker.
-    var planBtn = el("button", "plan-toggle", "+");
-    planBtn.type = "button";
-    planBtn.setAttribute("aria-label", "Add to This Week");
-    var planBtnTimer = null;
-    planBtn.addEventListener("click", function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var meal = addMeal(r.recipe_id, { serving: opts.serving });
-      planBtn.classList.add("added");
-      planBtn.textContent = "✓";
-      pop(planBtn);
-      plannerToast("Added “" + r.title + "” to This Week", "Undo", function () {
-        removeMeal(meal.uid);
-      });
-      clearTimeout(planBtnTimer);
-      planBtnTimer = setTimeout(function () {
-        planBtn.classList.remove("added");
-        planBtn.textContent = "+";
-      }, 1800);
-    });
-    card.appendChild(planBtn);
-
-    // "Mike's pick" star — visible to EVERYONE on a curated recipe, so Mike's
-    // taste reads across the whole app, not just inside the Mike's screen.
-    if (isMikeFav(r.recipe_id)) {
-      card.classList.add("mikes-pick");
-      card.appendChild(mikesBadge());
-    }
-
-    // Owner-only curation: double-tap a card to add/remove it from Mike's
-    // Favorites. Single tap still opens the recipe — but because the card is a
-    // link, in owner mode we hold navigation ~280ms to see if a second tap
-    // (the curate gesture) lands first. Visitors never enter this branch.
-    if (isOwner()) {
-      card.classList.add("owner-curatable");
-      var tapTimer = null;
-      card.addEventListener("click", function (e) {
-        if (e.defaultPrevented) return;          // heart (stopPropagation) handled it
-        e.preventDefault();
-        if (tapTimer) {                          // second tap → curate
-          clearTimeout(tapTimer); tapTimer = null;
-          var on = toggleMikeFav(r.recipe_id);
-          if (activeScreen() === "mikes") { renderMikes(); return; }
-          card.classList.toggle("mikes-pick", on);
-          var b = card.querySelector(".mikes-badge");
-          if (on && !b) card.appendChild(mikesBadge());
-          else if (!on && b) card.removeChild(b);
-          pop(card);
-        } else {                                 // first tap → maybe a single tap
-          tapTimer = setTimeout(function () {
-            tapTimer = null;
-            window.location.href = card.href;    // confirmed single tap → navigate
-          }, 280);
-        }
-      });
-    }
-    return card;
-  }
 
   /* ══ HOME screen — the hub ══════════════════════════════════════════ */
   // Each module is a premium glass card (gradient + accent border + soft
@@ -2096,13 +1845,13 @@
   }
 
   // Auto-drafted week: only offered when the plan is empty (homeAutoDraftEligible).
-  // Reuses Smart Week's own generator/commit (smwGenerateWeek/commitSmartWeek) —
+  // Reuses Smart Week's own generator/commit (wkGenerateWeek/commitSmartWeek) —
   // this is a new *trigger* for that existing code (shown proactively instead of
   // waiting for a button tap), not a new generator. The grid is cached in
   // homeAutoDraftGrid so Regenerate re-rolls it but a re-render (e.g. tab switch)
   // doesn't silently swap the draft out from under the cook.
   function renderAutoDraftCard() {
-    if (!homeAutoDraftGrid) homeAutoDraftGrid = smwGenerateWeek("all").grid;
+    if (!homeAutoDraftGrid) homeAutoDraftGrid = wkGenerateWeek("all", "balanced").grid;
     var grid = homeAutoDraftGrid;
     var mealCount = grid.length;
     var recipeCount = Array.from(new Set(grid.map(function (g) { return g.id; }))).length;
@@ -2129,7 +1878,7 @@
     var regen = el("button", "autodraft-regen", "🔀 Regenerate");
     regen.type = "button";
     regen.addEventListener("click", function () {
-      homeAutoDraftGrid = smwGenerateWeek("all").grid;
+      homeAutoDraftGrid = wkGenerateWeek("all", "balanced").grid;
       renderHome();
     });
     var not = el("button", "autodraft-dismiss", "Not now");
@@ -3959,7 +3708,7 @@
     var macroGoals = loadMacroGoals();
     var mode = "balanced"; // "balanced" | "macro"
     function currentGrid() {
-      return (mode === "macro" && macroGoals) ? msgGenerateWeek(scopeKey).grid : smwGenerateWeek(scopeKey).grid;
+      return wkGenerateWeek(scopeKey, (mode === "macro" && macroGoals) ? "macro" : "balanced").grid;
     }
     var grid = currentGrid();
     // Dismissing the prep-day callout only sticks until the grid is
@@ -4101,8 +3850,8 @@
             regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
             regen.addEventListener("click", function () {
               var newId = (mode === "macro" && macroGoals)
-                ? msgRegenerateSlot(grid, day, slot, scopeKey)
-                : smwRegenerateSlot(grid, day, slot);
+                ? wkRegenerateSlot(grid, day, slot, "macro", { scopeKey: scopeKey })
+                : wkRegenerateSlot(grid, day, slot, "balanced", { scopeKey: scopeKey });
               if (!newId) { pop(regen); return; }
               grid = grid.map(function (g) {
                 return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
@@ -4368,80 +4117,13 @@
     writeStore(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets }));
   }
 
-  /* ── Time Check generation (tcw* namespace) ───────────────────────────
-     Deliberately decoupled from Smart Week's own smw* scoring above (see
-     that section's note) — same grid shape and the same recency +
-     dish-category-variety + ingredient-overlap tie-break
-     (smwScoreCandidate), but each day's candidate pool is first narrowed
-     to whatever fits that day's assigned time bucket. A bucket with zero
-     fits for a slot falls back to the full eligible pool, so a day/slot
-     never comes back empty just because its budget was narrow. */
-  function tcwPickForSlot(slot, usedIds, prevCategory, excludeId, bucketKey, usedIngredientKeys) {
-    var pool = mealEligibleRecipes(slot);
-    if (excludeId) pool = pool.filter(function (r) { return r.recipe_id !== excludeId; });
-    var bucket = BWQ_BUCKETS.filter(function (b) { return b.key === bucketKey; })[0];
-    if (bucket) {
-      var fit = pool.filter(function (r) { return bucket.match(bwqTotalTime(r)); });
-      if (fit.length) pool = fit;
-    }
-    if (!pool.length) return null;
-    var fresh = pool.filter(function (r) {
-      var days = daysSinceCooked(r.recipe_id);
-      return days == null || days > SMW_HARD_EXCLUDE_DAYS;
-    });
-    var candidates = fresh.length ? fresh : pool;
-    var best = null, bestScore = -Infinity;
-    candidates.forEach(function (r) {
-      var s = smwScoreCandidate(r, usedIds, prevCategory, usedIngredientKeys);
-      if (s > bestScore) { bestScore = s; best = r; }
-    });
-    return best;
-  }
-  // Full 7-day grid, same shape as smwGenerateWeek's — days with no bucket
-  // assigned are skipped (the cook didn't tell us anything about them).
-  function tcwGenerateWeek(scopeKey, dayBuckets) {
-    var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
-    var usedIds = new Set();
-    var usedIngredientKeys = {};
-    var prevCategoryBySlot = {};
-    var grid = [];
-    DAYS.forEach(function (day) {
-      var bucketKey = dayBuckets[day];
-      if (!bucketKey) return;
-      scope.slots.forEach(function (slot) {
-        var pick = tcwPickForSlot(slot, usedIds, prevCategoryBySlot[slot], null, bucketKey, usedIngredientKeys);
-        if (pick) {
-          usedIds.add(pick.recipe_id);
-          prevCategoryBySlot[slot] = pick.dish_category;
-          mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(pick));
-          grid.push({ day: day, slot: slot, id: pick.recipe_id });
-        }
-      });
-    });
-    return { scope: scope, grid: grid };
-  }
-  // Re-pick a single day+slot against that day's assigned bucket, excluding
-  // its current recipe so the tap always changes something when possible.
-  // Ingredient overlap is scored against every other slot already in the
-  // grid, same as smwRegenerateSlot.
-  function tcwRegenerateSlot(grid, day, slot, dayBuckets) {
-    var usedIds = new Set();
-    var usedIngredientKeys = {};
-    grid.forEach(function (g) {
-      if (g.day === day && g.slot === slot) return;
-      usedIds.add(g.id);
-      var r = recipeById(g.id);
-      if (r) mergeIngredientKeys(usedIngredientKeys, recipeIngredientKeys(r));
-    });
-    var current = grid.filter(function (g) { return g.day === day && g.slot === slot; })[0];
-    var dayIdx = DAYS.indexOf(day);
-    var prevEntry = dayIdx > 0
-      ? grid.filter(function (g) { return g.day === DAYS[dayIdx - 1] && g.slot === slot; })[0]
-      : null;
-    var prevCategory = prevEntry ? ((recipeById(prevEntry.id) || {}).dish_category) : null;
-    var pick = tcwPickForSlot(slot, usedIds, prevCategory, current ? current.id : null, dayBuckets[day], usedIngredientKeys);
-    return pick ? pick.recipe_id : null;
-  }
+  /* Time Check generation lives in WEEK_MODES.time (audit C-04) — it used to
+     be a third copy of the generator (tcw*) whose only real contribution was
+     the time-bucket pre-filter below, since it already scored with Balanced's
+     own smwScoreCandidate. All that survives here is the bucket data and
+     BWQ_BUCKETS/bwqTotalTime above; the loop is shared. A bucket with zero
+     fits for a slot falls back to the full eligible pool, so a day/slot never
+     comes back empty just because the cook's budget was narrow. */
 
   function closeBandwidthQuiz() {
     var ov = document.querySelector(".bwq-overlay");
@@ -4505,7 +4187,7 @@
       cta.disabled = !DAYS.some(function (d) { return !!dayBuckets[d]; });
       cta.addEventListener("click", function () {
         saveTimeCheck(scopeKey, dayBuckets);
-        var result = tcwGenerateWeek(scopeKey, dayBuckets);
+        var result = wkGenerateWeek(scopeKey, "time", { dayBuckets: dayBuckets });
         grid = result.grid;
         scope = result.scope;
         phase = "results";
@@ -4525,7 +4207,7 @@
       var regenAll = el("button", "picker-sort-btn smw-regen-all-btn", "🔀 Regenerate");
       regenAll.type = "button";
       regenAll.addEventListener("click", function () {
-        var result = tcwGenerateWeek(scopeKey, dayBuckets);
+        var result = wkGenerateWeek(scopeKey, "time", { dayBuckets: dayBuckets });
         grid = result.grid;
         scope = result.scope;
         paint();
@@ -4557,7 +4239,7 @@
             regen.type = "button";
             regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
             regen.addEventListener("click", function () {
-              var newId = tcwRegenerateSlot(grid, day, slot, dayBuckets);
+              var newId = wkRegenerateSlot(grid, day, slot, "time", { scopeKey: scopeKey, dayBuckets: dayBuckets });
               if (!newId) { pop(regen); return; }
               grid = grid.map(function (g) {
                 return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
@@ -4918,6 +4600,35 @@
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
     syncOwnerFromUrl();
+
+    // How the shell does the things the shared card can't know about
+    // (audit C-07). collection.js configures the same hooks its own way —
+    // that difference is the whole reason the card takes hooks instead of
+    // being copied.
+    MCCards.configure({
+      isMikePick: isMikeFav,
+      mikesBadge: mikesBadge,
+      isOwner: isOwner,
+      toggleMikePick: toggleMikeFav,
+      // On the Mike's Favorites screen a curation tap re-renders the whole
+      // grid, so the card must not then poke at its own (replaced) node.
+      onMikePickToggled: function () {
+        if (activeScreen() !== "mikes") return false;
+        renderMikes();
+        return true;
+      },
+      // Un-hearting on the Favorites screen drops the card out of the list.
+      onFavToggled: function (id, on, opts) {
+        if (!opts || !opts.fav) return false;
+        renderFavorites();
+        return true;
+      },
+      addToPlan: function (r, o) { return addMeal(r.recipe_id, { serving: o && o.serving }); },
+      removeFromPlan: removeMeal,
+      toast: plannerToast
+    });
+    // A full quota shouldn't silently swallow a heart (audit C-12).
+    MCFav.onWriteFail = warnStorageFull;
     wireFavSync();
 
     // Persistent tab bar: Cookbook tab → home; Tracker tab → tracker screen.
@@ -4948,6 +4659,4 @@
     document.addEventListener("DOMContentLoaded", init);
   } else { init(); }
 
-  // Expose favorites API for collection.js / recipe page.
-  window.MCFav = { load: loadFavs, toggle: toggleFav, has: function (id) { return loadFavs().has(id); } };
 })();
