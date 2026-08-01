@@ -556,6 +556,45 @@ rather than assuming a regression.)*
 (phase 2 — doc drift is the developer stream's highest-frequency waste, and it now can't recur
 silently).
 
+## Owner-only verification — how to actually close it
+
+Two items have sat open since phase 1 because CI can't do them. Most of both is now
+automated; what's left is a few minutes of tapping.
+
+### Supabase cross-device reconciliation (audit C-02)
+
+**Server side: verified 2026-08-01.** `user_sync` has exactly the documented shape
+(`user_id`, `store_key`, `data jsonb`, `updated_at`, `device_id`) with PK `(user_id, store_key)` —
+which is what `mc-sync.js`'s `onConflict` upsert depends on — and RLS is a single `own_rows`
+policy, `auth.uid() = user_id` on both USING and WITH CHECK. Correct isolation, correct
+cross-device behavior.
+
+**Found while checking:** of 13 rows, **`mc-cookbook:favorites` and `mc-cookbook:pantry` are
+absent**, and every cookbook row was last written 2026-07-17/18 — before C-02 shipped. Nothing is
+broken; the app simply hasn't been opened signed-in since the change deployed. But it means C-02
+is unverified in production, exactly as flagged.
+
+To close it:
+1. **Device A** — open the cookbook, sign in, heart two recipes, add a pantry staple, then
+   background the app (`pagehide` flushes immediately; otherwise the 30 s timer).
+2. Confirm two new rows appear for those store keys with a fresh `device_id`.
+3. **Device B** — sign in, confirm the hearts arrive.
+4. **The union test** (this is the one that exercises `stringSet`): with A closed, heart a
+   *different* recipe on B, then reopen A. The server row must hold the **union**, not one side
+   overwriting the other.
+
+### PWA device matrix
+
+**`diagnostics.html` ships as of phase 5.** Open it on each device and mode and it self-tests
+install state, service-worker registration and control, precache completeness, app-shell-from-
+cache, every shared module, storage quota and the photo cap, sync status, and the kitchen
+capabilities (wake lock, barcode, camera) — plus the real `window.__mcBoot` number, which closes
+C-06's last loop. "Copy report" gives a plain-text summary.
+
+Four runs fill the matrix: iOS Safari (browser), iOS installed, Android Chrome (browser), Android
+installed. Anything red is a real finding; warnings are usually platform limits (iOS withholds
+`storage.estimate` and has no `BarcodeDetector`, both expected).
+
 ## Open questions (backlog only)
 - **`mc-cookbook:timecheck` needs a `ts` field** before it can join the sync whitelist (C-02).
   Today it's `{ scopeKey, days }` with no timestamp and no union semantics, so every available
