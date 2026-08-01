@@ -2,18 +2,21 @@
 
 Guidance for AI assistants (and humans) working in **Mike's Cookbook**.
 
-## Planning rule — executive summary required
+## Planning rule — artifact + roadmap is sufficient to proceed
 
-**Invoke the `executive-summary` skill** (`.claude/skills/executive-summary/SKILL.md`)
-only for long, extensive coding sessions and builds — e.g. new features or UI screens
-spanning many files, multi-phase refactors, or major service-worker/PWA overhauls.
-Produce a Word-style executive summary and wait for explicit approval ("approved" / "go")
-before writing or editing any file.
+For long, extensive coding sessions and builds — e.g. new features or UI
+screens spanning many files, multi-phase refactors, or major
+service-worker/PWA overhauls — produce a short artifact and/or roadmap
+covering scope, affected files, and approach before implementing. Creating
+that artifact/roadmap is itself sufficient evidence and direction to
+proceed directly to implementation; it replaces the old executive-summary
+approval step, so no separate "approved"/"go" reply is required before
+writing or editing files.
 
-**Skip the summary for everything else,** including: data-model additions (new
-recipes, collections, or dish categories), isolated bug fixes, single-line
-corrections, copy/wording tweaks, and CSS adjustments. See the skill for full
-scope guidance.
+**Skip the artifact/roadmap step for everything else,** including:
+data-model additions (new recipes, collections, or dish categories),
+isolated bug fixes, single-line corrections, copy/wording tweaks, and CSS
+adjustments.
 
 ## Documentation currency rule — keep the Quick Tour current
 
@@ -29,8 +32,8 @@ walkthrough never drifts out of date with what's actually shipped.
   tweaks) don't require a Quick Tour update.
 - If a feature is removed or changed enough that existing Quick Tour copy is
   now wrong, update or remove that section rather than leaving stale copy.
-- This is independent of the executive-summary gate above — even a change
-  small enough to skip the executive summary still needs its Quick Tour entry
+- This is independent of the planning rule above — even a change small
+  enough to skip the artifact/roadmap step still needs its Quick Tour entry
   if it's user-facing.
 
 ## Recipe photo hand-off rule
@@ -86,7 +89,7 @@ worker and PWA install require an `http(s)` origin.
 
 The app is **hub-and-spoke**, with **one persistent 2-tab bar** at the bottom
 of the shell (`<nav class="tab-bar">` in `index.html`) that switches between
-**Cookbook** and **Tracker** — nothing else. The seven screens are *not* tabs:
+**Cookbook** and **Tracker** — nothing else. The six screens are *not* tabs:
 they sit behind the Cookbook tab as hub-and-spoke, reached from Home and
 returned to with a "‹ Home" anchor. (This section used to say "there is no
 bottom tab bar," which stopped being true when the Tracker shipped;
@@ -149,7 +152,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `diagnostics.html` | **Device Check** — the real-device half of the audit's verification, which CI can't do. Standalone and unlinked from nav (same precedent as the Quick Tour). Loads the same script set `index.html` does, then self-tests: install/display mode, service-worker registration + control, precache completeness and app-shell-from-cache (offline readiness), every `MC*` shared module, localStorage writability + storage quota + the `:photos` cap, Supabase config/sign-in/last-push-pull, wake lock / BarcodeDetector / camera, safe-area insets — and the **real** `window.__mcBoot` boot number that closes audit C-06. "Copy report" yields a plain-text summary. Open it on each device and mode to fill the PWA matrix. |
 | `quick-tour.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. |
-| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (7 blocking gates — syntax, recipe data, bridge + sync-merge tests, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (8 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -352,16 +355,20 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Seven gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Eight gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
-  3. `tools/test-mc-bridge.js` + `tools/test-mc-sync-merge.js` — cross-app read
+  3. `tools/check-docs.js` — docs match the code: recipe/collection/category
+     counts, file-size claims, and structural claims (e.g. tab bar, screen
+     count, SW strategy) across `CLAUDE.md`, `README.txt`, `ROADMAP.md`, and
+     the Quick Tour pages (audit C-11).
+  4. `tools/test-mc-bridge.js` + `tools/test-mc-sync-merge.js` — cross-app read
      layer and sync-merge logic (roadmap B5, audit C-02).
-  4. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
-  5. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
-  6. `tools/build-sw.py --check` — precache list is current.
-  7. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  5. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
+  6. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
+  7. `tools/build-sw.py --check` — precache list is current.
+  8. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -372,6 +379,7 @@ Before pushing, run the same gates locally:
 ```bash
 for f in $(git ls-files '*.js'); do node --check "$f" || echo "FAIL $f"; done
 node tools/validate-recipes.js
+node tools/check-docs.js
 node tools/test-mc-bridge.js && node tools/test-mc-sync-merge.js
 node tools/test-sw-strategy.js && node tools/test-mc-export.js
 python3 tools/build-sw.py --check
@@ -379,13 +387,16 @@ python3 tools/build-sw.py --check
 
 ## Git workflow
 
-- **Work from the `main` branch only.** Before making changes, confirm
-  `git branch --show-current` returns `main`.
-- Do **not** read, reference, or pull from other branches.
-- Pushing to `main` triggers the GitHub Pages deploy above — every push is a
-  production release. Make sure the `node --check` gate passes and the SW
-  precache list is current before pushing.
-- Do not open pull requests unless explicitly asked.
+- **Develop on a feature branch, land via pull request.** Recent history is
+  entirely PR-based (`claude/<slug>` branches merged into `main`) — this
+  section used to say "work from `main` only, don't open PRs," which stopped
+  matching practice once audit C-16 put `verify` on pull requests as well as
+  `main` specifically so a branch's checks run before merge, not after.
+- The `verify` job runs on both the PR and `main`; `deploy` only fires on
+  `main` after `verify` passes, so nothing publishes straight from a branch.
+- Merging to `main` triggers the GitHub Pages deploy — every merge is a
+  production release. Make sure the `node --check` gate and the rest of the
+  CI gates above pass, and the SW precache list is current, before merging.
 
 ## Quick reference
 
