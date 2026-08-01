@@ -258,6 +258,33 @@
     return recipes().filter(function (r) { return r.source === col.source_match; });
   }
 
+  /* ── Store writes (audit C-12) ────────────────────────────────────────
+     Every mc-cookbook: write in this file used to be its own
+     `try { localStorage.setItem(…) } catch (e) {}` — fourteen of them,
+     each swallowing a QuotaExceededError in silence. Swallowing is the
+     right call for resilience (a full disk shouldn't throw a cook out of
+     a recipe mid-cook) but it's the wrong call for diagnosis: the actual
+     failure mode was hearts and meal plans quietly not saving, with no
+     signal at all. Photos are the realistic way to fill a 5–10 MB origin
+     quota — cook-log photos and recipe cover photos both live in this
+     namespace.
+
+     One helper, so the failure is reported exactly once per session
+     rather than fourteen times or zero. Callers that can recover
+     meaningfully still get the boolean back. */
+  var storageWarned = false;
+  function warnStorageFull() {
+    if (storageWarned) return;
+    storageWarned = true;
+    // plannerToast is a hoisted function declaration further down this
+    // same IIFE, so it's callable from here regardless of source order.
+    plannerToast("Storage is full — that change didn't save. Remove some cook-log photos to free space.");
+  }
+  function writeStore(key, value) {
+    try { localStorage.setItem(key, value); return true; }
+    catch (e) { warnStorageFull(); return false; }
+  }
+
   /* ── Favorites (shared store, also read by collection.js / recipe page) ── */
   var FAV_KEY = "mc-cookbook:favorites";
   function loadFavs() {
@@ -265,7 +292,7 @@
     catch (e) { return new Set(); }
   }
   function saveFavs(set) {
-    try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+    writeStore(FAV_KEY, JSON.stringify(Array.from(set)));
   }
   function toggleFav(id) {
     var set = loadFavs();
@@ -295,7 +322,7 @@
     } catch (e) { return null; }
   }
   function saveMikeDraft(list) {
-    try { localStorage.setItem(MIKE_DRAFT_KEY, JSON.stringify(list)); } catch (e) {}
+    writeStore(MIKE_DRAFT_KEY, JSON.stringify(list));
   }
   function clearMikeDraft() { try { localStorage.removeItem(MIKE_DRAFT_KEY); } catch (e) {} }
   // The list to DISPLAY: an owner's in-progress draft overlays the published one.
@@ -467,7 +494,7 @@
       p.startedAt = null;
       p.day7Dismissed = false;
     }
-    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+    writeStore(PLAN_KEY, JSON.stringify(p));
     updateAppBadge();   // every plan mutation funnels through here
   }
   // Home's auto-drafted-week offer (see renderAutoDraftCard): only offered
@@ -479,7 +506,7 @@
     catch (e) { return 0; }
   }
   function dismissAutoDraft() {
-    try { localStorage.setItem(AUTODRAFT_DISMISS_KEY, String(Date.now())); } catch (e) {}
+    writeStore(AUTODRAFT_DISMISS_KEY, String(Date.now()));
   }
   function clearAutoDraftDismiss() {
     try { localStorage.removeItem(AUTODRAFT_DISMISS_KEY); } catch (e) {}
@@ -590,7 +617,7 @@
     catch (e) { return new Set(); }
   }
   function saveGroc(set) {
-    try { localStorage.setItem(GROC_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+    writeStore(GROC_KEY, JSON.stringify(Array.from(set)));
   }
 
   /* ── Cook log (shared with the recipe detail page's "I Cooked This") ───
@@ -605,7 +632,7 @@
     catch (e) { return {}; }
   }
   function saveCookedMap(map) {
-    try { localStorage.setItem(COOKED_KEY, JSON.stringify(map)); } catch (e) {}
+    writeStore(COOKED_KEY, JSON.stringify(map));
   }
   // Mirrors cookbook.js's logCooked/removeCooked. Returns the ISO timestamp
   // used, so the caller can stash it on the meal and remove exactly this
@@ -694,7 +721,7 @@
     try { return localStorage.getItem(RECAP_DISMISS_KEY) || ""; } catch (e) { return ""; }
   }
   function dismissRecapForWeek(weekKey) {
-    try { localStorage.setItem(RECAP_DISMISS_KEY, weekKey); } catch (e) {}
+    writeStore(RECAP_DISMISS_KEY, weekKey);
   }
   function weekKeyFor(d) {
     var offset = (d.getDay() + 6) % 7;
@@ -800,7 +827,7 @@
     catch (e) { return new Set(); }
   }
   function savePantry(set) {
-    try { localStorage.setItem(PANTRY_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+    writeStore(PANTRY_KEY, JSON.stringify(Array.from(set)));
   }
   function pantryKey(item) { return (item || "").trim().toLowerCase(); }
   function togglePantry(item) {
@@ -832,7 +859,7 @@
     catch (e) { return []; }
   }
   function saveHistory(arr) {
-    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
+    writeStore(HISTORY_KEY, JSON.stringify(arr));
   }
   // Most-recurring recipe tags across a set of meals, joined into a
   // readable auto-name (e.g. "High-Protein & One-Dish Week"). Falls back
@@ -911,7 +938,7 @@
     catch (e) { return []; }
   }
   function saveMacroHistory(arr) {
-    try { localStorage.setItem(MACRO_HISTORY_KEY, JSON.stringify(arr)); } catch (e) {}
+    writeStore(MACRO_HISTORY_KEY, JSON.stringify(arr));
   }
   function mealMacros(m) {
     var r = recipeById(m.id);
@@ -1011,7 +1038,7 @@
     catch (e) { return []; }
   }
   function saveCustom(arr) {
-    try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(arr)); } catch (e) {}
+    writeStore(CUSTOM_KEY, JSON.stringify(arr));
   }
 
   /* ── Macro goals bridge — reads goals set in MC Training's calculator ─
@@ -1966,7 +1993,7 @@
     catch (e) { return true; } // storage unavailable — fail quiet, not nagging
   }
   function markTourSeen() {
-    try { localStorage.setItem(TOUR_SEEN_KEY, "1"); } catch (e) {}
+    writeStore(TOUR_SEEN_KEY, "1");
   }
   function tourBanner() {
     var b = el("div", "backup-banner tour-banner");
@@ -4338,8 +4365,7 @@
     } catch (e) { return { scopeKey: "all", days: {} }; }
   }
   function saveTimeCheck(scopeKey, dayBuckets) {
-    try { localStorage.setItem(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets })); }
-    catch (e) {}
+    writeStore(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets }));
   }
 
   /* ── Time Check generation (tcw* namespace) ───────────────────────────

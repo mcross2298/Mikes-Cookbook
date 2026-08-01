@@ -439,14 +439,38 @@
      mc-cookbook:photos → { [recipe_id]: dataURL }. Separate from the
      cook-log photos above (those are per dated cook entry); this is a
      single cover image shown in the sticky header. Same downscale
-     pipeline, same mc-cookbook: namespace so it rides along in backups. */
-  var RECIPE_PHOTOS_KEY = "mc-cookbook:photos";
+     pipeline, same mc-cookbook: namespace so it rides along in backups.
+
+     Audit C-12: each photo was already size-bounded by downscaleImage
+     (PHOTO_EDGE / PHOTO_QUALITY) and a failed write already alerts — but
+     unlike the cook log, which caps at MAX_PHOTOS, there was no ceiling on
+     HOW MANY recipes could hold a cover photo. With 318 recipes that's an
+     unbounded slice of a 5–10 MB origin quota shared with everything else
+     in the mc-cookbook: namespace. MAX_RECIPE_PHOTOS applies the cook log's
+     own pattern here: keep the N most recent, drop the oldest.
+
+     "Oldest" is insertion order. These keys are recipe_id slugs (never
+     numeric), so JS preserves insertion order for them, re-saving the map
+     keeps that order, and overwriting an existing key keeps its original
+     position — so the first key really is the least-recently-added. */
+  var RECIPE_PHOTOS_KEY  = "mc-cookbook:photos";
+  var MAX_RECIPE_PHOTOS  = 24;
 
   function loadRecipePhotos() {
     try {
       var o = JSON.parse(localStorage.getItem(RECIPE_PHOTOS_KEY) || "{}");
       return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
     } catch (e) { return {}; }
+  }
+  // Drop oldest-first until the map is within budget. Returns how many went.
+  function enforceRecipePhotoCap(map, keepId) {
+    var keys = Object.keys(map), dropped = 0;
+    for (var i = 0; i < keys.length && Object.keys(map).length > MAX_RECIPE_PHOTOS; i++) {
+      if (keys[i] === keepId) continue;       // never evict the one just added
+      delete map[keys[i]];
+      dropped++;
+    }
+    return dropped;
   }
   function saveRecipePhotos(map) {
     try { localStorage.setItem(RECIPE_PHOTOS_KEY, JSON.stringify(map)); return true; }
@@ -457,9 +481,13 @@
   function attachRecipePhoto(r, dataUrl) {
     var map = loadRecipePhotos();
     map[r.recipe_id] = dataUrl;
+    var dropped = enforceRecipePhotoCap(map, r.recipe_id);
     if (!saveRecipePhotos(map)) {
       window.alert("Storage is full — couldn’t save the photo. Remove another photo and try again.");
       return;
+    }
+    if (dropped) {
+      toast("Keeping your " + MAX_RECIPE_PHOTOS + " most recent recipe photos to save space.");
     }
     renderHeader(r);
   }

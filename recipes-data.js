@@ -23097,6 +23097,83 @@ const COLLECTIONS = [
       { key: "Skillets & Stir-Fries", label: "Skillets & Stir-Fries" },
       { key: "Grilled & Sheet-Pan", label: "Grilled & Sheet-Pan" }
     ]
+  },
+  /* ── Audit C-10 ────────────────────────────────────────────────────────
+     These four sources had recipes but no collection, so the ten recipes
+     below were reachable only by Categories or search — never from the
+     collection cards Home points a cook at. Provenance was deliberately NOT
+     rewritten to close the gap (re-`source`ing a recipe to an existing
+     collection would have been quicker and would have destroyed where it
+     actually came from), so each origin gets its own card, including the two
+     that hold a single recipe today. `tools/validate-recipes.js` now asserts
+     this direction too — every recipe's `source` must resolve to a live
+     collection — so a new source can't silently orphan its recipes again. */
+  {
+    id: "eating-healthy-mag",
+    title: "Eating Healthy Mag",
+    tag: "★ Collection · Complete Plates",
+    blurb:
+      "Full dinner plates from the magazine — a protein, a starch and a " +
+      "vegetable side worked out together, so the whole meal lands at once.",
+    designer: "📖 From Eating Healthy Magazine",
+    accent: "#5B8C5A",          // garden green
+    icon: "🍽️",
+    status: "live",
+    source_match: "Eating Healthy Mag",
+    subsections: [
+      { key: "Skillets & Stir-Fries", label: "Skillets & Stir-Fries" },
+      { key: "Grilled & Sheet-Pan", label: "Grilled & Sheet-Pan" },
+      { key: "Casseroles & Bakes", label: "Casseroles & Bakes" }
+    ]
+  },
+  {
+    id: "simple-high-protein",
+    title: "Simple High-Protein",
+    tag: "★ Collection · Weeknight Protein",
+    blurb:
+      "Comfort food rebuilt around the protein number — pizza, pasta and mac " +
+      "and cheese that still fit the day's macros, on a weeknight timeline.",
+    designer: "📖 Simple High-Protein Recipes",
+    accent: "#7A6FAF",          // muted violet
+    icon: "🥘",
+    status: "live",
+    source_match: "Simple High-Protein Recipes",
+    subsections: [
+      { key: "Skillets & Stir-Fries", label: "Skillets & Stir-Fries" },
+      { key: "Casseroles & Bakes", label: "Casseroles & Bakes" }
+    ]
+  },
+  {
+    id: "family-recipes",
+    title: "Family Recipes",
+    tag: "★ Collection · Hand-Me-Downs",
+    blurb:
+      "The handed-down ones — cooked from memory long before they were " +
+      "written down. Small on purpose; it grows a recipe at a time.",
+    designer: "🏡 Passed down in the family",
+    accent: "#B0714A",          // warm oak
+    icon: "🥘",
+    status: "live",
+    source_match: "Family Recipes",
+    subsections: [
+      { key: "Casseroles & Bakes", label: "Casseroles & Bakes" }
+    ]
+  },
+  {
+    id: "clean-eat-guide",
+    title: "Clean Eat Guide",
+    tag: "★ Collection · Clean Treats",
+    blurb:
+      "Whole-food sweets with a short ingredient list — the kind you can " +
+      "make in a few minutes and keep in the freezer.",
+    designer: "📖 From the Clean Eat Guide",
+    accent: "#6FA8A0",          // sea glass
+    icon: "🍫",
+    status: "live",
+    source_match: "Clean Eat Guide",
+    subsections: [
+      { key: "Desserts", label: "Desserts" }
+    ]
   }
 ];
 
