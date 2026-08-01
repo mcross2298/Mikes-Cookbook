@@ -1411,7 +1411,7 @@
   // under goal. Requires real history (MACRO_TREND_MIN_DAYS) before applying,
   // so a fresh planner never gets biased off zero data. Its acceptance
   // criterion is that this stays visible, never silent — see the
-  // "smw-trend-callout" banner in openSmartWeek()'s paint().
+  // "smw-trend-callout" banner in openPlanWeek()'s paintGrid().
   var MACRO_TREND_LOOKBACK_DAYS = 14;
   var MACRO_TREND_MIN_DAYS = 4;      // days of real history needed to trust a trend
   var MACRO_TREND_UNDER_PCT = 0.85;  // avg daily protein below this share of goal counts as "under"
@@ -2236,16 +2236,22 @@
 
     s.appendChild(bar);
 
-    // First-launch nudge: Quick Tour used to be reachable only via a Help-tier
-    // link at the very bottom of Home, with no signal a brand-new user should
-    // scroll all the way down to find it. Shows once, dismissed permanently by
-    // either taking the tour or explicitly closing it.
-    if (!tourSeen()) s.appendChild(tourBanner());
-
-    // Safety-net nudge: stale backup + data worth protecting.
-    if (!backupBannerDismissed && backupIsStale() && hasCookData()) {
-      s.appendChild(backupBanner());
-    }
+    /* ── At most ONE nudge banner (audit C-09) ────────────────────────────
+       Each of these was appended independently, so a first launch with a
+       stale backup showed both at once, on top of the hero, the Today card,
+       the recap and the auto-draft card — up to eleven stacked calls to
+       action before a cook reached "Categories". Every one was individually
+       justified; nothing owned the question of what to show FIRST. Ranking
+       replaces accumulation: the tour outranks the backup nudge, because a
+       cook who doesn't know the app yet has nothing to lose. */
+    var nudge = null;
+    // First-launch: Quick Tour used to be reachable only via a Help-tier link
+    // at the very bottom of Home, with no signal a new user should scroll
+    // that far. Shows once, dismissed permanently by taking it or closing it.
+    if (!tourSeen()) nudge = tourBanner();
+    // Safety net: stale backup + data worth protecting.
+    else if (!backupBannerDismissed && backupIsStale() && hasCookData()) nudge = backupBanner();
+    if (nudge) s.appendChild(nudge);
 
     // Hero — the weekly meal planner entry (replaces the old "Now Cooking"
     // collection spotlight). Reflects the live plan and opens the planner spoke.
@@ -2282,21 +2288,18 @@
     hero.appendChild(hc);
     s.appendChild(hero);
 
-    // "Today" glance — only renders when today itself has something planned,
-    // so it complements rather than duplicates the auto-draft card below
-    // (which only ever shows for a fully empty week).
-    var todayCard = renderTodayCard();
-    if (todayCard) s.appendChild(todayCard);
-
-    var recapCard = renderWeeklyRecapCard();
-    if (recapCard) s.appendChild(recapCard);
-
-    // Auto-drafted week: only when there's no plan yet and the offer isn't
-    // on cooldown (dismissed recently). Sits right under the hero so it
-    // reads as "here's a start" rather than competing with it.
-    if (!planned && homeAutoDraftEligible()) {
-      s.appendChild(renderAutoDraftCard());
-    }
+    /* ── At most ONE suggestion card (audit C-09) ─────────────────────────
+       Ranked by how immediate the cook's need is, most urgent first:
+         Today      what to do RIGHT NOW — beats everything when it applies
+         Auto-draft no plan at all yet; the app's best one-tap moment
+         Recap      a look back, valuable but never urgent
+       Previously all three could stack under the hero. Today and auto-draft
+       were already mutually exclusive by construction (one needs a plan, the
+       other needs an empty one) — the recap was the one that piled on. */
+    var suggestion = renderTodayCard();
+    if (!suggestion && !planned && homeAutoDraftEligible()) suggestion = renderAutoDraftCard();
+    if (!suggestion) suggestion = renderWeeklyRecapCard();
+    if (suggestion) s.appendChild(suggestion);
 
     var forYou = renderForYouCarousel();
     if (forYou) s.appendChild(forYou);
@@ -3135,15 +3138,17 @@
     add.addEventListener("click", function () { openPicker({}); });
     body.appendChild(add);
 
-    var smart = el("button", "plan-smart-btn", "✨&nbsp;&nbsp;Smart Week");
+    // One door (audit C-05). This was two sibling buttons — "✨ Smart Week"
+    // and "⏱️ Time Check" — which, with Smart Week's own inner Balanced /
+    // Macro-Targeted toggle, made four ways to fill a week that all produce
+    // the same grid. The cook had to classify their own intent before seeing
+    // a single recipe, and comparing two of them meant closing one overlay
+    // and starting from a different button. Now the bias is a chip inside
+    // one overlay, chosen after there's a result to look at.
+    var smart = el("button", "plan-smart-btn", "✨&nbsp;&nbsp;Plan my week");
     smart.type = "button";
-    smart.addEventListener("click", openSmartWeek);
+    smart.addEventListener("click", function () { openPlanWeek(); });
     body.appendChild(smart);
-
-    var timeCheck = el("button", "plan-time-btn", "⏱️&nbsp;&nbsp;Time Check");
-    timeCheck.type = "button";
-    timeCheck.addEventListener("click", openBandwidthQuiz);
-    body.appendChild(timeCheck);
 
     if (meals.length) {
       var clear = el("button", "plan-clear", "Clear week");
@@ -3693,93 +3698,218 @@
   }
 
   /* ── Smart Week overlay: scope → 7-day preview → commit ─────────────── */
-  function closeSmartWeek() {
+  /* ══ Plan my week — ONE overlay, three biases (audit C-05) ═════════════
+     Replaces openSmartWeek + openBandwidthQuiz. Those were two full-screen
+     overlays reached from two sibling buttons, and Smart Week carried its
+     own Balanced / Macro-Targeted toggle on top — four entry points, one
+     { day, slot, id } grid. Worse, the choice was irreversible in the UI:
+     seeing a Balanced week and wondering what the Time Check version looked
+     like meant cancelling out and starting from a different button.
+
+     Now the bias is a chip row inside one overlay, so the cook picks it
+     AFTER there's a result to compare against. The two overlays also carried
+     a near-identical ~60-line day-grid renderer; that's `pwDayBlocks` now.
+
+     Time is a bias like the others, but it needs input first — the day
+     buckets — so it shows its quiz inline until the cook has assigned at
+     least one day, then flips to the grid with an "Adjust days" way back.
+     Assignments still persist in mc-cookbook:timecheck exactly as before. */
+  function closePlanWeek() {
     var ov = document.querySelector(".smw-overlay");
     if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
     document.body.classList.remove("picking");
   }
-  function openSmartWeek() {
-    closeSmartWeek();
 
-    var scopeKey = "all";
-    // Macro-Targeted is only ever offered when the user has real goals set
-    // (via MC Training's calculator) — with no goals, this stays "balanced"
-    // and the mode toggle never renders, so casual users see no change.
+  // Shared day-by-day chip grid, previously duplicated in both overlays.
+  // onRegen(day, slot) returns a replacement recipe id (or null).
+  function pwDayBlocks(parent, grid, scope, opts) {
+    DAYS.forEach(function (day) {
+      var entries = grid.filter(function (g) { return g.day === day; });
+      if (!entries.length) return;
+      var dayBlock = el("div", "plan-day smw-day");
+      dayBlock.appendChild(el("div", "plan-day-head", esc(DAY_LONG[day])));
+      if (opts.dayNote) {
+        var note = opts.dayNote(day);
+        if (note) dayBlock.appendChild(el("div", "smw-macro-fit", esc(note)));
+      }
+      scope.slots.forEach(function (slot) {
+        var entry = entries.filter(function (g) { return g.slot === slot; })[0];
+        if (!entry) return;
+        var r = recipeById(entry.id);
+        var slotEl = el("div", "plan-slot");
+        slotEl.appendChild(el("div", "plan-slot-label", esc(slot)));
+        var cell = el("div", "plan-slot-cell");
+        var chip = el("div", "plan-chip smw-chip");
+        chip.appendChild(el("span", "plan-chip-icon", recipeIconHtml(r && r.icon)));
+        var titleEl = el("a", "plan-chip-title", esc(r ? r.title : entry.id));
+        if (r) titleEl.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
+        chip.appendChild(titleEl);
+        var regen = el("button", "smw-chip-regen", "↻");
+        regen.type = "button";
+        regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
+        regen.addEventListener("click", function () {
+          var newId = opts.onRegen(day, slot);
+          if (!newId) { pop(regen); return; }
+          opts.onReplace(day, slot, newId);
+        });
+        chip.appendChild(regen);
+        var rm = el("button", "smw-chip-remove", "×");
+        rm.type = "button";
+        rm.setAttribute("aria-label", "Remove " + slot + " for " + DAY_LONG[day]);
+        rm.addEventListener("click", function () { opts.onRemove(day, slot); });
+        chip.appendChild(rm);
+        cell.appendChild(chip);
+        slotEl.appendChild(cell);
+        dayBlock.appendChild(slotEl);
+      });
+      parent.appendChild(dayBlock);
+    });
+  }
+
+  function openPlanWeek() {
+    closePlanWeek();
+
+    // Macro-Targeted is only ever offered when the cook has real goals set
+    // (via the tracker's calculator) — with no goals the chip never renders
+    // and nothing changes for a casual user, same gate as before.
     var macroGoals = loadMacroGoals();
-    var mode = "balanced"; // "balanced" | "macro"
-    function currentGrid() {
-      return wkGenerateWeek(scopeKey, (mode === "macro" && macroGoals) ? "macro" : "balanced").grid;
-    }
-    var grid = currentGrid();
+    var savedTime  = loadTimeCheck();
+    var scopeKey   = "all";
+    var mode       = "balanced";           // "balanced" | "macro" | "time"
+    var dayBuckets = {};
+    DAYS.forEach(function (d) { dayBuckets[d] = savedTime.days[d] || null; });
+    // Returning cooks who already answered the quiz land straight on a grid.
+    var timePhase  = DAYS.some(function (d) { return !!dayBuckets[d]; }) ? "results" : "quiz";
+    var grid  = [];
+    var scope = SMART_SCOPES[0];
     // Dismissing the prep-day callout only sticks until the grid is
-    // wholesale-regenerated (new scope/mode/Regenerate tap) — a single
-    // slot edit shouldn't bring back a suggestion the user just dismissed.
+    // wholesale-regenerated (new scope/bias/Regenerate tap) — a single slot
+    // edit shouldn't bring back a suggestion the cook just dismissed.
     var prepDismissed = false;
+
+    function regenerate() {
+      var res = (mode === "time")
+        ? wkGenerateWeek(scopeKey, "time", { dayBuckets: dayBuckets })
+        : wkGenerateWeek(scopeKey, (mode === "macro" && macroGoals) ? "macro" : "balanced");
+      grid = res.grid;
+      scope = res.scope;
+      prepDismissed = false;
+    }
+    if (mode !== "time" || timePhase === "results") regenerate();
 
     var ov = el("div", "picker smw-overlay");
     var top = el("div", "picker-top");
-    top.appendChild(el("div", "picker-title", "✨ Smart Week"));
+    top.appendChild(el("div", "picker-title", "✨ Plan my week"));
     var close = el("button", "picker-close", "Cancel");
     close.type = "button";
-    close.addEventListener("click", closeSmartWeek);
+    close.addEventListener("click", closePlanWeek);
     top.appendChild(close);
     ov.appendChild(top);
 
+    // Bias chips — the whole point of C-05. Switching one regenerates in
+    // place instead of sending the cook back out to a different button.
+    var modeBar = el("div", "smw-mode-bar");
+    function paintMode() {
+      modeBar.innerHTML = "";
+      var items = [{ value: "balanced", label: "Balanced" }];
+      if (macroGoals) items.push({ value: "macro", label: "Macro" });
+      items.push({ value: "time", label: "Time" });
+      modeBar.appendChild(segControl("smw-modetoggle", items, mode, function (v) {
+        if (v === mode) return;
+        mode = v;
+        if (mode === "time" && !DAYS.some(function (d) { return !!dayBuckets[d]; })) {
+          timePhase = "quiz";           // needs its input before it can generate
+        } else {
+          if (mode === "time") timePhase = "results";
+          regenerate();
+        }
+        paintMode();
+        paint();
+      }));
+    }
+    paintMode();
+    ov.appendChild(modeBar);
+
     var scopeBar = el("div", "smw-scope-bar");
     var scopeSel = el("select", "smw-scope-select");
-    scopeSel.setAttribute("aria-label", "Smart Week scope");
+    scopeSel.setAttribute("aria-label", "Which meals to plan");
     scopeSel.innerHTML = SMART_SCOPES.map(function (s) {
       return '<option value="' + s.key + '">' + esc(s.label) + "</option>";
     }).join("");
     scopeSel.value = scopeKey;
     scopeSel.addEventListener("change", function () {
       scopeKey = scopeSel.value;
-      grid = currentGrid();
-      prepDismissed = false;
+      if (!(mode === "time" && timePhase === "quiz")) regenerate();
       paint();
     });
     scopeBar.appendChild(scopeSel);
     var regenAll = el("button", "picker-sort-btn smw-regen-all-btn", "🔀 Regenerate");
     regenAll.type = "button";
-    regenAll.addEventListener("click", function () {
-      grid = currentGrid();
-      prepDismissed = false;
-      paint();
-    });
+    regenAll.addEventListener("click", function () { regenerate(); paint(); });
     scopeBar.appendChild(regenAll);
     ov.appendChild(scopeBar);
-
-    var modeBar = el("div", "smw-mode-bar");
-    function paintMode() {
-      modeBar.innerHTML = "";
-      modeBar.appendChild(segControl("smw-modetoggle", [
-        { value: "balanced", label: "Balanced" },
-        { value: "macro", label: "Macro-Targeted" }
-      ], mode, function (v) {
-        mode = v;
-        grid = currentGrid();
-        prepDismissed = false;
-        paintMode();
-        paint();
-      }));
-    }
-    if (macroGoals) {
-      paintMode();
-      ov.appendChild(modeBar);
-    }
 
     var body = el("div", "picker-results smw-body");
     ov.appendChild(body);
 
     function slotCount(slot) { return grid.filter(function (g) { return g.slot === slot; }).length; }
 
-    function paint() {
-      body.innerHTML = "";
-      var scope = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
+    function replaceSlot(day, slot, newId) {
+      grid = grid.map(function (g) {
+        return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
+      });
+      paint();
+    }
+    function removeSlot(day, slot) {
+      grid = grid.filter(function (g) { return !(g.day === day && g.slot === slot); });
+      paint();
+    }
 
-      // Macro-trend bias reason (ROADMAP.md Pillar C fast-follow, folded into
-      // roadmap B2) — only applies in Macro-Targeted mode, and per that
-      // item's own acceptance criterion, must stay visible, never silent.
+    // Time's day-budget quiz, shown inline until at least one day is set.
+    function paintTimeQuiz() {
+      scopeBar.style.display = "";
+      regenAll.style.display = "none";
+      body.innerHTML = "";
+      body.appendChild(el("p", "bwq-intro",
+        "Which days need to move fast, and which have room to breathe? " +
+        "We'll build the week around it."));
+      DAYS.forEach(function (day) {
+        var block = el("div", "tcw-day-block");
+        block.appendChild(el("div", "tcw-day-label", esc(DAY_LONG[day])));
+        var items = BWQ_BUCKETS.map(function (b) { return { value: b.key, label: b.emoji + " " + b.short }; });
+        block.appendChild(segControl("tcw-day-toggle", items, dayBuckets[day], function (v) {
+          dayBuckets[day] = v;
+          paint();
+        }));
+        body.appendChild(block);
+      });
+      var cta = el("button", "cook-start bwq-continue-btn", "Generate my week →");
+      cta.type = "button";
+      cta.disabled = !DAYS.some(function (d) { return !!dayBuckets[d]; });
+      cta.addEventListener("click", function () {
+        saveTimeCheck(scopeKey, dayBuckets);
+        timePhase = "results";
+        regenerate();
+        paint();
+      });
+      body.appendChild(cta);
+    }
+
+    function paintGrid() {
+      scopeBar.style.display = "";
+      regenAll.style.display = "";
+      body.innerHTML = "";
+
+      if (mode === "time") {
+        var back = el("button", "picker-sort-btn bwq-back-btn", "‹ Adjust days");
+        back.type = "button";
+        back.addEventListener("click", function () { timePhase = "quiz"; paint(); });
+        body.appendChild(back);
+      }
+
+      // Macro-trend bias reason (ROADMAP Pillar C fast-follow, folded into
+      // roadmap B2) — only in Macro mode, and per that item's own acceptance
+      // criterion it must stay visible, never silent.
       if (mode === "macro" && macroGoals) {
         var trend = macroTrendBias(macroGoals);
         if (trend.reason) {
@@ -3788,7 +3918,9 @@
       }
 
       if (!grid.length) {
-        body.appendChild(emptyState("🧊", "No recipes available for this scope yet."));
+        body.appendChild(emptyState("🧊", mode === "time"
+          ? "No recipes available yet.<br>Go back and assign at least one day."
+          : "No recipes available for this scope yet."));
       } else {
         if (!prepDismissed) {
           var suggestion = prepDaySuggestion(grid);
@@ -3821,57 +3953,19 @@
           if (trimRow.children.length) body.appendChild(trimRow);
         }
 
-        DAYS.forEach(function (day) {
-          var entries = grid.filter(function (g) { return g.day === day; });
-          if (!entries.length) return;
-          var dayBlock = el("div", "plan-day smw-day");
-          dayBlock.appendChild(el("div", "plan-day-head", esc(DAY_LONG[day])));
-          if (mode === "macro" && macroGoals) {
+        pwDayBlocks(body, grid, scope, {
+          dayNote: function (day) {
+            if (!(mode === "macro" && macroGoals)) return null;
             var fitPct = msgDayFitPct(grid, day, macroGoals);
-            if (fitPct != null) {
-              dayBlock.appendChild(el("div", "smw-macro-fit",
-                "~" + fitPct + "% of daily protein goal"));
-            }
-          }
-          scope.slots.forEach(function (slot) {
-            var entry = entries.filter(function (g) { return g.slot === slot; })[0];
-            if (!entry) return;
-            var r = recipeById(entry.id);
-            var slotEl = el("div", "plan-slot");
-            slotEl.appendChild(el("div", "plan-slot-label", esc(slot)));
-            var cell = el("div", "plan-slot-cell");
-            var chip = el("div", "plan-chip smw-chip");
-            chip.appendChild(el("span", "plan-chip-icon", recipeIconHtml(r && r.icon)));
-            var titleEl = el("a", "plan-chip-title", esc(r ? r.title : entry.id));
-            if (r) titleEl.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
-            chip.appendChild(titleEl);
-            var regen = el("button", "smw-chip-regen", "↻");
-            regen.type = "button";
-            regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
-            regen.addEventListener("click", function () {
-              var newId = (mode === "macro" && macroGoals)
-                ? wkRegenerateSlot(grid, day, slot, "macro", { scopeKey: scopeKey })
-                : wkRegenerateSlot(grid, day, slot, "balanced", { scopeKey: scopeKey });
-              if (!newId) { pop(regen); return; }
-              grid = grid.map(function (g) {
-                return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
-              });
-              paint();
-            });
-            chip.appendChild(regen);
-            var rm = el("button", "smw-chip-remove", "×");
-            rm.type = "button";
-            rm.setAttribute("aria-label", "Remove " + slot + " for " + DAY_LONG[day]);
-            rm.addEventListener("click", function () {
-              grid = grid.filter(function (g) { return !(g.day === day && g.slot === slot); });
-              paint();
-            });
-            chip.appendChild(rm);
-            cell.appendChild(chip);
-            slotEl.appendChild(cell);
-            dayBlock.appendChild(slotEl);
-          });
-          body.appendChild(dayBlock);
+            return fitPct == null ? null : "~" + fitPct + "% of daily protein goal";
+          },
+          onRegen: function (day, slot) {
+            return wkRegenerateSlot(grid, day, slot,
+              (mode === "macro" && macroGoals) ? "macro" : (mode === "time" ? "time" : "balanced"),
+              { scopeKey: scopeKey, dayBuckets: dayBuckets });
+          },
+          onReplace: replaceSlot,
+          onRemove: removeSlot
         });
       }
 
@@ -3880,15 +3974,19 @@
       confirm.type = "button";
       confirm.disabled = !grid.length;
       confirm.addEventListener("click", function () {
-        var scope2 = SMART_SCOPES.filter(function (s) { return s.key === scopeKey; })[0] || SMART_SCOPES[0];
-        commitSmartWeek(grid, scope2.slots);
-        closeSmartWeek();
+        commitSmartWeek(grid, scope.slots);
+        closePlanWeek();
         plannerState.view = "plan";
         refresh();
         window.scrollTo(0, 0);
       });
       actions.appendChild(confirm);
       body.appendChild(actions);
+    }
+
+    function paint() {
+      if (mode === "time" && timePhase === "quiz") paintTimeQuiz();
+      else paintGrid();
     }
     paint();
 
@@ -4125,165 +4223,6 @@
      fits for a slot falls back to the full eligible pool, so a day/slot never
      comes back empty just because the cook's budget was narrow. */
 
-  function closeBandwidthQuiz() {
-    var ov = document.querySelector(".bwq-overlay");
-    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
-    document.body.classList.remove("picking");
-  }
-  function openBandwidthQuiz() {
-    closeBandwidthQuiz();
-
-    var saved = loadTimeCheck();
-    var scopeKey = saved.scopeKey;
-    var dayBuckets = {};
-    DAYS.forEach(function (d) { dayBuckets[d] = saved.days[d] || null; });
-    var phase = "quiz";  // "quiz" | "results"
-    var grid = [];
-    var scope = SMART_SCOPES[0];
-
-    var ov = el("div", "picker bwq-overlay");
-    var top = el("div", "picker-top");
-    top.appendChild(el("div", "picker-title", "⏱ Time Check"));
-    var done = el("button", "picker-close", "Done");
-    done.type = "button";
-    done.addEventListener("click", function () { closeBandwidthQuiz(); refresh(); });
-    top.appendChild(done);
-    ov.appendChild(top);
-
-    var body = el("div", "picker-results bwq-body");
-    ov.appendChild(body);
-
-    function tcwDayBlock(day) {
-      var block = el("div", "tcw-day-block");
-      block.appendChild(el("div", "tcw-day-label", esc(DAY_LONG[day])));
-      var items = BWQ_BUCKETS.map(function (b) { return { value: b.key, label: b.emoji + " " + b.short }; });
-      block.appendChild(segControl("tcw-day-toggle", items, dayBuckets[day], function (v) {
-        dayBuckets[day] = v;
-        paintQuiz();
-      }));
-      return block;
-    }
-
-    function paintQuiz() {
-      body.innerHTML = "";
-      body.appendChild(el("p", "bwq-intro",
-        "Which days need to move fast, and which have room to breathe? We'll build the week around it."));
-
-      var scopeBar = el("div", "smw-scope-bar");
-      var scopeSel = el("select", "smw-scope-select");
-      scopeSel.setAttribute("aria-label", "Time Check meal slots");
-      scopeSel.innerHTML = SMART_SCOPES.map(function (s) {
-        return '<option value="' + s.key + '">' + esc(s.label) + "</option>";
-      }).join("");
-      scopeSel.value = scopeKey;
-      scopeSel.addEventListener("change", function () { scopeKey = scopeSel.value; });
-      scopeBar.appendChild(scopeSel);
-      body.appendChild(scopeBar);
-
-      DAYS.forEach(function (day) { body.appendChild(tcwDayBlock(day)); });
-
-      var cta = el("button", "cook-start bwq-continue-btn", "Generate my week →");
-      cta.type = "button";
-      cta.disabled = !DAYS.some(function (d) { return !!dayBuckets[d]; });
-      cta.addEventListener("click", function () {
-        saveTimeCheck(scopeKey, dayBuckets);
-        var result = wkGenerateWeek(scopeKey, "time", { dayBuckets: dayBuckets });
-        grid = result.grid;
-        scope = result.scope;
-        phase = "results";
-        paint();
-      });
-      body.appendChild(cta);
-    }
-
-    function paintResults() {
-      body.innerHTML = "";
-
-      var back = el("button", "picker-sort-btn bwq-back-btn", "‹ Back to quiz");
-      back.type = "button";
-      back.addEventListener("click", function () { phase = "quiz"; paint(); });
-      body.appendChild(back);
-
-      var regenAll = el("button", "picker-sort-btn smw-regen-all-btn", "🔀 Regenerate");
-      regenAll.type = "button";
-      regenAll.addEventListener("click", function () {
-        var result = wkGenerateWeek(scopeKey, "time", { dayBuckets: dayBuckets });
-        grid = result.grid;
-        scope = result.scope;
-        paint();
-      });
-      body.appendChild(regenAll);
-
-      if (!grid.length) {
-        body.appendChild(emptyState("🧊",
-          "No recipes available yet.<br>Go back and assign at least one day."));
-      } else {
-        DAYS.forEach(function (day) {
-          var entries = grid.filter(function (g) { return g.day === day; });
-          if (!entries.length) return;
-          var dayBlock = el("div", "plan-day smw-day");
-          dayBlock.appendChild(el("div", "plan-day-head", esc(DAY_LONG[day])));
-          scope.slots.forEach(function (slot) {
-            var entry = entries.filter(function (g) { return g.slot === slot; })[0];
-            if (!entry) return;
-            var r = recipeById(entry.id);
-            var slotEl = el("div", "plan-slot");
-            slotEl.appendChild(el("div", "plan-slot-label", esc(slot)));
-            var cell = el("div", "plan-slot-cell");
-            var chip = el("div", "plan-chip smw-chip");
-            chip.appendChild(el("span", "plan-chip-icon", recipeIconHtml(r && r.icon)));
-            var titleEl = el("a", "plan-chip-title", esc(r ? r.title : entry.id));
-            if (r) titleEl.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
-            chip.appendChild(titleEl);
-            var regen = el("button", "smw-chip-regen", "↻");
-            regen.type = "button";
-            regen.setAttribute("aria-label", "Regenerate " + slot + " for " + DAY_LONG[day]);
-            regen.addEventListener("click", function () {
-              var newId = wkRegenerateSlot(grid, day, slot, "time", { scopeKey: scopeKey, dayBuckets: dayBuckets });
-              if (!newId) { pop(regen); return; }
-              grid = grid.map(function (g) {
-                return (g.day === day && g.slot === slot) ? { day: day, slot: slot, id: newId } : g;
-              });
-              paint();
-            });
-            chip.appendChild(regen);
-            var rm = el("button", "smw-chip-remove", "×");
-            rm.type = "button";
-            rm.setAttribute("aria-label", "Remove " + slot + " for " + DAY_LONG[day]);
-            rm.addEventListener("click", function () {
-              grid = grid.filter(function (g) { return !(g.day === day && g.slot === slot); });
-              paint();
-            });
-            chip.appendChild(rm);
-            cell.appendChild(chip);
-            slotEl.appendChild(cell);
-            dayBlock.appendChild(slotEl);
-          });
-          body.appendChild(dayBlock);
-        });
-      }
-
-      var actions = el("div", "smw-actions");
-      var confirm = el("button", "cook-start smw-confirm-btn", "＋ Set Weekly Meal Plan");
-      confirm.type = "button";
-      confirm.disabled = !grid.length;
-      confirm.addEventListener("click", function () {
-        commitSmartWeek(grid, scope.slots);
-        closeBandwidthQuiz();
-        plannerState.view = "plan";
-        refresh();
-        window.scrollTo(0, 0);
-      });
-      actions.appendChild(confirm);
-      body.appendChild(actions);
-    }
-
-    function paint() { if (phase === "quiz") paintQuiz(); else paintResults(); }
-    paint();
-
-    document.body.appendChild(ov);
-    document.body.classList.add("picking");
-  }
 
   /* ══ ADD-RECIPE FORM — create your own / add to library ═════════════ */
   // A full-screen overlay (reuses the picker overlay shell) holding a "Medium"
