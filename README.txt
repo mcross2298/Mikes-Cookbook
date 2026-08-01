@@ -17,13 +17,16 @@ Contents
 
 Structure
 ---------
-index.html        App shell. Seven hub-and-spoke screens — Home, Planner,
-                  Categories, Recipes, Favorites, Mike's Favorites, Tracker —
-                  plus one persistent 2-tab bar (Cookbook / Tracker). Home is
-                  the hub; every spoke has a "< Home" anchor back.
+index.html        App shell. Six hub-and-spoke screens — Home, Planner,
+                  Browse, Favorites, Mike's Favorites, Tracker — plus one
+                  persistent 2-tab bar (Cookbook / Tracker). Home is the hub;
+                  every spoke has a "< Home" anchor back. Browse folds the
+                  old Categories screen's dish-type taxonomy in alongside
+                  collections and app-wide search.
 cookbook-home.js  Shell controller: screen switching, Home hub, This Week
-                  planner (Smart Week, Macro Smart Generator, Time Check,
-                  grocery list, cook log), Categories, Recipes, Favorites.
+                  planner ("Plan my week" — Balanced / Macro / Time bias
+                  chips over one shared generator, grocery list, cook log),
+                  Browse, Favorites, Mike's Favorites.
 collection.html   One collection's recipe list (+ live search).
 collection.js     Collection render + search; coming-soon state for future
                   collections.
@@ -41,9 +44,15 @@ mc-*.js           Shared modules: the recipe card and favorites store, the
                   sign-in, cross-device sync, manual backup, install prompt,
                   and the read-only cookbook<->workout bridge.
 manifest.json     PWA manifest.  icon.svg  App icon.  sw.js  Service worker.
-tools/            build-sw.py (precache list) + the CI test/validation suite.
+diagnostics.html  Device Check — real-device PWA/offline/storage self-test,
+                  unlinked from nav.
+quick-tour.html   Standalone, cookbook-styled feature walkthroughs, unlinked
+quick-tour-overview.html  from nav; used for onboarding/demo.
+ROADMAP.md        Phased improvement roadmap, kept current with what's shipped.
+tools/            build-sw.py (precache list) + the CI test/validation suite,
+                  including check-docs.js (fails CI on stale doc claims).
 .github/workflows/pages.yml
-                  CI: a `verify` job (7 blocking gates) on pull requests and
+                  CI: a `verify` job (8 blocking gates) on pull requests and
                   main, then `deploy` to GitHub Pages on main only.
 
 Open:  index.html   ·   recipe.html?id=jalapeno-chicken-bake
