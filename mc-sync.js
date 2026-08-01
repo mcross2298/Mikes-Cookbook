@@ -55,8 +55,30 @@
     'mc-cookbook:mealplan:custom':      'arrayByUid',
     'mc-cookbook:mealplan:macrohistory': 'arrayByUid',
     'mc-cookbook:userrecipes':          'arrayByRecipeId',
-    'mc-cookbook:cooked':               'cookedByRecipe'
+    'mc-cookbook:cooked':               'cookedByRecipe',
+    // Audit C-02. Both are JSON arrays of ids written via Array.from(Set),
+    // so union is the correct resolution and 'stringSet' — already proven on
+    // :mealplan:grocery — applies unchanged. Favorites in particular were the
+    // sharpest gap: three screens write them, the storage event wires live
+    // cross-tab updates for them, and Home advertises "☁️ Backed up" while
+    // they never left the device.
+    'mc-cookbook:favorites':            'stringSet',
+    'mc-cookbook:pantry':               'stringSet'
   };
+  // Deliberately NOT synced, so the omissions read as decisions:
+  //   :photos          user-attached recipe images as data URLs — image data
+  //                    has no business in a jsonb row, and the cook-log photos
+  //                    it sits alongside are already device-local by design.
+  //   :timecheck       { scopeKey, days } with no timestamp and no union
+  //                    semantics: every available strategy either loses a
+  //                    local edit or produces a meaningless merge. Needs a
+  //                    ts field on the store before it can sync honestly.
+  //   :lastBackupAt · :lastScreen · :tourSeen · :cookfont · :owner ·
+  //   :mealplan:autodraft-dismissed · :mealplan:recap-dismissed ·
+  //   :mikesFavorites:draft · per-recipe :s<n>:<kind> check-offs
+  //                    device- or session-local preferences and ephemera.
+  //                    Syncing them would push one phone's UI state onto
+  //                    another, which is a regression, not a feature.
   // Roadmap B0 (cookbook↔workout bridge) — stores this app CONSUMES read-only
   // from 4-Weeks-to-Open- via the shared user_sync table. PULLED into local
   // localStorage (so mc-bridge.js can read today's workout + the training

@@ -1942,16 +1942,21 @@
     return b;
   }
 
-  /* ══ BACKUP & RESTORE — export/import the whole mc-cookbook: namespace ═
+  /* ══ BACKUP & RESTORE — the Home card's UI over mc-export.js ═══════════
      The app is local-only: every byte of a cook's data (favorites, the weekly
      plan, grocery check-offs, their own recipes, per-recipe step/grocery
-     check-offs) lives in localStorage under the mc-cookbook: namespace. This is
-     the safety net — one tap writes it all to a portable JSON file, and a
-     matching import restores it (also the stop-gap for moving a plan between
-     phones until/if real sync ever lands). */
-  var NS         = "mc-cookbook:";
+     check-offs) lives in localStorage under the mc-cookbook: namespace, plus
+     the tracker's mc_macros_v1. This is the safety net — one tap writes it all
+     to a portable JSON file, and a matching import restores it.
+
+     The export/import ITSELF lives in mc-export.js (window.MCExport), not
+     here. This file used to carry a second, independent implementation whose
+     file format was mutually unreadable with that one even though both wrote
+     mikes-cookbook-backup-<date>.json — see audit C-01, and mc-export.js's
+     header for the format and its backward compatibility with files this
+     code wrote. Everything below is UI: the card, the freshness line, and the
+     stale-backup nudge. */
   var BACKUP_KEY = "mc-cookbook:lastBackupAt";
-  var BACKUP_FMT = 1;                         // backup-file schema version
   var backupBannerDismissed = false;          // per-session dismissal
 
   /* ── First-launch Quick Tour nudge ────────────────────────────────── */
@@ -1987,72 +1992,60 @@
     return b;
   }
 
-  function namespacedKeys() {
-    var out = [];
-    for (var i = 0; i < localStorage.length; i++) {
-      var k = localStorage.key(i);
-      if (k && k.indexOf(NS) === 0) out.push(k);
-    }
-    return out;
-  }
-  function pad2(n) { return (n < 10 ? "0" : "") + n; }
-  function todayStamp() {
-    var d = new Date();
-    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  /* Thin adapters over window.MCExport (mc-export.js), which owns the file
+     format for the whole app. Kept as local functions so the card below reads
+     the same as before, and so the Home card can keep its confirm() step —
+     its copy promises a replace, and a cook tapping Import on the hub deserves
+     the chance to back out. The account sheet's own Import calls MCExport
+     directly without one; that asymmetry is deliberate, not drift. */
+  function backupUnavailable(done) {
+    if (window.MCExport) return false;
+    if (done) done(false, "Backup isn't available right now — try reloading the app.");
+    return true;
   }
 
   function exportData() {
-    var data = {};
-    namespacedKeys().forEach(function (k) { data[k] = localStorage.getItem(k); });
-    var payload = {
-      app: "mikes-cookbook", version: BACKUP_FMT,
-      exportedAt: new Date().toISOString(), data: data
-    };
-    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    var url  = URL.createObjectURL(blob);
-    var a = el("a");
-    a.href = url;
-    a.download = "mikes-cookbook-backup-" + todayStamp() + ".json";
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () {
-      if (a.parentNode) a.parentNode.removeChild(a);
-      URL.revokeObjectURL(url);
-    }, 0);
-    try { localStorage.setItem(BACKUP_KEY, new Date().toISOString()); } catch (e) {}
+    if (backupUnavailable(null)) return false;
+    MCExport.exportJSON();                    // also stamps BACKUP_KEY
+    return true;
   }
 
-  // Validate → confirm → clean-restore, reporting via done(ok, message). A
-  // malformed or wrong-version file is rejected BEFORE anything is written, so
-  // a bad import can never corrupt the data already on the device.
+  // Read → validate → confirm → restore, reporting via done(ok, message).
+  // A malformed file is rejected BEFORE anything is written, so a bad import
+  // can never corrupt the data already on the device.
   function importData(file, done) {
+    if (backupUnavailable(done)) return;
     var reader = new FileReader();
     reader.onerror = function () { done(false, "Couldn't read that file."); };
     reader.onload = function () {
       var parsed;
       try { parsed = JSON.parse(reader.result); }
       catch (e) { done(false, "That file isn't valid JSON."); return; }
-      var data = parsed && parsed.data;
-      if (!parsed || parsed.version !== BACKUP_FMT ||
-          typeof data !== "object" || data === null || Array.isArray(data)) {
-        done(false, "This doesn't look like a Mike's Cookbook backup file.");
-        return;
-      }
+      // Dry-run the validation against a throwaway store so a file that would
+      // be rejected never reaches the confirm prompt.
+      var check = MCExport.restorePayload(parsed, memStore());
+      if (!check.ok) { done(false, check.message); return; }
       if (!window.confirm("This replaces your current saved data with the backup. Continue?")) {
         done(false, null);                    // cancelled — no-op, not an error
         return;
       }
-      try {
-        namespacedKeys().forEach(function (k) { localStorage.removeItem(k); });
-        Object.keys(data).forEach(function (k) {
-          if (k.indexOf(NS) === 0 && data[k] != null) localStorage.setItem(k, String(data[k]));
-        });
-        done(true, null);
-      } catch (e) {
-        done(false, "Couldn't restore — your device storage may be full.");
-      }
+      var res = MCExport.restorePayload(parsed, localStorage);
+      done(res.ok, res.ok ? null : res.message);
     };
     reader.readAsText(file);
+  }
+
+  // Minimal Storage-alike for the dry run above — same surface restorePayload
+  // touches (length/key/getItem/setItem/removeItem), nothing more.
+  function memStore() {
+    var m = {};
+    return {
+      get length() { return Object.keys(m).length; },
+      key: function (i) { return Object.keys(m)[i]; },
+      getItem: function (k) { return Object.prototype.hasOwnProperty.call(m, k) ? m[k] : null; },
+      setItem: function (k, v) { m[k] = String(v); },
+      removeItem: function (k) { delete m[k]; }
+    };
   }
 
   function relativeDays(iso) {
@@ -2161,9 +2154,10 @@
     card.appendChild(el("p", "card-label", "Your cookbook lives on this device"));
     card.appendChild(el("p", "backup-copy",
       "Export a backup file to keep your favorites, weekly plan, grocery " +
-      "check-offs, cook log and your own recipes safe — or to move them to " +
-      "another phone. Cook-log photos are included, so a backup with photos " +
-      "can be several MB. Importing replaces what&rsquo;s on this device."));
+      "check-offs, cook log, macro tracker and your own recipes safe — or to " +
+      "move them to another phone. Cook-log photos are included, so a backup " +
+      "with photos can be several MB. Importing replaces what&rsquo;s on this " +
+      "device."));
 
     var iso;
     try { iso = localStorage.getItem(BACKUP_KEY); } catch (e) { iso = null; }

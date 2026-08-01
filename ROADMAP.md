@@ -282,7 +282,70 @@ reconciliation across two signed-in physical devices. Full breakdown in
 
 **Effort:** Med–High (phased) · **Impact:** High (this is the joint-launch product).
 
+## Pillar E — Cookbook-interior waste audit (findings C-01 – C-15)
+
+**Source:** a Lean Six Sigma waste audit of this repo's interior, 2026-07-31, weighted to the
+cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`–`W-23`, of which
+`LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
+side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
+15 findings: 3 high, 9 medium, 3 low.
+
+### Phase 1 ✅ (shipped 2026-07-31) — the only findings that were broken for a real cook
+
+- **C-01 · Two backup systems, incompatible formats.** The app shipped two complete backup
+  implementations, both reachable from Home, both writing `mikes-cookbook-backup-<date>.json`
+  stamped `app:"mikes-cookbook"`. Neither could read the other's files: the account-sheet file
+  was rejected outright by Home's importer (no `version` field), and the Home file was *accepted*
+  by the account-sheet importer and silently corrupted — it `JSON.stringify`-ed values that were
+  already JSON strings, so favorites restored as the string `"[\"a\",\"b\"]"`. Reproduced, not
+  inferred. Consolidated into `mc-export.js`; `cookbook-home.js` keeps only thin adapters and its
+  `confirm()` step. **Found while fixing:** the old `mc-export.js` also corrupted bare-string
+  stores round-tripping its *own* file — `:lastBackupAt` (ISO stamp) and
+  `:mealplan:recap-dismissed` (week key) aren't JSON, so parse-then-stringify re-quoted them.
+  Format v2 therefore stores **raw localStorage strings**, the only round trip correct for every
+  store. v1 and unversioned legacy files still import, so no backup already on a phone is
+  orphaned.
+- **C-03 · Home's backup omitted the entire macro tracker.** It prefix-scanned `mc-cookbook:`
+  and the tracker is deliberately `mc_macros_v1`. Fixed by the consolidation (this is why
+  `mc-export.js` was the copy to keep); card copy now names the tracker.
+- **C-02 · Favorites and pantry never synced.** Neither was in `mc-sync.js`'s `STORES`, so a
+  signed-in cook watching "☁️ Backed up · 2m ago" wasn't having their hearts backed up. Both are
+  `Array.from(Set)` id lists, so the existing `stringSet` union strategy applied unchanged. The
+  still-excluded stores (`:photos`, `:timecheck`, and the device-local preferences) now carry
+  written reasons in the file so the omissions read as decisions. `:timecheck` specifically needs
+  a `ts` field on the store before it can sync honestly — logged below.
+
+**Verification:** `tools/test-mc-export.js` (new, 39 assertions, blocking CI step) pins the format
+contract — round trip, both legacy shapes, every rejection path, and the exact C-01 corruption.
+`tools/test-mc-sync-merge.js` gained favorites/pantry conflict fixtures plus a source-level
+assertion on `STORES` membership, since the merge logic was never the problem — the whitelist was.
+The whole flow was then driven end-to-end in headless Chromium against the real app: export from
+Home's card, wipe the device, re-import, and confirm the app reads real arrays back (20/20).
+
+**Not verified from this session:** actual Supabase row reconciliation for the two newly-synced
+stores across two signed-in physical devices — same owner-only gate B5 documented.
+
+### Phases 2–6 (not started)
+
+| Phase | IDs | Work |
+|------:|-----|------|
+| 2 | C-11 · C-10 · C-12 | Correct the docs (they say 160 recipes; there are **318**) then gate freshness in CI; reach the 10 recipes no collection points at; document the 11 undocumented stores and cap `:photos` |
+| 3 | C-04 · C-07 | Collapse the three near-verbatim week generators (`smw*`/`msg*`/`tcw*`) to one; extract `mc-cards.js` + `mc-fav.js` so the recipe card stops being maintained twice |
+| 4 | C-05 · C-09 | One "Plan my week" door with bias chips; Home priority rule instead of stacking up to 11 cards. Optional 7→5 screen rationalization (needs a call on Mike's Favorites losing top-level billing) |
+| 5 | C-08 · C-06 | Split `cookbook-home.js` (4,933 lines, 240 fns) along its seams; measure `recipes-data.js` parse on a real device before splitting it |
+| 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes |
+
+**Effort:** Phase 1 Low · **Impact:** Critical (disaster-recovery path).
+
 ## Open questions (backlog only)
+- **`mc-cookbook:timecheck` needs a `ts` field** before it can join the sync whitelist (C-02).
+  Today it's `{ scopeKey, days }` with no timestamp and no union semantics, so every available
+  merge strategy either loses a local edit or produces a meaningless result. Small data-shape
+  change; do it whenever Time Check is next touched — likely Phase 4.
+- **`/favicon.ico` 404s on every cold load.** Chromium probes it by default and the repo has no
+  `favicon.ico` and no `<link rel="icon">` (the manifest and apple-touch-icon both point at
+  `icon.svg`). Pre-existing, cosmetic, noticed during Phase 1 verification. One line in each
+  page's `<head>`, plus an SW precache regen — batch it with Phase 6 hygiene.
 - ~~Macro-trend bias (Pillar C fast-follow)~~ **Resolved** — shipped 2026-07-15 via bridge
   roadmap B2, biased on real training signal per the note above, not as a standalone tweak.
 - ~~How should app state get from `localStorage` to a scheduled trigger / a real data bridge?~~
