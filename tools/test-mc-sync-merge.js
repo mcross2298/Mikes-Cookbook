@@ -47,6 +47,27 @@ const M = loadMerge();
 ok('module.exports captured all 6 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
   M.mergePlan && M.mergeStringSet && M.mergeHistoryBySavedAt && M.mergeCookedByRecipe));
 
+// ---- whitelist membership (audit C-02) ------------------------------------
+// The merge functions were never the problem for favorites and pantry — the
+// gap was that neither store was in STORES at all, so nothing ever called a
+// merge on them. STORES is a private closure var, so assert against the real
+// source text: a future edit that drops one of these should fail here rather
+// than quietly un-sync a cook's hearts again.
+{
+  const stores = SRC.slice(SRC.indexOf('var STORES = {'), SRC.indexOf('var CONSUME = {'));
+  [
+    'mc_macros_v1', 'mc-cookbook:mealplan', 'mc-cookbook:mealplan:grocery',
+    'mc-cookbook:mealplan:history', 'mc-cookbook:mealplan:custom',
+    'mc-cookbook:mealplan:macrohistory', 'mc-cookbook:userrecipes',
+    'mc-cookbook:cooked', 'mc-cookbook:favorites', 'mc-cookbook:pantry'
+  ].forEach((key) => ok('STORES whitelist includes ' + key, stores.includes("'" + key + "'")));
+  // Never push a store this app only consumes — one writer per store.
+  ok('STORES excludes the workout app\'s mc_activity', !stores.includes("'mc_activity'"));
+  ok('STORES excludes the workout app\'s mc_workout_log_v1', !stores.includes("'mc_workout_log_v1'"));
+  // Image data has no business in a jsonb sync row.
+  ok('STORES excludes mc-cookbook:photos', !stores.includes("'mc-cookbook:photos'"));
+}
+
 // ---- mergeMacros: scalar by top-level ts; per-day entries union by id,
 //      greater entry.ts wins (identical contract to the workout app's copy,
 //      since mc_macros_v1 is the one store both apps write) ----------------
@@ -87,6 +108,34 @@ ok('module.exports captured all 6 merge fns', !!(M && M.mergeMacros && M.mergeAr
 {
   const out = M.mergeStringSet(['a', 'b'], ['b', 'c']);
   eq('stringSet: union+dedupe preserves first-seen order', out, ['a', 'b', 'c']);
+}
+
+// ---- audit C-02: favorites + pantry now ride the same stringSet strategy.
+//      Both are Array.from(Set) id lists, so a true cross-device conflict
+//      (each phone favorited something different while offline) has to
+//      resolve as a union — losing either side would be the bug. --------------
+{
+  const phoneA = ['chili-verde', 'steak-bowl'];
+  const phoneB = ['steak-bowl', 'carnitas'];
+  const out = M.mergeStringSet(phoneA, phoneB);
+  eq('favorites: divergent devices union, no favorite lost',
+    out.sort(), ['carnitas', 'chili-verde', 'steak-bowl']);
+}
+{
+  // First sync from a device that has never pushed: remote is absent/empty.
+  eq('favorites: empty remote keeps every local favorite',
+    M.mergeStringSet(['chili-verde'], []), ['chili-verde']);
+  eq('favorites: empty local adopts the whole remote set',
+    M.mergeStringSet([], ['chili-verde']), ['chili-verde']);
+  eq('favorites: a non-array store degrades to empty, never throws',
+    M.mergeStringSet(null, undefined), []);
+}
+{
+  // Pantry keys are lowercased free text, not slugs — make sure spaces and
+  // duplicates across devices behave.
+  const out = M.mergeStringSet(['salt', 'olive oil'], ['olive oil', 'black pepper']);
+  eq('pantry: staples union without duplicating a multi-word key',
+    out, ['salt', 'olive oil', 'black pepper']);
 }
 
 // ---- mergeHistoryBySavedAt: archival snapshots, union by savedAt ----------
