@@ -289,8 +289,7 @@ cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`�
 `LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
 side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
 16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching phase 1's own PR.
-Phases 1–4 are shipped (C-01 – C-05, C-07, C-09 – C-12, C-16);
-C-06, C-08 and C-13 – C-15 remain, plus the optional screen rationalization.
+Phases 1–5 are shipped (C-01 – C-12 and C-16). Only C-13 – C-15 remain — phase 6 hygiene.
 
 ### Phase 1 ✅ (shipped 2026-07-31) — the findings that were broken for a real cook
 
@@ -491,11 +490,66 @@ against a real 13 and 11. Both counts are now gated, plus a structural check tha
 shell screen-count matches the number of `<section class="screen">` panels `index.html` ships. All
 three mutation-tested.
 
-### Phases 5–6 (not started)
+### Phase 5 ✅ (shipped 2026-08-01) — measure first, then split where there's actually a seam
+
+- **C-06 · `recipes-data.js`: measured, and left alone.** The audit extrapolated "28 ms here × 5 ≈
+  140 ms on a phone" from a Node `new Function()` compile — which is not how a browser loads a
+  script (V8 lazily compiles, and a mark at the top of the file measures execution *after* parse,
+  missing it entirely). Measured properly instead, with CDP CPU throttling and an A/B against the
+  same page with the file stubbed to an empty array:
+
+  | CPU | page | parse+exec | file's cost to DOMContentLoaded |
+  |---|---|---:|---:|
+  | 1× | index.html | 27 ms | 81 ms |
+  | 4× | index.html | 45 ms | 136 ms |
+  | 6× | index.html | 69 ms | 244 ms |
+  | 4× | recipe.html | 41 ms | 73 ms |
+  | 6× | recipe.html | 48 ms | 73 ms |
+
+  4× ≈ a good mid-range Android, 6× ≈ a slow one. **Decision: do not split.** Three reasons. The
+  shell genuinely needs all 318 recipes — app-wide search, Smart Week generation, Browse's
+  taxonomies and favorites all iterate the whole set, so a per-collection split would defer the
+  load and then pull everything back on the first search. `recipe.html` — the case the audit called
+  out as most wasteful — turns out to be the *cheapest* at a flat ~73 ms, because it parses the
+  data and uses one record. And the service worker serves it cache-first, so the download is once
+  per deploy; only the parse recurs. A one-line `window.__mcBoot` instrument now ships on all three
+  pages so a **real** device number can be read from a console rather than modelled — that was the
+  audit's own acceptance criterion and it's now satisfiable.
+- **C-08 · Split `cookbook-home.js` — but not where the audit said.** The audit named the planner
+  as "the first and cleanest extraction: ~1,500 contiguous lines that only `setTab()` calls into."
+  Measuring the coupling before moving anything showed that's wrong: the planner region references
+  **66** names defined elsewhere in the file. Extracting it would have replaced one big file with
+  one big file plus a 66-entry context object. **Contiguous is not separable.** The dependency
+  counts across candidate regions:
+
+  | region | lines | needs from outside | hands back |
+  |---|---:|---:|---:|
+  | Planner + overlays | 1,347 | **66** | 12 |
+  | "For You" carousel | 247 | 36 | 1 |
+  | Grocery quantity math | 257 | **5** | 6 |
+  | Add-recipe form | 233 | **6** | 1 |
+
+  The bottom two moved: **`mc-grocery.js`** (quantity parsing/summing/pretty-printing, purchase
+  units, and the ingredient-identity keying the grocery merge *and* Smart Week's overlap scoring
+  both read) and **`mc-recipe-form.js`**. `cookbook-home.js` 4,615 → 4,183 lines, 230 → 208
+  top-level functions. The planner stays put, with the reason written into `CLAUDE.md` so the next
+  pass doesn't re-litigate it.
+
+**Verification (20/20 headless):** the quantity math is checked against exact expectations
+(`"1 1/2"` → 1.5, `"3/4"` → 0.75, `"to taste"` → null so it's listed rather than summed, and
+plural/singular merge-names collapsing together); the Grocery tab still builds aisle-grouped rows
+from a real plan; the ingredient keys still feed Plan my week; the Add Recipe form opens, populates
+its category dropdown from `CATEGORY_ORDER`, saves to `mc-cookbook:userrecipes`, and the saved
+recipe appears in the live data layer. Two new top-level assets → SW regenerated, cache **v26**.
+
+*(One note on that run: three assertions failed at first and it was the harness, not the code — it
+was filling the form by guessing at placeholder text. Confirmed by reading the real validation path
+rather than assuming a regression.)*
+
+### Phase 6 (not started)
 
 | Phase | IDs | Work |
 |------:|-----|------|
-| 5 | C-08 · C-06 | Split `cookbook-home.js` (4.9k lines, 240 fns) along its seams; measure `recipes-data.js` parse on a real device before splitting it |
 | 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes, `/favicon.ico` |
 
 **Effort:** Phase 1 Low, Phase 2 Low · **Impact:** Critical (phase 1, disaster recovery) then High

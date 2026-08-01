@@ -36,8 +36,10 @@ recipes-data.js   RECIPES + COLLECTIONS — the data layer. Everything derives
 user-recipes.js   "My Recipes" — cook-authored recipes, stored locally and
                   merged into RECIPES at load.
 tracker*.js       In-app macro tracker (food search, barcode scan, goals).
-mc-*.js           Optional sign-in, cross-device sync, manual backup, install
-                  prompt, and the read-only cookbook<->workout bridge.
+mc-*.js           Shared modules: the recipe card and favorites store, the
+                  grocery quantity math, the add-recipe form, plus optional
+                  sign-in, cross-device sync, manual backup, install prompt,
+                  and the read-only cookbook<->workout bridge.
 manifest.json     PWA manifest.  icon.svg  App icon.  sw.js  Service worker.
 tools/            build-sw.py (precache list) + the CI test/validation suite.
 .github/workflows/pages.yml
