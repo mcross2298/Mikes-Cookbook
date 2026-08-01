@@ -93,10 +93,17 @@ bottom tab bar," which stopped being true when the Tracker shipped;
 `tools/check-docs.js` now fails CI if that claim comes back while
 `index.html` still has the element.)
 
-- **`index.html`** is a single-page **shell**. It holds seven `<section
+- **`index.html`** is a single-page **shell**. It holds six `<section
   class="screen">` panels (`#screen-home`, `#screen-planner`,
-  `#screen-categories`, `#screen-recipes`, `#screen-favorites`,
-  `#screen-mikes`, `#screen-tracker`); only the `.active` one is visible.
+  `#screen-recipes`, `#screen-favorites`, `#screen-mikes`,
+  `#screen-tracker`); only the `.active` one is visible. It held seven until
+  the audit merged Categories into `#screen-recipes` (now "Browse") — the two
+  were separate top-level screens over the same 318 recipes, and Browse
+  already carried every dish category as a filter chip. `#categories` still
+  resolves as a deep link via `SCREEN_ALIASES` and lands on the "By dish
+  type" taxonomy. **Mike's Favorites deliberately kept its own screen** — it
+  is the app's editorial surface and hosts the owner publishing toolbar, so
+  it was not folded into Favorites.
   `cookbook-home.js` swaps screens via `display` toggles and mirrors the
   active screen to `location.hash` (e.g. `#recipes`) so it survives reloads
   and deep links. **Home is the hub**; each spoke screen has a "‹ Home" anchor
@@ -114,8 +121,8 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 
 | File | Role |
 | --- | --- |
-| `index.html` | App shell — the seven hub/spoke screens (Home, Planner, Categories, Recipes, Favorites, Mike's Favorites, Tracker). Loads `recipes-data.js`, `user-recipes.js`, `cookbook-home.js`, the tracker module set, `cookbook-sw.js`. |
-| `cookbook-home.js` | Shell controller (~206 KB, ~4.7k lines). Renders Home hub, This Week meal planner (Smart Week, Macro Smart Generator, batch-prep suggestion, cook-log + macro history), Categories, Recipes (collection cards + app-wide search), Favorites, Mike's Favorites. Owns meal-plan + favorites logic. **One planning door (audit C-05):** `openPlanWeek()` is the single overlay behind the Plan pane's "✨ Plan my week" button. It replaced `openSmartWeek` + `openBandwidthQuiz` — two full-screen overlays reached from two sibling buttons, with Smart Week carrying its own Balanced/Macro toggle on top: four entry points for one grid, and the choice was irreversible in the UI (comparing two meant cancelling out and starting from a different button). The bias is now a chip row (**Balanced · Macro · Time**) that regenerates in place; Macro still only appears when real macro goals exist. Time keeps its day-budget quiz, shown inline until at least one day is assigned, with an "‹ Adjust days" way back; assignments still persist in `mc-cookbook:timecheck`. The two overlays also carried a near-identical ~60-line day-grid renderer — that's `pwDayBlocks` now.
+| `index.html` | App shell — the six hub/spoke screens (Home, Planner, Browse, Favorites, Mike's Favorites, Tracker). Loads `recipes-data.js`, `user-recipes.js`, `cookbook-home.js`, the tracker module set, `cookbook-sw.js`. |
+| `cookbook-home.js` | Shell controller (~206 KB, ~4.7k lines). Renders Home hub, This Week meal planner (Plan my week, batch-prep suggestion, cook-log + macro history), Browse (collection **or** dish-type taxonomy + app-wide search + facet chips), Favorites, Mike's Favorites. Owns meal-plan + favorites logic. **One planning door (audit C-05):** `openPlanWeek()` is the single overlay behind the Plan pane's "✨ Plan my week" button. It replaced `openSmartWeek` + `openBandwidthQuiz` — two full-screen overlays reached from two sibling buttons, with Smart Week carrying its own Balanced/Macro toggle on top: four entry points for one grid, and the choice was irreversible in the UI (comparing two meant cancelling out and starting from a different button). The bias is now a chip row (**Balanced · Macro · Time**) that regenerates in place; Macro still only appears when real macro goals exist. Time keeps its day-budget quiz, shown inline until at least one day is assigned, with an "‹ Adjust days" way back; assignments still persist in `mc-cookbook:timecheck`. The two overlays also carried a near-identical ~60-line day-grid renderer — that's `pwDayBlocks` now.
 
 **Home ranks, it doesn't stack (audit C-09):** `renderHome()` shows **at most one nudge banner** (tour outranks the stale-backup nudge) and **at most one suggestion card** (Today ▸ auto-draft ▸ recap). Each was previously appended independently; on a Monday with a stale backup, favorites set and a meal planned for today, that really did render 2 banners + 2 cards on top of the hero, the For You carousel and seven browse modules. Ranking replaces accumulation — add new Home cards to the ranking, not after it.
 

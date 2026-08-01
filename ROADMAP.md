@@ -458,10 +458,38 @@ ran on a Saturday. Rebuilt with favorites seeded, a meal planned for today, and 
 Monday before any app script runs, the pre-change code produces **2 banners and 2 cards** and the
 post-change code produces **1 and 1**. That is the assertion that ships.
 
-**Still open, and deliberately not done here:** the 7→5 screen rationalization (merging Categories +
-Recipes into one faceted Browse, and Mike's Favorites into Favorites). It's the one item in this
-audit that removes a surface's top-level billing, so it stays the owner's call rather than an
-assistant's.
+**Screen rationalization — decided 2026-08-01, and the audit's own recommendation changed.** The
+audit proposed 7→5: merge Categories + Recipes into one faceted Browse, *and* fold Mike's Favorites
+into Favorites. Reading the code changed that call, and the owner agreed:
+
+- **Categories + Recipes merged ✅ (7 → 6 screens).** These were two top-level screens over the same
+  318 recipes, and the Recipes screen **already carried every dish category as a filter chip** — so
+  Categories was a second, prettier door to a facet that already lived there. One **Browse** screen
+  now, with a taxonomy switch (*By collection* / *By dish type*); tapping a dish-type card sets the
+  category facet instead of navigating. Both taxonomies collapse to the same result grid the moment
+  a search or facet is active, so the switch hides rather than sitting there doing nothing.
+  `#categories` still resolves as a deep link (`SCREEN_ALIASES`) and lands on *By dish type*. Home's
+  Explore section drops from two modules to one.
+- **Mike's Favorites kept ❌ (not merged).** The audit called for folding it in; that was a call made
+  at a distance. It holds 11 curated recipes, hosts the owner publishing toolbar, and is the app's
+  editorial voice — "recipes Mike has actually made and loved" — which is plausibly what makes the
+  cookbook read as authored rather than generic for the joint launch. Against that, the waste it
+  represents is ~25 lines of render code and one Home module. Poor trade. The ⭐ "Mike's pick" badge
+  in `mc-cards.js` already surfaces his picks on every card app-wide, so his taste reads across the
+  app whether or not the screen exists.
+
+**Verification (15/15 headless):** Home offers one Browse module and no Categories module while
+keeping Mike's Favorites; the taxonomy switch shows both axes; *By dish type* renders all 11
+category cards; tapping one filters in place without navigating; the switch hides once a facet is
+active; `#screen-categories` no longer exists; the `#categories` deep link still works and lands on
+the dish-type view; app-wide search still works; Mike's Favorites still renders. Phase 4's own 23
+assertions were re-run and still pass.
+
+**`tools/check-docs.js` gained three assertions** while fixing the docs for this, because the Quick
+Tour turned out to be independently stale again — it claimed "5 live collections · 9 categories"
+against a real 13 and 11. Both counts are now gated, plus a structural check that CLAUDE.md's
+shell screen-count matches the number of `<section class="screen">` panels `index.html` ships. All
+three mutation-tested.
 
 ### Phases 5–6 (not started)
 

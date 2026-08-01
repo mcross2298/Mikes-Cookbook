@@ -1375,6 +1375,12 @@ button.col-back { appearance: none; -webkit-appearance: none;
 }
 .pantry-filter-toggle:active { transform: scale(0.97); }
 
+/* Browse taxonomy switch (By collection / By dish type) — reuses the
+   .servings segmented control the planner and recipe page already use, so
+   it reads as the same control family rather than a new one. */
+.browse-taxo-bar { padding: 0 20px 12px; }
+.browse-taxo-bar .servings { width: 100%; }
+
 .recipe-cat-bar {
   display: flex; gap: 8px; padding: 0 20px 14px; overflow-x: auto;
   -webkit-overflow-scrolling: touch;

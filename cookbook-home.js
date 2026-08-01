@@ -2308,16 +2308,15 @@
     var browse = el("div", "home-browse");
 
     // — Explore section: browse the full recipe library —
+    // One module, not two. "Categories" and "Recipes" were separate entries
+    // into two screens over the same library; a cook doesn't arrive knowing
+    // which axis they want, so the axis is now a switch inside Browse.
     browse.appendChild(el("div", "tier-label", "Explore"));
     browse.appendChild(homeModule({
-      icon: "🍽️", title: "Categories", accent: "#C87A53",
-      sub: "By dish type · " + presentCategories().length + " types",
-      onTap: function () { setTab("categories"); }
-    }));
-    browse.appendChild(homeModule({
-      icon: "📖", title: "Recipes", accent: "#D9A05B",
-      sub: "By collection · " + collections().length + " collections · " + recipes().length + " recipes",
-      onTap: function () { setTab("recipes"); }
+      icon: "📖", title: "Browse", accent: "#D9A05B",
+      sub: recipes().length + " recipes · " + collections().length + " collections · " +
+           presentCategories().length + " dish types",
+      onTap: function () { recipesState.browse = "collection"; setTab("recipes"); }
     }));
 
     // — Your Library section: personal saves + custom recipes —
@@ -2417,11 +2416,14 @@
     }
   }
 
-  /* ══ CATEGORIES screen — the 7 dish types, then a per-category grid ══ */
-  // Default view: one premium card per category (reuses the .cat-card look).
-  // Tapping a card drills into that category's recipe grid.
-  var catState = { open: null };
-
+  /* ══ Dish-category cards — a taxonomy of the Browse screen ══════════════
+     These used to be their own top-level screen (#categories) that drilled
+     into a per-category grid. Browse already carried every dish category as
+     a filter chip, so that was a second, prettier door to a facet this app
+     already had — two top-level screens over the same 318 recipes, and a cook
+     doesn't arrive knowing whether they want to browse by dish type or by
+     collection. The cards live on now as Browse's "By dish type" view; tapping
+     one sets the category facet rather than navigating anywhere. */
   function categoryCard(cat) {
     var meta = CATEGORY_META[cat] || {};
     var accent = clampAccent(meta.accent || "#C87A53");
@@ -2441,46 +2443,22 @@
       '<div class="cat-count">' + n + (n === 1 ? " Recipe →" : " Recipes →") + "</div>";
     card.addEventListener("click", function (e) {
       e.preventDefault();
-      catState.open = cat;
-      renderCategories();
+      recipesState.category = cat;
+      renderRecipes();
       window.scrollTo(0, 0);
     });
     return card;
   }
 
-  function renderCategories() {
-    var s = $("#screen-categories");
-    s.innerHTML = "";
-
-    if (catState.open) { renderCategoryDetail(s, catState.open); return; }
-
-    s.appendChild(backTopBar("‹ Home", "Categories", "Browse by dish type",
-      function () { setTab("home"); }));
-    var wrap = el("div", "cards-wrap");
-    presentCategories().forEach(function (cat) { wrap.appendChild(categoryCard(cat)); });
-    s.appendChild(wrap);
-  }
-
-  function renderCategoryDetail(s, cat) {
-    var list = recipesInCategory(cat);
-    s.appendChild(backTopBar("‹ Categories", cat,
-      list.length + (list.length === 1 ? " recipe" : " recipes"),
-      function () { catState.open = null; renderCategories(); window.scrollTo(0, 0); }));
-
-    if (!list.length) {
-      s.appendChild(el("div", "empty",
-        '<span class="empty-emoji">🍽️</span>No recipes in this category yet.'));
-      return;
-    }
-    var grid = el("div", "col-grid");
-    list.forEach(function (r) { grid.appendChild(recipeCard(r)); });
-    s.appendChild(grid);
-  }
-
-  /* ══ RECIPES screen — collection cards + app-wide search ════════════ */
-  // Default view = flagship collection cards. Once a search query is active,
-  // the screen switches to a flat grid of matching recipe cards drawn from ALL
-  // recipes. Dish-type browsing lives on the Categories spoke.
+  /* ══ BROWSE screen — one library, two taxonomies + app-wide search ═══
+     Was two top-level screens: "Recipes" (collection cards) and "Categories"
+     (dish-type cards). Both list the same 318 recipes, differing only in the
+     axis — and this screen already carried every dish category as a filter
+     chip, so Categories was a second door to a facet that lived here.
+     Default view is now a taxonomy switch (By collection / By dish type);
+     once a search query or any facet is active, both collapse to the same
+     flat grid of matching recipe cards, exactly as before. The #categories
+     deep link still works (see SCREEN_ALIASES) and lands on By dish type. */
   function recipesMatch(r, q) {
     if (!q) return true;
     q = q.toLowerCase();
@@ -2498,9 +2476,14 @@
   // keyboard opens) the moment it renders, instead of landing on a static list.
   var focusRecipesSearch = false;
 
-  // Persists only for the JS runtime (like catState/plannerState) — resets
+  // Persists only for the JS runtime (like recipesState/plannerState) — resets
   // to off on a fresh load rather than sticking on silently across visits.
-  var recipesState = { lowShopping: false, category: null, macro: null };
+  // browse: "collection" | "dish" — which taxonomy the default (unfiltered)
+  // view shows. Audit: Categories and Recipes were two top-level screens over
+  // the same 318 recipes, and this screen already carried every dish category
+  // as a filter chip, so the Categories spoke was a second, prettier door to
+  // a facet this screen already had.
+  var recipesState = { lowShopping: false, category: null, macro: null, browse: "collection" };
 
   // ── Workout-app macro handoff (index.html?mkcal=620&mp=42#recipes) ────────
   // The training app's nutrition tab links here with the day's remaining
@@ -2559,8 +2542,9 @@
   function renderRecipes() {
     var s = $("#screen-recipes");
     s.innerHTML = "";
-    s.appendChild(backTopBar("‹ Home", "Recipes",
-      collections().length + " collections · " + recipes().length + " recipes",
+    s.appendChild(backTopBar("‹ Home", "Browse",
+      recipes().length + " recipes · " + collections().length + " collections · " +
+      presentCategories().length + " dish types",
       function () { setTab("home"); }));
 
     // Workout-tracker handoff — remaining-macros suggestions, above everything
@@ -2587,6 +2571,20 @@
       }
       s.appendChild(ho);
     }
+
+    // Taxonomy switch for the default (unfiltered) view. Hidden the moment a
+    // search or facet is active, because both taxonomies collapse to the same
+    // result grid then and a switch that changes nothing is worse than none.
+    var taxoBar = el("div", "browse-taxo-bar");
+    taxoBar.appendChild(segControl("browse-taxo", [
+      { value: "collection", label: "By collection" },
+      { value: "dish", label: "By dish type" }
+    ], recipesState.browse, function (v) {
+      recipesState.browse = v;
+      renderRecipes();
+      window.scrollTo(0, 0);
+    }));
+    s.appendChild(taxoBar);
 
     // Search box
     var searchWrap = el("div", "search-wrap");
@@ -2658,13 +2656,20 @@
       var q = box.value.trim();
       results.innerHTML = "";
 
-      if (!q && !anyFacetActive()) {                   // default: collection cards
+      if (!q && !anyFacetActive()) {                   // default: pick a taxonomy
+        taxoBar.style.display = "";
         var wrap = el("div", "cards-wrap");
-        wrap.appendChild(el("div", "tier-label", "★ Collections"));
-        collections().forEach(function (c) { wrap.appendChild(collectionCard(c)); });
+        if (recipesState.browse === "dish") {
+          wrap.appendChild(el("div", "tier-label", "🍽️ Dish types"));
+          presentCategories().forEach(function (cat) { wrap.appendChild(categoryCard(cat)); });
+        } else {
+          wrap.appendChild(el("div", "tier-label", "★ Collections"));
+          collections().forEach(function (c) { wrap.appendChild(collectionCard(c)); });
+        }
         results.appendChild(wrap);
         return;
       }
+      taxoBar.style.display = "none";
 
       var list = q ? recipes().filter(function (r) { return recipesMatch(r, q); }) : recipes().slice();
 
@@ -4468,12 +4473,21 @@
   }
 
   /* ── Screen switching (hub-and-spoke; mirrored to location.hash) ──── */
-  var SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes", "tracker"];
+  var SCREENS = ["home", "planner", "recipes", "favorites", "mikes", "tracker"];
+  // #categories used to be its own screen; keep the deep link working by
+  // routing it to Browse with the dish-type taxonomy selected.
+  var SCREEN_ALIASES = { categories: "recipes" };
   var COOKBOOK_SCREENS = ["home", "planner", "categories", "recipes", "favorites", "mikes"];
 
   function setTab(name) {
+    if (SCREEN_ALIASES[name]) {
+      if (name === "categories") {                    // legacy deep link
+        recipesState.browse = "dish";
+        recipesState.category = null;
+      }
+      name = SCREEN_ALIASES[name];
+    }
     if (SCREENS.indexOf(name) < 0) name = "home";
-    if (name === "categories") catState.open = null;  // re-entry → category grid
     if (name !== "planner") closePicker();             // never leave the picker open
 
     SCREENS.forEach(function (t) {
@@ -4483,7 +4497,6 @@
 
     if (name === "home") renderHome();
     if (name === "planner") renderPlanner();
-    if (name === "categories") renderCategories();
     if (name === "recipes") renderRecipes();
     if (name === "favorites") renderFavorites();
     if (name === "mikes") renderMikes();
