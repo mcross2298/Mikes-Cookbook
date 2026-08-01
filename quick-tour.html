@@ -193,11 +193,11 @@ var SLIDES = [
     eyebrow:'Module 1 · Home base',
     title:"The Home hub",
     tagline:"Home is the hub; every feature is a spoke. One bar at the bottom switches Cookbook ↔ Tracker — everything else opens from Home, and a “‹ Home” arrow always brings you back.",
-    scene:{glyph:'🏠',caption:'This Week hero · Categories · Recipes · Macro Tracker · Favorites',glow:'rgba(200,122,83,0.16)'},
-    narration:"Start at Home. Up top, the This Week card — your meal planner. Below, the Browse modules: Categories, Recipes, Macro Tracker, Mike's Favorites, your saved Favorites, and Add Recipe. Tap any module to drill in; the “‹ Home” arrow in the corner brings you straight back. You can't get lost.",
+    scene:{glyph:'🏠',caption:'This Week hero · Browse · Macro Tracker · Favorites',glow:'rgba(200,122,83,0.16)'},
+    narration:"Start at Home. Up top, the This Week card — your meal planner. Below, the modules: Browse, Macro Tracker, Mike's Favorites, your saved Favorites, and Add Recipe. Tap any module to drill in; the “‹ Home” arrow in the corner brings you straight back. You can't get lost.",
     steps:[
       {tx:"<b>Top — This Week:</b> your weekly meal planner and combined grocery list."},
-      {tx:"<b>Browse modules:</b> Categories · Recipes · Macro Tracker · Mike's Favorites · Favorites · Add Recipe."},
+      {tx:"<b>Modules:</b> Browse · Macro Tracker · Mike's Favorites · Favorites · Add Recipe."},
       {tx:"Every spoke has a <span class='tap'>‹ Home</span> arrow — one tap back to the hub."},
       {tx:"<b>🏋️ Workout app:</b> the icon next to search opens 4 Weeks to Open — one sign-in works in both."}
     ],
@@ -206,9 +206,9 @@ var SLIDES = [
   {
     eyebrow:'Module 2 · Find a dish',
     title:"Browse & pick a recipe",
-    tagline:"Two ways in: browse by dish type under Categories, or open the Recipes screen for collections, your own library, and live search.",
-    scene:{glyph:'📖',caption:'5 live collections · 9 categories · search by name, tag or ingredient',glow:'rgba(217,160,91,0.18)'},
-    narration:"Tap Recipes to see the collections — Two Meals a Day, Chipotle Copycats, High-Protein Meal Prep, Desserts and Salsas are all live, with Kelli Cross' heirlooms and a Carnivore set on the way. Open a collection to see its recipes; the bigger ones (High-Protein Meal Prep, Desserts) add a sub-tab bar — Chicken, Beef & Steak, Seafood and the like — so you can narrow in before you scroll. Use the search box to filter by name, tag, or ingredient. Prefer to shop by dish type? Categories sorts everything into nine buckets: Breakfast, Salads, Soups, Casseroles, Skillets, Grilled, Sandwiches, Desserts and Salsas & Dips. Tap any recipe card to open it.",
+    tagline:"One Browse screen, two ways to look at it — by collection or by dish type — plus live search across everything.",
+    scene:{glyph:'📖',caption:'13 live collections · 11 dish types · search by name, tag or ingredient',glow:'rgba(217,160,91,0.18)'},
+    narration:"Tap Browse. A switch at the top picks how you look at the library: By collection shows the flagship sets — Two Meals a Day, Chipotle Copycats, High-Protein Meal Prep, Desserts, Salsas, Sauces, Marinades and more, with Kelli Cross' heirlooms and a Carnivore set on the way. By dish type sorts everything into eleven buckets instead: Breakfast, Salads &amp; Slaws, Soups, Casseroles, Skillets, Grilled, Sandwiches, Desserts, Salsas &amp; Dips, Sauces and Marinades. Tap either kind of card to narrow down. Open a collection and the bigger ones add a sub-tab bar — Chicken, Beef &amp; Steak, Seafood and the like — so you can narrow in before you scroll. The search box and the filter chips work across the whole catalog either way.",
     steps:[
       {tx:"From Home, tap <span class='tap'>📖 Recipes</span> for collections + your library, or <span class='tap'>🍽️ Categories</span> to browse by dish type."},
       {tx:"Open a <b>collection</b> (e.g. Two Meals a Day) to see every recipe in it."},
@@ -265,33 +265,20 @@ var SLIDES = [
   },
   {
     eyebrow:'Module 6 · Let the app plan',
-    title:"Smart Week: auto-suggest 5 meals",
-    tagline:"Don't want to pick five recipes by hand? Smart Week finds a combo whose ingredients overlap, so perishables get used up instead of going bad in the back of the fridge.",
-    scene:{glyph:'✨',caption:'Tap Smart Week → 5-meal combo with shared ingredients previewed',glow:'rgba(200,122,83,0.16)'},
-    narration:"Inside This Week, tap the ✨ Smart Week button. It scans your recipes and greedily builds a 5-meal combo that shares the most Produce, Meat and Dairy — the perishable stuff — weighting those higher than pantry staples. You get a preview: the 5 recipe cards, plus the ingredients they share. Don't love the pick? Shuffle to another combo. Happy with it? One tap adds all 5 to This Week, unassigned, ready for you to place on a day.",
+    title:"Plan my week: one door, three ways",
+    tagline:"Don't want to pick a week of meals by hand? Tap once, then choose how it should think — balanced, built around your macros, or built around how much time each day has.",
+    scene:{glyph:'✨',caption:'Balanced · Macro · Time — switch the bias, the week rebuilds',glow:'rgba(200,122,83,0.16)'},
+    narration:"Inside This Week, tap ✨ Plan my week. You get a full day-by-day grid straight away, plus three chips at the top: Balanced favours variety and shared ingredients so perishables get used up; Macro fits each day to your calorie and protein goals (it only appears once you've set goals in the tracker); Time asks how much room each day has — Quick, Standard or No rush — and builds the week around your actual bandwidth. Tap a different chip and the week rebuilds in place, so you can compare instead of starting over. Regenerate any single slot with ↻, drop one with ×, then tap Set Weekly Meal Plan to commit it.",
     steps:[
-      {tx:"Open <b>This Week</b>, then tap <span class='tap'>✨ Smart Week</span>."},
-      {tx:"Review the <b>5-meal combo</b> and the ingredients it shares across recipes."},
-      {tx:"Tap <span class='tap'>🔀 Try another combo</span> to shuffle, or <span class='tap'>＋ Add these 5</span> to accept it."},
-      {tx:"Accepted meals land in This Week <b>unassigned</b> — drag them onto a day whenever you like."}
+      {tx:"Open <b>This Week</b>, then tap <span class='tap'>✨ Plan my week</span>."},
+      {tx:"Pick a bias: <b>Balanced</b>, <b>Macro</b> or <b>Time</b> — the grid rebuilds as you switch."},
+      {tx:"For <b>Time</b>, set each day to <b>Quick</b>, <b>Standard</b> or <b>No rush</b>, then tap <span class='tap'>Generate my week →</span>. Your day assignments are remembered."},
+      {tx:"Fine-tune with <span class='tap'>↻</span> on any slot, then tap <span class='tap'>＋ Set Weekly Meal Plan</span> to commit."}
     ],
-    tip:"Smart Week skips recipes already in your plan first, so it complements what you've picked rather than duplicating it. Signed in with the workout app linked, Smart Week also learns your real training days from your logged workout history and leans higher-protein on those days, lighter on the rest — no schedule to set up, it just picks up the pattern."
+    tip:"Balanced deprioritizes anything you cooked in the last week, so the week complements what you've already eaten instead of repeating it. Signed in with the workout app linked, it also learns your real training days from your logged workout history and leans higher-protein on those, lighter on the rest — no schedule to set up, it just picks up the pattern."
   },
   {
-    eyebrow:'Module 7 · Match your schedule',
-    title:"Time Check: build the week around your bandwidth",
-    tagline:"Some days you have an hour to cook, some days you don't. Time Check is a precursor to Smart Week — tell it how each day looks and it generates the whole week to match.",
-    scene:{glyph:'⏱️',caption:'Quick (<30 min) · Standard (~1 hr) · No rush — one per day',glow:'rgba(125,140,119,0.18)'},
-    narration:"Beside Smart Week sits ⏱️ Time Check. Pick which meal slots you want filled (same scope picker as Smart Week, so a no-lunch household can skip it), then assign each day of the week Quick (under 30 minutes), Standard (about an hour), or No rush — no time limit. Tap Generate my week and Time Check builds a full day-by-day grid, pulling each day's meals from that day's time budget first — regenerate any single slot, then tap Set Weekly Meal Plan to commit it, exactly like Smart Week's own preview. Your day assignments are remembered for next time.",
-    steps:[
-      {tx:"Open <b>This Week</b>, then tap <span class='tap'>⏱️ Time Check</span>."},
-      {tx:"Choose which meal slots to fill, then set each day to <b>Quick</b>, <b>Standard</b>, or <b>No rush</b>."},
-      {tx:"Tap <span class='tap'>Generate my week</span> to preview the day-by-day grid, regenerating any slot you want to change."},
-      {tx:"Tap <span class='tap'>Set Weekly Meal Plan</span> to commit it to This Week."}
-    ]
-  },
-  {
-    eyebrow:'Module 8 · Track your intake',
+    eyebrow:'Module 7 · Track your intake',
     title:"The Macro Tracker",
     tagline:"Beyond the recipes, a full day tracker — log what you eat by the hour and watch your calories and macros against your goals.",
     scene:{glyph:'📊',caption:'Daily kcal · P/F/C · food search + barcode scan',glow:'rgba(125,140,119,0.18)'},
@@ -308,7 +295,7 @@ var SLIDES = [
     cta:{ico:'📊',label:'Try it now',name:'Open the Macro Tracker',href:'index.html#tracker'}
   },
   {
-    eyebrow:'Module 9 · Dial it in',
+    eyebrow:'Module 8 · Dial it in',
     title:"Nutrition facts & favorite foods",
     tagline:"Every food opens a tappable facts sheet — switch grams and ounces, key in your exact amount, and star the staples for fast logging.",
     scene:{glyph:'🔢',caption:'Facts sheet · grams ⇄ oz toggle · keypad qty · ★ favorites',glow:'rgba(200,122,83,0.16)'},
@@ -321,7 +308,7 @@ var SLIDES = [
     ]
   },
   {
-    eyebrow:'Module 10 · Make it yours',
+    eyebrow:'Module 9 · Make it yours',
     title:"Favorites & your own recipes",
     tagline:"Save the recipes you love, see the ones Mike swears by, and add your own — they behave like every built-in recipe.",
     scene:{glyph:'❤',caption:"Tap ❤ to save · Mike's Favorites · Add your own recipe",glow:'rgba(255,90,110,0.16)'},
@@ -335,7 +322,7 @@ var SLIDES = [
     cta:{ico:'❤',label:'Try it now',name:'See your saved Favorites',href:'index.html#favorites'}
   },
   {
-    eyebrow:'Module 11 · Take it anywhere',
+    eyebrow:'Module 10 · Take it anywhere',
     title:"Install & cook offline",
     tagline:"Mike's Cookbook is a PWA — add it to your home screen and it works at the counter with zero signal.",
     scene:{glyph:'📲',caption:'Add to Home Screen → full-screen → works offline',glow:'rgba(200,122,83,0.16)'},

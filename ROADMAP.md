@@ -289,8 +289,8 @@ cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`�
 `LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
 side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
 16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching phase 1's own PR.
-Phases 1–3 are shipped (C-01, C-02, C-03, C-04, C-07, C-10, C-11, C-12, C-16);
-C-05, C-06, C-08, C-09 and C-13 – C-15 remain.
+Phases 1–4 are shipped (C-01 – C-05, C-07, C-09 – C-12, C-16);
+C-06, C-08 and C-13 – C-15 remain, plus the optional screen rationalization.
 
 ### Phase 1 ✅ (shipped 2026-07-31) — the findings that were broken for a real cook
 
@@ -430,11 +430,71 @@ write.
   `rgbFromHex`, `hashStr` and `CARD_PATTERNS` **all wrong**, and `recipeIconHtml` turned out to
   depend on a 121-line SVG table that wasn't in the plan. The shipped file moves the real bytes.
 
-### Phases 4–6 (not started)
+### Phase 4 ✅ (shipped 2026-08-01) — one decision instead of four
+
+- **C-05 · Four ways to fill a week became one.** The Plan pane had two sibling buttons — *✨ Smart
+  Week* and *⏱️ Time Check* — and Smart Week carried its own Balanced/Macro-Targeted toggle on top.
+  Four entry points, one `{day, slot, id}` grid, and the choice was **irreversible in the UI**:
+  seeing a Balanced week and wondering what Time Check would give meant cancelling out and starting
+  from a different button. Now one *✨ Plan my week* button opens one overlay whose bias is a chip
+  row (**Balanced · Macro · Time**) that regenerates in place — the cook picks *after* there's a
+  result to compare. Macro still only appears with real goals set. Time keeps its day-budget quiz,
+  shown inline until a day is assigned, with an "‹ Adjust days" way back; assignments still persist.
+  The two overlays also carried a near-identical ~60-line day-grid renderer — now `pwDayBlocks`.
+- **C-09 · Home ranks instead of stacking.** At most one nudge banner (tour ▸ stale-backup) and at
+  most one suggestion card (Today ▸ auto-draft ▸ recap). Each was appended independently before.
+
+**Verification (23/23 in headless Chromium):** every bias chip renders and regenerates in place
+without opening a second overlay; Macro shows its per-day protein readout and is absent without
+goals; Time gates "Generate" until a day is assigned, produces a grid covering only assigned days,
+returns to the quiz, and persists buckets; committing writes a plan whose meals carry the roadmap-B1
+bridge snapshot.
+
+**A note on how C-09 was verified, because the first attempt was wrong.** The initial test asserted
+"≤1 nudge, ≤1 suggestion" and passed — but a control run against the *pre-change* code passed too,
+so it proved nothing. The scenario couldn't stack: `hasCookData()` needs favorites or a plan (the
+cook log alone doesn't count), and the recap card **only renders on Sunday or Monday** — the test
+ran on a Saturday. Rebuilt with favorites seeded, a meal planned for today, and `Date` pinned to a
+Monday before any app script runs, the pre-change code produces **2 banners and 2 cards** and the
+post-change code produces **1 and 1**. That is the assertion that ships.
+
+**Screen rationalization — decided 2026-08-01, and the audit's own recommendation changed.** The
+audit proposed 7→5: merge Categories + Recipes into one faceted Browse, *and* fold Mike's Favorites
+into Favorites. Reading the code changed that call, and the owner agreed:
+
+- **Categories + Recipes merged ✅ (7 → 6 screens).** These were two top-level screens over the same
+  318 recipes, and the Recipes screen **already carried every dish category as a filter chip** — so
+  Categories was a second, prettier door to a facet that already lived there. One **Browse** screen
+  now, with a taxonomy switch (*By collection* / *By dish type*); tapping a dish-type card sets the
+  category facet instead of navigating. Both taxonomies collapse to the same result grid the moment
+  a search or facet is active, so the switch hides rather than sitting there doing nothing.
+  `#categories` still resolves as a deep link (`SCREEN_ALIASES`) and lands on *By dish type*. Home's
+  Explore section drops from two modules to one.
+- **Mike's Favorites kept ❌ (not merged).** The audit called for folding it in; that was a call made
+  at a distance. It holds 11 curated recipes, hosts the owner publishing toolbar, and is the app's
+  editorial voice — "recipes Mike has actually made and loved" — which is plausibly what makes the
+  cookbook read as authored rather than generic for the joint launch. Against that, the waste it
+  represents is ~25 lines of render code and one Home module. Poor trade. The ⭐ "Mike's pick" badge
+  in `mc-cards.js` already surfaces his picks on every card app-wide, so his taste reads across the
+  app whether or not the screen exists.
+
+**Verification (15/15 headless):** Home offers one Browse module and no Categories module while
+keeping Mike's Favorites; the taxonomy switch shows both axes; *By dish type* renders all 11
+category cards; tapping one filters in place without navigating; the switch hides once a facet is
+active; `#screen-categories` no longer exists; the `#categories` deep link still works and lands on
+the dish-type view; app-wide search still works; Mike's Favorites still renders. Phase 4's own 23
+assertions were re-run and still pass.
+
+**`tools/check-docs.js` gained three assertions** while fixing the docs for this, because the Quick
+Tour turned out to be independently stale again — it claimed "5 live collections · 9 categories"
+against a real 13 and 11. Both counts are now gated, plus a structural check that CLAUDE.md's
+shell screen-count matches the number of `<section class="screen">` panels `index.html` ships. All
+three mutation-tested.
+
+### Phases 5–6 (not started)
 
 | Phase | IDs | Work |
 |------:|-----|------|
-| 4 | C-05 · C-09 | One "Plan my week" door with bias chips; Home priority rule instead of stacking up to 11 cards. Optional 7→5 screen rationalization (needs a call on Mike's Favorites losing top-level billing) |
 | 5 | C-08 · C-06 | Split `cookbook-home.js` (4.9k lines, 240 fns) along its seams; measure `recipes-data.js` parse on a real device before splitting it |
 | 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes, `/favicon.ico` |
 

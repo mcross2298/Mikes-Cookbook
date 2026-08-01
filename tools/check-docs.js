@@ -111,6 +111,11 @@ exact('ROADMAP.md', /- \*\*(\d+) recipes\*\* across/, RECIPES.length, 'recipe co
 exact('ROADMAP.md', /across \*\*(\d+) dish categories\*\*/, CATEGORIES, 'dish-category count');
 exact('quick-tour.html', /(\d+) recipes · serving scaling/, RECIPES.length, 'recipe count');
 exact('quick-tour-overview.html', /📖 (\d+) recipes/, RECIPES.length, 'recipe count');
+// The tour's own collection/dish-type counts. These were "5 live collections ·
+// 9 categories" when the app had 13 and 11 — the same drift C-11 found in the
+// recipe counts, one paragraph over, so they get the same treatment.
+exact('quick-tour.html', /(\d+) live collections · \d+ dish types/, LIVE.length, 'live-collection count');
+exact('quick-tour.html', /\d+ live collections · (\d+) dish types/, CATEGORIES, 'dish-type count');
 exact('README.txt', /RECIPES: (\d+) recipes/, RECIPES.length, 'recipe count');
 exact('README.txt', /COLLECTIONS: (\d+) live/, LIVE.length, 'live-collection count');
 exact('CLAUDE.md', /\*\*Collections\*\* \(`COLLECTIONS`, (\d+) live\)/, LIVE.length, 'live-collection count');
@@ -132,6 +137,21 @@ contradicted('quick-tour.html', "There's no bottom tab bar",
 contradicted('quick-tour-overview.html', 'no bottom tab bar',
   /class="tab-bar"/.test(read('index.html')),
   'index.html ships a persistent tab bar. Update the overview copy.');
+// The shell's screen count is a structural claim: it must match the number of
+// <section class="screen"> panels index.html actually ships.
+{
+  const html = read('index.html');
+  const panels = (html.match(/class="screen[^"]*" id="screen-/g) || []).length;
+  const md = read('CLAUDE.md');
+  const m = md.match(/It holds (\w+) `<section/);
+  const WORDS = { four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9 };
+  if (!m) {
+    problems.push("CLAUDE.md: couldn't find the shell screen-count claim (\"It holds <n> `<section\")");
+  } else if (WORDS[m[1]] !== panels) {
+    problems.push(`CLAUDE.md:${lineOf(md, m[0])}: says the shell holds ${m[1]} screen panels, index.html ships ${panels}`);
+  }
+}
+
 contradicted('CLAUDE.md', 'network-first for HTML',
   /stale-while-revalidate/.test(read('sw.js')),
   'sw.js uses stale-while-revalidate for HTML (audit LS-4), not network-first.');
