@@ -84,7 +84,14 @@ worker and PWA install require an `http(s)` origin.
 
 ## Architecture: hybrid SPA shell + standalone deep pages
 
-The app is **hub-and-spoke**. There is **no bottom tab bar**.
+The app is **hub-and-spoke**, with **one persistent 2-tab bar** at the bottom
+of the shell (`<nav class="tab-bar">` in `index.html`) that switches between
+**Cookbook** and **Tracker** — nothing else. The seven screens are *not* tabs:
+they sit behind the Cookbook tab as hub-and-spoke, reached from Home and
+returned to with a "‹ Home" anchor. (This section used to say "there is no
+bottom tab bar," which stopped being true when the Tracker shipped;
+`tools/check-docs.js` now fails CI if that claim comes back while
+`index.html` still has the element.)
 
 - **`index.html`** is a single-page **shell**. It holds seven `<section
   class="screen">` panels (`#screen-home`, `#screen-planner`,
@@ -108,11 +115,11 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | File | Role |
 | --- | --- |
 | `index.html` | App shell — the seven hub/spoke screens (Home, Planner, Categories, Recipes, Favorites, Mike's Favorites, Tracker). Loads `recipes-data.js`, `user-recipes.js`, `cookbook-home.js`, the tracker module set, `cookbook-sw.js`. |
-| `cookbook-home.js` | Shell controller (~140 KB, ~3.2k lines). Renders Home hub, This Week meal planner (Smart Week, Macro Smart Generator, batch-prep suggestion, cook-log + macro history), Categories, Recipes (collection cards + app-wide search), Favorites, Mike's Favorites. Owns meal-plan + favorites logic. **Bridge (roadmap B2):** Smart Week's `smw*` scoring and the Macro Smart Generator's `msg*` budget both read `MCBridge.likelyTrainingDays()` (a real historical weekday-training pattern, not a fabricated schedule) to bias meal selection toward higher protein on likely training days, lighter on rest days; `macroTrendBias()` separately reads `mc-cookbook:mealplan:macrohistory` and bumps the Macro Smart Generator's protein target when the trailing trend is clearly under goal (surfaced as a visible, non-silent reason line in the Smart Week overlay's Macro-Targeted mode). The Home hero's `emptyHeroCopy()` also checks real training signal (`trainingNudgeCopy()`) before falling back to its generic time-of-day copy, and the "Past 7 Days" recap card (`weeklyRecapStats()`) fuses in a workouts-this-week count from the bridge. **Bridge (roadmap B3):** the existing "Today" card (`renderTodayCard()`) gains a real workout-status badge (`todayWorkoutBadge()`) and now renders even with a workout logged but no meals planned (previously returned `null` and silently dropped the signal); Home's topbar gains a persistent reciprocal nav link to the workout app (`.home-workout-btn`), `MARKET:STRIP`/`MARKET:ADD`-gated the same way the workout app's own cookbook link is (absolute URL standalone, relative `../dashboard.html` when mounted in the Rolodex). Turns out the two apps are same-origin (see `4-Weeks-to-Open-/cookbook-bridge-roadmap.md`'s architecture correction), so this link's sign-in continuity needed no extra code. |
+| `cookbook-home.js` | Shell controller (~220 KB, ~4.9k lines). Renders Home hub, This Week meal planner (Smart Week, Macro Smart Generator, batch-prep suggestion, cook-log + macro history), Categories, Recipes (collection cards + app-wide search), Favorites, Mike's Favorites. Owns meal-plan + favorites logic. **Bridge (roadmap B2):** Smart Week's `smw*` scoring and the Macro Smart Generator's `msg*` budget both read `MCBridge.likelyTrainingDays()` (a real historical weekday-training pattern, not a fabricated schedule) to bias meal selection toward higher protein on likely training days, lighter on rest days; `macroTrendBias()` separately reads `mc-cookbook:mealplan:macrohistory` and bumps the Macro Smart Generator's protein target when the trailing trend is clearly under goal (surfaced as a visible, non-silent reason line in the Smart Week overlay's Macro-Targeted mode). The Home hero's `emptyHeroCopy()` also checks real training signal (`trainingNudgeCopy()`) before falling back to its generic time-of-day copy, and the "Past 7 Days" recap card (`weeklyRecapStats()`) fuses in a workouts-this-week count from the bridge. **Bridge (roadmap B3):** the existing "Today" card (`renderTodayCard()`) gains a real workout-status badge (`todayWorkoutBadge()`) and now renders even with a workout logged but no meals planned (previously returned `null` and silently dropped the signal); Home's topbar gains a persistent reciprocal nav link to the workout app (`.home-workout-btn`), `MARKET:STRIP`/`MARKET:ADD`-gated the same way the workout app's own cookbook link is (absolute URL standalone, relative `../dashboard.html` when mounted in the Rolodex). Turns out the two apps are same-origin (see `4-Weeks-to-Open-/cookbook-bridge-roadmap.md`'s architecture correction), so this link's sign-in continuity needed no extra code. |
 | `collection.html` / `collection.js` | One collection's recipe list (`collection.html?c=<id>`) + live search; coming-soon placeholder for future collections; also serves the "My Recipes" collection. |
 | `recipe.html` / `cookbook.js` | Unified recipe detail: fixed header (title/tags/times/serving stepper) + swipeable sub-tabs (Overview & Macros · Grocery · Recipe). Owns serving scaling (`scaleQuantity`, wired for arbitrary 1–12 servings), check-off state, screen wake lock, and full-screen Cooking Mode. |
 | `cookbook-nav.js` | Renders the floating 🏠 Home button on `data-tabbar="page"` pages. Exposes `window.MCNav`. |
-| `recipes-data.js` | **The data layer** (~12.4k lines / ~600 KB). `RECIPES` array (160 recipes) + `COLLECTIONS` array. Decoupled from rendering; exposed as `window.RECIPES` / `window.COLLECTIONS`. |
+| `recipes-data.js` | **The data layer** (~23.2k lines / ~1.04 MB). `RECIPES` array (318 recipes) + `COLLECTIONS` array. Decoupled from rendering; exposed as `window.RECIPES` / `window.COLLECTIONS`. |
 | `user-recipes.js` | "My Recipes" — lets a cook add their own recipes from the Home hub; stored in `localStorage` (`mc-cookbook:userrecipes`) and merged into `window.RECIPES`/`COLLECTIONS` at load so they behave like built-in recipes everywhere (search, planner, favorites, categories). Must load after `recipes-data.js`, before the page controllers. |
 | `tracker.js` / `tracker-store.js` / `tracker-calc.js` / `tracker-foodapi.js` / `tracker-barcode.js` / `tracker-recipe.js` | The in-app macro tracker (`#screen-tracker`): week calendar strip, hour-by-hour food log, calorie/macro goals from a suggest-then-adjust calculator, food entry via Open Food Facts search or barcode scan, and direct recipe logging from the recipe page. Store is `mc_macros_v1` — the same key and shape 4-Weeks-to-Open-'s workout app uses, so a signed-in trainee's tracker data is one store, not two (see Client-side state below). Exposed as `window.MCTracker`. |
 | `mc-supabase.js` / `mc-sync.js` / `mc-account.js` | Optional login + cross-device sync, ported from 4-Weeks-to-Open- (same Supabase project — one account works in both apps). `mc-supabase.js` is the client + auth (invite-only, no public sign-up); `mc-sync.js` mirrors a whitelist of localStorage stores to Supabase's `user_sync` table per signed-in user — `mc_macros_v1` plus every `mc-cookbook:mealplan*` key, `mc-cookbook:userrecipes`, `mc-cookbook:cooked`, and (**audit C-02**) `mc-cookbook:favorites` + `mc-cookbook:pantry` (each with its own merge strategy — see the file header). Favorites and pantry were absent from the whitelist until C-02: three screens write favorites and Home advertises "☁️ Backed up," but they never left the device. Both are `Array.from(Set)` id lists, so they use the existing `stringSet` union strategy unchanged. **Deliberately still not synced**, with reasons in the file: `:photos` (image data doesn't belong in a jsonb row), `:timecheck` (no timestamp and no union semantics — needs a `ts` field before it can sync honestly), and the device/session-local preferences (`:tourSeen`, `:owner`, `:cookfont`, `:lastScreen`, `:lastBackupAt`, the dismissal stamps, and per-recipe check-offs). **Bridge (roadmap B0):** `mc-sync.js` also has a `CONSUME` map that **pulls, read-only,** the workout app's `mc_activity` + `mc_workout_log_v1` from the same `user_sync` table (owner authoritative, `replace` merge, never pushed back — one writer per store); `mc-bridge.js` reads those for a cross-app view. `mc-account.js` is the sign-in-sheet UI, mounted into the Home top bar by `cookbook-home.js` via `window.MCAccount.mount(container)`, and also hosts the Export data / Import data buttons (works whether signed in or not). All three sync modules are no-ops when signed out — nothing changes for a cook who never logs in. **Roadmap B5:** the merge functions (`mergeMacros`, `mergePlan`, `mergeStringSet`, `mergeHistoryBySavedAt`, `mergeArrayByField`, `mergeCookedByRecipe`) are private closures in a browser-only IIFE, so a `module.exports` hook was added as the literal first statement inside it (before the `window.__mcSync`/`MC_SB` guards) — the merge functions are `function` declarations further down the same closure so they're already hoisted and defined regardless of how the guards resolve. `tools/test-mc-sync-merge.js` sandboxes the real file with `vm` (fake `window`/`MC_SB` so the guards return early right after `module.exports` is set) and asserts real conflicting-fixture behavior — now a blocking CI step, not just a local check. `tracker-foodapi.js`/`tracker-calc.js`/`tracker-barcode.js` are generated copies of the workout app's `mc-foodapi.js`/`mc-macrocalc.js`/`mc-barcode.js` via `tools/sync-shared-modules.py` in that repo (which also enforces the byte-identical copies of `mc-bridge.js`/`mc-install.js`/`mc-backup-status.js`/`tools/test-mc-bridge.js`; a CI drift gate in both repos' `pages.yml` fails on any stale copy) — don't hand-edit them here. |
@@ -120,7 +127,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `mc-export.js` | **The app's one manual backup** (logged-out or logged-in): exports every `mc-cookbook:*` key plus `mc_macros_v1` as a downloadable JSON file, and restores from one. Two UIs call it — the `mc-account.js` sheet and Home's "Backup & Restore" card (`cookbook-home.js`'s `renderBackupSection`, which adds a `confirm()` the sheet doesn't). **Audit C-01:** `cookbook-home.js` used to carry a second, independent implementation whose file format was mutually unreadable with this one even though both wrote `mikes-cookbook-backup-<date>.json` — one rejected the other's files, the other accepted them and double-encoded every store. Consolidated here; that file now only holds thin adapters. Format is **v2**, and values are the **raw localStorage strings** — not every store holds JSON (`:lastBackupAt` is a bare ISO stamp, `:mealplan:recap-dismissed` a bare week key), so a parse/stringify round trip corrupts them. v1 (old `cookbook-home.js`) and unversioned (old `mc-export.js`) files still import. `tools/test-mc-export.js` pins all of this in CI. |
 | `mc-install.js` | **Roadmap B4 — ported from 4-Weeks-to-Open-, byte-identical.** Captures the native Android `beforeinstallprompt` at page load (loads first thing in `<body>` in `index.html`, since the event only reaches a listener already attached) and exposes `window.MC_INSTALL` (`platform`, `isInstalled()`, `canPrompt()`, `prompt()`, `onChange(fn)`). Fully app-agnostic — no cookbook-specific logic. Consumed by `mc-account.js`'s Install section. |
 | `mc-backup-status.js` | **Roadmap B4 — ported from 4-Weeks-to-Open-, byte-identical.** Fills `#backupStatus` (a placeholder `cookbook-home.js`'s `renderHome()` re-creates on every Home visit) with the live "☁️ Backed up · Nm ago" state from `mc-sync.js`. Re-queries the DOM on every `render()` call rather than caching the element once, since this SPA rebuilds Home's whole DOM each visit (the workout app's stable-DOM dashboard would work with either approach); exposes `window.MC_BACKUP_STATUS.refresh()`, which `renderHome()` calls right after re-creating the placeholder so the status shows immediately instead of waiting up to 15s for the next interval tick. |
-| `cookbook.css` | The entire design system + all component styles (~50 KB). Design tokens live in `:root`. |
+| `cookbook.css` | The entire design system + all component styles (~108 KB). Design tokens live in `:root`. |
 | `cookbook-sw.js` | Shared service-worker **registration** + update toasts; included on every page. |
 | `sw.js` | The service worker itself. `CACHE_URLS` is **auto-generated** — never hand-edit it. |
 | `manifest.json` / `icon.svg` | PWA manifest + app icon. |
@@ -175,13 +182,23 @@ Sauces · Marinades. A category only appears on the Categories screen once a
 recipe uses it (`categoriesWithRecipes()`), so adding a 12th needs an entry in
 both `CATEGORY_ORDER` and `CATEGORY_META`.
 
-**Collections** (`COLLECTIONS`): each is a flagship card with `status:
+**Collections** (`COLLECTIONS`, 13 live): each is a flagship card with `status:
 "live" | "coming-soon"`. A `live` collection lists every recipe whose `source`
 matches its `source_match` and links to `collection.html?c=<id>`. Live
 sources today: *Two Meals a Day*, *Chipotle Copycats*, *High-Protein Meal
-Prep*, *Desserts*, *Salsas*, *Sauces*, *Marinades*, plus the user-authored
-*My Recipes* collection (`user-recipes.js`). Coming soon: *Kelli Cross'
-Recipes* (Heritage), *Carnivore*.
+Prep*, *Desserts*, *Salsas*, *Sauces*, *Pasta Sauces*, *Marinades*, *Flexible
+Dieting*, *Eating Healthy Mag*, *Simple High-Protein Recipes*, *Family
+Recipes*, *Clean Eat Guide*, plus the user-authored *My Recipes* collection
+(`user-recipes.js`). Coming soon: *Kelli Cross' Recipes* (Heritage),
+*Carnivore*.
+
+**Every recipe must be reachable.** The last four live collections above were
+added by audit C-10: their sources had recipes but no collection, so ten
+recipes were reachable only via Categories or search, never from the
+collection cards Home points at. `tools/validate-recipes.js` checks both
+directions now — a `source_match` that resolves to nothing (empty collection)
+*and* a recipe `source` that no live collection matches (stranded recipe).
+Adding a recipe with a brand-new `source` fails CI until it has a home.
 
 ## Client-side state (localStorage)
 
@@ -227,12 +244,61 @@ JSON-serialize directly — this was a real bug; keep the pattern).
   (groceries/steps), keyed by recipe **and** serving count so each count keeps
   an independent checklist.
 
+**The rest of the namespace (audit C-12).** Eleven stores were live in the code
+and absent from this list. They're small, but "undocumented" is how a store
+ends up outside the sync whitelist and the backup by accident — which is
+exactly what happened to favorites (C-02). Full inventory, so the next audit
+starts from a true list:
+
+- `mc-cookbook:photos` — `{ [recipe_id]: dataURL }`, one cover photo per
+  recipe, written by `cookbook.js`. Each image is downscaled
+  (`PHOTO_EDGE` 1024px, quality 0.7) and the map is capped at
+  `MAX_RECIPE_PHOTOS` (24, oldest evicted) — the cap was added by C-12; the
+  downscale and the storage-full alert already existed. **Not synced** (image
+  data doesn't belong in a jsonb row); it *is* in the backup file, which is why
+  a backup with photos can run to several MB.
+- `mc-cookbook:timecheck` — `{ scopeKey, days }`, the Time Check quiz's
+  per-day time buckets. **Not synced:** no timestamp and no union semantics, so
+  every merge strategy either loses a local edit or produces nonsense. Needs a
+  `ts` field first — see ROADMAP backlog.
+- `mc-cookbook:pantry` — see above; synced as of C-02.
+- `mc-cookbook:lastBackupAt` — ISO timestamp of the last manual export. Feeds
+  the Home card's "Last backup: …" line and the stale-backup nudge. **A bare
+  string, not JSON** — this is one of the stores that made the old backup
+  format's parse/stringify round trip corrupt data (C-01).
+- `mc-cookbook:mealplan:autodraft-dismissed` — ms timestamp; ~7-day cooldown on
+  the Home auto-draft offer. Cleared when a real plan is built.
+- `mc-cookbook:mealplan:recap-dismissed` — the week key of the dismissed weekly
+  recap card. Also a bare string, not JSON.
+- `mc-cookbook:tourSeen` — `"1"` once the Quick Tour banner is taken or closed.
+- `mc-cookbook:owner` — `"1"` when owner mode is unlocked (`?owner=1`, or five
+  taps on the "Mike's" eyebrow). Gates the Mike's Favorites editing toolbar.
+- `mc-cookbook:mikesFavorites:draft` — owner-mode local draft of
+  `MIKES_FAVORITES` before it's copied out and committed. Owner-only.
+- `mc-cookbook:lastScreen` — `sessionStorage`, not localStorage: the shell
+  screen to return to from `recipe.html`/`collection.html`'s Home button.
+- `mc-cookbook:cookfont` — Cooking Mode font-size preference (`cookbook.js`).
+- `mc-cookbook:tracker:v1` — **legacy.** One-time migration source for
+  `mc_macros_v1`; `tracker-store.js` reads it once and moves the data. Slated
+  for removal (audit C-14).
+
+**Writes go through `writeStore()` in `cookbook-home.js`.** Each store used to
+carry its own `try { setItem } catch (e) {}`; fourteen of them swallowed
+`QuotaExceededError` in silence, so a full quota looked like favorites and meal
+plans just not saving. Swallowing is still correct — a full disk shouldn't
+throw a cook out of a recipe — but `writeStore()` now surfaces one toast per
+session so the failure is at least visible. Keep new writes on that helper.
+
 Favorites re-render across tabs by listening to the `storage` event.
 
 ## Service worker & caching
 
-- `sw.js` uses **network-first for HTML** (3s timeout for flaky kitchen Wi-Fi,
-  then cache fallback) and **cache-first for everything else**.
+- `sw.js` uses **stale-while-revalidate for HTML** (audit LS-4 — serve the
+  cached page instantly, refresh it behind for next load, fall back to the app
+  shell on a cold cache) and **cache-first for everything else**. It was
+  network-first with a 3s timeout until LS-4; `tools/test-sw-strategy.js`
+  pins the current behavior and `tools/check-docs.js` fails if this paragraph
+  drifts back.
 - `CACHE_URLS` is delimited by `/* AUTOGEN:URLS START/END */` markers and is
   **generated by `tools/build-sw.py` — never edit it by hand.**
 - The SW self-activates (`skipWaiting` + `clients.claim`) and the page reloads

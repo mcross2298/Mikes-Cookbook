@@ -16,7 +16,7 @@
 
 Ground truth as of this evaluation — read the code, not the last roadmap:
 
-- **160 recipes** across **11 dish categories** (Breakfast, Salads & Slaws, Soups/Stews/Chilis,
+- **318 recipes** across **11 dish categories** (Breakfast, Salads & Slaws, Soups/Stews/Chilis,
   Casseroles & Bakes, Skillets & Stir-Fries, Grilled & Sheet-Pan, Sandwiches, Desserts, Salsas &
   Dips, Sauces, Marinades) — up from the 41 recipes / 7 categories the previous docs described.
 - **7 shell screens**, not 5: Home, Planner, Categories, Recipes, Favorites, **Mike's Favorites**,
@@ -288,7 +288,9 @@ reconciliation across two signed-in physical devices. Full breakdown in
 cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`–`W-23`, of which
 `LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
 side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
-16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching this phase's own PR.
+16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching phase 1's own PR.
+Phases 1 and 2 are shipped (C-01, C-02, C-03, C-10, C-11, C-12, C-16); C-04 – C-09 and
+C-13 – C-15 remain.
 
 ### Phase 1 ✅ (shipped 2026-07-31) — the findings that were broken for a real cook
 
@@ -336,17 +338,64 @@ Home's card, wipe the device, re-import, and confirm the app reads real arrays b
 **Not verified from this session:** actual Supabase row reconciliation for the two newly-synced
 stores across two signed-in physical devices — same owner-only gate B5 documented.
 
-### Phases 2–6 (not started)
+### Phase 2 ✅ (shipped 2026-08-01) — stop the drift, reach every recipe
+
+- **C-11 · The docs described an app that no longer existed.** CLAUDE.md and ROADMAP.md said
+  160 recipes and quick-tour.html said 144; there were **318**. CLAUDE.md also had
+  `cookbook-home.js` at "~140 KB, ~3.2k lines" (220 KB / 4.9k), `recipes-data.js` at "~600 KB"
+  (1.04 MB), `cookbook.css` at "~50 KB" (108 KB), the service worker as network-first two rounds
+  after LS-4 made it stale-while-revalidate, and "there is **no bottom tab bar**" while
+  `index.html` shipped one. **README.txt was the worst of it** — it still described a three-tab
+  shell (Home · Recipes · Favorites) that hasn't existed for several releases, and put Two Meals
+  a Day at 10 recipes (41). All corrected, and README.txt rewritten against the real code.
+  The durable half is **`tools/check-docs.js`** (new, blocking CI gate): counts checked exactly,
+  file sizes with a ±20% tolerance so normal churn doesn't fail CI, and structural claims checked
+  *against the source they describe* — the "no bottom tab bar" line fails only while
+  `index.html` actually has a `.tab-bar`, so it stays correct if the app changes. Mutation-tested
+  against five seeded drifts: four caught, and the deliberately-small size drift correctly passed.
+  The repo's answer to doc drift until now was the "process rule" — discipline. Discipline is what
+  produced the numbers above; `build-sw.py --check` already proved the automated version of this
+  idea works for the precache list.
+- **C-10 · Ten recipes were unreachable from the Recipes browse path.** Four sources
+  (*Eating Healthy Mag* 5, *Simple High-Protein Recipes* 3, *Family Recipes* 1,
+  *Clean Eat Guide* 1) had recipes but no collection, so they could only be found via Categories
+  or search — never from the collection cards Home points at. *Family Recipes* was the sharpest
+  case: a single handed-down lasagna, in the app whose whole premise is hand-me-downs, with no way
+  to browse to it. **Provenance was deliberately not rewritten** — re-`source`ing those recipes
+  into an existing collection would have been a one-line fix and would have destroyed where they
+  actually came from — so each origin got its own card, including the two holding one recipe
+  today. `validate-recipes.js` now checks **both** directions (an empty collection *and* a
+  stranded recipe); mutation-tested by deleting a collection and confirming it fails.
+- **C-12 · Eleven stores were undocumented; fourteen writers swallowed quota failures.** All
+  eleven are now in CLAUDE.md's state section. **Correction to the audit's own claim:**
+  `mc-cookbook:photos` was described as uncapped *and* silent — only the first half was right.
+  Each image was already downscaled and a failed write already alerted; what was missing was a
+  ceiling on *how many* recipes could hold a cover photo (318 possible, against a 5–10 MB shared
+  quota). `MAX_RECIPE_PHOTOS = 24` applies the cook log's own evict-oldest pattern. The real
+  silent-failure finding was elsewhere: fourteen `try { setItem } catch (e) {}` blocks in
+  `cookbook-home.js` — favorites, plan, grocery, cook log, pantry, history — meaning a full quota
+  looked like changes just not saving. All routed through one `writeStore()` helper that keeps the
+  swallow (correct — a full disk shouldn't throw a cook out of a recipe) but surfaces one toast
+  per session.
+
+**Verification:** every gate green, plus a live headless-Chromium pass (15/15): all four new
+collection cards render on the Recipes screen, each collection page lists exactly its recipes, all
+318 recipes resolve to a live collection, a formerly-orphaned recipe opens and renders, and a
+simulated `QuotaExceededError` produces exactly one visible toast — not zero, and not one per
+write.
+
+### Phases 3–6 (not started)
 
 | Phase | IDs | Work |
 |------:|-----|------|
-| 2 | C-11 · C-10 · C-12 | Correct the docs (they say 160 recipes; there are **318**) then gate freshness in CI; reach the 10 recipes no collection points at; document the 11 undocumented stores and cap `:photos` |
 | 3 | C-04 · C-07 | Collapse the three near-verbatim week generators (`smw*`/`msg*`/`tcw*`) to one; extract `mc-cards.js` + `mc-fav.js` so the recipe card stops being maintained twice |
 | 4 | C-05 · C-09 | One "Plan my week" door with bias chips; Home priority rule instead of stacking up to 11 cards. Optional 7→5 screen rationalization (needs a call on Mike's Favorites losing top-level billing) |
-| 5 | C-08 · C-06 | Split `cookbook-home.js` (4,933 lines, 240 fns) along its seams; measure `recipes-data.js` parse on a real device before splitting it |
-| 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes |
+| 5 | C-08 · C-06 | Split `cookbook-home.js` (4.9k lines, 240 fns) along its seams; measure `recipes-data.js` parse on a real device before splitting it |
+| 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes, `/favicon.ico` |
 
-**Effort:** Phase 1 Low · **Impact:** Critical (disaster-recovery path).
+**Effort:** Phase 1 Low, Phase 2 Low · **Impact:** Critical (phase 1, disaster recovery) then High
+(phase 2 — doc drift is the developer stream's highest-frequency waste, and it now can't recur
+silently).
 
 ## Open questions (backlog only)
 - **`mc-cookbook:timecheck` needs a `ts` field** before it can join the sync whitelist (C-02).

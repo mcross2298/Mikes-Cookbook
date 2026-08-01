@@ -175,6 +175,37 @@ function validateCollections(collections, sources, errors) {
   });
 }
 
+// Audit C-10 — the reverse of the source_match check above. That one proves a
+// collection can't render empty; this one proves a recipe can't be stranded.
+// Ten recipes across four sources (Eating Healthy Mag, Simple High-Protein
+// Recipes, Family Recipes, Clean Eat Guide) had no collection pointing at
+// them, so they were reachable only via Categories or search — never from the
+// collection cards Home sends a cook to. Nothing caught it because validation
+// only ever ran collection -> recipe. Adding a recipe with a brand-new
+// `source` and no matching collection now fails here instead of shipping an
+// unreachable recipe.
+function validateEveryRecipeReachable(recipes, collections, errors) {
+  if (!Array.isArray(recipes) || !Array.isArray(collections)) return;
+  var liveSources = new Set();
+  collections.forEach(function (c) {
+    if (c && c.status === "live" && isNonEmptyString(c.source_match)) liveSources.add(c.source_match);
+  });
+  var orphansBySource = new Map();
+  recipes.forEach(function (r) {
+    if (!r || !isNonEmptyString(r.source) || liveSources.has(r.source)) return;
+    if (!orphansBySource.has(r.source)) orphansBySource.set(r.source, []);
+    orphansBySource.get(r.source).push(r.recipe_id);
+  });
+  orphansBySource.forEach(function (recipeIds, source) {
+    errors.push(
+      "source \"" + source + "\" has " + recipeIds.length + " recipe(s) but no live COLLECTIONS entry " +
+      "matches it — unreachable from the Recipes browse path (" +
+      recipeIds.slice(0, 4).join(", ") + (recipeIds.length > 4 ? ", …" : "") + "). " +
+      "Add a collection with source_match \"" + source + "\", or change those recipes' source."
+    );
+  });
+}
+
 function validateMikesFavorites(list, ids, errors) {
   if (list === undefined) return; // optional
   if (!Array.isArray(list)) { errors.push("MIKES_FAVORITES must be an array."); return; }
@@ -188,6 +219,7 @@ function main() {
   var errors = [];
   var recipeInfo = validateRecipes(data.recipes, errors);
   validateCollections(data.collections, recipeInfo.sources, errors);
+  validateEveryRecipeReachable(data.recipes, data.collections, errors);
   validateMikesFavorites(data.mikesFavorites, recipeInfo.ids, errors);
 
   if (errors.length) {
