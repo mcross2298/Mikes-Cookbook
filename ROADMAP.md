@@ -31,11 +31,11 @@ Ground truth as of this evaluation — read the code, not the last roadmap:
   described: **Smart Week** (scope-driven 7-day generator), a **Macro Smart Generator** (opt-in
   macro-targeted variant), **batch-prep day suggestion**, meal-completion → **cook log**, and
   **macro history** feeding back into generation.
-- **Zero automated verification.** CI (`.github/workflows/pages.yml`) is a `node --check` syntax
-  gate + service-worker regen + deploy — nothing validates the 12.4k-line `recipes-data.js`
-  (unique `recipe_id`, valid `dish_category`/ingredient-`category` enums, `source_match`
-  resolvability, `serving_2`/`serving_4` macro equality) and there is no UI smoke test. This
-  wasn't picked as this round's priority but is flagged here as a known gap — see §Backlog.
+- ~~**Zero automated verification.**~~ **Superseded.** As of Pillar A + Pillar E phase 1, CI is a
+  `verify` job with **7 blocking gates** (syntax, `validate-recipes.js`, the bridge + sync-merge
+  tests, SW strategy, backup format, precache freshness, shared-module drift) running on pull
+  requests *and* `main`, with `deploy` gated behind it. There is still **no UI smoke test** —
+  that remains the open gap. See Pillar E, C-16.
 
 **Implication:** the app is materially ahead of what its own docs described. The risk this round
 isn't a missing feature, it's that **the planner's smart features are all pull-based** — Mike has
@@ -288,9 +288,9 @@ reconciliation across two signed-in physical devices. Full breakdown in
 cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`–`W-23`, of which
 `LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
 side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
-15 findings: 3 high, 9 medium, 3 low.
+16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching this phase's own PR.
 
-### Phase 1 ✅ (shipped 2026-07-31) — the only findings that were broken for a real cook
+### Phase 1 ✅ (shipped 2026-07-31) — the findings that were broken for a real cook
 
 - **C-01 · Two backup systems, incompatible formats.** The app shipped two complete backup
   implementations, both reachable from Home, both writing `mikes-cookbook-backup-<date>.json`
@@ -314,6 +314,17 @@ side of a two-app suite and never opened `cookbook-home.js` or walked the cook's
   still-excluded stores (`:photos`, `:timecheck`, and the device-local preferences) now carry
   written reasons in the file so the omissions read as decisions. `:timecheck` specifically needs
   a `ts` field on the store before it can sync honestly — logged below.
+
+- **C-16 · CI never ran on pull requests** — found while watching this phase's own PR, not in the
+  original audit sweep. `pages.yml` triggered on `push: branches: ["main"]` alone, so a PR got
+  **zero checks**: all six gates fired only on the merge commit, by which point a failure was
+  already live on the production origin. The gates were real, they just ran one step too late to
+  protect anything. Split into `verify` (7 gates, runs on pull requests **and** `main`) and
+  `deploy` (`needs: verify`, gated to `main`, never runs from a PR branch). `build-sw.py --check`
+  was promoted to a real gate in the process — the deploy job regenerates `sw.js` anyway, so a
+  stale precache list had never been able to fail anything, and on a PR it's the only signal that
+  a new top-level asset was never wired in. This is the developer stream's counterpart to C-01:
+  a safety net that existed but wasn't positioned where it could catch a fall.
 
 **Verification:** `tools/test-mc-export.js` (new, 39 assertions, blocking CI step) pins the format
 contract — round trip, both legacy shapes, every rejection path, and the exact C-01 corruption.

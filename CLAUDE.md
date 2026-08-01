@@ -126,7 +126,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `manifest.json` / `icon.svg` | PWA manifest + app icon. |
 | `quick-tour.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. |
-| `.github/workflows/pages.yml` | CI: `node --check` JS gate → regen SW → deploy to GitHub Pages. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (7 blocking gates — syntax, recipe data, bridge + sync-merge tests, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -265,16 +265,34 @@ committed `CACHE_NAME` is informational, but keep the precache list current.
 
 ## CI / deploy
 
-`.github/workflows/pages.yml` runs on push to `main`:
-1. `node --check` over every tracked `*.js` (syntax gate — **all JS must
-   pass**).
-2. Regenerate the service worker (`tools/build-sw.py --version ci-<run>`).
-3. Deploy the repo root to GitHub Pages.
+`.github/workflows/pages.yml` has **two jobs** (split by audit C-16 — before
+that the whole thing ran on `push: main` only, so a pull request got no checks
+at all and the gates first fired on the merge commit, one step too late to stop
+anything reaching production):
 
-Before pushing, sanity-check JS locally:
+- **`verify`** — runs on **pull requests and on `main`**. Seven gates, all
+  blocking:
+  1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
+  2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
+  3. `tools/test-mc-bridge.js` + `tools/test-mc-sync-merge.js` — cross-app read
+     layer and sync-merge logic (roadmap B5, audit C-02).
+  4. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
+  5. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
+  6. `tools/build-sw.py --check` — precache list is current.
+  7. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+- **`deploy`** — `needs: verify`, and gated to `main` by
+  `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
+  nothing ever deploys from a PR branch. Regenerates the SW with
+  `--version ci-<run>` and publishes the repo root to GitHub Pages.
+
+Before pushing, run the same gates locally:
 
 ```bash
 for f in $(git ls-files '*.js'); do node --check "$f" || echo "FAIL $f"; done
+node tools/validate-recipes.js
+node tools/test-mc-bridge.js && node tools/test-mc-sync-merge.js
+node tools/test-sw-strategy.js && node tools/test-mc-export.js
+python3 tools/build-sw.py --check
 ```
 
 ## Git workflow
