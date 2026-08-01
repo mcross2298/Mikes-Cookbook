@@ -29,43 +29,8 @@
     void node.offsetWidth;
     node.classList.add("pop");
   };
-  function rgbFromHex(hex) {
-    var h = (hex || "").replace("#", "");
-    if (h.length !== 6) return "200,122,83";
-    return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }).join(",");
-  }
   // Authored accents range down to near-black; used as literal text/border color
   // on dark surfaces, so floor the lightness before it's ever set as a CSS var.
-  function clampAccent(hex) {
-    var h = (hex || "").replace("#", "");
-    if (h.length !== 6) return hex || "#C87A53";
-    var r = parseInt(h.substr(0, 2), 16) / 255;
-    var g = parseInt(h.substr(2, 2), 16) / 255;
-    var b = parseInt(h.substr(4, 2), 16) / 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2;
-    if (l >= 0.45) return "#" + h;
-    var d = max - min;
-    var s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
-    var hue = 0;
-    if (d !== 0) {
-      if (max === r) hue = ((g - b) / d) % 6;
-      else if (max === g) hue = (b - r) / d + 2;
-      else hue = (r - g) / d + 4;
-      hue *= 60; if (hue < 0) hue += 360;
-    }
-    l = 0.45;
-    var c = (1 - Math.abs(2 * l - 1)) * s;
-    var x = c * (1 - Math.abs((hue / 60) % 2 - 1));
-    var m = l - c / 2, rp, gp, bp;
-    if (hue < 60) { rp = c; gp = x; bp = 0; }
-    else if (hue < 120) { rp = x; gp = c; bp = 0; }
-    else if (hue < 180) { rp = 0; gp = c; bp = x; }
-    else if (hue < 240) { rp = 0; gp = x; bp = c; }
-    else if (hue < 300) { rp = x; gp = 0; bp = c; }
-    else { rp = c; gp = 0; bp = x; }
-    function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
-    return "#" + toHex(rp) + toHex(gp) + toHex(bp);
-  }
   // Recipe/category/collection icons used to be raw platform emoji, which
   // render differently per OS and clash with icon.svg's crafted look. Every
   // authored emoji maps to one of a small set of cream/ink line icons (same
@@ -76,168 +41,37 @@
   // every context that used to size the emoji via font-size (.rc-icon at
   // 24px, .cat-icon at 32px, .plan-meal-icon/.plan-chip-icon at their own
   // sizes) with no separate icon set needed per size.
-  var DEFAULT_RECIPE_ICON =
-    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
-      '<rect x="5" y="4" width="14" height="16" rx="2.4" fill="#F9F8F6"/>' +
-      '<rect x="8" y="8" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.55"/>' +
-      '<rect x="8" y="11.4" width="8" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.4"/>' +
-      '<rect x="8" y="14.8" width="5" height="1.6" rx="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
-    "</svg>";
-  var RECIPE_ICON_SVGS = {
-    protein:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<ellipse cx="14.5" cy="9" rx="6" ry="5" fill="#F9F8F6"/>' +
-        '<path d="M11 12.5c-2.6 2.1-5.4 4.9-6 6.9-.4 1.5.9 2.6 2.3 2 2-.8 4.6-3.4 6.6-6.2" fill="#F9F8F6"/>' +
-        '<circle cx="6.2" cy="19.6" r="1.3" fill="#2A2C2E" fill-opacity="0.28"/>' +
-      "</svg>",
-    seafood:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<ellipse cx="10.5" cy="12" rx="7" ry="4.2" fill="#F9F8F6"/>' +
-        '<path d="M17 9.5 21.5 6.5 19.5 12 21.5 17.5 17 14.5Z" fill="#F9F8F6"/>' +
-        '<circle cx="6.8" cy="11" r="1" fill="#2A2C2E" fill-opacity="0.4"/>' +
-      "</svg>",
-    dairy:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M3 17.5 11 5 21 10.5 21 17.5Z" fill="#F9F8F6"/>' +
-        '<circle cx="14" cy="12.5" r="1.1" fill="#2A2C2E" fill-opacity="0.3"/>' +
-        '<circle cx="10.5" cy="15.5" r="0.9" fill="#2A2C2E" fill-opacity="0.3"/>' +
-        '<circle cx="17" cy="15" r="0.8" fill="#2A2C2E" fill-opacity="0.3"/>' +
-      "</svg>",
-    heat:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 2c1.8 3 3.6 5 3.6 8.4a3.6 3.6 0 1 1-7.2 0c0-1 .3-1.8.7-2.6-.1 1.6.8 2 1.3 1 .5-1-.2-2 .2-3.8.5 1.4 1.4 1.6 1.4 0Z" fill="#F9F8F6"/>' +
-        '<path d="M9 20c1.5.8 4.5.8 6 0-1 1.5-2 2-3 2s-2-.5-3-2Z" fill="#2A2C2E" fill-opacity="0.25"/>' +
-      "</svg>",
-    herb:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 21c0-8 2-13 8-16-1 7-3 12-8 16Z" fill="#F9F8F6"/>' +
-        '<path d="M12 21c0-8-2-13-8-16 1 7 3 12 8 16Z" fill="#F9F8F6" fill-opacity="0.75"/>' +
-        '<path d="M12 21V9" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.2"/>' +
-      "</svg>",
-    citrus:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<circle cx="12" cy="12" r="9" fill="#F9F8F6"/>' +
-        '<path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3 6.3 17.7" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1"/>' +
-      "</svg>",
-    berry:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<circle cx="9" cy="14" r="4" fill="#F9F8F6"/>' +
-        '<circle cx="15" cy="14" r="4" fill="#F9F8F6"/>' +
-        '<circle cx="12" cy="9.5" r="4" fill="#F9F8F6"/>' +
-        '<path d="M12 5.5c1-1.5 2.5-2 4-1.7" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.3" stroke-linecap="round"/>' +
-      "</svg>",
-    vegetable:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M9 8c4-4 9-5.5 11-3.5S16 10 12 14Z" fill="#2A2C2E" fill-opacity="0.22"/>' +
-        '<path d="M4 20c-1-4 1-9 5-11s7 1 6 5-7 8-11 6Z" fill="#F9F8F6"/>' +
-      "</svg>",
-    grain:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M3 11h18a9 6 0 0 1-18 0Z" fill="#F9F8F6"/>' +
-        '<path d="M6 8c1-1.5 2-2 2-3.5M11 7c1-1.5 2-2 2-3.5M16 8c1-1.5 2-2 2-3.5" stroke="#2A2C2E" stroke-opacity="0.25" stroke-width="1.3" stroke-linecap="round"/>' +
-      "</svg>",
-    sauce:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M7 3h7l-1 5 4 3.5c2 1.7 1.6 5.5-2.5 6.5-4.5 1.1-9.5-1-9.5-5.5 0-2.5 1.5-4 3-5Z" fill="#F9F8F6"/>' +
-        '<circle cx="12.5" cy="15" r="1" fill="#2A2C2E" fill-opacity="0.28"/>' +
-      "</svg>",
-    bread:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M4 13c0-5 3.6-8 8-8s8 3 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" fill="#F9F8F6"/>' +
-        '<path d="M8 8.5v5M12 7.5v6M16 8.5v5" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1.3" stroke-linecap="round"/>' +
-      "</svg>",
-    dessert:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M4 20 12 4l8 16Z" fill="#F9F8F6"/>' +
-        '<path d="M7 14h10M8.5 17h7" stroke="#2A2C2E" stroke-opacity="0.22" stroke-width="1.3"/>' +
-        '<circle cx="12" cy="4" r="1.1" fill="#2A2C2E" fill-opacity="0.3"/>' +
-      "</svg>",
-    egg:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 5c4 0 8 3 8 7.5S17 20 12 20 3 16 3 12.5C3 8.5 7 5 12 5Z" fill="#F9F8F6" fill-opacity="0.85"/>' +
-        '<circle cx="13" cy="12" r="4" fill="#F9F8F6"/>' +
-        '<circle cx="13" cy="12" r="4" fill="#2A2C2E" fill-opacity="0.12"/>' +
-      "</svg>",
-    drink:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M5 8h11v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z" fill="#F9F8F6"/>' +
-        '<path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" stroke="#F9F8F6" stroke-width="1.6" fill="none"/>' +
-        '<path d="M8 5.5c.4-.8-.2-1.3 0-2M11.5 5.5c.4-.8-.2-1.3 0-2" stroke="#2A2C2E" stroke-opacity="0.25" stroke-width="1.1" stroke-linecap="round"/>' +
-      "</svg>",
-    bowl:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M3 10.5h18a9 7.5 0 0 1-18 0Z" fill="#F9F8F6"/>' +
-        '<path d="M3 10.5a9 3 0 0 1 18 0" fill="#2A2C2E" fill-opacity="0.12"/>' +
-      "</svg>",
-    fruit:
-      '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="display:block" aria-hidden="true">' +
-        '<path d="M12 9c3.5-2 7 .3 7 4.5S15.5 21 12 21s-7-3.3-7-7.5S8.5 7 12 9Z" fill="#F9F8F6"/>' +
-        '<path d="M12 9V5.5c1-1 2-1.2 3-1" stroke="#2A2C2E" stroke-opacity="0.3" stroke-width="1.3" stroke-linecap="round" fill="none"/>' +
-      "</svg>"
-  };
-  // Every emoji actually authored across recipes-data.js's 226 recipes plus
-  // CATEGORY_META/COLLECTIONS, grouped into the icon set above. A few
-  // one-off novelty glyphs (🌈🌌🎉🤠💍🌀🌴) have no sensible food mapping and
-  // are left out on purpose — they fall through to DEFAULT_RECIPE_ICON.
-  var EMOJI_ICON_GROUP = {
-    "🌶️": "heat", "🍯": "sauce", "🧀": "dairy", "🍋": "citrus", "🌮": "bread",
-    "🥗": "bowl", "🍗": "protein", "🐟": "seafood", "🍤": "seafood", "🍫": "dessert",
-    "🍓": "berry", "🥢": "grain", "🥩": "protein", "🍝": "grain", "🔥": "heat",
-    "🧄": "herb", "🥪": "bread", "🫑": "vegetable", "🥣": "bowl", "🥑": "vegetable",
-    "🍚": "grain", "🌯": "bread", "🌿": "herb", "🥦": "vegetable", "🍳": "egg",
-    "🍕": "bread", "🧈": "dairy", "🫐": "berry", "🍪": "dessert", "🥔": "vegetable",
-    "🧆": "protein", "🍖": "protein", "🥧": "dessert", "🍔": "bread", "🦐": "seafood",
-    "🍲": "bowl", "🍜": "grain", "🍍": "fruit", "🥜": "vegetable", "🍅": "vegetable",
-    "🌽": "vegetable", "🫘": "vegetable", "🥙": "bread", "🍰": "dessert", "🧂": "sauce",
-    "🍊": "citrus", "🍁": "herb", "🧇": "bread", "🍛": "grain", "🌭": "bread",
-    "🥬": "vegetable", "🥘": "bowl", "🎃": "vegetable", "🍌": "fruit", "🍨": "dessert",
-    "🍎": "fruit", "🍭": "dessert", "🥭": "fruit", "🥟": "bread", "🍒": "berry",
-    "🥨": "bread", "🍑": "fruit", "🥝": "fruit", "🦀": "seafood", "🦃": "protein",
-    "🍠": "vegetable", "🍢": "protein", "🍩": "dessert", "🥕": "vegetable", "☕": "drink",
-    "🍇": "fruit", "🫒": "vegetable", "🌱": "herb", "🍣": "seafood", "🥥": "fruit",
-    "🥖": "bread", "🥡": "bowl", "🍦": "dessert", "🍱": "bowl"
-  };
-  function recipeIconHtml(icon) {
-    if (!icon) return DEFAULT_RECIPE_ICON;
-    var group = EMOJI_ICON_GROUP[icon];
-    return group ? RECIPE_ICON_SVGS[group] : DEFAULT_RECIPE_ICON;
+  /* Recipe-card rendering lives in mc-cards.js (audit C-07) — this file used
+     to carry a byte-identical copy of the icon table and accent helpers, and
+     a second, drifting copy of the card itself. Aliases keep the existing
+     call sites unchanged; configureCards() below supplies this page's
+     behavior (its own plan store + toast, the user-recipe delete control,
+     and the flat "Toggle favorite" heart label it has always used). */
+  var clampAccent    = MCCards.clampAccent;
+  var rgbFromHex     = MCCards.rgbFromHex;
+  var hashStr        = MCCards.hashStr;
+  var cardPatternFor = MCCards.cardPatternFor;
+  var cardSheenDelay = MCCards.cardSheenDelay;
+  var recipeIconHtml = MCCards.recipeIconHtml;
+  var macroStatsHtml = MCCards.macroStatsHtml;
+  function recipeCard(r, onChange) {
+    return MCCards.recipeCard(r, {
+      onChange: onChange, allowDelete: true, favLabels: false
+    });
   }
+
 
   // Recipe cards have no photography — see cookbook-home.js's matching
   // cardPatternFor() for the full rationale. Deterministic per recipe_id so
   // the same card always gets the same texture, not a reshuffle on repaint.
-  var CARD_PATTERNS = [
-    { image: "repeating-linear-gradient(45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
-    { image: "radial-gradient(rgba(255,255,255,0.18) 1.4px, transparent 1.6px)", size: "14px 14px" },
-    { image: "repeating-linear-gradient(-45deg, rgba(255,255,255,0.10) 0 2px, transparent 2px 11px)", size: "auto" },
-    { image: "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0 2px, transparent 2px 12px)", size: "auto" }
-  ];
-  function hashStr(s) {
-    var h = 0;
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h;
-  }
-  function cardPatternFor(recipeId) {
-    return CARD_PATTERNS[hashStr(recipeId) % CARD_PATTERNS.length];
-  }
   // Desyncs the ported category-card sheen sweep (see .rc-sheen) so a grid
   // of many recipe cards doesn't all flash in unison.
-  function cardSheenDelay(recipeId) {
-    return ((hashStr(recipeId) >>> 3) % 7) * 0.8 + "s";
-  }
 
   /* ── Favorites store (same key as cookbook-home.js) ───────────────── */
-  var FAV_KEY = "mc-cookbook:favorites";
-  function loadFavs() {
-    try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
-    catch (e) { return new Set(); }
-  }
-  function toggleFav(id) {
-    var set = loadFavs();
-    if (set.has(id)) set.delete(id); else set.add(id);
-    try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
-    return set.has(id);
-  }
+  // The favorites store itself is mc-fav.js (audit C-07).
+  var FAV_KEY = MCFav.KEY;
+  function loadFavs()    { return MCFav.load(); }
+  function toggleFav(id) { return MCFav.toggle(id); }
 
   /* ── This Week planner (shared store with cookbook-home.js) ────────
      collection.html doesn't load cookbook-home.js, so this mirrors just
@@ -314,111 +148,7 @@
   // Compact bottom stat row for a recipe card — one authored serving's
   // Cal/Protein/Fat/Carbs, matching recipe.html's macro card exactly (no
   // division by serving count; see macrosFor() in cookbook.js).
-  function macroStatsHtml(m) {
-    var stats = [
-      { cls: "cal", v: m.calories, label: "Cal" },
-      { cls: "", v: m.protein_g, label: "Protein" },
-      { cls: "", v: m.fat_g, label: "Fat" },
-      { cls: "", v: m.carbs_g, label: "Carbs" }
-    ].filter(function (s) { return s.v != null; });
-    if (!stats.length) return "";
-    return '<div class="rc-stats">' + stats.map(function (s) {
-      return '<div class="rc-stat ' + s.cls + '">' +
-        '<span class="rc-stat-num">' + Math.round(s.v) + "</span>" +
-        '<span class="rc-stat-label">' + s.label + "</span></div>";
-    }).join("") + "</div>";
-  }
 
-  function recipeCard(r, onChange) {
-    var accent = clampAccent(r.accent || "#C87A53");
-    var card = el("a", "rc");
-    card.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id);
-    card.style.setProperty("--rc-accent", accent);
-    card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
-    var pattern = cardPatternFor(r.recipe_id);
-    card.style.setProperty("--rc-pattern", pattern.image);
-    card.style.setProperty("--rc-pattern-size", pattern.size);
-
-    // macro_profiles are stored PER SINGLE SERVING and are identical across
-    // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,
-    // the same way recipe.html's macro card does.
-    var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
-    var m = (r.macro_profiles && r.macro_profiles["serving_" + tier]) ||
-      (r.macro_profiles && r.macro_profiles["serving_" + (r.native_serving || 2)]) || {};
-
-    card.innerHTML =
-      '<div class="rc-band">' +
-        '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
-        '<span class="rc-icon">' + recipeIconHtml(r.icon) + "</span>" +
-      "</div>" +
-      '<div class="rc-body">' +
-        '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
-        macroStatsHtml(m) +
-      "</div>";
-
-    var on = loadFavs().has(r.recipe_id);
-    var heart = el("button", "fav-toggle" + (on ? " on" : ""), on ? "❤" : "♡");
-    heart.type = "button";
-    heart.setAttribute("aria-label", "Toggle favorite");
-    heart.addEventListener("click", function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var nowOn = toggleFav(r.recipe_id);
-      heart.classList.toggle("on", nowOn);
-      heart.textContent = nowOn ? "❤" : "♡";
-      pop(heart);
-    });
-    card.appendChild(heart);
-
-    // One-tap plan-add, stacked below the heart (see cookbook.js's matching
-    // recipe-detail control for the full rationale).
-    var planBtn = el("button", "plan-toggle", "+");
-    planBtn.type = "button";
-    planBtn.setAttribute("aria-label", "Add to This Week");
-    var planBtnTimer = null;
-    planBtn.addEventListener("click", function (e) {
-      e.preventDefault(); e.stopPropagation();
-      var meal = addToPlan(r);
-      planBtn.classList.add("added");
-      planBtn.textContent = "✓";
-      pop(planBtn);
-      toast("Added “" + r.title + "” to This Week", "Undo", function () {
-        removeFromPlan(meal.uid);
-      });
-      clearTimeout(planBtnTimer);
-      planBtnTimer = setTimeout(function () {
-        planBtn.classList.remove("added");
-        planBtn.textContent = "+";
-      }, 1800);
-    });
-    card.appendChild(planBtn);
-
-    // "Mike's pick" star — the curated, shipped list (window.MIKES_FAVORITES)
-    // reads here too, so a visitor sees Mike's picks while browsing a collection.
-    if ((window.MIKES_FAVORITES || []).indexOf(r.recipe_id) >= 0) {
-      card.classList.add("mikes-pick");
-      var mb = el("span", "mikes-badge", "★");
-      mb.setAttribute("aria-label", "Mike's pick");
-      mb.title = "Mike's pick";
-      card.appendChild(mb);
-    }
-
-    // User-authored recipes get a delete control so the personal library is
-    // manageable. Removal updates the shared store + the live list.
-    if (r.user && window.MCUser) {
-      var del = el("button", "rc-delete", "✕");
-      del.type = "button";
-      del.setAttribute("aria-label", "Delete this recipe");
-      del.addEventListener("click", function (e) {
-        e.preventDefault(); e.stopPropagation();
-        if (window.confirm("Delete “" + r.title + "” from your recipes?")) {
-          window.MCUser.remove(r.recipe_id);
-          if (onChange) onChange();
-        }
-      });
-      card.appendChild(del);
-    }
-    return card;
-  }
 
   /* ── Desserts: "similar desserts" grouping ───────────────────────────
      Desserts collection only. Groups the current (subtab-filtered) list
@@ -500,6 +230,24 @@
 
   /* ── Render ───────────────────────────────────────────────────────── */
   function init() {
+    // This page's half of the shared card's behavior (audit C-07). The shell
+    // configures the same hooks with its own planner and curation gestures;
+    // neither side needs to know the other exists.
+    MCCards.configure({
+      // The curated, shipped list reads here too, so a visitor sees Mike's
+      // picks while browsing a collection.
+      isMikePick: function (id) { return (window.MIKES_FAVORITES || []).indexOf(id) >= 0; },
+      mikesBadge: function () {
+        var mb = el("span", "mikes-badge", "★");
+        mb.setAttribute("aria-label", "Mike's pick");
+        mb.title = "Mike's pick";
+        return mb;
+      },
+      addToPlan: function (r) { return addToPlan(r); },
+      removeFromPlan: removeFromPlan,
+      toast: toast
+    });
+
     var c = pickCollection();
     var top = $("#top"), grid = $("#grid"), searchWrap = $("#searchWrap");
 

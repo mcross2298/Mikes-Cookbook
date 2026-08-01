@@ -289,8 +289,8 @@ cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`�
 `LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
 side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
 16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching phase 1's own PR.
-Phases 1 and 2 are shipped (C-01, C-02, C-03, C-10, C-11, C-12, C-16); C-04 – C-09 and
-C-13 – C-15 remain.
+Phases 1–3 are shipped (C-01, C-02, C-03, C-04, C-07, C-10, C-11, C-12, C-16);
+C-05, C-06, C-08, C-09 and C-13 – C-15 remain.
 
 ### Phase 1 ✅ (shipped 2026-07-31) — the findings that were broken for a real cook
 
@@ -384,11 +384,56 @@ collection cards render on the Recipes screen, each collection page lists exactl
 simulated `QuotaExceededError` produces exactly one visible toast — not zero, and not one per
 write.
 
-### Phases 3–6 (not started)
+### Phase 3 ✅ (shipped 2026-08-01) — stop maintaining the same code twice
+
+- **C-04 · Three near-verbatim week generators → one.** `smw*` (Balanced), `msg*` (Macro-Targeted)
+  and `tcw*` (Time Check) were three implementations of one algorithm: same eligible pool, same
+  `excludeId` filter, same `SMW_HARD_EXCLUDE_DAYS` freshness filter with the same fallback, same
+  argmax loop. Time Check already called Balanced's own scorer — that's what proved the seam was
+  there. Now one `wkPickForSlot` + `wkGenerateWeek` + `wkRegenerateSlot`, with the three biases
+  declared in a `WEEK_MODES` table (`prepare` / `skipDay` / `narrow` / `score` / `track`).
+  **A deliberate asymmetry was preserved, not "fixed":** Time Check passes no `dayBias`, so it has
+  never had Balanced's training-day protein bias. Changing that is a product decision.
+  **Honest accounting:** this removed **31 code lines**, not the ~235 the audit projected. That
+  estimate counted the whole 375-line span, most of which was genuinely mode-specific logic
+  (`msgMacroFit`, `msgDayConsumed`, `macroTrendBias`, `smwTrainBias`, the scorers) that had to
+  stay. The real win is structural — 9 functions became 3 plus a declarative table, so a fix to
+  repeat-avoidance or seasonality now lands in one place instead of up to three.
+- **C-07 · The recipe card was maintained twice.** ~300 duplicated lines per file: a byte-identical
+  121-line icon-SVG table, `CARD_PATTERNS`, `clampAccent` (triplicated — `cookbook.js` too),
+  `rgbFromHex`, `hashStr`, `cardPatternFor`, `cardSheenDelay`, `macroStatsHtml`, and the card
+  itself — which had **already drifted**: collection pages had grown a user-recipe delete control
+  while the shell had grown a pantry badge, serving override, owner double-tap curation and a
+  favorites-screen removal path. New `mc-cards.js` (one card, per-call `opts` for what a card
+  shows + `configure(hooks)` for how a page behaves) and `mc-fav.js` (the favorites store, which
+  `CLAUDE.md` already described as `window.MCFav` even though two of the three files never used
+  it). `cookbook-home.js` 4,953 → 4,662 lines; `collection.js` 629 → 377 (−40%).
+
+**Verification — this phase was the riskiest so far, so both halves were proved, not argued:**
+
+- **C-04, golden-output diff.** Generation carries deliberate `Math.random` jitter, so a seeded
+  PRNG made it comparable. A harness captured **54 cases / 600 grid cells** (3 modes × 3 state
+  variants × 6 scopes, plus regenerate calls and the macro-fit readout) from the *pre-refactor*
+  code, seeding every input the scorers read — cook log, favorites, macro goals, macro history,
+  and a stubbed training pattern. Two baseline runs were byte-identical first, so the comparison
+  meant something. Post-refactor output: **byte-identical across all 54 cases.**
+- **C-07, DOM snapshot diff.** 13 card-rendering surfaces captured before and after (shell
+  Recipes / Favorites / Mike's / Categories / category detail / Low-shopping filter / Home, four
+  collection pages, and both heart-tap paths, which behave differently by design). **12 of 13
+  byte-identical.** The 13th, Home, differs *run-to-run on identical code* — the For You
+  carousel's own jitter — confirmed with a control run; masking the carousel makes Home identical
+  too.
+- The C-04 golden set was re-run **after** the card extraction and still matched, so the two
+  changes don't interact.
+- Every writer's assumption was checked against real source rather than inferred: a first draft of
+  `mc-cards.js` written from memory got `clampAccent`, `macroStatsHtml`, `recipeIconHtml`,
+  `rgbFromHex`, `hashStr` and `CARD_PATTERNS` **all wrong**, and `recipeIconHtml` turned out to
+  depend on a 121-line SVG table that wasn't in the plan. The shipped file moves the real bytes.
+
+### Phases 4–6 (not started)
 
 | Phase | IDs | Work |
 |------:|-----|------|
-| 3 | C-04 · C-07 | Collapse the three near-verbatim week generators (`smw*`/`msg*`/`tcw*`) to one; extract `mc-cards.js` + `mc-fav.js` so the recipe card stops being maintained twice |
 | 4 | C-05 · C-09 | One "Plan my week" door with bias chips; Home priority rule instead of stacking up to 11 cards. Optional 7→5 screen rationalization (needs a call on Mike's Favorites losing top-level billing) |
 | 5 | C-08 · C-06 | Split `cookbook-home.js` (4.9k lines, 240 fns) along its seams; measure `recipes-data.js` parse on a real device before splitting it |
 | 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes, `/favicon.ico` |

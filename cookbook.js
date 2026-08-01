@@ -41,36 +41,9 @@
   // Authored accents range down to near-black; --accent is used as literal
   // text/border color on the dark theme, so floor the lightness before it's
   // ever set as a CSS var — otherwise a dark accent goes illegible.
-  function clampAccent(hex) {
-    var h = (hex || "").replace("#", "");
-    if (h.length !== 6) return hex || "#C87A53";
-    var r = parseInt(h.substr(0, 2), 16) / 255;
-    var g = parseInt(h.substr(2, 2), 16) / 255;
-    var b = parseInt(h.substr(4, 2), 16) / 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2;
-    if (l >= 0.45) return "#" + h;
-    var d = max - min;
-    var s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
-    var hue = 0;
-    if (d !== 0) {
-      if (max === r) hue = ((g - b) / d) % 6;
-      else if (max === g) hue = (b - r) / d + 2;
-      else hue = (r - g) / d + 4;
-      hue *= 60; if (hue < 0) hue += 360;
-    }
-    l = 0.45;
-    var c = (1 - Math.abs(2 * l - 1)) * s;
-    var x = c * (1 - Math.abs((hue / 60) % 2 - 1));
-    var m = l - c / 2, rp, gp, bp;
-    if (hue < 60) { rp = c; gp = x; bp = 0; }
-    else if (hue < 120) { rp = x; gp = c; bp = 0; }
-    else if (hue < 180) { rp = 0; gp = c; bp = x; }
-    else if (hue < 240) { rp = 0; gp = x; bp = c; }
-    else if (hue < 300) { rp = x; gp = 0; bp = c; }
-    else { rp = c; gp = 0; bp = x; }
-    function toHex(v) { var n = Math.round((v + m) * 255); return (n < 16 ? "0" : "") + n.toString(16); }
-    return "#" + toHex(rp) + toHex(gp) + toHex(bp);
-  }
+  // Accent clamp lives in mc-cards.js (audit C-07) — it was triplicated across
+  // this file, cookbook-home.js and collection.js.
+  var clampAccent = MCCards.clampAccent;
   var CHECK_SVG =
     '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" ' +
     'stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
@@ -227,18 +200,10 @@
   }
 
   /* ── Favorites (shared store with the home/Favorites tab) ─────────── */
-  var FAV_KEY = "mc-cookbook:favorites";
-  function loadFavs() {
-    try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || "[]")); }
-    catch (e) { return new Set(); }
-  }
-  function isFav(id) { return loadFavs().has(id); }
-  function toggleFav(id) {
-    var set = loadFavs();
-    if (set.has(id)) set.delete(id); else set.add(id);
-    try { localStorage.setItem(FAV_KEY, JSON.stringify(Array.from(set))); } catch (e) {}
-    return set.has(id);
-  }
+  // The favorites store itself is mc-fav.js (audit C-07).
+  function loadFavs() { return MCFav.load(); }
+  function isFav(id) { return MCFav.has(id); }
+  function toggleFav(id) { return MCFav.toggle(id); }
 
   /* ── This Week planner (shared store with cookbook-home.js) ────────
      recipe.html doesn't load cookbook-home.js, so this mirrors just enough
