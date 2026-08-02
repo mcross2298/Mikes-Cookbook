@@ -330,7 +330,9 @@ starts from a true list:
 - `mc-cookbook:cookfont` — Cooking Mode font-size preference (`cookbook.js`).
 - `mc-cookbook:tracker:v1` — **legacy.** One-time migration source for
   `mc_macros_v1`; `tracker-store.js` reads it once and moves the data. Slated
-  for removal (audit C-14).
+  for removal (audit C-14) — shipped 2026-07-08, safe to delete
+  `migrateOldKey()`/`OLD_KEY` on or after 2027-01-08 (see `tracker-store.js`'s
+  header comment for the reasoning).
 
 **Writes go through `writeStore()` in `cookbook-home.js`.** Each store used to
 carry its own `try { setItem } catch (e) {}`; fourteen of them swallowed

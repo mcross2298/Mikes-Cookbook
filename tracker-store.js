@@ -26,6 +26,12 @@
    under the old cookbook-only key (mc-cookbook:tracker:v1) the first time
    this file runs post-upgrade, so nobody's existing log is stranded by the
    key rename. Exposed as window.MCTrackerStore.
+
+   Migration expiry (audit C-14): shipped 2026-07-08. Safe to delete
+   migrateOldKey() and OLD_KEY on or after 2027-01-08 — six months is a
+   conservative window for a returning cook (even an infrequent one) to have
+   opened the app at least once since the rename, and this app has no
+   analytics to confirm migration completion any other way.
    ========================================================================== */
 (function () {
   "use strict";

@@ -289,7 +289,7 @@ cook's own value stream. Distinct from the 2026-07-21 suite-level audit (`W-01`�
 `LS-1` and `LS-4` shipped here) — that one measured the cookbook from the outside as the small
 side of a two-app suite and never opened `cookbook-home.js` or walked the cook's journey.
 16 findings: 4 high, 9 medium, 3 low — C-16 was found while watching phase 1's own PR.
-Phases 1–5 are shipped (C-01 – C-12 and C-16). Only C-13 – C-15 remain — phase 6 hygiene.
+All six phases are shipped (C-01 – C-16).
 
 ### Phase 1 ✅ (shipped 2026-07-31) — the findings that were broken for a real cook
 
@@ -546,11 +546,44 @@ recipe appears in the live data layer. Two new top-level assets → SW regenerat
 was filling the form by guessing at placeholder text. Confirmed by reading the real validation path
 rather than assuming a regression.)*
 
-### Phase 6 (not started)
+### Phase 6 ✅ (shipped 2026-08-02) — hygiene
 
-| Phase | IDs | Work |
-|------:|-----|------|
-| 6 | C-13 · C-14 · C-15 | Photo-precedence note, migration expiry date, delete 13 dead CSS classes, `/favicon.ico` |
+- **C-13 · Photo-precedence note.** `mc-cards.js`'s `photoFor(r)` is the one resolution chain
+  every photo surface (cards, `recipe.html`'s hero, the eyebrow cover widget) must stay on — but
+  the function itself carried no comment stating the precedence, only CLAUDE.md did. Added
+  directly above the function: authored `r.photo` > explicit cover > most-recent cook-log photo
+  > none.
+- **C-14 · Migration expiry date.** `mc-cookbook:tracker:v1`'s one-time migration
+  (`tracker-store.js`'s `migrateOldKey()`) had no removal date, just "slated for removal." It
+  shipped 2026-07-08 (Phase 1.2, the `mc_macros_v1` unification); dated the removal window in the
+  file's header comment and in CLAUDE.md — safe to delete `migrateOldKey()`/`OLD_KEY` on or after
+  2027-01-08 (six months, conservative for a no-analytics app to be sure a returning cook has
+  loaded it at least once since the rename).
+- **C-15 · Dead CSS classes.** The audit estimated 13; a real dependency check (every class
+  selector in `cookbook.css` grepped against every `*.js`/`*.html` reference, then hand-verified
+  against the current markup to rule out false positives) found **18** with zero live reference,
+  each superseded by a rename that never got its old CSS cleaned up: `home-header` /
+  `home-eyebrow` / `home-title` / `home-tagline` (→ the `home-hero*` family), `home-section-head` /
+  `home-section-link` (no replacement found — feature removed), `collection-head` /
+  `collection-name` / `collection-count` (→ `col-*`), `browse-chips` / `filter-chips` (→
+  `recipe-filter-bar` / `pantry-filter-toggle`), `card-grid` (unreferenced — the one "hit" during
+  detection was the substring "multi-card-grid" inside a code comment, not a class use),
+  `rc-last-cooked` (→ the `rc-stat` family), `r-photo-img` / `r-photo-edit` / `r-photo-remove`
+  (→ `r-hero-img` / `r-hero-edit` / `r-hero-remove`, once the hero-photo work in CI initiative 3
+  replaced the old eyebrow-tag cover photo), `plan-time-btn` and `bwq-body` (plus `bwq-body`'s
+  three now-orphaned descendant rules) — not superseded, just never wired to any element. Honest
+  accounting per this repo's own convention (see C-04's note above): the audit's estimate was off
+  by 5, not a contradiction of the finding. 2,692 → 2,583 lines in `cookbook.css`, brace-balance
+  and full-repo reference-check both clean after removal.
+- **`/favicon.ico`.** Rather than add a new binary asset (which would need an SW precache bump),
+  every page's `<head>` now also declares `<link rel="icon" href="icon.svg" type="image/svg+xml">`
+  — reusing the icon the manifest and apple-touch-icon already point at. `icon.svg` was already
+  precached, so `tools/build-sw.py --check` stayed green with no version bump needed.
+
+**Verification:** `cookbook.css` open/close brace counts match (716/716) after every removal: none
+of the 18 classes has any remaining selector in the file, and a full-repo grep confirms zero
+surviving references in any `*.js`/`*.html`. No visual regression is possible for classes that were
+never applied to a live element to begin with.
 
 **Effort:** Phase 1 Low, Phase 2 Low · **Impact:** Critical (phase 1, disaster recovery) then High
 (phase 2 — doc drift is the developer stream's highest-frequency waste, and it now can't recur
@@ -600,10 +633,8 @@ installed. Anything red is a real finding; warnings are usually platform limits 
   Today it's `{ scopeKey, days }` with no timestamp and no union semantics, so every available
   merge strategy either loses a local edit or produces a meaningless result. Small data-shape
   change; do it whenever Time Check is next touched — likely Phase 4.
-- **`/favicon.ico` 404s on every cold load.** Chromium probes it by default and the repo has no
-  `favicon.ico` and no `<link rel="icon">` (the manifest and apple-touch-icon both point at
-  `icon.svg`). Pre-existing, cosmetic, noticed during Phase 1 verification. One line in each
-  page's `<head>`, plus an SW precache regen — batch it with Phase 6 hygiene.
+- ~~`/favicon.ico` 404s on every cold load~~ **Resolved** — shipped 2026-08-02 via Phase 6:
+  every page's `<head>` now declares `<link rel="icon" href="icon.svg" type="image/svg+xml">`.
 - ~~Macro-trend bias (Pillar C fast-follow)~~ **Resolved** — shipped 2026-07-15 via bridge
   roadmap B2, biased on real training signal per the note above, not as a standalone tweak.
 - ~~How should app state get from `localStorage` to a scheduled trigger / a real data bridge?~~
