@@ -629,13 +629,14 @@ installed. Anything red is a real finding; warnings are usually platform limits 
 `storage.estimate` and has no `BarcodeDetector`, both expected).
 
 ## Open questions (backlog only)
-- **`mc-cookbook:timecheck` still isn't in the sync whitelist (C-02).** The data-shape half is
-  done — `saveTimeCheck()` now writes a `ts` field (shipped 2026-08-02), so `{ scopeKey, days, ts }`
-  has what a merge strategy needs to order two conflicting writes. **Still open:** actually adding
-  it to `mc-sync.js`'s whitelist needs a real merge-strategy call (last-write-wins on `ts`? union
-  the per-day buckets like `stringSet` does for arrays?) plus new fixtures in
-  `tools/test-mc-sync-merge.js` — deliberately left as a separate decision, not bundled into the
-  data-shape fix.
+- ~~`mc-cookbook:timecheck` isn't in the sync whitelist (C-02)~~ **Resolved** — shipped
+  2026-08-02. `saveTimeCheck()` writes a `ts` field, and the store is now in `mc-sync.js`'s
+  `STORES` under a new `replaceByTs` strategy (whole-object last-write-wins on `ts`): the shape is
+  a flat per-weekday scalar map, so there's no meaningful per-day union the way `stringSet` unions
+  an array — two devices disagreeing on Monday's bucket is one cook re-answering the quiz, not two
+  facts to combine. `tools/test-mc-sync-merge.js` covers newer-remote, newer-local, a tied-`ts`
+  tie-break (remote wins, matching `mergeMacros`'s existing direction), and pre-migration data with
+  no `ts` at all.
 - ~~`/favicon.ico` 404s on every cold load~~ **Resolved** — shipped 2026-08-02 via Phase 6:
   every page's `<head>` now declares `<link rel="icon" href="icon.svg" type="image/svg+xml">`.
 - ~~Macro-trend bias (Pillar C fast-follow)~~ **Resolved** — shipped 2026-07-15 via bridge

@@ -4064,12 +4064,10 @@
       return { scopeKey: v.scopeKey || "all", days: v.days || {}, ts: v.ts || 0 };
     } catch (e) { return { scopeKey: "all", days: {}, ts: 0 }; }
   }
-  // ts (audit C-02 backlog item): a plain write timestamp, added so this
-  // store can eventually carry real union/last-write-wins semantics if it
-  // joins the mc-sync.js whitelist — it wasn't syncable at all before this,
-  // since every merge strategy needs *some* way to order two conflicting
-  // writes. Not itself wired into mc-sync.js yet — that's a separate change
-  // needing its own merge-strategy call, not a data-shape fix.
+  // ts (audit C-02): a plain write timestamp — this store now syncs via
+  // mc-sync.js's 'replaceByTs' strategy (whole-object last-write-wins). It
+  // was the one store C-02 flagged as blocked on a data-shape gap, not a
+  // deliberate device-local exclusion like most of the rest of the namespace.
   function saveTimeCheck(scopeKey, dayBuckets) {
     writeStore(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets, ts: Date.now() }));
   }
