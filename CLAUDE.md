@@ -164,7 +164,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `quick-tour.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. |
 | `recipes-index.js` / `recipes-detail-NN.js` | **Generated — never hand-edit.** Output of `tools/build-data.js`; see `mc-data.js` above. Regenerate with `node tools/build-data.js` after any `recipes-data.js` change; CI fails on a stale copy (`--check`) and on an orphaned shard left behind by a smaller `SHARDS`. `--report` prints the size table. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. Skips `recipes-data.js` — see its row above. |
-| `tools/smoke-test.js` | **Local only, not in CI.** Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, and the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation. Needs Playwright, which this repo has no npm step for, so wiring it into `pages.yml` is a separate decision. Run it before pushing anything that touches load order, Cooking Mode or the timers. |
+| `tools/smoke-test.js` | **Blocking CI gate as of 2026-08-02** (previously local-only). Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, and the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation. Playwright is installed ad hoc in the `verify` job (see the CI section below), not via a committed `package.json`, so this repo's real dependency footprint is unchanged. Still worth running locally before pushing anything that touches load order, Cooking Mode or the timers — CI will catch a regression either way, but locally is faster to iterate on. |
 | `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (13 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
@@ -417,7 +417,7 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Thirteen gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Fourteen gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
@@ -456,8 +456,18 @@ anything reaching production):
      token against a corpus-wide vocabulary instead.
   10. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
   11. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
-  12. `tools/build-sw.py --check` — precache list is current.
-  13. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  12. `tools/smoke-test.js` — the one gate that opens a real page in a real
+      browser and clicks something, rather than reasoning about source text or
+      running a module in a vm sandbox (shipped 2026-08-02, closing the CI gap
+      this file used to describe as standing). Playwright is installed ad hoc
+      for this single step — `npm init -y && npm install --no-save
+      playwright@^1 && npx playwright install --with-deps chromium` — so the
+      repo's real, committed footprint stays npm-free; the checkout (and
+      whatever `npm init` writes to it) is discarded when the job ends. Same
+      pattern Cross-Household- already uses for its own Playwright-driven
+      tests.
+  13. `tools/build-sw.py --check` — precache list is current.
+  14. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -476,6 +486,11 @@ node tools/test-mc-search.js
 node tools/test-sw-strategy.js && node tools/test-mc-export.js
 python3 tools/build-sw.py --check && node tools/build-data.js --check
 ```
+
+Also run `tools/smoke-test.js` (Playwright, needs a local server — `python3 -m
+http.server 8765 &` then `node tools/smoke-test.js`) before pushing anything
+that touches load order, Cooking Mode, or the timers; it's a blocking CI gate
+now too, but it's faster to catch locally.
 
 ## Git workflow
 
