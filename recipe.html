@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1E2022" />
+  <meta name="theme-color" content="#1E2022" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#F7F5F1" media="(prefers-color-scheme: light)" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="manifest.json" />
@@ -13,6 +14,9 @@
 </head>
 <body>
   <main class="app" data-tabbar="page">
+    <!-- Hero photo (CI initiative 3) — non-sticky, scrolls away naturally.
+         Renders nothing for a recipe with no photo. -->
+    <div class="r-hero empty" id="hero"></div>
     <!-- Fixed header summary: title, tags, times, serving-size ladder -->
     <header class="r-header" id="header"></header>
 

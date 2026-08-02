@@ -202,6 +202,77 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
     console.log('SKIP substitution test — no recipe in the corpus uses a curated ingredient');
   }
 
+
+  // ── Initiative 3: photo resolution chain + hero + light theme + Counter Mode ─
+  errors.length = 0;
+  await page.goto(B + '/index.html', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const photoRecipe = await page.evaluate((dataUrl) => {
+    var r = window.RECIPES[0];
+    var map = {}; map[r.recipe_id] = dataUrl;
+    localStorage.setItem('mc-cookbook:photos', JSON.stringify(map));
+    return { id: r.recipe_id, title: r.title };
+  }, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+
+  await page.goto(B + '/index.html#recipes', { waitUntil: 'networkidle' });
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(500);
+  await page.locator('#screen-recipes .search-box').fill(photoRecipe.title);
+  await page.waitForTimeout(300);
+  ok('cards: no JS errors', errors.length === 0 || (console.log(errors), false));
+  ok('cards: planted cover photo renders in the card band',
+    await page.locator('.rc-band.has-photo').count() > 0);
+  await page.locator('#screen-recipes .search-box').fill('chicken');
+  await page.waitForTimeout(300);
+  ok('cards: recipes without a photo still show the emoji band unchanged',
+    await page.locator('.rc-band:not(.has-photo) .rc-icon').count() > 0);
+
+  errors.length = 0;
+  await page.goto(B + '/recipe.html?id=' + photoRecipe.id, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  ok('hero: no JS errors', errors.length === 0 || (console.log(errors), false));
+  ok('hero: renders the cover photo', await page.locator('#hero .r-hero-img').count() === 1);
+  ok('hero: eyebrow "add photo" hidden once the hero owns display',
+    await page.locator('.r-eyebrow .r-photo').count() === 0);
+
+  const noPhotoId = await page.evaluate(() => window.RECIPES[5].recipe_id);
+  await page.goto(B + '/recipe.html?id=' + noPhotoId, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  ok('hero: renders nothing for a recipe with no photo',
+    await page.evaluate(() => document.getElementById('hero').offsetHeight) === 0);
+
+  // Light theme
+  {
+    const lightPage = await browser.newPage({ colorScheme: 'light' });
+    await lightPage.goto(B + '/index.html', { waitUntil: 'networkidle' });
+    await lightPage.waitForTimeout(300);
+    const bg = await lightPage.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    ok('light theme: body background flips to the paper tone', bg === 'rgb(247, 245, 241)');
+    const tabBarBg = await lightPage.evaluate(() => {
+      var el = document.querySelector('.tab-bar');
+      return el ? getComputedStyle(el).backgroundColor : null;
+    });
+    ok('light theme: floating chrome (tab bar) flips too, not just the page bg',
+      tabBarBg === 'rgba(247, 245, 241, 0.96)');
+    await lightPage.close();
+  }
+
+  // Counter Mode
+  errors.length = 0;
+  const counterRid = await page.evaluate(async () => {
+    await window.MCData.ensureAll();
+    return window.RECIPES.find(r => (r.instructions || []).length).recipe_id;
+  });
+  await page.goto(B + '/recipe.html?id=' + counterRid + '&cook=1', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const counterBtn = page.locator('.cook-counter-btn');
+  ok('counter mode: toggle button present in Cooking Mode', await counterBtn.count() === 1);
+  await counterBtn.click();
+  await page.waitForTimeout(200);
+  const cookBg = await page.evaluate(() => getComputedStyle(document.getElementById('cook')).backgroundColor);
+  ok('counter mode: background forces to white on toggle', cookBg === 'rgb(255, 255, 255)');
+  ok('counter mode: no JS errors', errors.length === 0 || (console.log(errors), false));
+
   // ── collection page ────────────────────────────────────────────────
   errors.length = 0;
   const cid = await page.evaluate(() => window.COLLECTIONS.find(c => c.status === 'live').id);

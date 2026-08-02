@@ -261,6 +261,61 @@
     return group ? RECIPE_ICON_SVGS[group] : DEFAULT_RECIPE_ICON;
   }
 
+  /* ── Photo resolution chain (CI initiative 3, "The Photographic Layer") ──
+     `cookbook-home.js`'s own header comment used to read "Recipe cards have
+     no photography — recipes-data.js has no image field." Both halves of
+     that were true and both were waste: the field was simply never wired,
+     and meanwhile the app was ALREADY storing real photos the cook took —
+     a cover photo per recipe (`mc-cookbook:photos`, set from recipe.html)
+     and a photo per dated cook-log entry (`mc-cookbook:cooked[id][].photo`)
+     — and showing them in exactly one place, recipe.html's own header.
+
+     Three sources, checked in order, so a recipe with none of them falls
+     through to the existing emoji/pattern band **completely unchanged** —
+     no visual regression is possible for a recipe with no photo:
+       1. `r.photo` — an authored path (`images/recipes/<id>.jpg`), the
+          field CLAUDE.md's photo hand-off rule already specifies.
+       2. The user's own cover photo for this recipe, if they set one.
+       3. The most recent cook-log photo for this recipe, if any — the
+          highest-leverage source, since it costs the cook nothing extra:
+          every dish they've already photographed while cooking becomes
+          card art automatically, with zero new effort.
+     Read directly from localStorage (not through a shared module) the same
+     way MCFav reads its own key — this file is loaded on every page these
+     keys exist on, and a fourth module for two `getItem` calls would be
+     more code than the thing it wraps. */
+  var RECIPE_COVER_KEY = "mc-cookbook:photos";
+  var COOKED_KEY = "mc-cookbook:cooked";
+  function loadJSONMap(key) {
+    try {
+      var o = JSON.parse(localStorage.getItem(key) || "{}");
+      return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
+    } catch (e) { return {}; }
+  }
+  function photoFor(r) {
+    if (r.photo) return { url: r.photo, source: "authored" };
+    var covers = loadJSONMap(RECIPE_COVER_KEY);
+    if (covers[r.recipe_id]) return { url: covers[r.recipe_id], source: "cover" };
+    var entries = loadJSONMap(COOKED_KEY)[r.recipe_id];
+    if (Array.isArray(entries)) {
+      for (var i = entries.length - 1; i >= 0; i--) {
+        var e = entries[i];
+        if (e && typeof e === "object" && e.photo) {
+          return { url: e.photo, source: "cooklog", at: e.at };
+        }
+      }
+    }
+    return null;
+  }
+  // Short relative date for the cook-log provenance chip ("Mar 14"), not the
+  // full relTime() prose cookbook.js's cook log uses — the chip has room for
+  // a date, not a sentence.
+  function shortDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
   function macroStatsHtml(m) {
     var stats = [
       { cls: "cal", v: m.calories, label: "Cal" },
@@ -277,7 +332,10 @@
   }
 
   /* ── the card ──────────────────────────────────────────────────────── */
-  // opts: serving | pantryInfo | fav | allowDelete | favLabels | onChange
+  // opts: serving | pantryInfo | fav | allowDelete | favLabels | onChange |
+  //       photo (default true — pass false to keep the compact emoji band
+  //       even when a photo exists, for a future dense-list context; no
+  //       current caller needs this, but the escape hatch costs nothing)
   function recipeCard(r, opts) {
     opts = opts || {};
     var accent = clampAccent(r.accent || "#C87A53");
@@ -288,6 +346,7 @@
     var pattern = cardPatternFor(r.recipe_id);
     card.style.setProperty("--rc-pattern", pattern.image);
     card.style.setProperty("--rc-pattern-size", pattern.size);
+    var photo = opts.photo === false ? null : photoFor(r);
 
     // macro_profiles are stored PER SINGLE SERVING and are identical across
     // every authored tier (see recipes-data.js / CLAUDE.md) — show them as-is,
@@ -318,11 +377,24 @@
       matchBadge = '<div class="rc-match-badge">matched: ' + esc(label.replace("_", " ")) + "</div>";
     }
 
+    // A card with a photo gets a taller band so the image actually reads as
+    // a photo rather than a sliver — the compact 52px band is the right
+    // height for an icon, not a dish. Cards with no photo are byte-for-byte
+    // the band this always rendered; this is additive, not a redesign.
+    var bandHtml = photo
+      ? '<div class="rc-band has-photo">' +
+          '<img class="rc-photo-img" src="' + esc(photo.url) + '" alt="" loading="lazy" decoding="async">' +
+          (photo.source === "cooklog"
+            ? '<span class="rc-photo-chip">📸 Your cook' + (photo.at ? " · " + esc(shortDate(photo.at)) : "") + "</span>"
+            : "") +
+        "</div>"
+      : '<div class="rc-band">' +
+          '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
+          '<span class="rc-icon">' + recipeIconHtml(r.icon) + "</span>" +
+        "</div>";
+
     card.innerHTML =
-      '<div class="rc-band">' +
-        '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
-        '<span class="rc-icon">' + recipeIconHtml(r.icon) + "</span>" +
-      "</div>" +
+      bandHtml +
       '<div class="rc-body">' +
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
@@ -439,6 +511,7 @@
     cardSheenDelay: cardSheenDelay,
     hashStr: hashStr,
     rgbFromHex: rgbFromHex,
-    clampAccent: clampAccent
+    clampAccent: clampAccent,
+    photoFor: photoFor
   };
 })();

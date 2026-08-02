@@ -17,6 +17,13 @@
   --bg-elev:       #26292B;   /* slightly elevated dark surface             */
   --surface:       #F9F8F6;   /* warm cream card                           */
   --surface-2:     #F1EFEA;   /* secondary cream (zebra / nested)          */
+  /* Raw RGB triplet for the floating "frosted chrome" elements (tab bar,
+     home/back FABs, the header's bottom fade) — these were hardcoded to
+     rgba(30,32,34,…) inline instead of reading a token, which is exactly
+     the kind of thing that quietly breaks a light theme: the shell
+     background flips, the floating chrome doesn't, and now it's a dark
+     island in a light page. One token, flipped alongside --bg below. */
+  --chrome-rgb:    30,32,34;
 
   /* Accents */
   --accent:        #C87A53;   /* terracotta (per-recipe overridable)       */
@@ -56,6 +63,37 @@
   --dur:       200ms;
 }
 
+/* ── LIGHT THEME (CI initiative 3) ───────────────────────────────────
+   The app was dark-shell-only — a real gap for a kitchen app: charcoal on
+   a sunlit counter at arm's length is the single worst-case legibility
+   scenario this app has, and the whole point of a kitchen tool is being
+   readable exactly there. Responds to the OS/browser's own light/dark
+   preference; there's no in-app toggle, because this tracks ambient
+   lighting, not a taste preference — the correct choice is "whatever the
+   room actually looks like," which the OS already knows.
+
+   Every component styles itself through the tokens above, never a literal
+   dark-mode color inline (the four spots that did — the frosted floating
+   chrome — got a token in this pass specifically so this override actually
+   reaches them; see --chrome-rgb's comment). That's what makes a
+   twelve-token override enough here instead of restyling every rule:
+   --surface/--surface-2 (the cream card system) are deliberately UNCHANGED
+   below except promoting --surface to true white, so a card still reads as
+   a distinct raised surface against the now-lighter page instead of the two
+   blending into each other. */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:            #F7F5F1;   /* warm paper, not stark white */
+    --bg-elev:       #EFEBE3;
+    --surface:       #FFFFFF;   /* promoted from cream so it still reads as a raised card */
+    --surface-2:     #F7F5F1;
+    --chrome-rgb:    247,245,241;
+    --on-dark:       #2A2C2E;   /* = --ink: "on-dark" now means "on the (light) shell bg" */
+    --on-dark-dim:   #6B6F72;   /* = --ink-dim */
+    --line-dark:     rgba(0,0,0,0.10);
+  }
+}
+
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body { margin: 0; padding: 0; }
@@ -79,13 +117,53 @@ body {
   position: relative;
 }
 
+/* ── HERO PHOTO (CI initiative 3) ─────────────────────────────────────
+   Deliberately NOT part of the sticky #header below — a hero belongs to the
+   top of the page, scrolling away like the rest of the content, with the
+   existing sticky title/tags bar taking over once it's past. Renders
+   nothing (`.empty`, zero height) for the 318 recipes with no photo; this
+   whole block is additive, not a redesign of the page for recipes that
+   have nothing to show. */
+.r-hero.empty { display: none; }
+.r-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--bg-elev);
+}
+.r-hero-img {
+  display: block; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in;
+}
+.r-hero::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 55%;
+  background: linear-gradient(to top, rgba(0,0,0,0.60), transparent);
+  pointer-events: none;
+}
+.r-hero-chip {
+  position: absolute; left: 16px; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  z-index: 1; font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em;
+  color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.55);
+}
+.r-hero .r-hero-edit,
+.r-hero .r-hero-remove {
+  position: absolute; z-index: 1;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  width: auto; height: 32px; padding: 0 12px;
+  border-radius: 999px; font-size: 12px; font-weight: 700;
+  background: rgba(20,20,20,0.55); border: 1px solid rgba(255,255,255,0.28); color: #fff;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.r-hero .r-hero-edit { right: 54px; }
+.r-hero .r-hero-remove { right: 14px; width: 32px; padding: 0; }
+
 /* ── FIXED HEADER SUMMARY ─────────────────────────────────────────── */
 .r-header {
   position: sticky;
   top: 0;
   z-index: 30;
   background:
-    linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, rgba(30,32,34,0.96) 100%);
+    linear-gradient(180deg, var(--bg) 0%, var(--bg) 70%, rgba(var(--chrome-rgb),0.96) 100%);
   border-bottom: 1px solid var(--line-dark);
   padding: calc(18px + env(safe-area-inset-top)) 20px 14px;
 }
@@ -712,6 +790,36 @@ body {
 }
 .rc-icon { font-size: 24px; line-height: 1; filter: saturate(1.05); }
 
+/* A photographed card (CI initiative 3) — the compact 52px band is right
+   for an icon, wrong for a dish, so a resolved photo gets its own taller
+   variant instead of being squeezed into the icon's height. The per-recipe
+   accent still shows: a 3px rule at the seam, in place of the icon band's
+   1px hairline, so accent stays this app's identity even on a photo card. */
+.rc-band.has-photo {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  display: block;
+  background-image: none;
+  border-bottom: 3px solid rgba(var(--rc-accent-rgb), 0.9);
+}
+.rc-photo-img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+/* A cook-log-sourced photo is the emotional payoff of the whole feature —
+   the cookbook visibly becomes the cook's own the more they use it — so it
+   gets a small provenance chip instead of looking identical to a stock or
+   authored photo. Bottom-left, over a scrim so it reads on any photo. */
+.rc-band.has-photo::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 46%;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  pointer-events: none;
+}
+.rc-photo-chip {
+  position: absolute; left: 8px; bottom: 7px; z-index: 1;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em;
+  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
 .rc-body { padding: 9px 12px 10px; }
 .rc-title {
   font-family: var(--serif);
@@ -842,7 +950,7 @@ body {
 .tab-bar {
   position: fixed; bottom: 0; left: 0; right: 0;
   height: var(--tab-h);
-  background: rgba(30,32,34,0.96);
+  background: rgba(var(--chrome-rgb),0.96);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--line-dark);
   display: flex; z-index: 50;
@@ -1209,7 +1317,7 @@ body {
   bottom: calc(16px + env(safe-area-inset-bottom));
   display: inline-flex; align-items: center; gap: 7px;
   padding: 11px 16px; border-radius: 999px; text-decoration: none;
-  background: rgba(30,32,34,0.96); color: var(--on-dark);
+  background: rgba(var(--chrome-rgb),0.96); color: var(--on-dark);
   border: 1px solid var(--line-dark);
   font-size: 13px; font-weight: 800; letter-spacing: 0.03em;
   box-shadow: 0 6px 20px rgba(0,0,0,0.40);
@@ -1225,7 +1333,7 @@ body {
   bottom: calc(16px + env(safe-area-inset-bottom));
   display: inline-flex; align-items: center; gap: 7px;
   padding: 11px 16px; border-radius: 999px; cursor: pointer;
-  background: rgba(30,32,34,0.96); color: var(--on-dark);
+  background: rgba(var(--chrome-rgb),0.96); color: var(--on-dark);
   border: 1px solid var(--line-dark); font-family: inherit;
   font-size: 13px; font-weight: 800; letter-spacing: 0.03em;
   box-shadow: 0 6px 20px rgba(0,0,0,0.40);
@@ -1609,6 +1717,41 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 }
 .cook-voice-btn:active { transform: scale(0.92); }
 .cook-voice-btn.listening { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.15); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15); }
+.cook-counter-btn {
+  appearance: none; cursor: pointer; width: 32px; height: 32px; margin-left: 6px;
+  border: 1px solid var(--line-dark); background: transparent; color: var(--on-dark);
+  border-radius: var(--r-sm); font-size: 15px; line-height: 1;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.cook-counter-btn:active { transform: scale(0.92); }
+.cook-counter-btn.on { border-color: var(--accent); background: rgba(var(--accent-rgb), 0.15); color: var(--accent); }
+
+/* ── COUNTER MODE (CI initiative 3) ──────────────────────────────────
+   An explicit override, not a third theme — see the toggle's comment in
+   cookbook.js. Redefines the handful of tokens .cook and its children
+   already read (--bg/--bg-elev/--on-dark/--on-dark-dim/--line-dark), so
+   every rule below Cooking Mode's own CSS updates for free; nothing here
+   duplicates a selector that already exists above. --accent is
+   deliberately NOT touched — it stays reserved for the progress bar and
+   an active timer, so it still means something instead of competing with
+   near-black-on-white for attention. Near-brutalist on purpose: this reads
+   at arm's length, one glance, sunlit counter. */
+.cook.counter-mode {
+  --bg: #FFFFFF;
+  --bg-elev: #EDEDED;
+  --on-dark: #000000;
+  --on-dark-dim: #3A3A3A;
+  --line-dark: rgba(0,0,0,0.16);
+}
+.cook.counter-mode .cook-step-title {
+  font-size: max(1.75rem, calc(28px * var(--cook-font)));
+}
+.cook.counter-mode .cook-step-detail {
+  font-size: max(1.5rem, calc(18px * var(--cook-font)));
+}
+/* .cook-nav.primary already sets near-black (#1a1208) text on the
+   unchanged --accent background — that pairing is already high-contrast
+   and accent isn't touched by counter-mode, so it needs no override here. */
 
 .cook-progress { height: 3px; background: var(--bg-elev); }
 .cook-progress-bar { height: 100%; background: var(--accent); transition: width var(--dur) var(--ease-out); }

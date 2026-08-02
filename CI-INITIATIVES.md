@@ -1,9 +1,8 @@
 # Mike's Cookbook — Flagship CI Initiatives (v3 proposal)
 
-> **Status:** Phase 1 and Phase 2 complete. Initiatives 1, 5, 2 and 4 are ✅ shipped;
-> only Initiative 3 (the Photographic Layer, Phase 3) remains a proposal.
-> Each initiative carries its own status line — this file is kept truthful as work lands,
-> per the repo's process rule.
+> **Status:** All three phases complete. **All five initiatives are ✅ shipped.**
+> Each initiative carries its own status line, with the real deltas from what was proposed —
+> this file is kept truthful as work lands, per the repo's process rule.
 > **Scope:** a multi-lens audit of the repo at `bb2efe0`, and the 5 initiatives that
 > move this app from "very good utility cookbook" to flagship-tier.
 > **Constraints honored:** vanilla HTML/CSS/JS, no framework, no bundler, no npm.
@@ -332,9 +331,41 @@ grocery leg of the journey.
 
 ---
 
-### Initiative 3: The Photographic Layer (auto-curated)
+### Initiative 3: The Photographic Layer (auto-curated) ✅ (shipped)
 
 * **Target Domain:** Visual Media Presentation / Micro-UI & Motion / Daylight Legibility
+* **Status:** ✅ **Shipped, all three slices**, with a scope adjustment on Slice A's placement:
+  * **Slice A — surfacing existing photos.** `mc-cards.js`'s `photoFor(r)` chain (authored →
+    cover → cook-log → nothing) is live on every card grid: Browse, Favorites, Mike's
+    Favorites, collection pages, and the planner's picker. A resolved photo swaps the
+    compact 52px icon band for a taller `aspect-ratio: 4/3` photo band — the accent survives
+    as a 3px rule beneath it, and a cook-log-sourced photo gets a "📸 Your cook" chip. **The
+    proposal's overlay-title treatment ("title sits on the image, scrim behind it") wasn't
+    built** — title stays in the existing cream `.rc-body` below the photo, a smaller,
+    lower-risk evolution of the current split-card layout rather than a redesign of how
+    every one of 318 cards presents its title. `recipe.html` also got a real hero (not in
+    the original card-only scope): a non-sticky `#hero` block before the sticky header, so
+    it scrolls away naturally, using the identical `photoFor()` chain.
+  * **Slice B — wiring the `photo` field.** Shipped exactly as specced: `tools/validate-
+    recipes.js` fails CI on a `photo` path that doesn't resolve on disk; `tools/build-sw.py`
+    recursively scans `images/` (previously top-level-only) for the precache. Verified both
+    directions with a mutated fixture (bad path fails, good path passes) since no recipe
+    currently has a photo to exercise this against for real.
+  * **Slice C — light theme + Counter Mode.** Light theme: a 7-token `@media (prefers-color-
+    scheme: light)` override, exactly as specced (`--bg` → warm paper, `--surface` →
+    white). **A real bug this pass caught along the way:** four floating "frosted chrome"
+    elements (the tab bar, both FABs, the header's fade) were hardcoded to
+    `rgba(30,32,34,…)` instead of reading a token, so the light override couldn't reach
+    them — a light shell with dark-charcoal floating chrome. Fixed with a new `--chrome-rgb`
+    token those four spots now read. Counter Mode: a manual, persisted toggle in Cooking
+    Mode's top bar (not the ambient `prefers-color-scheme` — a cook's daylight need is a
+    decision, not something to infer), redefining `.cook`'s own tokens to near-brutalist
+    white/black with a 1.5rem type floor; `--accent` stays untouched, exactly as specced.
+  * **Not done:** an exhaustive line-by-line audit of ~2,400 lines of CSS for every
+    dark-mode-assuming literal. The four "frosted chrome" spots were found and fixed; there
+    may be other, lower-traffic components with a similar hardcoded assumption that a full
+    light-mode visual pass would still catch. `diagnostics.html` doesn't yet have a check for
+    this — a reasonable follow-up.
 
 **The problem / gap.** `cookbook-home.js:65` states it plainly: *"Recipe cards have no
 photography."* Zero of 318 recipes carry a `photo` field; `images/` does not exist. Every
@@ -628,12 +659,16 @@ deliberately not wired into CI.
    substitution slice shipped smaller than proposed — informational only, not pantry-aware or
    interactive — see Initiative 4's own status note above for the full account.
 
-### Phase 3 — Flagship Surface *(~1–2 sprints)*
+### Phase 3 — Flagship Surface ✅ *(shipped)*
 
-5. **Initiative 3 — Photographic Layer.** Slice A: surface the photos that already exist in
-   the two live stores (largest visual delta, zero new assets, no data changes). Slice B:
-   wire the `photo` field + `validate-recipes.js` check so authored photography has a landing
-   pad. Slice C: light theme + Counter Mode.
+5. **Initiative 3 — Photographic Layer.** ✅ Shipped, all three slices. Slice A surfaces
+   the photos that already exist (cards + a new recipe.html hero) with zero new assets;
+   the proposed overlay-title card treatment was traded for a smaller, lower-risk change —
+   photo fills the band, title stays in the cream body below, unchanged from today's layout.
+   Slice B wired the `photo` field exactly as specced. Slice C shipped the light theme and
+   Counter Mode, and caught a real cross-cutting bug along the way: four floating chrome
+   elements were hardcoded dark and couldn't have responded to any theme override without
+   the `--chrome-rgb` fix that shipped alongside it.
 
 ### Cross-cutting, every phase
 
