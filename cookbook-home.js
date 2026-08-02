@@ -1846,7 +1846,12 @@
         // tap. Until this, Today's meals weren't even links: getting from
         // "this is tonight's dinner" to actually cooking it meant Browse,
         // search, open, then the third sub-tab, then Start Cooking.
-        if ((r.instructions || []).length) {
+        // Optimistic while the detail shards are still in flight: every
+        // built-in recipe has steps, and enterCook() no-ops harmlessly on one
+        // that turns out not to. Gating on r.instructions here would hide the
+        // button for the first moments of every cold open, on the default
+        // screen, which is worse than the edge case it would prevent.
+        if (!MCData.hasDetail(r.recipe_id) || (r.instructions || []).length) {
           var cookBtn = el("a", "today-meal-cook", "▸ Cook");
           cookBtn.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id) + "&cook=1";
           cookBtn.setAttribute("aria-label", "Start cooking " + r.title);
@@ -2251,6 +2256,26 @@
   // the same 318 recipes, and this screen already carried every dish category
   // as a filter chip, so the Categories spoke was a second, prettier door to
   // a facet this screen already had.
+  /* ── Detail-shard arrival (CI initiative 5) ───────────────────────────
+     The index paints the shell; ingredients and instructions arrive a moment
+     later in mc-data.js's shards. Three things on this screen genuinely need
+     the whole corpus — ingredient search, the "Use it up" reverse index, and
+     the low-shopping pantry filter — so they register an IN-PLACE repaint
+     here rather than having init() re-render the screen when the shards land.
+     Re-rendering would rebuild the DOM and blow away a half-typed search
+     query; calling the screen's own paint() re-filters and leaves the box
+     alone. Fired once, then dropped. */
+  var detailRepaints = [];
+  function onDetailReady(fn) {
+    if (window.MCData && MCData.allReady()) return;   // nothing to wait for
+    detailRepaints.push(fn);
+  }
+  function fireDetailReady() {
+    ingredientIndexCache = null;      // it may have been built from nothing
+    var fns = detailRepaints; detailRepaints = [];
+    fns.forEach(function (fn) { try { fn(); } catch (e) {} });
+  }
+
   var recipesState = { lowShopping: false, category: null, macro: null, browse: "collection" };
 
   // ── Workout-app macro handoff (index.html?mkcal=620&mp=42#recipes) ────────
@@ -2480,6 +2505,7 @@
     }
 
     box.addEventListener("input", paint);
+    onDetailReady(paint);   // ingredient search + low-shopping need the shards
     paint();
   }
 
@@ -3012,6 +3038,11 @@
   var ingredientIndexCache = null;
   function ingredientIndex() {
     if (ingredientIndexCache) return ingredientIndexCache;
+    // Building this before the detail shards arrive would cache an EMPTY index
+    // forever — every recipe's ingredients_by_serving is still absent at that
+    // point. Build it anyway (so a caller gets a real, if empty, answer) but
+    // don't memoize it until the data behind it is actually complete.
+    var complete = !window.MCData || MCData.allReady();
     var idx = {};
     recipes().forEach(function (r) {
       var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
@@ -3025,7 +3056,7 @@
         (idx[key] = idx[key] || []).push(r);
       });
     });
-    ingredientIndexCache = idx;
+    if (complete) ingredientIndexCache = idx;
     return idx;
   }
   function recipesUsingItem(itemName) {
@@ -3270,6 +3301,18 @@
 
   function renderGroceryPane(body) {
     var meals = planMeals();
+
+    // The merged list is built from every planned meal's ingredients, so it is
+    // empty until those recipes' detail shards land. Re-render this pane in
+    // place when they do — unlike the search screens there is no typed state
+    // to preserve here, so rebuilding the pane is the simplest correct thing.
+    if (meals.length && !MCData.allReady()) {
+      onDetailReady(function () {
+        if (!body.isConnected) return;
+        body.innerHTML = "";
+        renderGroceryPane(body);
+      });
+    }
 
     if (!meals.length) {
       body.appendChild(emptyState("🛒",
@@ -4166,6 +4209,16 @@
       }
     });
     MCTimers.mountRail();
+
+    // Detail shards. Requested AFTER the shell has painted from the index —
+    // that ordering is the whole point of initiative 5: first paint now waits
+    // on 149 KB instead of the 1.04 MB recipes-data.js used to block on. The
+    // shell needs the full corpus eventually (ingredient search, "Use it up",
+    // the low-shopping filter, and the planner's grocery merge), just not
+    // before it can draw anything.
+    MCData.ensureAll().then(function (okAll) {
+      if (okAll) fireDetailReady();
+    });
 
     // Day-7 archive check: no background cron exists in a static PWA, so
     // this is evaluated once per app open instead. Deferred a tick so the

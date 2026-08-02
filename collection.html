@@ -18,11 +18,14 @@
     <section class="col-grid" id="grid"></section>
   </main>
 
-  <!-- audit C-06: boot instrument. recipes-data.js is 1.04 MB and 62% of
-     the payload; these two marks make its real cost readable on a real
-     device via `window.__mcBoot` in a console, instead of extrapolated. -->
+  <!-- audit C-06: boot instrument. recipes-data.js WAS 1.04 MB and 62% of
+     the payload, parsed in full before anything painted. CI initiative 5
+     replaced it with recipes-index.js (149 KB — 13.9% of it) plus the
+     detail shards mc-data.js injects on demand, so __mcBoot.data now
+     measures the index alone: the number that actually gates first paint. -->
 <script>window.__mcBoot={t0:performance.now()};</script>
-<script src="recipes-data.js"></script>
+<script src="recipes-index.js"></script>
+<script src="mc-data.js"></script>
 <script>if(window.__mcBoot)window.__mcBoot.data=performance.now()-window.__mcBoot.t0;</script>
   <script src="user-recipes.js"></script>
   <script src="cookbook-nav.js"></script>

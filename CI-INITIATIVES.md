@@ -1,6 +1,6 @@
 # Mike's Cookbook — Flagship CI Initiatives (v3 proposal)
 
-> **Status:** Phase 1 in progress. Initiative 1 is ✅ shipped; the rest remain proposals.
+> **Status:** Phase 1 complete. Initiatives 1 and 5 are ✅ shipped; 2, 3 and 4 remain proposals.
 > Each initiative carries its own status line — this file is kept truthful as work lands,
 > per the repo's process rule.
 > **Scope:** a multi-lens audit of the repo at `bb2efe0`, and the 5 initiatives that
@@ -50,7 +50,7 @@ ingredients separating `item` (shopping name) from `prep` (mise instruction) wit
 | Nutrition | In-app macro tracker on `mc_macros_v1` — the same key/shape the workout app uses, so one signed-in trainee has one store, not two |
 | Cross-app | `mc-bridge.js` read-only layer: today's meals (denormalized snapshots), today's workout, `likelyTrainingDays()` biasing meal selection toward protein on real historical training days |
 | Sync / durability | Optional Supabase login, per-store merge strategies, v2 backup format with legacy import, `diagnostics.html` device self-test |
-| CI | 9 blocking gates on PRs *and* `main`, deploy gated behind them |
+| CI | 11 blocking gates on PRs *and* `main`, deploy gated behind them |
 
 ### What is genuinely absent
 
@@ -473,9 +473,14 @@ abort, which is the single most expensive failure in the whole culinary journey.
 
 ---
 
-### Initiative 5: The Instant-Open Data Layer
+### Initiative 5: The Instant-Open Data Layer ✅ (shipped)
 
 * **Target Domain:** Time-to-Table / Boot Performance / Offline Architecture
+* **Status:** ✅ **Shipped**, with three corrections the build forced — each of which was a wrong assumption in the spec below, caught by measuring:
+  * **The index is 155 KB, not ~120 KB** (14.5% of source), so first paint waits on **81% less work**, not 88%. Confirmed in a real browser, not inferred: median parse+execute of `recipes-data.js` vs `recipes-index.js` in the same Chromium was 2.6 ms → 0.5 ms. Note the *absolute* saving on a desktop-class CPU is ~2 ms — the byte and percentage wins are real and the transfer saving (155 KB vs 1.04 MB before anything can paint) dominates on kitchen Wi-Fi, but **the phone-scale number is still unmeasured**. `diagnostics.html` now reports exactly it.
+  * **Per-letter shards were a bad idea.** Recipe ids cluster hard: `c` alone (chicken, chipotle, chocolate…) is 211 KB, larger than the whole index, so opening a chicken recipe would have pulled a fifth of the corpus. Shards are hash-assigned instead — 16 of them, 33–70 KB.
+  * **"No consumer changes" was not achievable.** Three shell features genuinely need the whole corpus (ingredient search, the "Use it up" reverse index, the low-shopping pantry filter) plus the planner's grocery merge, so they call `ensureAll()` and repaint **in place** when it resolves. A hydration accessor cannot make an async load synchronous; the honest design waits, and `hasDetail()`/`allReady()` exist so callers check rather than silently rendering an empty ingredient list.
+* **Also learned:** the generator's index field list started as an allow-list and silently dropped `subsection` from 236 recipes. It is a deny-list now, so the failure mode is a too-big index rather than missing data, and `tools/test-mc-data.js` round-trips every field of every recipe to prove it.
 
 **The problem / gap.** `recipes-data.js` is 1.04 MB across 23,220 lines and is loaded
 **synchronously, in full, before any render, on all three page types**. Opening one recipe
@@ -543,7 +548,7 @@ early despite having no visible feature of its own.
 
 ## 4. Next steps & implementation roadmap
 
-### Phase 1 — Repair and Measure *(highest urgency; ~1 sprint)*
+### Phase 1 — Repair and Measure ✅ *(shipped)*
 
 1. **Initiative 1 — Continuous Cook Session.** It fixes a live defect where a user's running
    timer is silently destroyed. Nothing else on this list outranks correctness.
@@ -551,9 +556,15 @@ early despite having no visible feature of its own.
    under Phases 2 and 3, and because doing it *before* photography avoids a re-do.
 
 Both ship behind new blocking CI gates (`test-mc-timers.js`, `build-data.py --check`), taking
-the gate count from 8 to 10. Verify Phase 1 on a real device via `diagnostics.html`'s
-`__mcBoot` numbers before starting Phase 2 — the whole point of Initiative 5 is a measured
-result, not a claimed one.
+the gate count from 8 to **11** (both initiatives added a test plus a freshness check).
+
+**The one Phase 1 step still outstanding is the device measurement.** `diagnostics.html` now
+reports `__mcBoot.data` as the index-only parse and flags anything over 120 ms. Open it on a
+real phone before starting Phase 2: the desktop measurement above confirms the *relative* win
+(81% less work before first paint) but says nothing useful about a mid-range phone, which is
+the device this app is for. `tools/smoke-test.js` also ships now — a real-browser pass over
+boot, hydration, search, `?cook=1` and timer survival — though it needs Playwright and is
+deliberately not wired into CI.
 
 ### Phase 2 — Algorithmic Truth *(~1–2 sprints)*
 

@@ -51,6 +51,10 @@ jobs:
           node tools/test-mc-sync-merge.js
       - name: Kitchen timer store test (mc-timers.js — CI initiative 1)
         run: node tools/test-mc-timers.js
+      - name: Split data layer test (build-data.js output + mc-data.js hydration — CI initiative 5)
+        run: node tools/test-mc-data.js
+      - name: Generated recipe index + shards are current (build-data.js --check)
+        run: node tools/build-data.js --check
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

@@ -27,7 +27,15 @@ DEFAULT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Assets that should be precached, in a stable, readable order.
 EXTS = (".html", ".css", ".js", ".json", ".svg")
-SKIP = {"sw.js"}  # the SW never caches itself
+SKIP = {
+    "sw.js",            # the SW never caches itself
+    # CI initiative 5: recipes-data.js is the authored SOURCE of truth, but no
+    # page loads it any more — tools/build-data.js splits it into
+    # recipes-index.js plus the recipes-detail-NN.js shards, and those are what
+    # ship. Precaching it anyway would push 1.04 MB over the wire on every
+    # install for a file nothing ever requests.
+    "recipes-data.js",
+}
 
 
 def discover(root):

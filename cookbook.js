@@ -1439,15 +1439,20 @@
     }
     document.title = r.title + " · Mike's Cookbook";
 
+    // Header and macros come entirely from the index (title, tags, times,
+    // accent, per-serving macros), so they paint immediately — before the
+    // detail shard carrying this recipe's ingredients and steps has even been
+    // requested. That ordering IS initiative 5's win on this page: the cook
+    // sees the recipe, not a blank screen, while ~70 KB lands instead of the
+    // 1.04 MB the page used to parse before drawing anything at all.
     renderHeader(r);
     renderMacros(r);
-    renderGrocery(r);
-    renderRecipe(r);
     wireTabs();
     setTab("overview");
 
-    // The timer rail rides on every surface, so a countdown started in Cooking
-    // Mode is still visible after exiting to the checklist.
+    // The rail mounts immediately, not behind the detail load: a timer running
+    // for a DIFFERENT recipe must stay visible here regardless of whether this
+    // recipe's own shard ever arrives.
     MCTimers.configure({
       // Tapping a running pill goes back to the step that started it — across
       // recipes, which is why it may be a navigation rather than a jump.
@@ -1466,6 +1471,34 @@
     });
     MCTimers.mountRail();
 
+    MCData.ensureDetail(r.recipe_id).then(function (okDetail) {
+      if (!okDetail) {
+        // The shard genuinely failed (cold cache + dead network). Say so in
+        // the two panes that need it rather than rendering empty lists that
+        // look like a recipe with no ingredients.
+        $("#pane-grocery").innerHTML =
+          '<div class="card"><p class="card-label">Ingredients</p>' +
+          "<p class=\"desc\">Couldn't load this recipe's ingredients. Check your connection and reload.</p></div>";
+        $("#pane-recipe").innerHTML =
+          '<div class="card"><p class="card-label">Method</p>' +
+          "<p class=\"desc\">Couldn't load this recipe's steps. Check your connection and reload.</p></div>";
+        return;
+      }
+      // Re-run the two panes that were already painted, because each reads one
+      // detail field above the fold: the header's serving note checks whether
+      // this exact tier is authored (`ingredients_by_serving`), and the About
+      // card in renderMacros() prints `description`. Every renderer clears its
+      // container first, so re-running is a replace, not an append.
+      renderHeader(r);
+      renderMacros(r);
+      renderGrocery(r);
+      renderRecipe(r);
+      afterDetail(r);
+    });
+  }
+
+  // Everything that can only run once the recipe's steps exist.
+  function afterDetail(r) {
     // ?cook=1 — hands-free mode as an addressable destination. Cooking Mode
     // holds the wake lock, the large type and voice control, but it used to be
     // reachable only from a button inside the third sub-tab, so every "cook
