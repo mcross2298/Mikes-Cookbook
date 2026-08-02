@@ -379,6 +379,10 @@
       return;
     }
     renderMacros(r);
+    // This may be the most recent cook-log entry with a photo — the exact
+    // thing the hero falls back to when there's no explicit cover — so it
+    // can change what the hero shows even though the hero has no button here.
+    renderHero(r);
   }
 
   // Tap a thumbnail to view it full-screen; tap anywhere to dismiss.
@@ -445,12 +449,14 @@
       toast("Keeping your " + MAX_RECIPE_PHOTOS + " most recent recipe photos to save space.");
     }
     renderHeader(r);
+    renderHero(r);
   }
   function removeRecipePhoto(r) {
     var map = loadRecipePhotos();
     delete map[r.recipe_id];
     saveRecipePhotos(map);
     renderHeader(r);
+    renderHero(r);
   }
 
   function pickRecipePhoto(r) {
@@ -472,38 +478,76 @@
     input.click();
   }
 
+  // The small eyebrow control is only the "add a photo" entry point now —
+  // once a photo exists (from any source), the hero below owns display, edit
+  // and remove, and this returns null so the caller skips it. A recipe with
+  // no photo at all sees exactly the widget that was already here.
   function renderPhotoWidget(r) {
+    if (MCCards.photoFor(r)) return null;
     var wrap = el("div", "r-photo");
-    var url = loadRecipePhoto(r.recipe_id);
-    if (url) {
-      var img = el("img", "r-photo-img");
-      img.src = url;
-      img.alt = "Photo of " + r.title;
-      img.addEventListener("click", function () { openPhotoView(url); });
-      wrap.appendChild(img);
+    var add = el("button", "r-photo-add", "📷");
+    add.type = "button";
+    add.setAttribute("aria-label", "Add a photo");
+    add.addEventListener("click", function () { pickRecipePhoto(r); });
+    wrap.appendChild(add);
+    return wrap;
+  }
 
-      var edit = el("button", "r-photo-btn r-photo-edit", "✎");
+  /* ── Hero photo (CI initiative 3) ─────────────────────────────────────
+     Renders BEFORE the sticky #header, in its own non-sticky #hero block, so
+     it scrolls away naturally and the existing sticky title/tags bar takes
+     over beneath it — a hero belongs to the top of the page, not permanently
+     pinned there eating screen space while a cook scrolls the steps.
+
+     Uses the SAME MCCards.photoFor() chain the cards use (authored → cover
+     → cook-log), so recipe.html and every card agree on what "this recipe's
+     photo" means. Renders nothing — zero height, zero markup — for the 318
+     recipes that have none; this is purely additive.
+
+     Controls depend on where the photo came from: an authored photo
+     (`r.photo`, data-file content) is display-only here; a cook-log photo
+     gets a "set as cover" affordance (promotes it to an explicit, stable
+     cover rather than depending on that cook-log entry surviving the
+     MAX_PHOTOS eviction); only an explicit cover gets the full replace +
+     remove pair recipe.html has always offered. */
+  function renderHero(r) {
+    var host = $("#hero");
+    if (!host) return;
+    host.innerHTML = "";
+    var photo = MCCards.photoFor(r);
+    if (!photo) { host.className = "r-hero empty"; return; }
+    host.className = "r-hero";
+
+    var img = el("img", "r-hero-img");
+    img.src = photo.url;
+    img.alt = "Photo of " + r.title;
+    img.addEventListener("click", function () { openPhotoView(photo.url); });
+    host.appendChild(img);
+
+    if (photo.source === "cooklog") {
+      var chip = el("span", "r-hero-chip",
+        "📸 Your cook" + (photo.at ? " · " + esc(fmtDate(photo.at)) : ""));
+      host.appendChild(chip);
+    }
+
+    if (photo.source !== "authored") {
+      var edit = el("button", "r-photo-btn r-hero-edit",
+        photo.source === "cooklog" ? "☆ Set as cover" : "✎ Replace");
       edit.type = "button";
-      edit.setAttribute("aria-label", "Replace photo");
+      edit.setAttribute("aria-label", photo.source === "cooklog" ? "Set as cover photo" : "Replace photo");
       edit.addEventListener("click", function (e) { e.stopPropagation(); pickRecipePhoto(r); });
-      wrap.appendChild(edit);
-
-      var rm = el("button", "r-photo-btn r-photo-remove", "✕");
+      host.appendChild(edit);
+    }
+    if (photo.source === "cover") {
+      var rm = el("button", "r-photo-btn r-hero-remove", "✕");
       rm.type = "button";
-      rm.setAttribute("aria-label", "Remove photo");
+      rm.setAttribute("aria-label", "Remove cover photo");
       rm.addEventListener("click", function (e) {
         e.stopPropagation();
-        if (window.confirm("Remove this photo?")) removeRecipePhoto(r);
+        if (window.confirm("Remove this cover photo?")) removeRecipePhoto(r);
       });
-      wrap.appendChild(rm);
-    } else {
-      var add = el("button", "r-photo-add", "📷");
-      add.type = "button";
-      add.setAttribute("aria-label", "Add a photo");
-      add.addEventListener("click", function () { pickRecipePhoto(r); });
-      wrap.appendChild(add);
+      host.appendChild(rm);
     }
-    return wrap;
   }
 
   /* ── App state ────────────────────────────────────────────────────── */
@@ -671,7 +715,8 @@
     if (r.dish_category) tags.appendChild(el("span", "r-tag", esc(r.dish_category)));
     if (r.category) tags.appendChild(el("span", "r-tag sage", esc(r.category)));
     eyebrow.appendChild(tags);
-    eyebrow.appendChild(renderPhotoWidget(r));
+    var photoWidget = renderPhotoWidget(r);
+    if (photoWidget) eyebrow.appendChild(photoWidget);
     h.appendChild(eyebrow);
 
     h.appendChild(el("h1", "r-title", esc(r.title)));
@@ -850,6 +895,7 @@
       if (window.confirm("Remove this cooked entry" + (e.photo ? " and its photo?" : "?"))) {
         removeCooked(r.recipe_id, e.at);
         renderMacros(r);
+        if (e.photo) renderHero(r);   // may have been the hero's fallback photo
       }
     });
     row.appendChild(del);
@@ -1130,6 +1176,22 @@
     if (o) o.style.setProperty("--cook-font", v);
     return v;
   }
+
+  // Counter Mode (CI initiative 3) — an explicit override for maximum
+  // luminance/contrast, independent of the ambient light/dark theme. The
+  // light theme tracks the room; this tracks a decision — a cook standing at
+  // the counter under bright daylight may want max contrast even if the OS
+  // itself is in dark mode (or vice versa at night), so it's a manual toggle
+  // that WINS over whichever theme is otherwise active, not a third theme
+  // tied to a media query. Persisted per device, defaults off.
+  var COOK_COUNTER_KEY = "mc-cookbook:countermode";
+  function counterMode() { return localStorage.getItem(COOK_COUNTER_KEY) === "1"; }
+  function setCounterMode(on) {
+    try { localStorage.setItem(COOK_COUNTER_KEY, on ? "1" : "0"); } catch (e) {}
+    var o = $("#cook");
+    if (o) o.classList.toggle("counter-mode", on);
+    return on;
+  }
   function stepsDone(r) { return loadSet(r.recipe_id, state.serving, "steps"); }
   function markStep(r, num, on) {
     var set = stepsDone(r);
@@ -1316,7 +1378,7 @@
 
     var o = $("#cook");
     if (!o) {
-      o = el("div", "cook");
+      o = el("div", "cook" + (counterMode() ? " counter-mode" : ""));
       o.id = "cook";
       o.style.setProperty("--cook-font", cookFont());
       $("main.app").appendChild(o);
@@ -1341,6 +1403,17 @@
     fonts.appendChild(aMinus); fonts.appendChild(aPlus);
     top.appendChild(fonts);
     mountCookVoiceBtn(top);
+    var counterBtn = el("button", "cook-counter-btn" + (counterMode() ? " on" : ""), "☀︎");
+    counterBtn.type = "button";
+    counterBtn.setAttribute("aria-label", "Toggle daylight mode");
+    counterBtn.setAttribute("aria-pressed", counterMode() ? "true" : "false");
+    counterBtn.title = "Daylight mode — max contrast for a sunlit counter";
+    counterBtn.addEventListener("click", function () {
+      var on = setCounterMode(!counterMode());
+      counterBtn.classList.toggle("on", on);
+      counterBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    top.appendChild(counterBtn);
     o.appendChild(top);
 
     // Progress
@@ -1477,6 +1550,7 @@
     // sees the recipe, not a blank screen, while ~70 KB lands instead of the
     // 1.04 MB the page used to parse before drawing anything at all.
     renderHeader(r);
+    renderHero(r);
     renderMacros(r);
     wireTabs();
     setTab("overview");

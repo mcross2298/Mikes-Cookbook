@@ -87,6 +87,19 @@ function validateRecipes(recipes, errors) {
     });
     if (isNonEmptyString(r.source)) sources.add(r.source);
 
+    // photo is optional (CI initiative 3 / CLAUDE.md's photo hand-off rule) —
+    // absent on the recipes that don't have one, never backfilled. When it IS
+    // present it must actually resolve, so a typo'd or moved path fails CI
+    // instead of rendering a broken image on every card that recipe appears
+    // on. Only checked when a value exists; a missing field is not an error.
+    if (r.photo != null) {
+      if (!isNonEmptyString(r.photo)) {
+        errors.push(where + ": \"photo\" must be a non-empty string when present");
+      } else if (!fs.existsSync(path.join(__dirname, "..", r.photo))) {
+        errors.push(where + ": photo \"" + r.photo + "\" does not exist on disk");
+      }
+    }
+
     if (!isNonEmptyString(r.dish_category) || !KNOWN_DISH_CATEGORIES.has(r.dish_category)) {
       errors.push(where + ": dish_category \"" + r.dish_category + "\" isn't one of the known categories");
     }

@@ -36,6 +36,30 @@ SKIP = {
     # install for a file nothing ever requests.
     "recipes-data.js",
 }
+# CI initiative 3: recipe photos live under images/, hand-off'd one at a time
+# per CLAUDE.md's photo hand-off rule. Scanned separately (and recursively —
+# the top-level scan above deliberately isn't) and restricted to this one
+# directory, so adding a photo doesn't accidentally sweep in some unrelated
+# nested file elsewhere in the repo. Empty today (no recipe has a photo yet);
+# `os.walk` over a missing directory below just yields nothing.
+IMAGES_DIR = "images"
+IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
+
+
+def discover_images(root):
+    images_root = os.path.join(root, IMAGES_DIR)
+    if not os.path.isdir(images_root):
+        return []
+    out = []
+    for dirpath, dirnames, filenames in os.walk(images_root):
+        dirnames[:] = sorted(d for d in dirnames if not d.startswith("."))
+        for name in sorted(filenames):
+            if name.startswith("."):
+                continue
+            if name.lower().endswith(IMAGE_EXTS):
+                rel = os.path.relpath(os.path.join(dirpath, name), root)
+                out.append("./" + rel.replace(os.sep, "/"))
+    return out
 
 
 def discover(root):
@@ -48,13 +72,15 @@ def discover(root):
         path = os.path.join(root, name)
         if os.path.isfile(path) and name.endswith(EXTS):
             files.append(name)
-    # './' (the app root) first, then index, then the rest alphabetically.
+    # './' (the app root) first, then index, then the rest alphabetically,
+    # then any recipe photos.
     ordered = ["./"]
     for pref in ("index.html",):
         if pref in files:
             ordered.append("./" + pref)
             files.remove(pref)
     ordered += ["./" + f for f in files]
+    ordered += discover_images(root)
     return ordered
 
 
