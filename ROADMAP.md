@@ -32,10 +32,12 @@ Ground truth as of this evaluation — read the code, not the last roadmap:
   macro-targeted variant), **batch-prep day suggestion**, meal-completion → **cook log**, and
   **macro history** feeding back into generation.
 - ~~**Zero automated verification.**~~ **Superseded.** As of Pillar A + Pillar E phase 1, CI is a
-  `verify` job with **7 blocking gates** (syntax, `validate-recipes.js`, the bridge + sync-merge
-  tests, SW strategy, backup format, precache freshness, shared-module drift) running on pull
-  requests *and* `main`, with `deploy` gated behind it. There is still **no UI smoke test** —
-  that remains the open gap. See Pillar E, C-16.
+  `verify` job (7 gates at that point) running on pull requests *and* `main`, with `deploy` gated
+  behind it — see Pillar E, C-16 for how that job grew. ~~There is still no UI smoke test —
+  that remains the open gap.~~ **Resolved 2026-08-02:** `tools/smoke-test.js` is now one of
+  `verify`'s 14 blocking gates (Playwright installed ad hoc for that one step, so the repo's
+  npm-free footprint is unchanged) — see CLAUDE.md's CI section for the current, authoritative
+  gate count and list.
 
 **Implication:** the app is materially ahead of what its own docs described. The risk this round
 isn't a missing feature, it's that **the planner's smart features are all pull-based** — Mike has

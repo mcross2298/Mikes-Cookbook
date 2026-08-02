@@ -63,6 +63,21 @@ jobs:
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)
         run: node tools/test-mc-export.js
+      - name: UI smoke test (Playwright, real browser — tools/smoke-test.js)
+        # The only gate that actually opens a page and clicks something —
+        # everything else reasons about source text or runs a module in a vm
+        # sandbox. Playwright is installed ad hoc for this one step only (no
+        # committed package.json/lockfile — the checkout is discarded when
+        # the job ends, so this never changes the repo's real npm-free
+        # footprint). Same ad-hoc pattern Cross-Household-'s CI uses for its
+        # own Playwright-driven tests.
+        run: |
+          npm init -y
+          npm install --no-save playwright@^1
+          npx playwright install --with-deps chromium
+          python3 -m http.server 8765 &
+          sleep 1
+          node tools/smoke-test.js
       - name: Service-worker precache list is current (build-sw.py --check)
         # The deploy job regenerates sw.js anyway, so this never blocked a
         # deploy — but on a PR it's the only signal that a newly added or
