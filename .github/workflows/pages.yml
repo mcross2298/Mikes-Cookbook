@@ -78,6 +78,13 @@ jobs:
           python3 -m http.server 8765 &
           sleep 1
           node tools/smoke-test.js
+          # `npm init` leaves package.json (and npm may leave package-lock.json)
+          # sitting in the working tree for the rest of THIS job's steps, even
+          # though nothing here is ever committed. build-sw.py's precache scan
+          # globs top-level *.json among other extensions, so an uncleaned
+          # package.json reads as a new, unprecached asset and fails the very
+          # next gate — caught for real on 2026-08-02 (PR #132's first run).
+          rm -rf node_modules package.json package-lock.json
       - name: Service-worker precache list is current (build-sw.py --check)
         # The deploy job regenerates sw.js anyway, so this never blocked a
         # deploy — but on a PR it's the only signal that a newly added or
