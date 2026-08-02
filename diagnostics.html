@@ -78,14 +78,18 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
 <textarea class="dg-report" id="report" readonly aria-label="Plain-text report"></textarea>
 
 <p class="dg-foot">
-  Boot cost is <code>window.__mcBoot.data</code> — how long <code>recipes-data.js</code>
-  (1.04&nbsp;MB) takes to fetch, parse and execute on <em>this</em> device. Audit finding C-06
-  modelled this at 73–244&nbsp;ms with simulated CPU throttling; this is the real number.
+  Boot cost is <code>window.__mcBoot.data</code> — how long <code>recipes-index.js</code>
+  (149&nbsp;KB) takes to fetch, parse and execute on <em>this</em> device. This is the number that
+  gates first paint. Audit finding C-06 modelled the old <code>recipes-data.js</code>
+  (1.04&nbsp;MB, parsed in full before anything drew) at 73–244&nbsp;ms with simulated CPU
+  throttling; CI initiative 5 replaced it with this index plus detail shards loaded on demand,
+  so the figure below should now be a fraction of that range.
 </p>
 
 <!-- audit C-06: boot instrument. Same two marks index.html carries. -->
 <script>window.__mcBoot={t0:performance.now()};</script>
-<script src="recipes-data.js"></script>
+<script src="recipes-index.js"></script>
+<script src="mc-data.js"></script>
 <script>if(window.__mcBoot)window.__mcBoot.data=performance.now()-window.__mcBoot.t0;</script>
 <script src="user-recipes.js"></script>
 <script src="mc-bridge.js"></script>
@@ -182,12 +186,13 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
     g = group("Boot cost · audit C-06");
     var boot = window.__mcBoot && window.__mcBoot.data;
     if (boot == null) {
-      tally(row(g, "fail", "recipes-data.js boot instrument missing", "window.__mcBoot.data is undefined"));
+      tally(row(g, "fail", "recipes-index.js boot instrument missing", "window.__mcBoot.data is undefined"));
     } else {
-      tally(row(g, boot < 250 ? "pass" : "warn",
-        "recipes-data.js cost: " + boot.toFixed(0) + " ms",
-        "Fetch + parse + execute of 1.04 MB on this device. Under ~250 ms is fine; " +
-        "the audit modelled 73–244 ms. Run once cached (second load) for the steady-state number."));
+      tally(row(g, boot < 120 ? "pass" : "warn",
+        "recipes-index.js cost: " + boot.toFixed(0) + " ms",
+        "Fetch + parse + execute of the 149 KB index on this device — what first paint waits " +
+        "on. The 1.04 MB it replaced modelled at 73–244 ms, so this should land well under " +
+        "120 ms. Run once cached (second load) for the steady-state number."));
     }
     // COLLECTIONS gains a runtime "My Recipes" entry from user-recipes.js, so
     // this is one higher than the count shipped in recipes-data.js. Say so,
@@ -220,9 +225,15 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
         var cache = await caches.open(mc[0]);
         var keys = await cache.keys();
         // Check the assets this build actually needs, not a hardcoded list.
-        var need = ["./", "index.html", "cookbook.css", "recipes-data.js", "cookbook-home.js",
-                    "mc-fav.js", "mc-cards.js", "mc-grocery.js", "mc-recipe-form.js",
-                    "recipe.html", "cookbook.js", "collection.html", "collection.js", "sw.js"];
+        var need = ["./", "index.html", "cookbook.css", "recipes-index.js", "mc-data.js",
+                    "cookbook-home.js", "mc-fav.js", "mc-cards.js", "mc-timers.js",
+                    "mc-grocery.js", "mc-recipe-form.js", "recipe.html", "cookbook.js",
+                    "collection.html", "collection.js", "sw.js"];
+        // Every detail shard must be precached too, or a recipe opened offline
+        // shows its header and no ingredients (CI initiative 5).
+        for (var si = 0; si < (window.RECIPES_SHARDS || 16); si++) {
+          need.push("recipes-detail-" + (si < 10 ? "0" : "") + si + ".js");
+        }
         var have = keys.map(function (r) { return r.url; });
         var missing = need.filter(function (n) {
           if (n === "./") return !have.some(function (u) { return /\/$|index\.html$/.test(u); });

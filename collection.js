@@ -123,6 +123,15 @@
     }, actionLabel ? 5000 : 3200);
   }
 
+  /* ── Detail-shard arrival (CI initiative 5) ───────────────────────────
+     The grid paints from recipes-index.js; ingredients arrive a moment later
+     in mc-data.js's shards. Two things here read them — the search box matches
+     ingredient names, and the card's low-shopping count reads the whole list —
+     so the screen's own paint() is re-run in place when they land. In place,
+     not a re-render: rebuilding would discard a half-typed query. */
+  var detailRepaint = null;
+  function onDetailReady(fn) { detailRepaint = fn; }
+
   function collections() { return window.COLLECTIONS || []; }
   function recipes() { return window.RECIPES || []; }
 
@@ -368,10 +377,29 @@
       }
     }
     box.addEventListener("input", paint);
+    onDetailReady(paint);
     paint();
   }
 
+  // A timer started while cooking stays visible if the cook wanders back out
+  // to a collection to look something up mid-recipe. Mounted outside init()
+  // because init() returns early for a coming-soon collection, and the rail
+  // has nothing to do with which collection this is.
+  function boot() {
+    init();
+    // Collection pages filter on ingredients too (the search box matches
+    // ingredient names, and the low-shopping count reads the whole list), so
+    // they need the detail shards — just not before the grid can paint.
+    MCData.ensureAll().then(function (ok) { if (ok && detailRepaint) detailRepaint(); });
+    MCTimers.configure({
+      onJump: function (t) {
+        if (t.recipeId) location.href = "recipe.html?id=" + encodeURIComponent(t.recipeId) + "&cook=1";
+      }
+    });
+    MCTimers.mountRail();
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else { init(); }
+    document.addEventListener("DOMContentLoaded", boot);
+  } else { boot(); }
 })();

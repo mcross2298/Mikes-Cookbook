@@ -89,74 +89,64 @@
     }
     return out;
   }
-  function fmtClock(s) {
-    var m = Math.floor(s / 60), sec = s % 60;
-    return m + ":" + (sec < 10 ? "0" : "") + sec;
-  }
-
-  // Lazy, gesture-primed alert tone (Web Audio) — no asset, works offline.
-  var audioCtx = null;
-  function primeAudio() {
-    try {
-      if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
-    } catch (e) {}
-  }
-  function ping() {
-    try {
-      if (!audioCtx) return;
-      var t = audioCtx.currentTime;
-      [0, 0.3, 0.6].forEach(function (off) {
-        var osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-        osc.type = "sine"; osc.frequency.value = 880;
-        g.gain.setValueAtTime(0.0001, t + off);
-        g.gain.exponentialRampToValueAtTime(0.3, t + off + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + off + 0.22);
-        osc.connect(g); g.connect(audioCtx.destination);
-        osc.start(t + off); osc.stop(t + off + 0.24);
-      });
-    } catch (e) {}
-  }
-  function buzz() { try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {} }
-
-  // A self-contained countdown chip. Tap to start; tap again to cancel/reset.
-  function timerChip(seconds, label) {
+  // A chip is now a VIEW over mc-timers.js, not an owner of state.
+  //
+  // It used to hold its own setInterval in a closure bound to this node — and
+  // renderCook()/renderRecipe() destroy their whole subtree on every re-render,
+  // which silently killed running timers. The store owns the timer now; the
+  // chip only starts one and reflects whether one is already running for this
+  // step. Audio, vibration and expiry all moved to MCTimers with it, so the
+  // alert behaves identically no matter which surface started the countdown.
+  function timerChip(seconds, label, r, stepNumber) {
     var chip = el("button", "timer-chip", "⏱ " + label);
     chip.type = "button";
-    var remaining = seconds, intId = null;
-    function clear() { if (intId) { clearInterval(intId); intId = null; } }
-    function reset() {
-      clear(); remaining = seconds;
-      chip.className = "timer-chip"; chip.textContent = "⏱ " + label;
+
+    // Is one of MY timers (this recipe + step + duration) already running?
+    function mine() {
+      var all = MCTimers.list();
+      for (var i = 0; i < all.length; i++) {
+        var t = all[i];
+        if (t.recipeId === r.recipe_id && t.stepNumber === stepNumber && t.seconds === seconds) return t;
+      }
+      return null;
     }
+    function paint() {
+      var t = mine();
+      chip.className = "timer-chip" + (t ? (t.ringing ? " ringing" : " running") : "");
+      chip.textContent = t
+        ? (t.ringing ? "⏰ Time! · tap to clear" : "⏱ " + MCTimers.fmtClock(t.remainingMs))
+        : "⏱ " + label;
+    }
+
     chip.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation();        // never toggle the step itself
-      if (intId || chip.classList.contains("ringing")) { reset(); return; }
-      primeAudio();
-      chip.classList.add("running");
-      chip.textContent = "⏱ " + fmtClock(remaining);
-      intId = setInterval(function () {
-        remaining -= 1;
-        if (remaining <= 0) {
-          clear();
-          chip.classList.remove("running");
-          chip.classList.add("ringing");
-          chip.textContent = "⏰ Time! · tap to reset";
-          ping(); buzz();
-          return;
-        }
-        chip.textContent = "⏱ " + fmtClock(remaining);
-      }, 1000);
+      var t = mine();
+      if (t) { MCTimers.cancel(t.id); }                // tap a live chip to cancel/clear
+      else {
+        MCTimers.start({
+          seconds: seconds, label: label,
+          recipeId: r.recipe_id, recipeTitle: r.title, stepNumber: stepNumber
+        });
+      }
+      paint();
     });
+
+    // Repaint on every store change, and drop the subscription when this chip
+    // leaves the document — re-renders create new chips, and without this the
+    // old ones would accumulate as live subscribers.
+    var off = MCTimers.onChange(function () {
+      if (!chip.isConnected) { off(); return; }
+      paint();
+    });
+
+    paint();
     return chip;
   }
-  function appendTimers(parent, text) {
+  function appendTimers(parent, text, r, stepNumber) {
     var times = parseDurations(text);
     if (!times.length) return;
     var wrap = el("div", "timer-wrap");
-    times.forEach(function (t) { wrap.appendChild(timerChip(t.seconds, t.label)); });
+    times.forEach(function (t) { wrap.appendChild(timerChip(t.seconds, t.label, r, stepNumber)); });
     parent.appendChild(wrap);
   }
 
@@ -1021,7 +1011,7 @@
         '<p class="step-title">' + esc(st.title) + "</p>" +
         '<p class="step-detail">' + esc(st.detail) + "</p>" +
       "</div>";
-    appendTimers(row.querySelector(".step-body"), st.detail);
+    appendTimers(row.querySelector(".step-body"), st.detail, r, st.step_number);
     row.addEventListener("click", function () {
       var set = loadSet(r.recipe_id, state.serving, "steps");
       if (set.has(st.step_number)) { set.delete(st.step_number); }
@@ -1145,7 +1135,53 @@
     cookAnnounce("Reading ingredients");
   }
 
+  function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+  }
+
+  // Spoken timer control. The whole point of Cooking Mode is not touching the
+  // screen, and setting a timer was the one thing that still required a tap —
+  // the chips only exist where a duration happens to appear in the step text.
+  function voiceSetTimer(m) {
+    var n = parseFloat(m[1]);
+    if (!n || n <= 0) return;
+    var unit = (m[2] || "minute").toLowerCase();
+    var secs = unit.charAt(0) === "h" ? Math.round(n * 3600)
+      : unit.charAt(0) === "s" ? Math.round(n)
+        : Math.round(n * 60);
+    if (secs <= 0 || secs > 86400) return;
+    var label = n + " " + unit + (n === 1 ? "" : unit.slice(-1) === "s" ? "" : "s");
+    var st = (cook.recipe.instructions || [])[cook.index];
+    MCTimers.start({
+      seconds: secs, label: label,
+      recipeId: cook.recipe.recipe_id, recipeTitle: cook.recipe.title,
+      stepNumber: st ? st.step_number : null
+    });
+    speak("Timer set for " + label + ".");
+    cookAnnounce("Timer set for " + label);
+  }
+  function voiceTimerStatus() {
+    var live = MCTimers.list().filter(function (t) { return !t.ringing; });
+    if (!live.length) { speak("No timers running."); return; }
+    speak(live.map(function (t) {
+      return MCTimers.fmtClock(t.remainingMs).replace(":", " minutes ") + " seconds left on " + t.label;
+    }).join(". "));
+  }
+  function voiceStopTimer() {
+    var all = MCTimers.list();
+    if (!all.length) { speak("No timers running."); return; }
+    MCTimers.cancel(all[all.length - 1].id);   // the most recently started one
+    speak("Timer stopped.");
+  }
+
   var COOK_VOICE_COMMANDS = [
+    // Timer commands come FIRST: "set a timer for 5 minutes" also contains
+    // "set", and a looser pattern below must never shadow it.
+    { re: /\b(?:set|start)\b.*?\btimer\b.*?\b(\d+(?:\.\d+)?)\s*(hours?|hrs?|minutes?|mins?|seconds?|secs?)?\b/i, run: voiceSetTimer },
+    { re: /\b(how (long|much time)|time) (is )?(left|remaining)\b/i, run: voiceTimerStatus },
+    { re: /\b(stop|cancel|clear)( the)? timer\b/i, run: voiceStopTimer },
     { re: /\b(next|done)( step)?\b/i, run: function () { cookGo(1); } },
     { re: /\b(previous|prev|back|go back)( step)?\b/i, run: function () { cookGo(-1); } },
     { re: /\bread( the)? ingredients?\b/i, run: function () { speakIngredients(); } },
@@ -1288,7 +1324,7 @@
     body.appendChild(el("div", "cook-step-num", isDone ? "✓" : String(st.step_number)));
     body.appendChild(el("h2", "cook-step-title", esc(st.title)));
     body.appendChild(el("p", "cook-step-detail", esc(st.detail)));
-    appendTimers(body, st.detail);
+    appendTimers(body, st.detail, r, st.step_number);
     body.appendChild(el("p", "cook-tap-hint", isDone ? "Done · tap to undo" : "Tap to mark this step done"));
     body.addEventListener("click", function () {
       markStep(r, st.step_number, !stepsDone(r).has(st.step_number));
@@ -1403,12 +1439,76 @@
     }
     document.title = r.title + " · Mike's Cookbook";
 
+    // Header and macros come entirely from the index (title, tags, times,
+    // accent, per-serving macros), so they paint immediately — before the
+    // detail shard carrying this recipe's ingredients and steps has even been
+    // requested. That ordering IS initiative 5's win on this page: the cook
+    // sees the recipe, not a blank screen, while ~70 KB lands instead of the
+    // 1.04 MB the page used to parse before drawing anything at all.
     renderHeader(r);
     renderMacros(r);
-    renderGrocery(r);
-    renderRecipe(r);
     wireTabs();
     setTab("overview");
+
+    // The rail mounts immediately, not behind the detail load: a timer running
+    // for a DIFFERENT recipe must stay visible here regardless of whether this
+    // recipe's own shard ever arrives.
+    MCTimers.configure({
+      // Tapping a running pill goes back to the step that started it — across
+      // recipes, which is why it may be a navigation rather than a jump.
+      onJump: function (t) {
+        if (!t.recipeId) return;
+        if (t.recipeId !== r.recipe_id) {
+          location.href = "recipe.html?id=" + encodeURIComponent(t.recipeId) + "&cook=1";
+          return;
+        }
+        if (!cook.active) enterCook(r);
+        var steps = r.instructions || [];
+        for (var i = 0; i < steps.length; i++) {
+          if (steps[i].step_number === t.stepNumber) { cookGo(i - cook.index); return; }
+        }
+      }
+    });
+    MCTimers.mountRail();
+
+    MCData.ensureDetail(r.recipe_id).then(function (okDetail) {
+      if (!okDetail) {
+        // The shard genuinely failed (cold cache + dead network). Say so in
+        // the two panes that need it rather than rendering empty lists that
+        // look like a recipe with no ingredients.
+        $("#pane-grocery").innerHTML =
+          '<div class="card"><p class="card-label">Ingredients</p>' +
+          "<p class=\"desc\">Couldn't load this recipe's ingredients. Check your connection and reload.</p></div>";
+        $("#pane-recipe").innerHTML =
+          '<div class="card"><p class="card-label">Method</p>' +
+          "<p class=\"desc\">Couldn't load this recipe's steps. Check your connection and reload.</p></div>";
+        return;
+      }
+      // Re-run the two panes that were already painted, because each reads one
+      // detail field above the fold: the header's serving note checks whether
+      // this exact tier is authored (`ingredients_by_serving`), and the About
+      // card in renderMacros() prints `description`. Every renderer clears its
+      // container first, so re-running is a replace, not an append.
+      renderHeader(r);
+      renderMacros(r);
+      renderGrocery(r);
+      renderRecipe(r);
+      afterDetail(r);
+    });
+  }
+
+  // Everything that can only run once the recipe's steps exist.
+  function afterDetail(r) {
+    // ?cook=1 — hands-free mode as an addressable destination. Cooking Mode
+    // holds the wake lock, the large type and voice control, but it used to be
+    // reachable only from a button inside the third sub-tab, so every "cook
+    // this tonight" tap from the planner landed in a reading view four taps
+    // short of the thing the cook actually wanted.
+    if (new URLSearchParams(location.search).get("cook") === "1" &&
+        (r.instructions || []).length) {
+      setTab("recipe");
+      enterCook(r);
+    }
   }
 
   if (document.readyState === "loading") {
