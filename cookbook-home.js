@@ -4056,16 +4056,22 @@
   ];
   function bwqTotalTime(r) { return (r.prep_time_mins || 0) + (r.cook_time_mins || 0); }
 
-  var TIME_CHECK_KEY = "mc-cookbook:timecheck"; // { scopeKey, days: { Mon: "quick", ... } }
+  var TIME_CHECK_KEY = "mc-cookbook:timecheck"; // { scopeKey, days: { Mon: "quick", ... }, ts }
   function loadTimeCheck() {
     try {
       var v = JSON.parse(localStorage.getItem(TIME_CHECK_KEY) || "null");
-      if (!v || typeof v !== "object") return { scopeKey: "all", days: {} };
-      return { scopeKey: v.scopeKey || "all", days: v.days || {} };
-    } catch (e) { return { scopeKey: "all", days: {} }; }
+      if (!v || typeof v !== "object") return { scopeKey: "all", days: {}, ts: 0 };
+      return { scopeKey: v.scopeKey || "all", days: v.days || {}, ts: v.ts || 0 };
+    } catch (e) { return { scopeKey: "all", days: {}, ts: 0 }; }
   }
+  // ts (audit C-02 backlog item): a plain write timestamp, added so this
+  // store can eventually carry real union/last-write-wins semantics if it
+  // joins the mc-sync.js whitelist — it wasn't syncable at all before this,
+  // since every merge strategy needs *some* way to order two conflicting
+  // writes. Not itself wired into mc-sync.js yet — that's a separate change
+  // needing its own merge-strategy call, not a data-shape fix.
   function saveTimeCheck(scopeKey, dayBuckets) {
-    writeStore(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets }));
+    writeStore(TIME_CHECK_KEY, JSON.stringify({ scopeKey: scopeKey, days: dayBuckets, ts: Date.now() }));
   }
 
   /* Time Check generation lives in WEEK_MODES.time (audit C-04) — it used to

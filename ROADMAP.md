@@ -629,10 +629,13 @@ installed. Anything red is a real finding; warnings are usually platform limits 
 `storage.estimate` and has no `BarcodeDetector`, both expected).
 
 ## Open questions (backlog only)
-- **`mc-cookbook:timecheck` needs a `ts` field** before it can join the sync whitelist (C-02).
-  Today it's `{ scopeKey, days }` with no timestamp and no union semantics, so every available
-  merge strategy either loses a local edit or produces a meaningless result. Small data-shape
-  change; do it whenever Time Check is next touched — likely Phase 4.
+- **`mc-cookbook:timecheck` still isn't in the sync whitelist (C-02).** The data-shape half is
+  done — `saveTimeCheck()` now writes a `ts` field (shipped 2026-08-02), so `{ scopeKey, days, ts }`
+  has what a merge strategy needs to order two conflicting writes. **Still open:** actually adding
+  it to `mc-sync.js`'s whitelist needs a real merge-strategy call (last-write-wins on `ts`? union
+  the per-day buckets like `stringSet` does for arrays?) plus new fixtures in
+  `tools/test-mc-sync-merge.js` — deliberately left as a separate decision, not bundled into the
+  data-shape fix.
 - ~~`/favicon.ico` 404s on every cold load~~ **Resolved** — shipped 2026-08-02 via Phase 6:
   every page's `<head>` now declares `<link rel="icon" href="icon.svg" type="image/svg+xml">`.
 - ~~Macro-trend bias (Pillar C fast-follow)~~ **Resolved** — shipped 2026-07-15 via bridge
