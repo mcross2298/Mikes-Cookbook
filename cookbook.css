@@ -283,6 +283,13 @@ body {
   margin: 0 0 10px;
 }
 
+/* ── SUBSTITUTIONS (Grocery tab, CI initiative 4) ────────────────────
+   Informational, not interactive — no accept/reject state, so no per-row
+   check-off treatment. One line per applicable ingredient. */
+.sub-list { display: flex; flex-direction: column; gap: 10px; }
+.sub-row { font-size: 14.5px; line-height: 1.5; color: var(--ink-dim); margin: 0; }
+.sub-row b { color: var(--ink); font-weight: 700; }
+
 /* ── OVERVIEW & MACROS ────────────────────────────────────────────── */
 .desc { font-size: 15.5px; line-height: 1.6; color: var(--ink); margin: 0; }
 
@@ -1439,6 +1446,13 @@ button.col-back { appearance: none; -webkit-appearance: none;
 .rc-pantry-badge {
   display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 800;
   color: var(--sage); letter-spacing: 0.02em;
+}
+/* Match provenance badge — active search only (CI initiative 4). Quieter
+   than the pantry badge (uppercase mono label, not a claim about the
+   recipe) since this is metadata about the SEARCH, not the dish. */
+.rc-match-badge {
+  display: inline-block; margin-top: 5px; font-size: 10px; font-weight: 700;
+  color: var(--ink-dim); letter-spacing: 0.06em; text-transform: uppercase;
 }
 
 /* Bottom padding bumped 24px -> 48px: on top of main.app's own 64px

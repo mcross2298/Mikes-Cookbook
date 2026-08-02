@@ -206,14 +206,14 @@ var SLIDES = [
   {
     eyebrow:'Module 2 · Find a dish',
     title:"Browse & pick a recipe",
-    tagline:"One Browse screen, two ways to look at it — by collection or by dish type — plus live search across everything.",
+    tagline:"One Browse screen, two ways to look at it — by collection or by dish type — plus a real search that understands what you meant, even with a typo.",
     scene:{glyph:'📖',caption:'13 live collections · 11 dish types · search by name, tag or ingredient',glow:'rgba(217,160,91,0.18)'},
-    narration:"Tap Browse. A switch at the top picks how you look at the library: By collection shows the flagship sets — Two Meals a Day, Chipotle Copycats, High-Protein Meal Prep, Desserts, Salsas, Sauces, Marinades and more, with Kelli Cross' heirlooms and a Carnivore set on the way. By dish type sorts everything into eleven buckets instead: Breakfast, Salads &amp; Slaws, Soups, Casseroles, Skillets, Grilled, Sandwiches, Desserts, Salsas &amp; Dips, Sauces and Marinades. Tap either kind of card to narrow down. Open a collection and the bigger ones add a sub-tab bar — Chicken, Beef &amp; Steak, Seafood and the like — so you can narrow in before you scroll. The search box and the filter chips work across the whole catalog either way.",
+    narration:"Tap Browse. A switch at the top picks how you look at the library: By collection shows the flagship sets — Two Meals a Day, Chipotle Copycats, High-Protein Meal Prep, Desserts, Salsas, Sauces, Marinades and more, with Kelli Cross' heirlooms and a Carnivore set on the way. By dish type sorts everything into eleven buckets instead: Breakfast, Salads &amp; Slaws, Soups, Casseroles, Skillets, Grilled, Sandwiches, Desserts, Salsas &amp; Dips, Sauces and Marinades. Tap either kind of card to narrow down. Open a collection and the bigger ones add a sub-tab bar — Chicken, Beef &amp; Steak, Seafood and the like — so you can narrow in before you scroll. The search box now ranks best matches first instead of just filtering — type two words like &ldquo;chicken broccoli&rdquo; and it finds recipes naming both, and a small typo like &ldquo;chiken&rdquo; still finds Chicken recipes. A quiet &ldquo;matched: ingredient&rdquo; label under a card explains why it surfaced when the title alone wouldn&rsquo;t say so. The filter chips work across the whole catalog either way.",
     steps:[
       {tx:"From Home, tap <span class='tap'>📖 Recipes</span> for collections + your library, or <span class='tap'>🍽️ Categories</span> to browse by dish type."},
       {tx:"Open a <b>collection</b> (e.g. Two Meals a Day) to see every recipe in it."},
       {tx:"In a larger collection, tap a <b>sub-tab</b> (e.g. Chicken, Seafood) to narrow the grid further."},
-      {tx:"Use the <b>search box</b> to filter by name, tag, or ingredient."},
+      {tx:"Use the <b>search box</b> to search by name, tag, or ingredient — it ranks the best match first, tolerates a small typo, and a &ldquo;matched: ingredient&rdquo; label on a card says why it showed up."},
       {tx:"Tap a <b>recipe card</b> to open its full detail page."},
       {tx:"Arriving from the workout app's Nutrition tab? A <b>🎯 “Fits your day”</b> banner tops this screen with recipes that fit your remaining calories, best protein first — ✕ dismisses it. Logged a heavy leg day? The banner leans carb-forward automatically, to help you replenish."}
     ],
@@ -242,7 +242,7 @@ var SLIDES = [
     narration:"At the top of every recipe, three tabs. Overview & Macros shows the dish summary with its calories and protein, fat and carb breakdown per serving — your macro view. Grocery gives you a clean shopping list grouped by real store aisles — Produce, Meat & Poultry, Dairy & Eggs, and on through to Frozen last, so you shop the way you actually walk a store. Recipe is the full method, step by step, with the prep notes for each ingredient. Swipe or tap to switch.",
     steps:[
       {tx:"Tap <span class='tap'>Overview &amp; Macros</span> for the dish summary + per-serving macro breakdown."},
-      {tx:"Tap <span class='tap'>Grocery</span> for a clean shopping list grouped by real store aisles — Produce, Meat &amp; Poultry, Seafood, Dairy &amp; Eggs, Spices, Condiments, Dry Goods, and Frozen last, matching the order you'd actually walk a store."},
+      {tx:"Tap <span class='tap'>Grocery</span> for a clean shopping list grouped by real store aisles — Produce, Meat &amp; Poultry, Seafood, Dairy &amp; Eggs, Spices, Condiments, Dry Goods, and Frozen last, matching the order you'd actually walk a store. Missing something like sour cream or buttermilk? A <b>&ldquo;Don&rsquo;t have it on hand?&rdquo;</b> note under the list offers a swap for anything this recipe uses that has one."},
       {tx:"Tap <span class='tap'>Recipe</span> for the numbered method with per-ingredient prep notes."},
       {tx:"<b>Swipe</b> left/right to move between the three tabs."},
       {tx:"On the Recipe tab, tap <span class='tap'>▸ Start Cooking</span> for <b>Cooking Mode</b> — a full-screen, one-step-at-a-time view with big text, the screen kept awake, and a <span class='tap'>🎙️</span> button for opt-in voice control: say <b>“next step”</b>, <b>“previous step”</b>, or <b>“read ingredients”</b> to hear the list read aloud, hands free."},

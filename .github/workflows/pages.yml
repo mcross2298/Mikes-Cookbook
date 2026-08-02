@@ -57,6 +57,8 @@ jobs:
         run: node tools/build-data.js --check
       - name: Ingredient unit/density/aisle model + fragmentation ratchet (mc-units.js — CI initiative 2)
         run: node tools/test-mc-units.js
+      - name: Search ranking + performance regression tests (mc-search.js — CI initiative 4)
+        run: node tools/test-mc-search.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

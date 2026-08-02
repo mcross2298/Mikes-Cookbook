@@ -306,6 +306,18 @@
         "</div>";
     }
 
+    // Match provenance — only passed in during an active search (CI
+    // initiative 4, mc-search.js). Ranking alone doesn't say WHY a result
+    // matched, which matters most for the case ranking exists to surface:
+    // a recipe whose ingredients name the query but whose title doesn't.
+    var matchBadge = "";
+    if (opts.matchedFields && opts.matchedFields.length) {
+      var label = opts.matchedFields.indexOf("title") >= 0 ? "title"
+        : opts.matchedFields.indexOf("ingredient") >= 0 ? "ingredient"
+        : opts.matchedFields[0];
+      matchBadge = '<div class="rc-match-badge">matched: ' + esc(label.replace("_", " ")) + "</div>";
+    }
+
     card.innerHTML =
       '<div class="rc-band">' +
         '<span class="rc-sheen" style="animation-delay:' + cardSheenDelay(r.recipe_id) + '"></span>' +
@@ -315,6 +327,7 @@
         '<h3 class="rc-title">' + esc(r.title) + "</h3>" +
         macroStatsHtml(m) +
         pantryBadge +
+        matchBadge +
       "</div>";
 
     // A heart in the card's upper-right corner — favorite straight from the

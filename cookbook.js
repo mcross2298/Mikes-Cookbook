@@ -906,6 +906,30 @@
       card.appendChild(sec);
     });
     pane.appendChild(card);
+
+    // Missing-ingredient substitution (CI initiative 4) — informational, not
+    // interactive: it doesn't know whether THIS cook actually has sour cream
+    // on hand (recipe.html has no pantry read), so it surfaces "here's an
+    // option" for every ingredient this recipe uses that has a known swap,
+    // rather than claiming anything is missing. One note per applicable
+    // ingredient, deduplicated so two "sour cream" lines in one recipe don't
+    // repeat the same tip twice.
+    var seenSub = {}, subs = [];
+    list.forEach(function (ing) {
+      var s = MCSearch.substitutionFor(ing.item);
+      if (s && !seenSub[s.match]) { seenSub[s.match] = 1; subs.push(s); }
+    });
+    if (subs.length) {
+      var subCard = el("div", "card sub-card");
+      subCard.appendChild(el("p", "card-label", "Don't have it on hand?"));
+      var subList = el("div", "sub-list");
+      subs.forEach(function (s) {
+        subList.appendChild(el("p", "sub-row",
+          "No <b>" + esc(s.match) + "</b>? Try " + esc(s.swap) + "."));
+      });
+      subCard.appendChild(subList);
+      pane.appendChild(subCard);
+    }
   }
   // Auto-collapse: a checked row drops to the bottom of its own category
   // section, leaving the still-need-to-buy rows together at the top.

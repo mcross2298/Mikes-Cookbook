@@ -154,6 +154,54 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
     console.log('SKIP provenance-tap test — no density-derived row landed in this plan');
   }
 
+
+  // ── Initiative 4: ranked search + typo tolerance + substitution note ────
+  errors.length = 0;
+  await page.goto(B + '/index.html#recipes', { waitUntil: 'networkidle' });
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(500);
+  const searchBox = page.locator('#screen-recipes .search-box');
+  await searchBox.fill('chiken');
+  await page.waitForTimeout(300);
+  ok('search: no JS errors', errors.length === 0 || (console.log(errors), false));
+  const typoHits = await page.locator('#screen-recipes .rc').count();
+  console.log('     "chiken" (typo) hits: ' + typoHits);
+  ok('search: typo query returns real results (the documented old-search failure)', typoHits > 0);
+
+  await searchBox.fill('chicken broccoli');
+  await page.waitForTimeout(300);
+  const multiHits = await page.locator('#screen-recipes .rc').count();
+  console.log('     "chicken broccoli" hits: ' + multiHits);
+  ok('search: multi-word AND query returns real results (the other documented failure)', multiHits > 0);
+
+  const matchBadges = await page.locator('.rc-match-badge').count();
+  console.log('     cards showing a "matched: field" badge: ' + matchBadges);
+  ok('search: at least one result shows match provenance', matchBadges > 0);
+
+  // Substitution note on a recipe that uses a curated ingredient.
+  errors.length = 0;
+  const subId = await page.evaluate(async () => {
+    await window.MCData.ensureAll();
+    var hit = window.RECIPES.find(function (r) {
+      var by = r.ingredients_by_serving || {};
+      return Object.values(by).some(function (tier) {
+        return (tier || []).some(function (i) { return /sour cream|buttermilk|heavy cream/i.test(i.item || ''); });
+      });
+    });
+    return hit ? hit.recipe_id : null;
+  });
+  if (subId) {
+    await page.goto(B + '/recipe.html?id=' + subId, { waitUntil: 'networkidle' });
+    await page.click('#tab-grocery');
+    await page.waitForTimeout(300);
+    ok('substitution: no JS errors', errors.length === 0 || (console.log(errors), false));
+    const subText = await page.locator('.sub-card .sub-row').first().textContent().catch(() => null);
+    ok('substitution: "Don\'t have it on hand?" note rendered', !!subText);
+    console.log('     substitution note: ' + subText);
+  } else {
+    console.log('SKIP substitution test — no recipe in the corpus uses a curated ingredient');
+  }
+
   // ── collection page ────────────────────────────────────────────────
   errors.length = 0;
   const cid = await page.evaluate(() => window.COLLECTIONS.find(c => c.status === 'live').id);
