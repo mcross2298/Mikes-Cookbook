@@ -155,7 +155,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
   <!-- ── 2 · RECIPES ── -->
   <div class="es-sec" id="recipes">
     <div class="es-sec-head"><div class="es-sec-num">2</div><div class="es-sec-title">Browse: collections &amp; dish types</div></div>
-    <p class="es-lede">Two ways to find a dish: browse curated collections, or sort everything by dish type. Live search filters by name, tag, or ingredient.</p>
+    <p class="es-lede">Two ways to find a dish: browse curated collections, or sort everything by dish type. Search ranks the best match first, tolerates a typo, and understands multi-word queries.</p>
 
     <div class="es-tier flag">★ Collections</div>
     <div class="es-cards">
@@ -193,7 +193,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
     <ul class="es-ticks">
       <li><span class="chk">✓</span><span><b>Eleven dish types</b> — Breakfast · Salads &amp; Slaws · Soups, Stews &amp; Chilis · Casseroles &amp; Bakes · Skillets &amp; Stir-Fries · Grilled &amp; Sheet-Pan · Sandwiches · Desserts · Salsas &amp; Dips · Sauces · Marinades, switchable from the same Browse screen as collections.</span></li>
       <li><span class="chk">✓</span><span><b>Sub-tabs inside a collection</b> — the larger collections (High-Protein Meal Prep, Desserts) add a sticky sub-tab bar to filter their grid further, alongside search.</span></li>
-      <li><span class="chk">✓</span><span><b>Live search</b> — filter recipes instantly by name, tag, or ingredient from the Recipes screen.</span></li>
+      <li><span class="chk">✓</span><span><b>Ranked search</b> — searches name, tag, and every ingredient (not just the ones the old scan happened to read), scores title matches above ingredient-only ones, and tolerates a typo on longer words. "chicken broccoli" finds recipes naming both even when the words never sit next to each other; a "matched: ingredient" label explains a surprising result.</span></li>
     </ul>
   </div>
 
@@ -204,7 +204,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
     <ul class="es-ticks">
       <li><span class="chk">✓</span><span><b>Serving stepper (1–12)</b> — recipes are authored at 2 and 4 servings; any other count is <b>scaled live</b> from the native tier, rescaling every ingredient quantity on the fly.</span></li>
       <li><span class="chk">✓</span><span><b>Per-serving macros</b> — the Overview &amp; Macros tab shows calories and the protein / fat / carb breakdown <b>per single serving</b>, constant no matter how many you cook for.</span></li>
-      <li><span class="chk">✓</span><span><b>Clean grocery list</b> — the Grocery tab groups items by aisle (Meat · Dairy · Produce · Pantry) as a clean shopping list — <b>no fiddly exact amounts</b>, because you buy standard packages.</span></li>
+      <li><span class="chk">✓</span><span><b>Clean grocery list</b> — the Grocery tab groups items by real store aisle (Produce, Meat &amp; Poultry, Dairy &amp; Eggs, Spices, Frozen last…), not the raw four-value data category, so the order matches how you actually walk a store. A "Don't have it on hand?" note offers a swap (Greek yogurt for sour cream, milk + acid for buttermilk, and about 18 more) for anything the recipe uses that has a known substitute.</span></li>
       <li><span class="chk">✓</span><span><b>Step-by-step method</b> — the Recipe tab carries the numbered instructions with per-ingredient prep notes. Swipe between all three tabs.</span></li>
       <li><span class="chk">✓</span><span><b>Check-off state per serving</b> — tick groceries and steps as you go; progress is saved on-device, keyed to each recipe <b>and</b> serving count.</span></li>
       <li><span class="chk">✓</span><span><b>Cooking Mode</b> — ▸ Start Cooking on the Recipe tab opens a full-screen, one-step-at-a-time view (screen kept awake) with an opt-in <b>🎙️ voice control</b> toggle: "next step," "previous step," "read ingredients" (spoken aloud), all hands-free. Tonight's meals on the Home <b>Today</b> card get a <b>▸ Cook</b> button that opens it directly.</span></li>
@@ -219,7 +219,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
     <p class="es-lede">Plan the week's meals and the app turns them into one smart shopping trip.</p>
     <ul class="es-ticks">
       <li><span class="chk">✓</span><span><b>Build the week</b> — add the recipes you're cooking and the planner tracks your meals and recipe count from the Home hero.</span></li>
-      <li><span class="chk">✓</span><span><b>One combined grocery list</b> — every planned recipe's ingredients <b>merged and grouped by aisle</b>, so you shop once for the whole week.</span></li>
+      <li><span class="chk">✓</span><span><b>One combined grocery list</b> — every planned recipe's ingredients <b>merged and grouped by aisle</b>, so you shop once for the whole week. Compatible units merge into one buyable number (including a metric bridge — grams merge with ounces now) and a curated conversion table turns a size word like "1 medium onion" into a real weight where it can; a small dot under a quantity means it was estimated, and it's tappable to see exactly how.</span></li>
       <li><span class="chk">✓</span><span><b>Check off as you shop</b> — the plan remembers which items are already in the cart.</span></li>
       <li><span class="chk">✓</span><span><b>✨ Plan my week</b> — one tap builds a full day-by-day week, then three chips choose how it thinks. <b>Balanced</b> favours variety and overlapping ingredients so perishable Produce, Meat and Dairy get used up instead of going to waste. <b>Macro</b> fits each day to your calorie and protein goals (appears once goals are set). <b>Time</b> asks how much room each day has — Quick (&lt;30 min), Standard (~1 hr) or No rush — and builds around your actual bandwidth, remembering your day assignments. Switching a chip rebuilds the week in place, so you can compare instead of starting over. Signed in with the workout app linked, it also leans higher-protein on your real established training days and lighter on rest days, learned from your logged workout history.</span></li>
     </ul>

@@ -140,19 +140,11 @@
     return collections().filter(function (c) { return c.id === id; })[0] || collections()[0] || null;
   }
 
-  /* Search across title, tags and ingredient items. */
-  function matches(r, q) {
-    if (!q) return true;
-    q = q.toLowerCase();
-    if ((r.title || "").toLowerCase().indexOf(q) >= 0) return true;
-    if ((r.tags || []).join(" ").toLowerCase().indexOf(q) >= 0) return true;
-    var first = r.ingredients_by_serving &&
-      r.ingredients_by_serving["serving_" + (r.native_serving || 2)];
-    if (first && first.some(function (i) {
-      return (i.item || "").toLowerCase().indexOf(q) >= 0;
-    })) return true;
-    return false;
-  }
+  // CI initiative 4: ranked, tokenized, bounded-fuzz search (mc-search.js),
+  // replacing the old indexOf-over-three-fields substring scan — same gap
+  // this had as the shell's Browse screen, fixed the same way. Returns a
+  // ranked ARRAY, not a boolean, so best-match-first replaces filter-in-
+  // array-order within this collection's own recipe list.
 
   // Compact bottom stat row for a recipe card — one authored serving's
   // Cal/Protein/Fat/Carbs, matching recipe.html's macro card exactly (no
@@ -364,7 +356,7 @@
         return;
       }
 
-      var shown = list.filter(function (r) { return matches(r, q); });
+      var shown = q ? MCSearch.search(q, list) : list;
       if (!shown.length) {
         grid.appendChild(el("div", "empty",
           '<span class="empty-emoji">🔍</span>No recipes match “' + esc(q) + "”."));

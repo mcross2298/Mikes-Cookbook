@@ -52,7 +52,7 @@ ROADMAP.md        Phased improvement roadmap, kept current with what's shipped.
 tools/            build-sw.py (precache list) + the CI test/validation suite,
                   including check-docs.js (fails CI on stale doc claims).
 .github/workflows/pages.yml
-                  CI: a `verify` job (11 blocking gates) on pull requests and
+                  CI: a `verify` job (13 blocking gates) on pull requests and
                   main, then `deploy` to GitHub Pages on main only.
 
 Open:  index.html   ·   recipe.html?id=jalapeno-chicken-bake

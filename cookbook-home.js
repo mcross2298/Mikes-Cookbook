@@ -2232,17 +2232,27 @@
      once a search query or any facet is active, both collapse to the same
      flat grid of matching recipe cards, exactly as before. The #categories
      deep link still works (see SCREEN_ALIASES) and lands on By dish type. */
-  function recipesMatch(r, q) {
-    if (!q) return true;
-    q = q.toLowerCase();
-    if ((r.title || "").toLowerCase().indexOf(q) >= 0) return true;
-    if ((r.dish_category || "").toLowerCase().indexOf(q) >= 0) return true;
-    if ((r.category || "").toLowerCase().indexOf(q) >= 0) return true;
-    if ((r.tags || []).join(" ").toLowerCase().indexOf(q) >= 0) return true;
-    var ing = r.ingredients_by_serving &&
-      r.ingredients_by_serving["serving_" + (r.native_serving || 2)];
-    if (ing && ing.some(function (i) { return (i.item || "").toLowerCase().indexOf(q) >= 0; })) return true;
-    return false;
+  // CI initiative 4: ranked, tokenized, bounded-fuzz search (mc-search.js)
+  // replaces the old indexOf-over-five-fields substring scan, which returned
+  // ZERO results for "chicken broccoli" (the words are never adjacent in any
+  // one field) and ZERO for "chiken" (no typo tolerance at all) — both
+  // verified against the real catalog before this file existed. Returns a
+  // SORTED array (best match first), not a boolean, because ranking — not
+  // just filtering — was the actual gap.
+  // Side table of recipe_id -> matched fields for whichever search just ran,
+  // read by recipeCard() calls below to show the "matched: ingredient"
+  // provenance badge. A side table rather than threading {recipe,
+  // matchedFields} pairs through the category/macro/lowShopping .filter()
+  // chain that follows searchRecipes() — those filters, and the sort
+  // low-shopping applies afterward, all expect plain recipe objects, and
+  // wrapping/unwrapping at every step would be more code than this map.
+  var lastMatchedFields = {};
+  function searchRecipes(list, q) {
+    if (!q) { lastMatchedFields = {}; return list.slice(); }
+    var results = MCSearch.query(q, list);
+    lastMatchedFields = {};
+    results.forEach(function (x) { lastMatchedFields[x.recipe.recipe_id] = x.matchedFields; });
+    return results.map(function (x) { return x.recipe; });
   }
 
   // Set by Home's search button so this screen's box grabs focus (and the
@@ -2464,7 +2474,7 @@
       }
       taxoBar.style.display = "none";
 
-      var list = q ? recipes().filter(function (r) { return recipesMatch(r, q); }) : recipes().slice();
+      var list = searchRecipes(recipes(), q);
 
       if (recipesState.category) {
         list = list.filter(function (r) { return r.dish_category === recipesState.category; });
@@ -2499,7 +2509,10 @@
         (facetLabel ? " · " + facetLabel : "")));
       var grid = el("div", "col-grid");
       list.forEach(function (r) {
-        grid.appendChild(recipeCard(r, { pantryInfo: recipesState.lowShopping ? pantryMatchInfo(r) : null }));
+        grid.appendChild(recipeCard(r, {
+          pantryInfo: recipesState.lowShopping ? pantryMatchInfo(r) : null,
+          matchedFields: q ? lastMatchedFields[r.recipe_id] : null
+        }));
       });
       results.appendChild(grid);
     }
@@ -3109,7 +3122,8 @@
       (opts.pantry ? " is-staple" : ""));
     el2.innerHTML =
       '<span class="check-box">' + CHECK_SVG + "</span>" +
-      '<span class="grocery-qty">' + (row.qty ? esc(row.qty) : "") + "</span>" +
+      '<span class="grocery-qty">' + (row.qty ? esc(row.qty) : "") +
+        (row.derived ? '<span class="grocery-derived" aria-hidden="true"></span>' : "") + "</span>" +
       '<span class="check-text">' + esc(row.item) + "</span>";
     el2.addEventListener("click", function () {
       var set = loadGroc();
@@ -3119,6 +3133,29 @@
       saveGroc(set);
       collapseGroceryRow(el2, nowDone);
     });
+    // A quiet provenance affordance (CI initiative 2): some or all of this
+    // quantity came from mc-units.js's curated density table, not straight
+    // from an authored amount — "1 medium onion" only becomes a buyable
+    // weight by estimating what "medium" weighs. Tapping the underdotted
+    // quantity says exactly what was estimated and from what, rather than
+    // presenting a derived number as if it were an authored fact. Never a
+    // modal — the same lightweight toast every other quiet confirmation in
+    // this screen already uses.
+    if (row.derived) {
+      var qtyEl = el2.querySelector(".grocery-qty");
+      qtyEl.classList.add("has-derived");
+      qtyEl.setAttribute("tabindex", "0");
+      qtyEl.setAttribute("role", "button");
+      qtyEl.setAttribute("aria-label", "How this quantity was estimated");
+      var showDerived = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        plannerToast(row.derived.join(" · "));
+      };
+      qtyEl.addEventListener("click", showDerived);
+      qtyEl.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") showDerived(e);
+      });
+    }
     // Tapping the item name itself (not the row) surfaces other recipes
     // that use it — an odd leftover has no obvious next use otherwise.
     // Stops propagation so it never also toggles the check-off.
@@ -3332,7 +3369,7 @@
           if (groceryRowAllDone(row)) { madeRows.push(row); return; }
           buy.push(row);
         });
-        if (buy.length) buyCats.push({ category: c.category, rows: buy });
+        if (buy.length) buyCats.push({ aisle: c.aisle, rows: buy });
       });
       var total = buyCats.reduce(function (n, c) { return n + c.rows.length; }, 0);
 
@@ -3349,7 +3386,7 @@
       buyCats.forEach(function (c) {
         var sec = el("div", "grocery-cat");
         sec.appendChild(el("div", "grocery-cat-head",
-          '<span class="dot"></span>' + esc(c.category) +
+          '<span class="dot"></span>' + esc(c.aisle) +
           '<span class="grocery-cat-count">' + c.rows.length + "</span>"));
         c.rows.forEach(function (row) { sec.appendChild(groceryRow(row, checked)); });
         card.appendChild(sec);
@@ -3491,7 +3528,7 @@
     function paint() {
       var q = box.value.trim();
       results.innerHTML = "";
-      var list = recipes().filter(function (r) { return recipesMatch(r, q); });
+      var list = searchRecipes(recipes(), q);
       if (sortFresh) {
         // never-cooked → 0 → sorts first (freshest); most-recent → last.
         list = list.slice().sort(function (a, b) {

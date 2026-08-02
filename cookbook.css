@@ -283,6 +283,13 @@ body {
   margin: 0 0 10px;
 }
 
+/* ── SUBSTITUTIONS (Grocery tab, CI initiative 4) ────────────────────
+   Informational, not interactive — no accept/reject state, so no per-row
+   check-off treatment. One line per applicable ingredient. */
+.sub-list { display: flex; flex-direction: column; gap: 10px; }
+.sub-row { font-size: 14.5px; line-height: 1.5; color: var(--ink-dim); margin: 0; }
+.sub-row b { color: var(--ink); font-weight: 700; }
+
 /* ── OVERVIEW & MACROS ────────────────────────────────────────────── */
 .desc { font-size: 15.5px; line-height: 1.6; color: var(--ink); margin: 0; }
 
@@ -422,7 +429,10 @@ body {
   text-align: center;
   padding: 1px 7px;
 }
-/* Fixed quantity column so amounts line up cleanly for store scanning. */
+/* Fixed quantity column so amounts line up cleanly for store scanning.
+   tabular-nums keeps the digits themselves flush in that column too — a "2"
+   and a "12" now share a baseline instead of the narrower glyph drifting
+   right (CI initiative 2's "one row, one number" spec). */
 .grocery-row { align-items: center; }
 .grocery-qty {
   flex: 0 0 auto;
@@ -430,10 +440,36 @@ body {
   font-family: var(--serif);
   font-size: 15px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--accent);
   line-height: 1.2;
 }
 .grocery-row.done .grocery-qty { color: var(--ink-dim); }
+/* Provenance affordance: this quantity includes a density-derived estimate
+   (mc-units.js — "1 medium onion" only becomes a buyable weight by
+   estimating what "medium" weighs). A quiet dotted underline plus a small
+   dot, not a badge — trust in a derived number comes from being able to open
+   it, not from calling attention to it. Tap/Enter reveals the estimate via
+   groceryRow()'s plannerToast call. */
+.grocery-qty.has-derived {
+  cursor: pointer;
+  text-decoration: underline dotted rgba(var(--accent-rgb), 0.45);
+  text-underline-offset: 3px;
+}
+.grocery-qty.has-derived:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.grocery-derived {
+  display: inline-block;
+  width: 5px; height: 5px;
+  margin-left: 3px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+  background: var(--sage);
+  vertical-align: top;
+}
 /* Brief fade while a checked row drops to the bottom of its section (see
    collapseGroceryRow in cookbook-home.js) so the reorder reads as a settle,
    not a jump-cut. */
@@ -1410,6 +1446,13 @@ button.col-back { appearance: none; -webkit-appearance: none;
 .rc-pantry-badge {
   display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 800;
   color: var(--sage); letter-spacing: 0.02em;
+}
+/* Match provenance badge — active search only (CI initiative 4). Quieter
+   than the pantry badge (uppercase mono label, not a claim about the
+   recipe) since this is metadata about the SEARCH, not the dish. */
+.rc-match-badge {
+  display: inline-block; margin-top: 5px; font-size: 10px; font-weight: 700;
+  color: var(--ink-dim); letter-spacing: 0.06em; text-transform: uppercase;
 }
 
 /* Bottom padding bumped 24px -> 48px: on top of main.app's own 64px

@@ -1,6 +1,7 @@
 # Mike's Cookbook — Flagship CI Initiatives (v3 proposal)
 
-> **Status:** Phase 1 complete. Initiatives 1 and 5 are ✅ shipped; 2, 3 and 4 remain proposals.
+> **Status:** Phase 1 and Phase 2 complete. Initiatives 1, 5, 2 and 4 are ✅ shipped;
+> only Initiative 3 (the Photographic Layer, Phase 3) remains a proposal.
 > Each initiative carries its own status line — this file is kept truthful as work lands,
 > per the repo's process rule.
 > **Scope:** a multi-lens audit of the repo at `bb2efe0`, and the 5 initiatives that
@@ -50,7 +51,7 @@ ingredients separating `item` (shopping name) from `prep` (mise instruction) wit
 | Nutrition | In-app macro tracker on `mc_macros_v1` — the same key/shape the workout app uses, so one signed-in trainee has one store, not two |
 | Cross-app | `mc-bridge.js` read-only layer: today's meals (denormalized snapshots), today's workout, `likelyTrainingDays()` biasing meal selection toward protein on real historical training days |
 | Sync / durability | Optional Supabase login, per-store merge strategies, v2 backup format with legacy import, `diagnostics.html` device self-test |
-| CI | 11 blocking gates on PRs *and* `main`, deploy gated behind them |
+| CI | 13 blocking gates on PRs *and* `main`, deploy gated behind them |
 
 ### What is genuinely absent
 
@@ -238,9 +239,26 @@ hands are dirtiest.
 
 ---
 
-### Initiative 2: The Ingredient Truth Layer
+### Initiative 2: The Ingredient Truth Layer ✅ (shipped)
 
 * **Target Domain:** Smart Grocery Consolidation / Unit Normalization / Pantry Intelligence
+* **Status:** ✅ **Shipped**, as a smaller, more honest first slice than the spec below projected:
+  * **208 → 179 of 854 identities fragment** (24.4% → 21.0%), not the full resolution the original
+    framing implied. The metric bridge and unit-word aliasing are exact, zero-risk fixes and landed
+    in full; the density table is the one place this initiative makes a judgment call, and it stayed
+    deliberately small — ~30 curated items, each a widely-cited average weight, not the ~120-row
+    table originally estimated. Most of the *remaining* 179 are a genuine cooking-measurement-vs-weight
+    divide (a cup of chopped onion vs. a whole one) or fresh-herb bunch sizes, both of which this file
+    declines to guess at for the same reason `ITEM_ALIASES` started empty: fabricating a density it
+    isn't confident in would silently under- or over-count a real shopping list.
+  * The fragmentation count is a **CI ratchet** (`tools/test-mc-units.js`, gate 8 of 12), not a
+    one-time fix — it can only fall as `DENSITY` grows, never silently rise.
+  * The aisle model shipped as specified: `Produce → Meat & Poultry / Seafood → Dairy & Eggs →
+    Spices & Seasonings → Condiments & Sauces → Dry Goods & Pantry → Frozen` (perimeter first,
+    frozen deliberately last), derived from the untouched `category` enum plus a keyword check.
+  * **Not built:** user-reorderable aisle sequence. `AISLE_ORDER` is fixed, not drag-sortable — a
+    real feature, deliberately scoped out to keep this slice to the ingredient-math + a sensible
+    default store walk, not a new persisted-preference UI. Candidate for a follow-up, not blocking.
 
 **The problem / gap.** The merged grocery list is the app's highest-leverage automation and
 it is wrong on **24.5% of the catalog's ingredient identities**. Measured: 210 of 856
@@ -393,9 +411,36 @@ Mode removes the squint-and-lean that currently precedes every step read in dayl
 
 ---
 
-### Initiative 4: Intent-Ranked Discovery
+### Initiative 4: Intent-Ranked Discovery ✅ (shipped, search + substitution slices)
 
 * **Target Domain:** Search & Discovery / Cook-What-You-Have / AI-adjacent Matching
+* **Status:** ✅ **Search and substitution shipped; cook-what-you-have was already there.**
+  * `mc-search.js` replaced the `indexOf`-over-five-fields scan on the shell's Browse screen,
+    the recipe/meal picker overlay, and `collection.html`'s live search — all three were
+    separate reimplementations of the same substring scan, now one module. Both documented
+    failures are fixed and pinned in `tools/test-mc-search.js`: `"chicken broccoli"` and
+    `"chiken"` each now return real, ranked results.
+  * **A real bug the test suite itself caught:** the first working fuzz threshold (no fuzz
+    under 4 characters) let `"pork"` fuzzy-match `"York"` (New York strip steak) at edit
+    distance 1 — a single p→y substitution. The floor is 5 characters now.
+  * **A real performance bug, also self-caught:** the first working version ran Levenshtein
+    per (recipe × field × word) and measured ~35–50ms per keystroke on the real corpus —
+    perceptible lag on a live-typing search box. Restructured to resolve fuzzy matches once
+    per query token against a corpus-wide vocabulary instead of once per recipe; the same
+    corpus now measures ~4–8ms/query.
+  * **"Cook what you have" was substantially already built**, just under a different name —
+    the existing 🧂 Low-shopping filter already ranks by `pantryMatchInfo()`'s coverage
+    (`need` ascending) and shows a "Need N items" badge. Nothing new was required there; the
+    audit's framing implied a gap that measurement showed was mostly already closed.
+  * **Missing-ingredient substitution shipped smaller than proposed.** A curated 20-swap table
+    surfaces as an informational "Don't have it on hand?" note on `recipe.html`'s Grocery tab —
+    not the pantry-aware, tap-to-accept-and-rewrite-the-row version the original spec
+    described. `recipe.html` has no pantry read, and wiring one in was judged not worth a new
+    cross-file dependency for a first slice; the note shows for any curated ingredient the
+    recipe uses, regardless of whether the cook's pantry actually has it.
+  * **Not built:** token highlighting in card titles (a visual nicety, explicitly scoped out
+    up front) and the matched-field eyebrow on the picker overlay and collection pages (only
+    the shell's Browse screen shows it — ranking improved everywhere, the badge didn't).
 
 **The problem / gap.** `recipesMatch()` is `indexOf` over five fields. Consequences,
 verified against the real catalog:
@@ -566,14 +611,22 @@ the device this app is for. `tools/smoke-test.js` also ships now — a real-brow
 boot, hydration, search, `?cook=1` and timer survival — though it needs Playwright and is
 deliberately not wired into CI.
 
-### Phase 2 — Algorithmic Truth *(~1–2 sprints)*
+### Phase 2 — Algorithmic Truth ✅ *(shipped)*
 
-3. **Initiative 2 — Ingredient Truth Layer.** Land `mc-units.js` with the ratcheting
-   fragmentation gate first, then the aisle model. Watch the 210 baseline fall; the number
-   is the acceptance criterion.
-4. **Initiative 4 — Intent-Ranked Discovery.** Depends on `mc-units.js` for shared ingredient
-   identity and on Initiative 5's index for a cheap search corpus. Ship ranked search first,
-   then cook-what-you-have, then substitutions — three independently valuable slices.
+3. **Initiative 2 — Ingredient Truth Layer.** ✅ Shipped: `mc-units.js` with the ratcheting
+   fragmentation gate (`tools/test-mc-units.js`) and the aisle model both landed. Measured
+   208 → 179 of 854 identities fragmenting — a real, CI-enforced improvement, smaller than the
+   original ~120-row density-table estimate because the table shipped deliberately conservative
+   (~30 curated items). Growing `DENSITY`/`UNIT_WORD_ALIASES` further, and building the
+   user-reorderable aisle sequence, are both real follow-ups but weren't blocking for this slice.
+4. **Initiative 4 — Intent-Ranked Discovery.** ✅ Shipped: `mc-search.js` replaced the
+   `indexOf` scan everywhere it lived (Browse, the picker overlay, `collection.html`), fixing
+   both documented failures (`"chicken broccoli"`, `"chiken"`) and catching two real bugs in
+   its own test suite along the way — a 4-char fuzz floor that let `"pork"` match `"York"`,
+   and a naive per-recipe fuzzy scan that measured ~35–50ms/query before being restructured to
+   ~4–8ms. Cook-what-you-have turned out to already exist (the 🧂 Low-shopping filter). The
+   substitution slice shipped smaller than proposed — informational only, not pantry-aware or
+   interactive — see Initiative 4's own status note above for the full account.
 
 ### Phase 3 — Flagship Surface *(~1–2 sprints)*
 
