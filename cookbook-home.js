@@ -3109,7 +3109,8 @@
       (opts.pantry ? " is-staple" : ""));
     el2.innerHTML =
       '<span class="check-box">' + CHECK_SVG + "</span>" +
-      '<span class="grocery-qty">' + (row.qty ? esc(row.qty) : "") + "</span>" +
+      '<span class="grocery-qty">' + (row.qty ? esc(row.qty) : "") +
+        (row.derived ? '<span class="grocery-derived" aria-hidden="true"></span>' : "") + "</span>" +
       '<span class="check-text">' + esc(row.item) + "</span>";
     el2.addEventListener("click", function () {
       var set = loadGroc();
@@ -3119,6 +3120,29 @@
       saveGroc(set);
       collapseGroceryRow(el2, nowDone);
     });
+    // A quiet provenance affordance (CI initiative 2): some or all of this
+    // quantity came from mc-units.js's curated density table, not straight
+    // from an authored amount — "1 medium onion" only becomes a buyable
+    // weight by estimating what "medium" weighs. Tapping the underdotted
+    // quantity says exactly what was estimated and from what, rather than
+    // presenting a derived number as if it were an authored fact. Never a
+    // modal — the same lightweight toast every other quiet confirmation in
+    // this screen already uses.
+    if (row.derived) {
+      var qtyEl = el2.querySelector(".grocery-qty");
+      qtyEl.classList.add("has-derived");
+      qtyEl.setAttribute("tabindex", "0");
+      qtyEl.setAttribute("role", "button");
+      qtyEl.setAttribute("aria-label", "How this quantity was estimated");
+      var showDerived = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        plannerToast(row.derived.join(" · "));
+      };
+      qtyEl.addEventListener("click", showDerived);
+      qtyEl.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") showDerived(e);
+      });
+    }
     // Tapping the item name itself (not the row) surfaces other recipes
     // that use it — an odd leftover has no obvious next use otherwise.
     // Stops propagation so it never also toggles the check-off.
@@ -3332,7 +3356,7 @@
           if (groceryRowAllDone(row)) { madeRows.push(row); return; }
           buy.push(row);
         });
-        if (buy.length) buyCats.push({ category: c.category, rows: buy });
+        if (buy.length) buyCats.push({ aisle: c.aisle, rows: buy });
       });
       var total = buyCats.reduce(function (n, c) { return n + c.rows.length; }, 0);
 
@@ -3349,7 +3373,7 @@
       buyCats.forEach(function (c) {
         var sec = el("div", "grocery-cat");
         sec.appendChild(el("div", "grocery-cat-head",
-          '<span class="dot"></span>' + esc(c.category) +
+          '<span class="dot"></span>' + esc(c.aisle) +
           '<span class="grocery-cat-count">' + c.rows.length + "</span>"));
         c.rows.forEach(function (row) { sec.appendChild(groceryRow(row, checked)); });
         card.appendChild(sec);

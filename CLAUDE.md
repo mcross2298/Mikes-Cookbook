@@ -135,7 +135,8 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `mc-fav.js` | **The ❤ favorites store** (`mc-cookbook:favorites`), shared by all three controllers. Audit C-07: each of them carried its own `loadFavs`/`toggleFav` over the same key, and `CLAUDE.md` already *described* it as `window.MCFav` — that was only an export at the bottom of `cookbook-home.js`'s IIFE that the other two never used. This makes the documented thing the real thing. Exposes `MCFav.onWriteFail` so the shell can surface a quota failure (C-12); pages that don't set it behave as before. |
 | `mc-timers.js` | **The kitchen timer store + the rail that shows it** (CI initiative 1). A timer used to be a `setInterval` id closed over by `timerChip()` in `cookbook.js` and bound to a DOM node inside the Cooking Mode overlay — and `renderCook()` blanks that overlay (`o.innerHTML = ""`) on every step advance **and every done-toggle**, so a running countdown was silently destroyed the moment a cook swiped forward to read ahead. Three properties replace it: **a timer is an absolute instant, not a countdown** (`endsAt` epoch ms, remaining derived from `Date.now()` on every read — nothing decrements, so nothing can drift, and a timer that expired while the phone was locked reports itself correctly the moment the screen wakes); **the store is the truth, not the DOM** (`mc-cookbook:timers`, so a re-render, a tab switch, or a full navigation from `recipe.html` to `index.html` cannot destroy it); and **one ticker for all timers**, stopped entirely when none are running. Deliberately a 250 ms `setInterval` and **not** `requestAnimationFrame` — rAF is paused completely in a backgrounded tab, which is exactly when noticing an expiry still matters; correctness never depends on either, because of property 1. Renders its own rail (`MCTimers.mountRail()`) so the shell, collection pages, `recipe.html` and Cooking Mode all get one definition of it, and publishes its height as `--mc-rail-h` on `:root` so the bottom-anchored controls in `cookbook.css` clear it. Pinned by `tools/test-mc-timers.js` against a controllable clock. Exposed as `window.MCTimers`. |
 | `mc-cards.js` | **The recipe card**, shared by the shell and collection pages (audit C-07). Previously duplicated: ~300 lines each of icon-SVG table, `CARD_PATTERNS`, `clampAccent` (triplicated — `cookbook.js` too), `rgbFromHex`, `hashStr`, `cardPatternFor`, `cardSheenDelay`, `macroStatsHtml`, and the card itself, which had already drifted apart (collection pages grew a user-recipe delete control; the shell grew a pantry badge, serving override, owner double-tap curation and a favorites-screen removal path). One card now renders every surface, with per-call `opts` for what a card *shows* and `MCCards.configure(hooks)` for how a *page* adds to the plan / toasts / curates. Hooks default to no-ops. Behavior is identical to the two it replaced, asymmetries included — delete only where `opts.allowDelete`, curation only on the shell, collection pages keep their flat "Toggle favorite" heart label. Load `mc-fav.js` and `mc-cards.js` before any page controller. |
-| `mc-grocery.js` | **The merged grocery list's quantity math** (audit C-08): parsing an amount (`"1 1/2"`, `"0.75"`, `"to taste"`), summing across planned meals, purchase-unit conversion, and the ingredient-identity keying (`category|singularized-name`) that both the grocery merge **and** Smart Week's ingredient-overlap scoring read — one definition, two callers. Takes five readers via `MCGrocery.configure()` (`recipes`, `recipeById`, `planMeals`, `loadPantry`, `pantryKey`). |
+| `mc-units.js` | **The ingredient truth layer: unit normalization, a metric bridge, a curated count→weight density table, and a real aisle model** (CI initiative 2). Measured against the real 856-identity corpus: 208 ingredient identities (24.4%) resolved to more than one quantity bucket in the merged grocery list — `"3 cloves · 1 clove · 1 tbsp · 6 g"` on one row instead of one buyable number — because `g`, the corpus's 5th-most-common unit, sat outside both the old `vol`/`wt` families, and the unit half of a bucket key was never singularized (`clove` and `cloves` were different buckets by construction). `g`/`kg` and `ml`/`l` now extend those families with exact physical conversions; `UNIT_WORD_ALIASES` + `singularizeUnit()` fix the pluralization gap; a small, explicit `DENSITY` table (average whole-item weights for the corpus's ~30 highest-frequency count-measured items, e.g. "1 medium onion ≈ 110 g") bridges a count word into a real weight **only** for items it's confident about — an item absent from the table is left exactly as fragmented as before, deliberately. Net measured effect: **179/854 (21.0%)** now fragment, a real but modest first slice — most of the remainder is either a genuine cooking-measurement-vs-weight divide (a cup of chopped onion vs. a whole one) this file doesn't attempt to bridge, or a blank-quantity data quirk. Every density conversion is tagged (`viaDensity`) so the UI can show its work rather than present an estimate as fact (see `mc-grocery.js`'s `derived` notes and `cookbook-home.js`'s `.grocery-qty.has-derived` tap-to-reveal). Also derives a **real aisle model** (`aisleFor()`, `AISLE_ORDER`) from `ingredient.category` plus a keyword check — `category` stays the untouched four-value data-integrity enum `tools/validate-recipes.js` enforces; aisles are a display grouping layered on top (Produce → Meat & Poultry / Seafood → Dairy & Eggs → Spices & Seasonings → Condiments & Sauces → Dry Goods & Pantry → Frozen, perimeter-first with frozen deliberately last). Pure, no DOM, no storage — `tools/test-mc-units.js` runs it as a **ratcheting** CI gate over the real corpus (179 is the ceiling; it may only go down). Exposed as `window.MCUnits`. |
+| `mc-grocery.js` | **The merged grocery list's quantity math** (audit C-08): parsing an amount (`"1 1/2"`, `"0.75"`, `"to taste"`), summing across planned meals, purchase-unit conversion, and the ingredient-identity keying (`category|singularized-name`) that both the grocery merge **and** Smart Week's ingredient-overlap scoring read — one definition, two callers. **CI initiative 2** moved unit conversion, the density table and aisle assignment out to `mc-units.js`; `buildGrocery()` now bucket-keys each ingredient line through `MCUnits.resolveUnit()` and groups rows by `MCUnits.aisleFor()` instead of the raw category, returning `{ aisle, rows }` (was `{ category, rows }`) with each row optionally carrying `derived` — deduplicated, human-readable notes (`"1/2 each ≈ 29 g"`) for any sub-amount that came from a density estimate rather than an authored quantity. Takes five readers via `MCGrocery.configure()` (`recipes`, `recipeById`, `planMeals`, `loadPantry`, `pantryKey`). |
 | `mc-recipe-form.js` | **The "Add Recipe" overlay** (audit C-08) — title, icon, category, structured ingredients and numbered steps, persisted via `MCUser`. Needs four hooks (`categoryOrder`, `closePicker`, `recipes`, `setTab`); `MCRecipeForm.open()` is the single entry point. |
 | `recipe.html` / `cookbook.js` | Unified recipe detail: fixed header (title/tags/times/serving stepper) + swipeable sub-tabs (Overview & Macros · Grocery · Recipe). Owns serving scaling (`scaleQuantity`, wired for arbitrary 1–12 servings), check-off state, screen wake lock, and full-screen Cooking Mode. **Timers are no longer owned here** — `timerChip()` is a thin view over `mc-timers.js`, and the Web Audio ping / vibrate / expiry handling moved there with them so one definition serves every surface. `?cook=1` opens Cooking Mode directly (the page used to parse only `?id` and always `setTab("overview")`, so hands-free mode sat four taps deep behind the third sub-tab with no way to link to it); Home's Today card links there. Cooking Mode's voice grammar also covers timers now — *"set a timer for N minutes"*, *"how long left"*, *"stop the timer"* — since setting one was the last thing that still required a tap. |
 | `cookbook-nav.js` | Renders the floating 🏠 Home button on `data-tabbar="page"` pages. Exposes `window.MCNav`. |
@@ -156,7 +157,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `recipes-index.js` / `recipes-detail-NN.js` | **Generated — never hand-edit.** Output of `tools/build-data.js`; see `mc-data.js` above. Regenerate with `node tools/build-data.js` after any `recipes-data.js` change; CI fails on a stale copy (`--check`) and on an orphaned shard left behind by a smaller `SHARDS`. `--report` prints the size table. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. Skips `recipes-data.js` — see its row above. |
 | `tools/smoke-test.js` | **Local only, not in CI.** Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, and the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation. Needs Playwright, which this repo has no npm step for, so wiring it into `pages.yml` is a separate decision. Run it before pushing anything that touches load order, Cooking Mode or the timers. |
-| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (11 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (12 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -183,7 +184,10 @@ A `RECIPES` entry includes (see the file header for full notes):
   `serving_4`). Each ingredient separates `item` (clean shopping-list name →
   Grocery tab) from `prep` (mise-en-place instruction → Recipe tab only),
   plus `quantity`, `unit`, and `category` (one of **Meat · Dairy · Produce ·
-  Pantry**, which groups the grocery list).
+  Pantry** — a four-value data-integrity enum enforced by
+  `tools/validate-recipes.js`, never edited or extended for display purposes;
+  `mc-units.js`'s `aisleFor()` derives the grocery list's actual on-screen
+  grouping from it, see that file's row below).
 - `instructions` — array of `{ step_number, title, detail }`.
 
 **Serving ladder.** Most recipes (the 2-meals-a-day style) author a 2-serving
@@ -378,7 +382,7 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Eleven gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Twelve gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
@@ -400,10 +404,16 @@ anything reaching production):
      empty. The generator's field list is a **deny-list** now for that reason.
   7. `tools/build-data.js --check` — the generated index and shards are current
      (and no orphaned shard is left behind).
-  8. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
-  9. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
-  10. `tools/build-sw.py --check` — precache list is current.
-  11. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  8. `tools/test-mc-units.js` — the ingredient unit/density/aisle model (CI
+     initiative 2). Its corpus-wide fragmentation count is a **ratchet, not a
+     fixed assertion**: measured at 179 of 854 ingredient identities (was 208
+     before this file existed) and allowed to fall freely as `DENSITY` grows,
+     but never to rise — a new recipe introducing a unit this file can't
+     reconcile should fail review, not disappear into a grocery row silently.
+  9. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
+  10. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
+  11. `tools/build-sw.py --check` — precache list is current.
+  12. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -417,6 +427,7 @@ node tools/validate-recipes.js
 node tools/check-docs.js
 node tools/test-mc-bridge.js && node tools/test-mc-sync-merge.js
 node tools/test-mc-timers.js && node tools/test-mc-data.js
+node tools/test-mc-units.js
 node tools/test-sw-strategy.js && node tools/test-mc-export.js
 python3 tools/build-sw.py --check && node tools/build-data.js --check
 ```

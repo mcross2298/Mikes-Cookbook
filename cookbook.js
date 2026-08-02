@@ -866,9 +866,15 @@
   }
 
   /* ── Tab 2: Grocery — a pure shopping list ────────────────────────── */
-  // Shows only what you BUY (quantity + item), grouped by aisle. Prep details
-  // (e.g. "cooked and chopped") deliberately live on the Recipe tab, not here.
-  var CAT_ORDER = ["Meat", "Dairy", "Produce", "Pantry"];
+  // Shows only what you BUY (quantity + item), grouped by aisle (mc-units.js
+  // — CI initiative 2). This used to group by the raw `category` field
+  // (Meat/Dairy/Produce/Pantry) despite this very comment already claiming
+  // "aisle" — that four-value enum is a data-integrity field enforced by
+  // tools/validate-recipes.js, never a store layout, and it put frozen peas
+  // under the same "Produce" header as fresh herbs. `aisleFor()` derives a
+  // real aisle from category + a keyword check without touching the enum.
+  // Prep details (e.g. "cooked and chopped") deliberately live on the Recipe
+  // tab, not here.
   function renderGrocery(r) {
     var pane = $("#pane-grocery");
     pane.innerHTML = "";
@@ -876,24 +882,25 @@
     var list = ingredientsFor(r, state.serving);
     var done = loadSet(r.recipe_id, state.serving, "grocery");
 
-    // Group by category, preserving CAT_ORDER then any extras.
+    // Group by aisle, preserving AISLE_ORDER then any extras.
     var groups = {};
     list.forEach(function (ing, i) {
-      (groups[ing.category] = groups[ing.category] || []).push({ ing: ing, idx: i });
+      var aisle = MCUnits.aisleFor(ing.item, ing.category);
+      (groups[aisle] = groups[aisle] || []).push({ ing: ing, idx: i });
     });
-    var cats = CAT_ORDER.filter(function (c) { return groups[c]; })
-      .concat(Object.keys(groups).filter(function (c) { return CAT_ORDER.indexOf(c) < 0; }));
+    var aisles = MCUnits.AISLE_ORDER.filter(function (a) { return groups[a]; })
+      .concat(Object.keys(groups).filter(function (a) { return MCUnits.AISLE_ORDER.indexOf(a) < 0; }));
 
     var card = el("div", "card grocery-card");
     card.appendChild(el("p", "card-label",
       "Shopping list · " + list.length + " items · " + state.serving + " servings"));
 
-    cats.forEach(function (cat) {
+    aisles.forEach(function (aisle) {
       var sec = el("div", "grocery-cat");
       sec.appendChild(el("div", "grocery-cat-head",
-        '<span class="dot"></span>' + esc(cat) +
-        '<span class="grocery-cat-count">' + groups[cat].length + "</span>"));
-      groups[cat].forEach(function (entry) {
+        '<span class="dot"></span>' + esc(aisle) +
+        '<span class="grocery-cat-count">' + groups[aisle].length + "</span>"));
+      groups[aisle].forEach(function (entry) {
         sec.appendChild(groceryRow(r, entry.ing, entry.idx, done));
       });
       card.appendChild(sec);

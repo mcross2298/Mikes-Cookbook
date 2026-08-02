@@ -55,6 +55,8 @@ jobs:
         run: node tools/test-mc-data.js
       - name: Generated recipe index + shards are current (build-data.js --check)
         run: node tools/build-data.js --check
+      - name: Ingredient unit/density/aisle model + fragmentation ratchet (mc-units.js — CI initiative 2)
+        run: node tools/test-mc-units.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

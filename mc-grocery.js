@@ -78,29 +78,15 @@
     return String(Math.round(v * 100) / 100);
   }
 
-  // Unit normalization for the smart merge. We only convert within the small,
-  // unambiguous families the data actually uses — volume (tsp↔tbsp↔cup) and
-  // weight (oz↔lb). Anything else (counts, "small", "clove", ml, g…) is merged
-  // only against the exact same unit string and never cross-summed, so the list
-  // can't fabricate a wrong total from incompatible units.
-  var UNIT_DEFS = {
-    "tsp": { cls: "vol", f: 1 }, "teaspoon": { cls: "vol", f: 1 }, "teaspoons": { cls: "vol", f: 1 },
-    "tbsp": { cls: "vol", f: 3 }, "tablespoon": { cls: "vol", f: 3 }, "tablespoons": { cls: "vol", f: 3 },
-    "cup": { cls: "vol", f: 48 }, "cups": { cls: "vol", f: 48 },
-    "oz": { cls: "wt", f: 1 }, "ounce": { cls: "wt", f: 1 }, "ounces": { cls: "wt", f: 1 },
-    "lb": { cls: "wt", f: 16 }, "lbs": { cls: "wt", f: 16 }, "pound": { cls: "wt", f: 16 }, "pounds": { cls: "wt", f: 16 }
-  };
-  // Display ladders (largest unit first) with a plural label and the smallest
-  // value at which we'll use that unit. Volume keeps natural cup-fractions
-  // (down to ¼ cup); weight only promotes to lb at a whole pound, since cooks
-  // read "4 oz" not "¼ lb". The last (smallest) unit is always the fallback.
-  var UNIT_DISPLAY = {
-    vol: [{ u: "cup", p: "cups", f: 48, min: 0.25 }, { u: "tbsp", p: "tbsp", f: 3, min: 1 }, { u: "tsp", p: "tsp", f: 1, min: 0 }],
-    wt:  [{ u: "lb", p: "lb", f: 16, min: 1 }, { u: "oz", p: "oz", f: 1, min: 0 }]
-  };
-  function unitInfo(unit) {
-    return UNIT_DEFS[(unit || "").trim().toLowerCase()] || null;
-  }
+  // Unit normalization for the smart merge — CI initiative 2 ("The Ingredient
+  // Truth Layer"). This used to be a small local table covering only
+  // tsp/tbsp/cup and oz/lb; it's now mc-units.js (window.MCUnits), which adds
+  // a metric bridge (g/kg, ml/l), unit-word singularization (clove/cloves →
+  // one bucket), a curated count→weight density table for the corpus's
+  // highest-frequency produce items, and the aisle model used below. See that
+  // file's header for the measured impact and the reasoning behind what it
+  // deliberately does NOT try to convert.
+  var UNIT_DISPLAY = MCUnits.UNIT_DISPLAY;
   // A value reads cleanly if it's whole or a common kitchen fraction.
   function isCleanAmount(v) {
     var f = v - Math.floor(v + 1e-9);
@@ -193,11 +179,13 @@
 
   // Build the combined shopping list across every planned meal. Quantities for
   // the SAME item are merged into per-item buckets: amounts in a compatible
-  // unit family are converted to a common base and summed; incompatible units
-  // (e.g. "2 small" vs "4 oz") stay as separate sub-amounts on one line rather
-  // than being force-summed into a wrong total. Returns categories in aisle
-  // order, each holding one row per item keyed for check-off.
-  var GROC_CAT_ORDER = ["Meat", "Dairy", "Produce", "Pantry"];
+  // unit family — now including mc-units.js's metric bridge and its curated
+  // count→weight density table — are converted to a common base and summed;
+  // amounts with no such bridge stay as separate sub-amounts on one line
+  // rather than being force-summed into a wrong total. Returns aisles in
+  // AISLE_ORDER (a real store layout — see mc-units.js — not the raw
+  // Meat/Dairy/Produce/Pantry data-integrity enum), each holding one row per
+  // item keyed for check-off.
   function buildGrocery() {
     var items = {}, order = [];
     planMeals().forEach(function (meal) {
@@ -209,23 +197,46 @@
         if (!item) return;
         var unit = (ing.unit || "").trim();
         var cat  = ing.category || "Other";
-        var ikey = cat + "|" + groceryMergeName(item);
+        var mergeName = groceryMergeName(item);
+        var ikey = cat + "|" + mergeName;
         var it = items[ikey];
-        if (!it) { it = items[ikey] = { key: ikey, item: item, category: cat, buckets: {}, bucketOrder: [], texts: [], mealUids: [] }; order.push(ikey); }
+        if (!it) {
+          it = items[ikey] = {
+            key: ikey, item: item, category: cat,
+            aisle: MCUnits.aisleFor(item, cat),
+            buckets: {}, bucketOrder: [], texts: [], mealUids: [], derived: []
+          };
+          order.push(ikey);
+        }
         if (it.mealUids.indexOf(meal.uid) < 0) it.mealUids.push(meal.uid);
 
-        var info = unitInfo(unit);
-        var num  = parseQty(ing.quantity);
-        var bkey = info ? ("cls:" + info.cls) : ("u:" + unit.toLowerCase());
+        var num = parseQty(ing.quantity);
+        var res = MCUnits.resolveUnit(mergeName, unit, num);
+        var bkey = res.kind === "conv" ? ("cls:" + res.cls)
+          : res.kind === "count" ? "u:__count__"
+          : ("u:" + res.unit);
         var bk = it.buckets[bkey];
         if (!bk) {
-          bk = it.buckets[bkey] = info
-            ? { kind: "conv", cls: info.cls, base: 0, hasNum: false }
-            : { kind: "raw", unit: unit, sum: 0, hasNum: false };
+          bk = it.buckets[bkey] = res.kind === "conv"
+            ? { kind: "conv", cls: res.cls, base: 0, hasNum: false }
+            : { kind: "raw", unit: res.kind === "count" ? "" : res.unit, sum: 0, hasNum: false };
           it.bucketOrder.push(bkey);
         }
-        if (num != null) {
-          if (info) bk.base += num * info.f; else bk.sum += num;
+        if (num != null && res.kind === "conv") {
+          bk.base += res.base;
+          bk.hasNum = true;
+          // A density-derived amount is a judgment call (mc-units.js's DENSITY
+          // table), not an authored fact — record how it was arrived at so the
+          // UI can show its work rather than present an estimate as if it were
+          // an authored quantity. Deduped: the same "N word ≈ Ng" note from two
+          // different meals collapses to one line.
+          if (res.viaDensity) {
+            var note = prettyQty(num) + " " + (MCUnits.normalizeUnit(unit) || "each") +
+              " ≈ " + Math.round(num * MCUnits.densityGrams(mergeName, MCUnits.normalizeUnit(unit))) + " g";
+            if (it.derived.indexOf(note) < 0) it.derived.push(note);
+          }
+        } else if (num != null) {
+          bk.sum += num;
           bk.hasNum = true;
         } else if (ing.quantity != null && String(ing.quantity).trim()) {
           it.texts.push(String(ing.quantity).trim() + (unit ? " " + unit : ""));
@@ -233,19 +244,22 @@
       });
     });
 
-    // Group items into categories (aisle order first, then any extras seen).
+    // Group items into aisles (AISLE_ORDER first, then any extras — there
+    // shouldn't be any, aisleFor() is total over Meat/Dairy/Produce/Pantry,
+    // but a future fifth ingredient.category value should still render
+    // rather than silently vanish).
     var groups = {};
     order.forEach(function (ikey) {
       var it = items[ikey];
-      (groups[it.category] = groups[it.category] || []).push(it);
+      (groups[it.aisle] = groups[it.aisle] || []).push(it);
     });
-    var cats = GROC_CAT_ORDER.filter(function (c) { return groups[c]; })
-      .concat(Object.keys(groups).filter(function (c) { return GROC_CAT_ORDER.indexOf(c) < 0; }));
+    var aisles = MCUnits.AISLE_ORDER.filter(function (a) { return groups[a]; })
+      .concat(Object.keys(groups).filter(function (a) { return MCUnits.AISLE_ORDER.indexOf(a) < 0; }));
 
-    return cats.map(function (cat) {
+    return aisles.map(function (aisle) {
       return {
-        category: cat,
-        rows: groups[cat].map(function (it) {
+        aisle: aisle,
+        rows: groups[aisle].map(function (it) {
           var parts = [];
           it.bucketOrder.forEach(function (bkey) {
             var bk = it.buckets[bkey];
@@ -263,7 +277,10 @@
           var qty = parts.join(" · ");
           var pu = parts.length ? purchaseUnitFor(it.item) : null;
           if (pu) qty = "1 " + pu;
-          return { key: it.key, item: it.item, qty: qty, mealUids: it.mealUids };
+          return {
+            key: it.key, item: it.item, qty: qty, mealUids: it.mealUids,
+            derived: it.derived.length ? it.derived : null
+          };
         })
       };
     });

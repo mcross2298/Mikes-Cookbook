@@ -1,6 +1,7 @@
 # Mike's Cookbook — Flagship CI Initiatives (v3 proposal)
 
-> **Status:** Phase 1 complete. Initiatives 1 and 5 are ✅ shipped; 2, 3 and 4 remain proposals.
+> **Status:** Phase 1 complete; Phase 2's Initiative 2 shipped. Initiatives 1, 5 and 2 are
+> ✅ shipped; 3 and 4 remain proposals (4 is next — see Phase 2 below).
 > Each initiative carries its own status line — this file is kept truthful as work lands,
 > per the repo's process rule.
 > **Scope:** a multi-lens audit of the repo at `bb2efe0`, and the 5 initiatives that
@@ -50,7 +51,7 @@ ingredients separating `item` (shopping name) from `prep` (mise instruction) wit
 | Nutrition | In-app macro tracker on `mc_macros_v1` — the same key/shape the workout app uses, so one signed-in trainee has one store, not two |
 | Cross-app | `mc-bridge.js` read-only layer: today's meals (denormalized snapshots), today's workout, `likelyTrainingDays()` biasing meal selection toward protein on real historical training days |
 | Sync / durability | Optional Supabase login, per-store merge strategies, v2 backup format with legacy import, `diagnostics.html` device self-test |
-| CI | 11 blocking gates on PRs *and* `main`, deploy gated behind them |
+| CI | 12 blocking gates on PRs *and* `main`, deploy gated behind them |
 
 ### What is genuinely absent
 
@@ -238,9 +239,26 @@ hands are dirtiest.
 
 ---
 
-### Initiative 2: The Ingredient Truth Layer
+### Initiative 2: The Ingredient Truth Layer ✅ (shipped)
 
 * **Target Domain:** Smart Grocery Consolidation / Unit Normalization / Pantry Intelligence
+* **Status:** ✅ **Shipped**, as a smaller, more honest first slice than the spec below projected:
+  * **208 → 179 of 854 identities fragment** (24.4% → 21.0%), not the full resolution the original
+    framing implied. The metric bridge and unit-word aliasing are exact, zero-risk fixes and landed
+    in full; the density table is the one place this initiative makes a judgment call, and it stayed
+    deliberately small — ~30 curated items, each a widely-cited average weight, not the ~120-row
+    table originally estimated. Most of the *remaining* 179 are a genuine cooking-measurement-vs-weight
+    divide (a cup of chopped onion vs. a whole one) or fresh-herb bunch sizes, both of which this file
+    declines to guess at for the same reason `ITEM_ALIASES` started empty: fabricating a density it
+    isn't confident in would silently under- or over-count a real shopping list.
+  * The fragmentation count is a **CI ratchet** (`tools/test-mc-units.js`, gate 8 of 12), not a
+    one-time fix — it can only fall as `DENSITY` grows, never silently rise.
+  * The aisle model shipped as specified: `Produce → Meat & Poultry / Seafood → Dairy & Eggs →
+    Spices & Seasonings → Condiments & Sauces → Dry Goods & Pantry → Frozen` (perimeter first,
+    frozen deliberately last), derived from the untouched `category` enum plus a keyword check.
+  * **Not built:** user-reorderable aisle sequence. `AISLE_ORDER` is fixed, not drag-sortable — a
+    real feature, deliberately scoped out to keep this slice to the ingredient-math + a sensible
+    default store walk, not a new persisted-preference UI. Candidate for a follow-up, not blocking.
 
 **The problem / gap.** The merged grocery list is the app's highest-leverage automation and
 it is wrong on **24.5% of the catalog's ingredient identities**. Measured: 210 of 856
@@ -568,12 +586,16 @@ deliberately not wired into CI.
 
 ### Phase 2 — Algorithmic Truth *(~1–2 sprints)*
 
-3. **Initiative 2 — Ingredient Truth Layer.** Land `mc-units.js` with the ratcheting
-   fragmentation gate first, then the aisle model. Watch the 210 baseline fall; the number
-   is the acceptance criterion.
+3. **Initiative 2 — Ingredient Truth Layer.** ✅ Shipped: `mc-units.js` with the ratcheting
+   fragmentation gate (`tools/test-mc-units.js`) and the aisle model both landed. Measured
+   208 → 179 of 854 identities fragmenting — a real, CI-enforced improvement, smaller than the
+   original ~120-row density-table estimate because the table shipped deliberately conservative
+   (~30 curated items). Growing `DENSITY`/`UNIT_WORD_ALIASES` further, and building the
+   user-reorderable aisle sequence, are both real follow-ups but weren't blocking for this slice.
 4. **Initiative 4 — Intent-Ranked Discovery.** Depends on `mc-units.js` for shared ingredient
-   identity and on Initiative 5's index for a cheap search corpus. Ship ranked search first,
-   then cook-what-you-have, then substitutions — three independently valuable slices.
+   identity (now shipped) and on Initiative 5's index for a cheap search corpus (also shipped).
+   Ship ranked search first, then cook-what-you-have, then substitutions — three independently
+   valuable slices.
 
 ### Phase 3 — Flagship Surface *(~1–2 sprints)*
 

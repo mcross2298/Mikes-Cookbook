@@ -422,7 +422,10 @@ body {
   text-align: center;
   padding: 1px 7px;
 }
-/* Fixed quantity column so amounts line up cleanly for store scanning. */
+/* Fixed quantity column so amounts line up cleanly for store scanning.
+   tabular-nums keeps the digits themselves flush in that column too — a "2"
+   and a "12" now share a baseline instead of the narrower glyph drifting
+   right (CI initiative 2's "one row, one number" spec). */
 .grocery-row { align-items: center; }
 .grocery-qty {
   flex: 0 0 auto;
@@ -430,10 +433,36 @@ body {
   font-family: var(--serif);
   font-size: 15px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--accent);
   line-height: 1.2;
 }
 .grocery-row.done .grocery-qty { color: var(--ink-dim); }
+/* Provenance affordance: this quantity includes a density-derived estimate
+   (mc-units.js — "1 medium onion" only becomes a buyable weight by
+   estimating what "medium" weighs). A quiet dotted underline plus a small
+   dot, not a badge — trust in a derived number comes from being able to open
+   it, not from calling attention to it. Tap/Enter reveals the estimate via
+   groceryRow()'s plannerToast call. */
+.grocery-qty.has-derived {
+  cursor: pointer;
+  text-decoration: underline dotted rgba(var(--accent-rgb), 0.45);
+  text-underline-offset: 3px;
+}
+.grocery-qty.has-derived:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.grocery-derived {
+  display: inline-block;
+  width: 5px; height: 5px;
+  margin-left: 3px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+  background: var(--sage);
+  vertical-align: top;
+}
 /* Brief fade while a checked row drops to the bottom of its section (see
    collapseGroceryRow in cookbook-home.js) so the reorder reads as a settle,
    not a jump-cut. */
