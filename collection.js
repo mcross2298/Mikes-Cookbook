@@ -371,7 +371,21 @@
     paint();
   }
 
+  // A timer started while cooking stays visible if the cook wanders back out
+  // to a collection to look something up mid-recipe. Mounted outside init()
+  // because init() returns early for a coming-soon collection, and the rail
+  // has nothing to do with which collection this is.
+  function boot() {
+    init();
+    MCTimers.configure({
+      onJump: function (t) {
+        if (t.recipeId) location.href = "recipe.html?id=" + encodeURIComponent(t.recipeId) + "&cook=1";
+      }
+    });
+    MCTimers.mountRail();
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else { init(); }
+    document.addEventListener("DOMContentLoaded", boot);
+  } else { boot(); }
 })();

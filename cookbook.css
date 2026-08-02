@@ -979,6 +979,16 @@ body {
   padding: 6px 12px; font-size: 12px; font-weight: 800;
 }
 .today-meal-log:active { transform: scale(0.95); }
+/* "Cook" sits beside "Log" but stays the quieter of the two: logging is the
+   card's primary job, cooking is the trip out of it. */
+.today-meal-cook {
+  flex: 0 0 auto; text-decoration: none; font-family: var(--sans);
+  background: rgba(var(--accent-rgb), 0.16); color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.45); border-radius: 8px;
+  padding: 5px 10px; font-size: 12px; font-weight: 800; white-space: nowrap;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.today-meal-cook:active { transform: scale(0.95); }
 .today-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
 .today-macro { min-width: 0; }
 .today-macro-lbl { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--on-dark-dim); }
@@ -1619,6 +1629,103 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
   animation: timerRing 0.8s ease-in-out infinite;
 }
 @keyframes timerRing { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+/* ── THE TIMER RAIL (mc-timers.js) ─────────────────────────────────────
+   One rail for every surface — the shell, collection pages, the recipe
+   page and the Cooking Mode overlay — because a timer outlives all of
+   them now. Sits above the Cooking Mode overlay (z-index 100) and below
+   the toasts (200), so a cook can always see and dismiss a ringing timer
+   without leaving whatever they're doing.
+
+   It publishes its own height as --mc-rail-h on :root (set from JS after
+   layout, 0 when empty). The bottom-anchored controls below add that
+   variable to their own offset rather than assuming a fixed rail height,
+   so one row of pills and two rows both clear correctly. */
+.mc-rail {
+  position: fixed; z-index: 150;
+  left: 0; right: 0;
+  bottom: env(safe-area-inset-bottom);
+  display: flex; gap: 8px;
+  padding: 8px 12px;
+  overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mc-rail::-webkit-scrollbar { display: none; }
+.mc-rail.empty { display: none; }
+/* On the shell the tab bar owns the bottom edge, so the rail stacks above it. */
+.mc-rail.on-shell { bottom: calc(var(--tab-h, 64px) + env(safe-area-inset-bottom)); }
+
+.mc-pill {
+  position: relative; flex: 0 0 auto;
+  appearance: none; cursor: pointer; font-family: var(--sans); text-align: left;
+  display: flex; align-items: center; gap: 10px;
+  min-height: 56px; padding: 8px 38px 8px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.40);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.mc-pill:active { transform: scale(0.97); }
+
+/* The draining ring: a conic sweep driven by one custom property, so a
+   repaint is a variable write and not a DOM rebuild. */
+.mc-pill-ring {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%;
+  background: conic-gradient(var(--sage) var(--mc-pct, 100%), rgba(0,0,0,0.10) 0);
+  -webkit-mask: radial-gradient(circle, transparent 8px, #000 9px);
+  mask: radial-gradient(circle, transparent 8px, #000 9px);
+  transition: background var(--dur) linear;
+}
+.mc-pill-body { display: flex; flex-direction: column; line-height: 1.2; }
+.mc-pill-time {
+  font-size: 20px; font-weight: 800; letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.mc-pill-label {
+  font-size: 11px; font-weight: 600; color: var(--ink-dim);
+  letter-spacing: 0.02em; max-width: 15ch;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mc-pill-x {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: var(--ink-dim);
+}
+.mc-pill-x:active { background: rgba(0,0,0,0.06); }
+
+/* Under a minute the ring warms from sage to the app accent — the one
+   colour change, so it means something when it happens. */
+.mc-pill.soon .mc-pill-ring { background: conic-gradient(var(--accent) var(--mc-pct, 100%), rgba(0,0,0,0.10) 0); }
+.mc-pill.soon .mc-pill-time { color: var(--accent); }
+.mc-pill.paused { opacity: 0.72; }
+.mc-pill.paused .mc-pill-ring { background: conic-gradient(var(--ink-dim) var(--mc-pct, 100%), rgba(0,0,0,0.10) 0); }
+.mc-pill.ringing {
+  background: #ff5a6e; color: #fff; border-color: #ff5a6e;
+  animation: mcPillBreath 1.2s var(--ease-out) infinite;
+}
+.mc-pill.ringing .mc-pill-label,
+.mc-pill.ringing .mc-pill-x { color: rgba(255,255,255,0.85); }
+.mc-pill.ringing .mc-pill-ring { background: rgba(255,255,255,0.45); }
+@keyframes mcPillBreath { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+
+/* Reduced motion: keep the state legible, drop the pulse. A ringing timer
+   still reads as ringing — it's the highest-priority thing on screen. */
+@media (prefers-reduced-motion: reduce) {
+  .mc-pill.ringing { animation: none; outline: 2px solid #fff; outline-offset: -4px; }
+  .mc-pill-ring { transition: none; }
+}
+
+/* Nothing bottom-anchored may sit under the rail. Deliberately NOT a sibling
+   selector (`.mc-rail ~ .home-fab`): the rail is appended to <body> after
+   cookbook-nav.js has already added the FABs, so a sibling combinator would
+   never match. These re-declare the same properties later in the file and win
+   on source order, collapsing to the original offset when --mc-rail-h is 0. */
+.home-fab,
+.back-fab { bottom: calc(16px + var(--mc-rail-h, 0px) + env(safe-area-inset-bottom)); }
+.cook-controls { padding-bottom: calc(16px + var(--mc-rail-h, 0px) + env(safe-area-inset-bottom)); }
 
 /* ── SERVICE-WORKER TOASTS (offline ready / update available) ──────── */
 .sw-toast {

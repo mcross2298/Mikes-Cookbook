@@ -49,6 +49,8 @@ jobs:
         run: |
           node tools/test-mc-bridge.js
           node tools/test-mc-sync-merge.js
+      - name: Kitchen timer store test (mc-timers.js — CI initiative 1)
+        run: node tools/test-mc-timers.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

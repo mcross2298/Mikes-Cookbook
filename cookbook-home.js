@@ -1841,6 +1841,17 @@
       if (m.completed) {
         row.appendChild(el("span", "today-meal-check", "✓ Logged"));
       } else {
+        // "Cook" goes straight into hands-free Cooking Mode via ?cook=1 —
+        // wake lock, big type, voice control and the timer rail, all in one
+        // tap. Until this, Today's meals weren't even links: getting from
+        // "this is tonight's dinner" to actually cooking it meant Browse,
+        // search, open, then the third sub-tab, then Start Cooking.
+        if ((r.instructions || []).length) {
+          var cookBtn = el("a", "today-meal-cook", "▸ Cook");
+          cookBtn.href = "recipe.html?id=" + encodeURIComponent(r.recipe_id) + "&cook=1";
+          cookBtn.setAttribute("aria-label", "Start cooking " + r.title);
+          row.appendChild(cookBtn);
+        }
         var logBtn = el("button", "today-meal-log", "Log");
         logBtn.type = "button";
         logBtn.addEventListener("click", function () {
@@ -4144,6 +4155,17 @@
 
     setTab((location.hash || "#home").slice(1));
     updateAppBadge();   // corrects staleness from a day rollover while closed
+
+    // Timer rail. It rides on the shell too, not just the recipe page, so a
+    // countdown started while cooking stays visible when the cook steps back
+    // out to the planner or the grocery list mid-recipe.
+    MCTimers.onWriteFail = warnStorageFull;
+    MCTimers.configure({
+      onJump: function (t) {
+        if (t.recipeId) location.href = "recipe.html?id=" + encodeURIComponent(t.recipeId) + "&cook=1";
+      }
+    });
+    MCTimers.mountRail();
 
     // Day-7 archive check: no background cron exists in a static PWA, so
     // this is evaluated once per app open instead. Deferred a tick so the

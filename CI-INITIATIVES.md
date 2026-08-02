@@ -1,6 +1,8 @@
 # Mike's Cookbook — Flagship CI Initiatives (v3 proposal)
 
-> **Status:** proposal. Nothing here is shipped.
+> **Status:** Phase 1 in progress. Initiative 1 is ✅ shipped; the rest remain proposals.
+> Each initiative carries its own status line — this file is kept truthful as work lands,
+> per the repo's process rule.
 > **Scope:** a multi-lens audit of the repo at `bb2efe0`, and the 5 initiatives that
 > move this app from "very good utility cookbook" to flagship-tier.
 > **Constraints honored:** vanilla HTML/CSS/JS, no framework, no bundler, no npm.
@@ -48,7 +50,7 @@ ingredients separating `item` (shopping name) from `prep` (mise instruction) wit
 | Nutrition | In-app macro tracker on `mc_macros_v1` — the same key/shape the workout app uses, so one signed-in trainee has one store, not two |
 | Cross-app | `mc-bridge.js` read-only layer: today's meals (denormalized snapshots), today's workout, `likelyTrainingDays()` biasing meal selection toward protein on real historical training days |
 | Sync / durability | Optional Supabase login, per-store merge strategies, v2 backup format with legacy import, `diagnostics.html` device self-test |
-| CI | 8 blocking gates on PRs *and* `main`, deploy gated behind them |
+| CI | 9 blocking gates on PRs *and* `main`, deploy gated behind them |
 
 ### What is genuinely absent
 
@@ -158,9 +160,10 @@ are wrong on measurable percentages of the catalog. Initiative 5 unblocks Initia
 
 ## 3. Flagship CI initiatives
 
-### Initiative 1: The Continuous Cook Session
+### Initiative 1: The Continuous Cook Session ✅ (shipped)
 
 * **Target Domain:** Hands-Free Cooking Mode / Kitchen Timers / Session State
+* **Status:** ✅ **Shipped.** `mc-timers.js` + the rail, `?cook=1`, the timer voice grammar, the SW notification, and `tools/test-mc-timers.js` as blocking gate 5 of 9. Two deviations from the spec below, both deliberate: the ticker is a 250 ms `setInterval` rather than `requestAnimationFrame` (rAF is paused outright in a backgrounded tab — exactly when an expiry still needs noticing), and the SW notification is posted *by the page* rather than scheduled in the worker, because with no Push service a service worker cannot wake itself at a future instant. See `CLAUDE.md`'s `mc-timers.js` row for both.
 
 **The problem / gap.** Timers are the most-used utility in any cooking app and this
 one's evaporate. `timerChip()` closes over `intId`; `renderCook()` blanks its container on
