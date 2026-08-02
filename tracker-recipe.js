@@ -86,7 +86,7 @@
       ".ckr-btn{width:100%;box-sizing:border-box;padding:14px;border-radius:var(--r-md,12px);border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:6px;}" +
       ".ckr-btn.alt{background:transparent;color:var(--ink);border-color:var(--line);}" +
       ".ckr-toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom));transform:translateX(-50%);" +
-        "background:rgba(30,32,34,0.97);color:var(--on-dark);border:1px solid var(--line-dark);border-radius:999px;" +
+        "background:rgba(var(--chrome-rgb),0.97);color:var(--on-dark);border:1px solid var(--line-dark);border-radius:999px;" +
         "padding:10px 18px;font-size:13px;font-weight:800;z-index:1300;display:flex;align-items:center;gap:12px;box-shadow:0 6px 20px rgba(0,0,0,0.4);}" +
       ".ckr-toast a{color:var(--accent);text-decoration:none;font-weight:800;}";
     var st = document.createElement("style");

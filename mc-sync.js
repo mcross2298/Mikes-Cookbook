@@ -38,7 +38,8 @@
       mergePlan: function () { return mergePlan.apply(null, arguments); },
       mergeStringSet: function () { return mergeStringSet.apply(null, arguments); },
       mergeHistoryBySavedAt: function () { return mergeHistoryBySavedAt.apply(null, arguments); },
-      mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); }
+      mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); },
+      mergeReplaceByTs: function () { return mergeReplaceByTs.apply(null, arguments); }
     };
   }
   if (window.__mcSync) return;
@@ -63,16 +64,19 @@
     // cross-tab updates for them, and Home advertises "☁️ Backed up" while
     // they never left the device.
     'mc-cookbook:favorites':            'stringSet',
-    'mc-cookbook:pantry':               'stringSet'
+    'mc-cookbook:pantry':               'stringSet',
+    // { scopeKey, days, ts } — days maps a weekday to one bucket string
+    // ("quick"/"standard"/"none"), so there is no meaningful per-day union:
+    // two devices disagreeing on Monday's bucket isn't two facts to combine,
+    // it's one cook re-answering the quiz. Whole-object replace-by-ts (the
+    // same rule mergeMacros already uses for its scalar profile/goals half)
+    // is the only strategy that makes sense for this shape.
+    'mc-cookbook:timecheck':            'replaceByTs'
   };
   // Deliberately NOT synced, so the omissions read as decisions:
   //   :photos          user-attached recipe images as data URLs — image data
   //                    has no business in a jsonb row, and the cook-log photos
   //                    it sits alongside are already device-local by design.
-  //   :timecheck       { scopeKey, days } with no timestamp and no union
-  //                    semantics: every available strategy either loses a
-  //                    local edit or produces a meaningless merge. Needs a
-  //                    ts field on the store before it can sync honestly.
   //   :lastBackupAt · :lastScreen · :tourSeen · :cookfont · :owner ·
   //   :mealplan:autodraft-dismissed · :mealplan:recap-dismissed ·
   //   :mikesFavorites:draft · per-recipe :s<n>:<kind> check-offs
@@ -205,8 +209,19 @@
     return out;
   }
 
+  // Whole-object last-write-wins by top-level ts. For a store that's a flat
+  // scalar map (no id-keyed list to union field-by-field), this is the only
+  // honest merge — see mc-cookbook:timecheck's STORES comment above. A
+  // missing ts (pre-migration data) defaults to 0, so any ts'd write wins
+  // over it, same as the rest of this file treats an absent value as oldest.
+  function mergeReplaceByTs(local, remote) {
+    local = local || {}; remote = remote || {};
+    return (remote.ts || 0) >= (local.ts || 0) ? remote : local;
+  }
+
   function mergeStore(strategy, local, remote) {
     if (strategy === 'macros') return mergeMacros(local, remote);
+    if (strategy === 'replaceByTs') return mergeReplaceByTs(local, remote);
     if (strategy === 'plan') return mergePlan(local, remote);
     if (strategy === 'stringSet') return mergeStringSet(local, remote);
     if (strategy === 'historyBySavedAt') return mergeHistoryBySavedAt(local, remote);

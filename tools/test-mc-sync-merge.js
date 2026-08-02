@@ -44,8 +44,9 @@ function loadMerge() {
 }
 
 const M = loadMerge();
-ok('module.exports captured all 6 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
-  M.mergePlan && M.mergeStringSet && M.mergeHistoryBySavedAt && M.mergeCookedByRecipe));
+ok('module.exports captured all 7 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
+  M.mergePlan && M.mergeStringSet && M.mergeHistoryBySavedAt && M.mergeCookedByRecipe &&
+  M.mergeReplaceByTs));
 
 // ---- whitelist membership (audit C-02) ------------------------------------
 // The merge functions were never the problem for favorites and pantry — the
@@ -59,7 +60,8 @@ ok('module.exports captured all 6 merge fns', !!(M && M.mergeMacros && M.mergeAr
     'mc_macros_v1', 'mc-cookbook:mealplan', 'mc-cookbook:mealplan:grocery',
     'mc-cookbook:mealplan:history', 'mc-cookbook:mealplan:custom',
     'mc-cookbook:mealplan:macrohistory', 'mc-cookbook:userrecipes',
-    'mc-cookbook:cooked', 'mc-cookbook:favorites', 'mc-cookbook:pantry'
+    'mc-cookbook:cooked', 'mc-cookbook:favorites', 'mc-cookbook:pantry',
+    'mc-cookbook:timecheck'
   ].forEach((key) => ok('STORES whitelist includes ' + key, stores.includes("'" + key + "'")));
   // Never push a store this app only consumes — one writer per store.
   ok('STORES excludes the workout app\'s mc_activity', !stores.includes("'mc_activity'"));
@@ -159,6 +161,36 @@ ok('module.exports captured all 6 merge fns', !!(M && M.mergeMacros && M.mergeAr
   const remote = { 'r2': [{ at: '2026-01-01T00:00:00Z', photo: null }] };
   const out = M.mergeCookedByRecipe(local, remote);
   ok('cookedByRecipe: remote-only recipe id added', out.r2 && out.r2.length === 1);
+}
+
+// ---- mergeReplaceByTs: mc-cookbook:timecheck — whole-object last-write-wins
+{
+  const local = { scopeKey: 'all', days: { Mon: 'quick' }, ts: 100 };
+  const remote = { scopeKey: 'all', days: { Mon: 'standard', Tue: 'none' }, ts: 200 };
+  eq('replaceByTs: newer remote replaces local wholesale',
+    M.mergeReplaceByTs(local, remote), remote);
+  eq('replaceByTs: newer local wins over stale remote',
+    M.mergeReplaceByTs(remote, local), remote);
+}
+{
+  // Equal ts (e.g. two devices racing the same instant) — remote wins by
+  // convention, same tie-break direction mergeMacros uses (rts > lts keeps
+  // local only on a strict loss, so a tie already favors remote there too).
+  const local = { scopeKey: 'all', days: { Mon: 'quick' }, ts: 100 };
+  const remote = { scopeKey: 'all', days: { Mon: 'none' }, ts: 100 };
+  eq('replaceByTs: a tie favors remote', M.mergeReplaceByTs(local, remote), remote);
+}
+{
+  // Pre-migration data with no ts at all defaults to 0, so any real write —
+  // even one with ts 0 explicitly — is treated as at least as new.
+  const local = { scopeKey: 'all', days: { Mon: 'quick' } }; // no ts field
+  const remote = { scopeKey: 'all', days: { Mon: 'standard' }, ts: 0 };
+  eq('replaceByTs: a ts-less local loses to any ts\'d remote',
+    M.mergeReplaceByTs(local, remote), remote);
+}
+{
+  eq('replaceByTs: missing local/remote degrade to {}, never throw',
+    M.mergeReplaceByTs(null, undefined), {});
 }
 
 if (fail) { console.error(`\ntest-mc-sync-merge: ${pass} passed, ${fail} FAILED`); process.exit(1); }
