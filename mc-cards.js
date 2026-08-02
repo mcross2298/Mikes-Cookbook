@@ -292,6 +292,12 @@
       return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
     } catch (e) { return {}; }
   }
+  // Precedence (audit C-13): authored r.photo > the cook's own explicit
+  // cover > the most recent cook-log photo > none. Every caller of this
+  // function — cards, recipe.html's hero, the eyebrow cover widget — must
+  // stay on this one chain rather than reading r.photo or a store directly,
+  // or a second, drifting definition creeps back in (see CLAUDE.md's
+  // mc-cards.js entry).
   function photoFor(r) {
     if (r.photo) return { url: r.photo, source: "authored" };
     var covers = loadJSONMap(RECIPE_COVER_KEY);

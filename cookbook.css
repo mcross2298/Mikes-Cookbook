@@ -642,49 +642,6 @@ body {
    PHASE 2 — HOME / BROWSE SCREEN (index.html)
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── Brand header ─────────────────────────────────────────────────── */
-.home-header {
-  padding: 30px 22px 18px;
-}
-.home-eyebrow {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0;
-}
-.home-title {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 40px;
-  line-height: 1.02;
-  letter-spacing: 0.4px;
-  margin: 2px 0 10px;
-  color: var(--on-dark);
-}
-.home-tagline {
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: var(--on-dark-dim);
-  margin: 0;
-  max-width: 38ch;
-}
-
-/* ── Diet filter chips ────────────────────────────────────────────── */
-.filter-chips {
-  display: flex;
-  gap: 9px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 4px 22px 16px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: linear-gradient(180deg, var(--bg) 70%, rgba(30,32,34,0.0));
-}
-.filter-chips::-webkit-scrollbar { display: none; }
 .chip {
   flex: 0 0 auto;
   appearance: none;
@@ -708,24 +665,6 @@ body {
 /* ── Collections ──────────────────────────────────────────────────── */
 .collections { padding: 0 16px 44px; }
 .collection { margin-bottom: 26px; }
-.collection-head {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 0 6px 12px;
-}
-.collection-name {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 21px;
-  color: var(--on-dark);
-  margin: 0;
-}
-.collection-count {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--on-dark-dim);
-}
 .empty {
   text-align: center;
   color: var(--on-dark-dim);
@@ -733,13 +672,6 @@ body {
 }
 
 /* ── Recipe card (color-block + icon) ─────────────────────────────── */
-.card-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 13px;
-}
-@media (min-width: 560px) { .card-grid { grid-template-columns: 1fr 1fr; } }
-
 .rc {
   position: relative;            /* anchors the corner ❤ favorite toggle */
   display: flex;
@@ -850,12 +782,6 @@ body {
   font-size: 12.5px;
   color: var(--ink-dim);
   margin: 0;
-}
-.rc-last-cooked {
-  font-size: 11.5px;
-  color: var(--ink-dim);
-  margin: 3px 0 0;
-  opacity: 0.72;
 }
 
 /* Bottom macro stat row — Cal / Protein / Fat / Carbs for a single serving,
@@ -970,12 +896,7 @@ body {
    FLAGSHIP COLLECTION CARDS  —  faithful port of 4WTO .cat-card
    Per-card accent is injected inline (--cc): border-top, glow, tag, footer.
    ═══════════════════════════════════════════════════════════════════ */
-/* Recipes-screen search facets (reuses .chip; non-sticky unlike .filter-chips) */
-.browse-chips {
-  display: flex; gap: 9px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  padding: 2px 20px 14px;
-}
-.browse-chips::-webkit-scrollbar { display: none; }
+/* Recipes-screen search facets (reuses .chip) */
 .browse-count {
   padding: 0 20px 12px;
   font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
@@ -1208,13 +1129,6 @@ body {
   font-size: 12.5px; font-weight: 700; color: var(--on-dark); line-height: 1.3;
   display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-
-.home-section-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  padding: 20px 20px 10px;
-}
-.home-section-head h2 { font-family: var(--serif); font-size: 18px; font-weight: 700; margin: 0; color: var(--on-dark); }
-.home-section-link { font-size: 13px; font-weight: 700; color: var(--accent); text-decoration: none; cursor: pointer; }
 
 /* ── Home browse modules (Categories / Recipes / Favorites spokes) ──── */
 /* Premium glass cards that echo the "Now Cooking" hero — a per-module accent
@@ -1635,10 +1549,6 @@ button.col-back { appearance: none; -webkit-appearance: none;
 
 /* ── Recipe detail: header cover photo (in the eyebrow tag row) ───── */
 .r-photo { position: relative; flex: 0 0 auto; }
-.r-photo-img {
-  display: block; width: 44px; height: 44px; object-fit: cover;
-  border-radius: 999px; border: 1px solid var(--line-dark); cursor: zoom-in;
-}
 .r-photo-add {
   width: 44px; height: 44px; cursor: pointer;
   display: grid; place-items: center; font-size: 18px;
@@ -1651,8 +1561,6 @@ button.col-back { appearance: none; -webkit-appearance: none;
   border-radius: 999px; border: 1px solid var(--line-dark);
   background: var(--bg); color: var(--on-dark);
 }
-.r-photo-edit { bottom: -4px; right: -4px; }
-.r-photo-remove { top: -4px; right: -4px; }
 
 /* ── Reduced motion ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -2203,24 +2111,7 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 .sre-body { padding-top: 4px; }
 
 /* ── Time Check: bandwidth quiz button + bucketed suggestion overlay ──── */
-.plan-time-btn {
-  appearance: none; display: block; width: 100%; margin: 10px 0 0; cursor: pointer;
-  padding: 12px; background: transparent; border: 1px solid var(--line-dark);
-  border-radius: var(--r-md); color: var(--on-dark-dim);
-  font-family: var(--sans); font-size: 14px; font-weight: 800; letter-spacing: 0.02em;
-  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
-}
-.plan-time-btn:hover { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.5); }
-.plan-time-btn:active { transform: scale(0.99); }
-
-.bwq-body { padding: 4px 20px calc(20px + env(safe-area-inset-bottom)); }
 .bwq-intro { font-size: 13.5px; color: var(--on-dark-dim); line-height: 1.5; margin: 0 0 16px; }
-/* .smw-scope-bar carries its own 20px horizontal padding for smw-body (which
-   has none); bwq-body already insets 20px on every child, so cancel the
-   bar's own inset here to avoid a doubled indent. */
-.bwq-body .smw-scope-bar { padding-left: 0; padding-right: 0; margin: 0 0 14px; }
-.bwq-body .smw-day { padding-left: 0; padding-right: 0; }
-.bwq-body .smw-actions { padding-left: 0; padding-right: 0; }
 
 .tcw-day-block { padding: 12px 0; border-bottom: 1px solid var(--line-dark); }
 .tcw-day-block:last-of-type { border-bottom: 0; }
