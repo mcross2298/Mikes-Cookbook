@@ -591,6 +591,77 @@ never applied to a live element to begin with.
 (phase 2 — doc drift is the developer stream's highest-frequency waste, and it now can't recur
 silently).
 
+### Phase 7 ✅ (shipped 2026-08-30) — VOC/VOA Kaizen audit, Waves 5–6: kitchen ergonomics
+
+**Source:** the 2026-08-30 VOC/VOA Kaizen audit — a separate, later exercise than Pillar E's own
+2026-07-31 waste audit above, this one driving all five repos of the fleet (this cookbook plus the
+workout app and the two finance apps) in a real browser at 390px and 320px, then handing each
+repo a numbered sequence of "waves." Waves 0–4 belong to the workout repo, 5–8 to this one, 9–16 to
+the finance pair; this phase covers Waves 5–6, the initiatives tagged `C-I1`–`C-I5` in that audit
+(a distinct numbering from this pillar's own `C-01`–`C-16` findings above — same letter, different
+audit, kept as the source names them). Wave 8 (the a11y CI gate itself) and the rest are tracked in
+`4-Weeks-to-Open-`'s `MASTER_ROADMAP_VOC_VOA_KAIZEN.md`, the authoritative copy.
+
+The audit's headline finding for this repo: of the fleet's four pushable apps, the cookbook is the
+one used with the worst hands (kitchen, grease, divided attention) and carries the *least*
+ergonomic enforcement — 0 of 14 blocking CI gates measure a touch target, a contrast ratio, or a
+viewport width, versus 100% route coverage on both seated desk-use finance apps. Wave 5's own
+content was to document that inversion, not to invent a fix for it — a re-walk of `quick-tour.html`
+and a fresh offline reload both came back clean (the tour's 12 slides all render, matching
+`SLIDES`; a cold-cache reload still painted the app shell), so nothing there needed a code change.
+Wave 6 is the fix, scoped to the specific controls the audit measured under the 44px touch floor:
+
+- **C-I2 · Cooking Mode ergonomic refit.** Counter Mode exists specifically because this screen is
+  read at arm's length in bad light with wet or greasy hands — and three of its own top-bar
+  controls measured under the floor anyway: `.cook-exit` (53×18), `.cook-voice-btn` (40×32), and
+  `.cook-counter-btn` — the daylight toggle itself — at 32×32. Extended the invisible-floor pattern
+  Phase 3 already established for `.cook-font-btn` (a centered 44×44 `::before`, real visual size
+  untouched) to all three; the 16px+ clearance each already has from its nearest sibling in
+  `.cook-top`'s flex row (confirmed by measuring the actual gaps, not assumed) means none of the
+  three new floors overlaps another and steals its neighbor's edge taps.
+- **C-I5 · High-frequency card controls.** `.fav-toggle` and `.plan-toggle` render through the one
+  shared `mc-cards.js`, so one fix reaches every card surface (shell, collection pages, Favorites).
+  Both measured 34×34 on cards. They're stacked 40px apart center-to-center, so a full 44×44 floor
+  on each would have overlapped by 4px and let one button steal the other's edge taps — the same
+  failure mode Phase 3's own comment warned about for the 2/4 serving toggle. Capped both to 40px
+  tall (touching, not overlapping) while staying the full 44px wide, since nothing flanks them
+  horizontally. The header pills (`.r-fav` / `.r-plan`) were already excluded by Phase 3 and stay
+  excluded — they're a comfortable static 38px pill, not a compact absolutely-positioned icon.
+- **The serving stepper.** Also 40×40 and already covered by Phase 3's invisible floor, but the
+  audit called it out by name as "the most-tapped control during actual cooking," and unlike the
+  Cooking Mode cluster it has genuine room: the count display between the two buttons is
+  `flex: 1` and simply absorbs whatever width the buttons stop using. Bumped `.serving-step` to a
+  real 44×44 (not just an invisible floor) rather than leave the fleet's highest-frequency control
+  behind a trick when a straightforward fix was free.
+- **A regression caught before it shipped, not after.** The first pass added
+  `.fav-toggle:not(.r-fav) { position: relative; }` alongside the new `::before` rule, following
+  the letter of Phase 3's pattern without checking that `.fav-toggle` already declares
+  `position: absolute` on its own — the `:not()` selector's extra specificity let the new rule
+  silently override that and knock the heart out of its corner. Caught by screenshotting the real
+  Browse screen before and after in headless Chromium and comparing them side by side, not by
+  reasoning about the CSS; the two toggles don't need `position: relative` at all, since an
+  `absolute`-positioned element already anchors its own `::before`. Left as a comment on the fixed
+  rule so the same mistake isn't repeated the next time a control gets this treatment.
+
+**Verification:** `tools/smoke-test.js` (40 assertions, including `?cook=1` opening Cooking Mode,
+the counter-mode toggle, and card rendering) passes unchanged before and after. `cookbook.css`
+brace-balance holds (717/717). No JS, data, or service-worker files touched, so
+`tools/check-docs.js`, `tools/build-sw.py --check`, and `tools/build-data.js --check` all stayed
+green with nothing to regenerate — this phase is CSS-only.
+
+**Not done in this phase — carried to later waves:** `C-I1` (the cookbook's first accessibility
+gate, so this fix stays enforced instead of silently regressing — that's Wave 8), `C-I3` (vendoring
+the Supabase SDK so cold offline sign-in stops depending on a CDN the service worker can't
+precache), and `C-I4` (a `features.js`-style registry plus a tour-coverage `--check`, mirrored from
+the finance apps' pattern). All three are effort M, none is blocked by this phase's changes, and
+none is invented here per the same "don't pad a wave with unrelated work" discipline the source
+audit itself calls out for Wave 1.
+
+**Effort:** Small (reused an existing CSS pattern; no new mechanism). **Impact:** High — the
+controls fixed are the ones tapped most often, in the one screen this app's kitchen-use positioning
+depends on, with zero risk to any other surface (the touch-floor changes are additive and pass the
+existing smoke suite unchanged).
+
 ## Owner-only verification — how to actually close it
 
 Two items have sat open since phase 1 because CI can't do them. Most of both is now
