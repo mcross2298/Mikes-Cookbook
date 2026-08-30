@@ -254,8 +254,8 @@ body {
 }
 .serving-step {
   flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   appearance: none;
   border: 1px solid var(--line-dark);
   background: transparent;
@@ -2561,18 +2561,38 @@ button, a, input, select, textarea, [role="button"], .check-row {
 /* Invisible 44×44 minimum hit area, centered on each compact control. Only
    on standalone icon buttons — never on adjacent pairs (e.g. the 2/4 serving
    toggle), where overlapping floors would steal each other's edge taps. */
-.serving-step, .cook-font-btn, .plan-remove, .rf-row-remove,
-.cook-entry-del, .grocery-staple {
+.serving-step, .cook-font-btn, .cook-exit, .cook-voice-btn, .cook-counter-btn,
+.plan-remove, .rf-row-remove, .cook-entry-del, .grocery-staple {
   position: relative;
 }
 /* The card heart is already position:absolute; the header pill (.r-fav) is
-   static and already a comfortable 38px pill, so it's excluded. */
-.serving-step::before, .cook-font-btn::before, .plan-remove::before,
-.rf-row-remove::before, .cook-entry-del::before, .grocery-staple::before,
-.fav-toggle:not(.r-fav)::before {
+   static and already a comfortable 38px pill, so it's excluded. Cooking
+   Mode's exit/voice/daylight controls (audit VOC/VOA wave 6 — measured
+   18–32px tall) share the same 16px+ clearance from their nearest sibling
+   that .cook-font-btn already relies on, so the full centered floor is safe
+   here too. */
+.serving-step::before, .cook-font-btn::before, .cook-exit::before,
+.cook-voice-btn::before, .cook-counter-btn::before, .plan-remove::before,
+.rf-row-remove::before, .cook-entry-del::before, .grocery-staple::before {
   content: ""; position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   width: 100%; height: 100%; min-width: 44px; min-height: 44px;
+}
+/* The card heart and its add-to-plan button sit stacked 40px apart, center
+   to center (audit VOC/VOA wave 6 — both measured 34×34). A full 44px floor
+   on each would overlap by 4px and let one button steal the other's edge
+   taps, so both grow to only 40px tall (touching, not overlapping) while
+   staying the full 44px wide — nothing flanks them horizontally. Excludes
+   the header pills (.r-fav / .r-plan), already comfortable 38px pills.
+   Both are already `position: absolute` in their own rule above, which
+   already anchors this pseudo-element — redeclaring `position: relative`
+   here would override that (a `.fav-toggle:not(.r-fav)` selector outranks
+   the plain `.fav-toggle` it's overriding) and knock the button out of its
+   corner entirely. */
+.fav-toggle:not(.r-fav)::before, .plan-toggle:not(.r-plan)::before {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 40px;
 }
 /* Adjacent segmented toggle: grow the target vertically only (no overlap). */
 .plan-serv-opt { display: inline-flex; align-items: center; min-height: 32px; padding: 6px 12px; }
