@@ -123,6 +123,18 @@
     }, actionLabel ? 5000 : 3200);
   }
 
+  /* ── Storage-full warning (audit VOC/VOA wave 7) ──────────────────────
+     Same gap as cookbook.js: cookbook-home.js's C-12 fix only wired
+     MCFav.onWriteFail / MCTimers.onWriteFail on the shell, so a full quota
+     on this page silently swallowed a heart tap or a running timer's
+     write with no signal at all. Same one-shot-per-session shape. */
+  var storageWarned = false;
+  function warnStorageFull() {
+    if (storageWarned) return;
+    storageWarned = true;
+    toast("Storage is full — that change didn't save. Remove some cook-log photos to free space.");
+  }
+
   /* ── Detail-shard arrival (CI initiative 5) ───────────────────────────
      The grid paints from recipes-index.js; ingredients arrive a moment later
      in mc-data.js's shards. Two things here read them — the search box matches
@@ -379,6 +391,10 @@
   // has nothing to do with which collection this is.
   function boot() {
     init();
+    // A full quota shouldn't silently swallow a heart or a timer (audit
+    // VOC/VOA wave 7 — see warnStorageFull() above).
+    MCFav.onWriteFail = warnStorageFull;
+    MCTimers.onWriteFail = warnStorageFull;
     // Collection pages filter on ingredients too (the search box matches
     // ingredient names, and the low-shopping count reads the whole list), so
     // they need the detail shards — just not before the grid can paint.

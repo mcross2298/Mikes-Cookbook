@@ -61,6 +61,22 @@
     }, 3200);
   }
 
+  /* ── Storage-full warning (audit VOC/VOA wave 7) ──────────────────────
+     cookbook-home.js's C-12 fix surfaces a toast when a full quota
+     silently swallows a write, but it only wired MCFav.onWriteFail /
+     MCTimers.onWriteFail on the shell — this page also toggles favorites
+     and, via Cooking Mode, starts the app's flagship kitchen timers.
+     Before this, a full quota on recipe.html failed both exactly as
+     silently as the C-12 writeup describes on the shell, pre-fix: nothing
+     told the cook their heart tap or their timer didn't actually save.
+     Same one-shot-per-session shape as warnStorageFull() there. */
+  var storageWarned = false;
+  function warnStorageFull() {
+    if (storageWarned) return;
+    storageWarned = true;
+    toast("Storage is full — that change didn't save. Remove some cook-log photos to free space.");
+  }
+
   /* ── Inline step timers ───────────────────────────────────────────── */
   // Cooks reach for a separate timer app for "simmer 20 minutes". Parse real
   // durations out of step text and offer a tappable countdown chip that pings
@@ -1554,6 +1570,11 @@
     renderMacros(r);
     wireTabs();
     setTab("overview");
+
+    // A full quota shouldn't silently swallow a heart or a timer (audit
+    // VOC/VOA wave 7 — see warnStorageFull() above).
+    MCFav.onWriteFail = warnStorageFull;
+    MCTimers.onWriteFail = warnStorageFull;
 
     // The rail mounts immediately, not behind the detail load: a timer running
     // for a DIFFERENT recipe must stay visible here regardless of whether this

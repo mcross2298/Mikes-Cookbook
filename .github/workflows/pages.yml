@@ -64,13 +64,13 @@ jobs:
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)
         run: node tools/test-mc-export.js
       - name: UI smoke test (Playwright, real browser — tools/smoke-test.js)
-        # The only gate that actually opens a page and clicks something —
-        # everything else reasons about source text or runs a module in a vm
-        # sandbox. Playwright is installed ad hoc for this one step only (no
-        # committed package.json/lockfile — the checkout is discarded when
-        # the job ends, so this never changes the repo's real npm-free
-        # footprint). Same ad-hoc pattern Cross-Household-'s CI uses for its
-        # own Playwright-driven tests.
+        # Opens a page and clicks something — everything else reasons about
+        # source text or runs a module in a vm sandbox. Playwright is
+        # installed ad hoc for this one step only (no committed
+        # package.json/lockfile — the checkout is discarded when the job
+        # ends, so this never changes the repo's real npm-free footprint).
+        # Same ad-hoc pattern Cross-Household-'s CI uses for its own
+        # Playwright-driven tests.
         run: |
           npm init -y
           npm install --no-save playwright@^1
@@ -84,6 +84,23 @@ jobs:
           # globs top-level *.json among other extensions, so an uncleaned
           # package.json reads as a new, unprecached asset and fails the very
           # next gate — caught for real on 2026-08-02 (PR #132's first run).
+          rm -rf node_modules package.json package-lock.json
+      - name: Kitchen ergonomics gate (touch-target ratchet — tools/check-a11y.mjs)
+        # VOC/VOA Kaizen audit wave 8 (initiative C-I1) — the cookbook's
+        # first accessibility gate, ported from Cross-Household-'s own
+        # check-a11y.mjs but scoped to touch targets only (see the script's
+        # header comment for why contrast isn't in this one yet). It's a
+        # ratchet, not zero-tolerance: the fleet-wide audit found real
+        # under-floor controls well beyond wave 6's Cooking Mode/card-control
+        # fixes, so KNOWN_FAILURES records today's count and this only fails
+        # on a NEW regression, same shape as tools/test-mc-units.js's
+        # fragmentation ratchet. Its own npm install, separate from the step
+        # above — that one already cleaned up after itself before this runs.
+        run: |
+          npm init -y
+          npm install --no-save playwright@^1
+          npx playwright install --with-deps chromium
+          node tools/check-a11y.mjs
           rm -rf node_modules package.json package-lock.json
       - name: Service-worker precache list is current (build-sw.py --check)
         # The deploy job regenerates sw.js anyway, so this never blocked a

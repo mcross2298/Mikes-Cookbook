@@ -22,7 +22,9 @@
    swallowing it *silently* is what made a full quota look like hearts simply
    not saving, so a host can set MCFav.onWriteFail to surface it — the shell
    points it at cookbook-home.js's one-toast-per-session warning (audit C-12).
-   Pages that don't set it behave exactly as they always did.
+   All three hosts wire this now (audit VOC/VOA wave 7 closed the gap on
+   recipe.html and collection.html, which had shipped without it); a page
+   that doesn't set it falls back to swallowing silently, same as before.
 
    Exposed as window.MCFav = { KEY, load(), save(set), toggle(id), has(id) }.
    ========================================================================== */
