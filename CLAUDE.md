@@ -164,8 +164,9 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `quick-tour.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. |
 | `recipes-index.js` / `recipes-detail-NN.js` | **Generated — never hand-edit.** Output of `tools/build-data.js`; see `mc-data.js` above. Regenerate with `node tools/build-data.js` after any `recipes-data.js` change; CI fails on a stale copy (`--check`) and on an orphaned shard left behind by a smaller `SHARDS`. `--report` prints the size table. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. Skips `recipes-data.js` — see its row above. |
-| `tools/smoke-test.js` | **Blocking CI gate as of 2026-08-02** (previously local-only). Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, and the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation. Playwright is installed ad hoc in the `verify` job (see the CI section below), not via a committed `package.json`, so this repo's real dependency footprint is unchanged. Still worth running locally before pushing anything that touches load order, Cooking Mode or the timers — CI will catch a regression either way, but locally is faster to iterate on. |
-| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (13 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
+| `tools/smoke-test.js` | **Blocking CI gate as of 2026-08-02** (previously local-only). Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation — and, as of the VOC/VOA Kaizen audit wave 7, a simulated full-quota write on `recipe.html` and `collection.html` to prove the storage-full toast actually surfaces there (see `mc-fav.js`'s row and the wave 7 writeup in `ROADMAP.md`). Playwright is installed ad hoc in the `verify` job (see the CI section below), not via a committed `package.json`, so this repo's real dependency footprint is unchanged. Still worth running locally before pushing anything that touches load order, Cooking Mode, the timers, or a write path — CI will catch a regression either way, but locally is faster to iterate on. |
+| `tools/check-a11y.mjs` | **The cookbook's first accessibility gate** (VOC/VOA Kaizen audit wave 8, initiative C-I1) — blocking CI as of the same wave. Drives every shell screen and standalone page in Playwright/Chromium and fails if the count of under-44px touch targets exceeds a recorded ratchet ceiling (`KNOWN_FAILURES`, same shape as `mc-units.js`'s fragmentation ratchet — may only fall, never rise). Touch targets only, not contrast — see the file's own header comment for why a sandbox with blocked webfonts shouldn't be trusted to baseline that yet. Measures a control's *effective* hit area as `max(its own box, its ::before's rendered box)`, so the invisible-floor pattern several controls already use (see `cookbook.css`'s Phase 3 comment) reads as compliant instead of producing false failures. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (15 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -417,7 +418,7 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Fourteen gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Fifteen gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
@@ -466,8 +467,27 @@ anything reaching production):
       whatever `npm init` writes to it) is discarded when the job ends. Same
       pattern Cross-Household- already uses for its own Playwright-driven
       tests.
-  13. `tools/build-sw.py --check` — precache list is current.
-  14. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  13. `tools/check-a11y.mjs` — the cookbook's first accessibility gate (VOC/VOA
+      Kaizen audit wave 8, initiative C-I1), ported from Cross-Household-'s own
+      `check-a11y.mjs` but touch-targets-only — the source audit's own "Method &
+      limits" section explicitly warns that a sandbox with webfonts blocked at
+      the browser level shouldn't be used to baseline contrast, so that half of
+      the pattern is deferred to a follow-up that can baseline it from a real
+      CI run. Touch targets are unaffected (explicit CSS px, not font metrics).
+      A raw `getBoundingClientRect()` would be the wrong measurement here:
+      cookbook.css's Phase 3 pass already gives several controls a real 44px+
+      hit area via an invisible, centered `::before` with the *visible* box left
+      smaller on purpose, so this script measures `max(own box, ::before's
+      rendered box)` instead of hand-maintaining a per-selector exemption list.
+      It's a **ratchet, not zero-tolerance** (same shape as `test-mc-units.js`'s
+      fragmentation count): the fleet-wide audit found real under-floor controls
+      on nearly every shell screen, and fixing all of them is out of wave 8's
+      scope — `KNOWN_FAILURES` records that count and the gate only fails on a
+      *new* regression. Proven against the pre-wave-6 tree before landing (88
+      failures, over the ceiling) and the post-wave-6 tree (84, at the ceiling)
+      per the wave's own instruction to prove the gate has teeth first.
+  14. `tools/build-sw.py --check` — precache list is current.
+  15. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -489,8 +509,10 @@ python3 tools/build-sw.py --check && node tools/build-data.js --check
 
 Also run `tools/smoke-test.js` (Playwright, needs a local server — `python3 -m
 http.server 8765 &` then `node tools/smoke-test.js`) before pushing anything
-that touches load order, Cooking Mode, or the timers; it's a blocking CI gate
-now too, but it's faster to catch locally.
+that touches load order, Cooking Mode, or the timers, and `tools/check-a11y.mjs`
+(Playwright, starts its own server — no `http.server` needed) before pushing
+anything that touches a touch target's size or position; both are blocking CI
+gates now too, but they're faster to catch locally.
 
 ## Git workflow
 

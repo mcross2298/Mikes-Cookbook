@@ -605,7 +605,8 @@ audit, kept as the source names them). Wave 8 (the a11y CI gate itself) and the 
 The audit's headline finding for this repo: of the fleet's four pushable apps, the cookbook is the
 one used with the worst hands (kitchen, grease, divided attention) and carries the *least*
 ergonomic enforcement — 0 of 14 blocking CI gates measure a touch target, a contrast ratio, or a
-viewport width, versus 100% route coverage on both seated desk-use finance apps. Wave 5's own
+viewport width, versus 100% route coverage on both seated desk-use finance apps. **Closed by Wave
+8 below**, which adds a 15th gate that measures exactly the first of those three. Wave 5's own
 content was to document that inversion, not to invent a fix for it — a re-walk of `quick-tour.html`
 and a fresh offline reload both came back clean (the tour's 12 slides all render, matching
 `SLIDES`; a cold-cache reload still painted the app shell), so nothing there needed a code change.
@@ -661,6 +662,91 @@ audit itself calls out for Wave 1.
 controls fixed are the ones tapped most often, in the one screen this app's kitchen-use positioning
 depends on, with zero risk to any other surface (the touch-floor changes are additive and pass the
 existing smoke suite unchanged).
+
+### Phase 8 ✅ (shipped 2026-08-30) — VOC/VOA Kaizen audit, Waves 7–8: the silent write path and the first a11y gate
+
+**Wave 7 — "no search defect found; the real content is the quota path."** The audit's own framing
+for this wave explicitly ruled out re-litigating search (already fixed, CI initiative 4) and pointed
+at a specific, narrower gap instead. Audit C-12 (Phase 4 above) had already fixed *silent* full-quota
+writes on the shell — `MCFav.onWriteFail` / `MCTimers.onWriteFail` wired to a one-toast-per-session
+warning — but only on `cookbook-home.js`. `recipe.html` (`cookbook.js`) and `collection.html`
+(`collection.js`) both toggle favorites through the same `mc-fav.js`, and `recipe.html`'s Cooking
+Mode is where the app's kitchen timers actually get started, yet neither page ever set the hook:
+`mc-fav.js`'s own header comment said as much — *"pages that don't set it behave exactly as they
+always did"* — which, read plainly, meant a full quota on either page failed exactly as silently as
+the pre-C-12 shell did. Fixed by giving each page the identical one-shot `warnStorageFull()` its own
+existing `toast()` helper already supported, and wiring `MCFav.onWriteFail` / `MCTimers.onWriteFail`
+in each page's init — same fix, same shape, two more places it was missing. `mc-fav.js`'s header
+comment now says all three hosts wire it, rather than describing the pre-fix gap as still current.
+
+**Verification, not assumption:** `tools/smoke-test.js` gained two new checks — monkeypatch
+`Storage.prototype.setItem` to throw `QuotaExceededError` on the `mc-cookbook:favorites` key, tap
+the heart on `recipe.html`'s `.r-fav` and on a `collection.html` card, and assert the storage-full
+toast actually renders. Confirmed these fail on the pre-fix tree (stashed the JS changes, reran —
+both new checks failed exactly as expected) before restoring the fix, the same fail-then-pass
+discipline Wave 8's own instruction asks for on its own gate below.
+
+**Wave 8 — "the cookbook's first accessibility gate, with Cooking Mode as an explicit route."**
+`tools/check-a11y.mjs`, loosely ported from Cross-Household-'s script of the same name (initiative
+C-I1). Two deliberate departures from a literal port, both explained in the script's own header:
+
+- **Touch targets only, no contrast check.** The source audit's own "Method & limits" section says
+  outright that a session like this one runs in a sandbox with webfonts blocked at the browser
+  level, and *"no contrast or visual ratchet was re-baselined here, and none should be."* Building
+  and tuning a contrast gate in exactly that kind of sandbox, then shipping it as if verified,
+  would be the opposite of this repo's own "measure, don't assume" standard — the numbers could
+  look clean here and still be wrong against the real CI runner. Touch targets are unaffected (they
+  come from explicit CSS px, not font metrics), so they're gated now; contrast is left as an
+  explicitly-named follow-up rather than silently dropped.
+- **A ratchet, not zero-tolerance — same shape as `tools/test-mc-units.js`'s fragmentation count.**
+  A comprehensive first pass across the shell's six screens plus every standalone page found **84**
+  controls under the 44px floor — far more than waves 6/7 touched: shell topbar icons, the planner's
+  segmented toggles, Browse's category chips, the tracker's own icon row, both Quick Tour pages'
+  nav dots and jump chips, and more. Fixing all of it is a separate, much larger effort than what
+  waves 6–8 scoped, and a gate that immediately fails on 84 pre-existing findings unrelated to this
+  work would either block unrelated PRs or get disabled — neither protects anything. `KNOWN_FAILURES
+  = 84` records today's count as a ceiling: the gate fails only when a **new** control regresses
+  under the floor, and may only improve (lower the constant) from here, mirroring the exact ratchet
+  shape `mc-units.js`'s corpus-fragmentation count already established in this repo.
+
+**The measurement problem a literal port would have had.** A raw `el.getBoundingClientRect()` is
+the wrong measurement for this codebase specifically: `cookbook.css`'s own Phase 3 pass (and Wave
+6 above) already gives the serving stepper, Cooking Mode's exit/font/voice/daylight buttons, and
+the card heart/plan-toggle pair a real 44px+ hit area via a centered, invisible `::before` —
+*visual* size deliberately unchanged. A gate that only read the real element's box would report
+every one of those as broken the day it landed: a false failure on a control that was already
+fixed, which is worse than no gate at all (the source audit's own W-I4 finding, about a green gate
+measuring the wrong thing, is the mirror image of this — here a naive gate would be *red* for the
+wrong reason). So a control's effective size is computed as `max(its own box, its ::before's
+rendered box)` when that `::before` has real content and `position: absolute` — exactly what the
+CSS pattern produces — rather than a hand-maintained per-selector exemption list that would drift
+out of sync the next time a control gets the same treatment. One exemption remains, and it's
+numeric rather than name-based on purpose: the card heart/plan-toggle pair's intentional 40px-tall
+cap (Wave 6 — a full 44 on each would overlap its stacked sibling) is only exempted when it
+actually measures `height >= 40 && width >= 44`, so a regression back to the pre-Wave-6 shape
+(34×34, no floor at all) still fails rather than being masked by matching the same class name.
+
+**Proven to have teeth before landing, per the wave's own instruction:** ran the gate against the
+pre-Wave-6 `cookbook.css` (the commit before Wave 6's PR) and confirmed it reports **88** failures
+— over the ceiling, correctly catching `.cook-exit` / `.cook-voice-btn` / `.cook-counter-btn`
+newly under the floor and the card `.plan-toggle` losing its exemption because it no longer has a
+floor at all — then restored the current tree, where it reports exactly **84**, at the ceiling.
+
+**Not done in this phase:** the 84 pre-existing failures the ratchet currently tolerates (shell
+topbar icons, planner/browse segmented controls and chips, the tracker's icon row, both Quick Tour
+pages) are real and worth a future pass, but are out of scope for what waves 6–8 asked for —
+recorded as the ratchet's own baseline rather than fixed here. Contrast checking is deferred for
+the sandbox reason above. `.r-fav` / `.r-plan` (the recipe-page header pills) turned out to
+measure 38px tall, not the "comfortable 38px pill" the Phase 3 comment assumed made them safe to
+exclude from the floor treatment — a real, newly-surfaced finding, also left in the ratchet rather
+than fixed here, since it wasn't part of what either wave named.
+
+**Effort:** Wave 7 Small (reused the existing C-12 mechanism, two more call sites), Wave 8 Medium
+(a new script, plus the ::before-aware measurement it needed to avoid false failures). **Impact:**
+Wave 7 High relative to its size — closes a completely silent failure mode on the app's two busiest
+standalone pages, one of which is Cooking Mode. Wave 8 is this repo's first ergonomic CI coverage
+at all, on the exact axis (kitchen-use touch targets) the whole VOC/VOA Kaizen exercise found this
+app weakest on.
 
 ## Owner-only verification — how to actually close it
 

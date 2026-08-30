@@ -82,6 +82,29 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   await page.click('#tab-grocery');
   ok('recipe: grocery rendered', (await page.locator('#pane-grocery').innerHTML()).length > 200);
 
+  // ── audit VOC/VOA wave 7: a full quota must not fail silently here ───
+  // cookbook-home.js's C-12 fix only wired MCFav.onWriteFail on the shell;
+  // this page (and collection.html, below) toggle favorites too and had
+  // shipped without it, so a full quota tapping a heart here used to do
+  // nothing visible at all.
+  errors.length = 0;
+  await page.evaluate(() => {
+    window.__origSetItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) {
+      if (k === 'mc-cookbook:favorites') {
+        Storage.prototype.setItem = window.__origSetItem;
+        throw new DOMException('quota', 'QuotaExceededError');
+      }
+      return window.__origSetItem.call(this, k, v);
+    };
+  });
+  await page.click('.r-fav');
+  await page.waitForTimeout(200);
+  const recipeQuotaToast = await page.locator('.mc-toast-msg').first().textContent().catch(() => null);
+  ok('recipe: a full quota on a heart tap surfaces the storage-full toast',
+    !!recipeQuotaToast && /storage is full/i.test(recipeQuotaToast));
+  ok('recipe: no JS errors from the simulated quota failure', errors.length === 0 || (console.log(errors), false));
+
   // ── ?cook=1 deep link ──────────────────────────────────────────────
   errors.length = 0;
   await page.goto(B + '/recipe.html?id=' + id + '&cook=1', { waitUntil: 'networkidle' });
@@ -279,6 +302,25 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   await page.goto(B + '/collection.html?c=' + cid, { waitUntil: 'networkidle' });
   ok('collection: no JS errors', errors.length === 0 || (console.log(errors), false));
   ok('collection: grid rendered', await page.locator('#grid .rc').count() > 0);
+
+  // ── audit VOC/VOA wave 7: same quota check, collection.html's card heart ─
+  errors.length = 0;
+  await page.evaluate(() => {
+    window.__origSetItem = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) {
+      if (k === 'mc-cookbook:favorites') {
+        Storage.prototype.setItem = window.__origSetItem;
+        throw new DOMException('quota', 'QuotaExceededError');
+      }
+      return window.__origSetItem.call(this, k, v);
+    };
+  });
+  await page.locator('#grid .fav-toggle').first().click();
+  await page.waitForTimeout(200);
+  const collectionQuotaToast = await page.locator('.mc-toast-msg').first().textContent().catch(() => null);
+  ok('collection: a full quota on a card heart tap surfaces the storage-full toast',
+    !!collectionQuotaToast && /storage is full/i.test(collectionQuotaToast));
+  ok('collection: no JS errors from the simulated quota failure', errors.length === 0 || (console.log(errors), false));
 
   await browser.close();
   console.log(fails ? '\n' + fails + ' SMOKE FAILURES' : '\nsmoke: all checks passed');
