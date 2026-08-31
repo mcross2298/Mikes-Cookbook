@@ -63,6 +63,10 @@ jobs:
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)
         run: node tools/test-mc-export.js
+      - name: No silent localStorage write paths (check-write-paths.js — Gate 17)
+        run: node tools/check-write-paths.js
+      - name: PWA manifest + icon correctness (test-manifest.js — Gate 18)
+        run: node tools/test-manifest.js
       - name: UI smoke test (Playwright, real browser — tools/smoke-test.js)
         # Opens a page and clicks something — everything else reasons about
         # source text or runs a module in a vm sandbox. Playwright is

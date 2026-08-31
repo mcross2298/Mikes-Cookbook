@@ -166,7 +166,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. Skips `recipes-data.js` — see its row above. |
 | `tools/smoke-test.js` | **Blocking CI gate as of 2026-08-02** (previously local-only). Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation — and, as of the VOC/VOA Kaizen audit wave 7, a simulated full-quota write on `recipe.html` and `collection.html` to prove the storage-full toast actually surfaces there (see `mc-fav.js`'s row and the wave 7 writeup in `ROADMAP.md`). Playwright is installed ad hoc in the `verify` job (see the CI section below), not via a committed `package.json`, so this repo's real dependency footprint is unchanged. Still worth running locally before pushing anything that touches load order, Cooking Mode, the timers, or a write path — CI will catch a regression either way, but locally is faster to iterate on. |
 | `tools/check-a11y.mjs` | **The cookbook's first accessibility gate** (VOC/VOA Kaizen audit wave 8, initiative C-I1) — blocking CI as of the same wave. Drives every shell screen and standalone page in Playwright/Chromium and fails if the count of under-44px touch targets exceeds a recorded ratchet ceiling (`KNOWN_FAILURES`, same shape as `mc-units.js`'s fragmentation ratchet — may only fall, never rise). Touch targets only, not contrast — see the file's own header comment for why a sandbox with blocked webfonts shouldn't be trusted to baseline that yet. Measures a control's *effective* hit area as `max(its own box, its ::before's rendered box)`, so the invisible-floor pattern several controls already use (see `cookbook.css`'s Phase 3 comment) reads as compliant instead of producing false failures. |
-| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (15 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (17 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, silent-write-path lint, PWA manifest/icon correctness, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -418,7 +418,7 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Fifteen gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Seventeen gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
@@ -457,7 +457,30 @@ anything reaching production):
      token against a corpus-wide vocabulary instead.
   10. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
   11. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
-  12. `tools/smoke-test.js` — the one gate that opens a real page in a real
+  12. `tools/check-write-paths.js` — no `localStorage.setItem()` call is left
+      inside an empty `catch (e) {}` anywhere in the app's real source (the
+      "runtime invisibles" audit, 2026-08-31). Audit C-12 built the right
+      mechanism (`writeStore()` / `onWriteFail` hooks) and wired it into two
+      stores; this gate exists because four more genuinely silent write paths
+      — a hand-typed recipe, a logged tracker entry, a plan-add, a check-off —
+      had shipped since, each with the exact same empty-catch shape, and
+      nothing noticed for a year. It's a **ratchet**, same shape as
+      `test-mc-units.js`'s fragmentation count: `ALLOWED_SILENT` is the
+      complete, reasoned list of today's deliberate exceptions (device-local
+      preferences like `:cookfont`/`:owner`, the `mc_device_id` random id, the
+      food-search cache, the one-time legacy tracker-key migration) and may
+      only shrink — a new empty-catch `setItem()` that isn't on it fails
+      review instead of silently shipping.
+  13. `tools/test-manifest.js` — PWA manifest + icon correctness, pure file and
+      byte reads, no browser (same audit). Catches what a real device install
+      is otherwise the only way to notice: `apple-touch-icon` pointing at an
+      SVG (iOS ignores it and falls back to a screenshot of the page as the
+      icon), a missing `maskable` icon or ≥512px raster (Android adaptive-icon
+      letterboxing), a missing manifest `id` (a future `start_url` change would
+      orphan every existing install), and a page missing its light/dark
+      `theme-color` meta pair. Verifies a PNG is a **real** PNG via its 8-byte
+      signature and actual `IHDR` dimensions, not just a plausible filename.
+  14. `tools/smoke-test.js` — the one gate that opens a real page in a real
       browser and clicks something, rather than reasoning about source text or
       running a module in a vm sandbox (shipped 2026-08-02, closing the CI gap
       this file used to describe as standing). Playwright is installed ad hoc
@@ -466,8 +489,21 @@ anything reaching production):
       repo's real, committed footprint stays npm-free; the checkout (and
       whatever `npm init` writes to it) is discarded when the job ends. Same
       pattern Cross-Household- already uses for its own Playwright-driven
-      tests.
-  13. `tools/check-a11y.mjs` — the cookbook's first accessibility gate (VOC/VOA
+      tests. Extended by the "runtime invisibles" audit with three more
+      scenarios: an SW update's reload is deferred while Cooking Mode is
+      active and applies the moment it ends (dispatching a synthetic
+      `controllerchange` on the real, already-active `navigator.serviceWorker`
+      rather than installing a second SW version — this is what caught a real
+      ordering bug in `exitCook()`: the `?cook=1` URL param was being stripped
+      *after* the event that can trigger a synchronous reload, so the deferred
+      reload would have landed right back in Cooking Mode); `overscroll-behavior`
+      actually lands on `body` and `.cook-body` (pull-to-refresh containment);
+      and a shard that fails to load (a fresh, isolated browser context with
+      the shard's own network request blocked, so a warm SW cache from earlier
+      scenarios can't quietly make it a no-op) shows the honest error and
+      recovers on a manual reload — automatic recovery the instant connectivity
+      returns is a documented, separate follow-up, not yet built.
+  15. `tools/check-a11y.mjs` — the cookbook's first accessibility gate (VOC/VOA
       Kaizen audit wave 8, initiative C-I1), ported from Cross-Household-'s own
       `check-a11y.mjs` but touch-targets-only — the source audit's own "Method &
       limits" section explicitly warns that a sandbox with webfonts blocked at
@@ -486,8 +522,8 @@ anything reaching production):
       *new* regression. Proven against the pre-wave-6 tree before landing (88
       failures, over the ceiling) and the post-wave-6 tree (84, at the ceiling)
       per the wave's own instruction to prove the gate has teeth first.
-  14. `tools/build-sw.py --check` — precache list is current.
-  15. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  16. `tools/build-sw.py --check` — precache list is current.
+  17. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -504,6 +540,7 @@ node tools/test-mc-timers.js && node tools/test-mc-data.js
 node tools/test-mc-units.js
 node tools/test-mc-search.js
 node tools/test-sw-strategy.js && node tools/test-mc-export.js
+node tools/check-write-paths.js && node tools/test-manifest.js
 python3 tools/build-sw.py --check && node tools/build-data.js --check
 ```
 

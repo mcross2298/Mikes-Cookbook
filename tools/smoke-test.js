@@ -11,11 +11,13 @@
    5 made recipe detail load asynchronously, and neither is visible to a
    static check.
 
-   **Not wired into CI, deliberately.** It needs Playwright and a Chromium
-   binary; this project has no package.json and no npm step, and adding one to
-   pages.yml is a change to the project's character that belongs to a separate
-   decision, not to the change that happened to need a browser. Run it locally
-   before pushing anything that touches load order, Cooking Mode or the timers.
+   **Wired into CI as of 2026-08-02** (this comment used to say the opposite
+   — pages.yml's `verify` job now installs Playwright + Chromium ad hoc for
+   this one step and cleans up afterward, so the repo's real, committed
+   footprint stays npm-free; see that workflow's own comment on the step).
+   Still worth running locally before pushing anything that touches load
+   order, Cooking Mode, the timers, or a write path — CI catches a
+   regression either way, but locally is faster to iterate on.
 
    Usage:
      python3 -m http.server 8765 &
@@ -112,6 +114,20 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   ok('cook=1: no JS errors', errors.length === 0 || (console.log(errors), false));
   ok('cook=1: Cooking Mode opened', await page.locator('#cook').count() === 1);
 
+  // ── gesture containment (B1) ─────────────────────────────────────────
+  // A downward drag at the top of the page must never trigger the OS's
+  // pull-to-refresh — on Android standalone that reloads the whole app out
+  // from under a cook mid-recipe. overscroll-behavior is what stops it;
+  // this asserts the computed style actually landed, on both the page body
+  // and Cooking Mode's own scroll container.
+  ok('gesture: body has overscroll-behavior-y: none',
+    await page.evaluate(() => getComputedStyle(document.body).overscrollBehaviorY) === 'none');
+  ok('gesture: Cooking Mode\'s scroll container contains its own overscroll',
+    await page.evaluate(() => {
+      var el = document.querySelector('.cook-body');
+      return !!el && getComputedStyle(el).overscrollBehaviorY === 'contain';
+    }));
+
   // ── timers ─────────────────────────────────────────────────────────
   const chip = page.locator('#cook .timer-chip').first();
   if (await chip.count()) {
@@ -133,6 +149,55 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
     ok('timer: rail clears the tab bar', await page.locator('.mc-rail.on-shell').count() === 1);
   } else {
     console.log('SKIP timer chip tests — no duration in this recipe\'s steps');
+  }
+
+  // ── SW update reload deferred while Cooking Mode is active (A3) ────────
+  // A deploy landing mid-cook used to reload the page out from under the
+  // cook — wake lock released, voice control stopped, dropped back on
+  // Overview. Rather than installing a second SW version (real, but the
+  // slowest and flakiest way to prove this), this dispatches the exact
+  // event cookbook-sw.js's own controllerchange listener reacts to on the
+  // REAL, already-active navigator.serviceWorker — indistinguishable to
+  // that listener from a genuine update taking control. Needs the SW to
+  // already be controlling this client (clients.claim() on activate, from
+  // the earlier navigations in this file) so the "update" branch runs
+  // rather than the "first install" branch — skips gracefully if the SW
+  // hasn't taken control in time rather than flaking CI on real-world SW
+  // registration timing.
+  // Observed via a REAL navigation event rather than mocking
+  // window.location.reload — that property is non-configurable in
+  // Chromium, so a page.evaluate() assignment to it silently no-ops
+  // (caught for real while writing this test: it made the "deferred"
+  // assertion pass for the wrong reason, then let a genuine reload tear
+  // down the execution context on the very next assertion).
+  errors.length = 0;
+  await page.goto(B + '/recipe.html?id=' + id + '&cook=1', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  const swControlling = await page.evaluate(() => !!navigator.serviceWorker.controller);
+  if (swControlling && await page.locator('#cook').count() === 1) {
+    let navigatedWhileCooking = false;
+    page.once('framenavigated', () => { navigatedWhileCooking = true; });
+    await page.evaluate(() => navigator.serviceWorker.dispatchEvent(new Event('controllerchange')));
+    await page.waitForTimeout(400);
+    ok('sw-reload: an update while Cooking Mode is active does not reload immediately',
+      !navigatedWhileCooking);
+
+    const exitNav = page.waitForEvent('framenavigated', { timeout: 3000 }).catch(() => null);
+    await page.click('.cook-exit');
+    const navigatedOnExit = await exitNav;
+    ok('sw-reload: exiting Cooking Mode applies the deferred reload', !!navigatedOnExit);
+    if (navigatedOnExit) {
+      await page.waitForLoadState('networkidle');
+      // The URL is stripped of ?cook=1 BEFORE the deferred reload fires
+      // (see exitCook()'s own comment on the ordering) — otherwise the
+      // fresh load would see ?cook=1 again and immediately re-enter
+      // Cooking Mode, undoing the exit the reload was supposed to honor.
+      ok('sw-reload: the reload does not land back in Cooking Mode',
+        await page.locator('#cook').count() === 0);
+    }
+    ok('sw-reload: no JS errors', errors.length === 0 || (console.log(errors), false));
+  } else {
+    console.log('SKIP sw-reload tests — service worker had not taken control of this client in time');
   }
 
   // ── Initiative 2: aisle grouping + provenance underdot on the grocery pane ─
@@ -321,6 +386,52 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   ok('collection: a full quota on a card heart tap surfaces the storage-full toast',
     !!collectionQuotaToast && /storage is full/i.test(collectionQuotaToast));
   ok('collection: no JS errors from the simulated quota failure', errors.length === 0 || (console.log(errors), false));
+
+  // ── a shard that fails to load shows the honest error, not an empty pane ──
+  // Initiative 5 split recipes-data.js into an index + 16 on-demand detail
+  // shards; ensureDetail()'s onerror handler already resolves false rather
+  // than hanging, and cookbook.js's init() already renders an explicit
+  // "Couldn't load this recipe's ingredients" message rather than a blank
+  // pane on that failure — this pins both. A fresh, ISOLATED browser
+  // context (no SW registration, no Cache Storage) is used deliberately:
+  // every scenario above this one already warmed all 16 shards into the
+  // shared page's SW cache via MCData.ensureAll(), so re-using that page
+  // would make this indistinguishable from a real cache hit no matter what
+  // the network does. Blocking the shard URL here forces a genuine network
+  // miss on a cold cache, the exact "captive portal / dead network" case
+  // the audit named. Automatic recovery the instant connectivity returns
+  // (no manual reload) is a documented, separate follow-up — not yet
+  // built — so this scenario pins the recovery path that exists today: a
+  // reload once the network is back.
+  {
+    const freshCtx = await browser.newContext();
+    const freshPage = await freshCtx.newPage();
+    const freshErrors = [];
+    freshPage.on('pageerror', (e) => freshErrors.push('pageerror: ' + e.message));
+    freshPage.on('console', (m) => {
+      const t = m.text();
+      if (m.type() === 'error' && !/net::|Failed to load resource/.test(t)) freshErrors.push('console: ' + t);
+    });
+
+    const shardPattern = /\/recipes-detail-\d\d\.js(\?.*)?$/;
+    await freshPage.route(shardPattern, (route) => route.abort('failed'));
+
+    await freshPage.goto(B + '/recipe.html?id=' + id, { waitUntil: 'networkidle' });
+    await freshPage.waitForTimeout(500);
+    const groceryText = await freshPage.locator('#pane-grocery').innerText().catch(() => '');
+    ok('offline shard: the honest "couldn\'t load" message renders instead of an empty pane',
+      /couldn.t load/i.test(groceryText));
+
+    await freshPage.unroute(shardPattern);
+    await freshPage.reload({ waitUntil: 'networkidle' });
+    await freshPage.waitForTimeout(500);
+    const groceryTextAfter = await freshPage.locator('#pane-grocery').innerText().catch(() => '');
+    ok('offline shard: reloading once the network recovers loads the real ingredients',
+      groceryTextAfter.length > 50 && !/couldn.t load/i.test(groceryTextAfter));
+    ok('offline shard: no unexpected JS errors', freshErrors.length === 0 || (console.log(freshErrors), false));
+
+    await freshCtx.close();
+  }
 
   await browser.close();
   console.log(fails ? '\n' + fails + ' SMOKE FAILURES' : '\nsmoke: all checks passed');

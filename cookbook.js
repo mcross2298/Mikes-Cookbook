@@ -254,7 +254,12 @@
   function saveSet(recipeId, serving, kind, set) {
     try {
       localStorage.setItem(storeKey(recipeId, serving, kind), JSON.stringify(Array.from(set)));
-    } catch (e) {}
+    } catch (e) {
+      // A full quota here used to silently drop a check-off — a cook could
+      // tick off ten ingredients mid-shop, hit quota, and find them all
+      // unchecked again on the next load with no idea why.
+      warnStorageFull();
+    }
   }
 
   /* ── Cook log (shared store: dated cook history + optional photo) ──────
@@ -290,14 +295,17 @@
     if (!Array.isArray(map[id])) map[id] = [];
     map[id] = map[id].map(normalizeEntry);
     map[id].push({ at: new Date().toISOString(), photo: null });
-    saveCooked(map);
+    // Silently unrecorded used to mean the streak, Smart Week's repeat-
+    // avoidance, and the weekly recap's cooked count all quietly drifted
+    // from what the cook actually did, with nothing on screen explaining why.
+    if (!saveCooked(map)) warnStorageFull();
   }
   function removeCooked(id, at) {
     var map = loadCooked();
     if (!Array.isArray(map[id])) return;
     map[id] = map[id].map(normalizeEntry).filter(function (e) { return e.at !== at; });
     if (!map[id].length) delete map[id];
-    saveCooked(map);
+    if (!saveCooked(map)) warnStorageFull();
   }
 
   // Relative + absolute date strings for the log.
@@ -480,7 +488,7 @@
   function removeRecipePhoto(r) {
     var map = loadRecipePhotos();
     delete map[r.recipe_id];
-    saveRecipePhotos(map);
+    if (!saveRecipePhotos(map)) warnStorageFull();
     renderHeader(r);
     renderHero(r);
   }
@@ -1409,12 +1417,17 @@
     cook.active = false;
     stopCookVoice(); // no reason to keep the mic open once Cooking Mode is closed
     document.body.classList.remove("cooking");
-    document.dispatchEvent(new Event("mc:cookingchange"));
+    // Strip ?cook=1 BEFORE dispatching mc:cookingchange: cookbook-sw.js's
+    // listener for that event may call location.reload() synchronously
+    // (an update was deferred while cooking, and this is the moment it
+    // applies) — reloading a URL that still said ?cook=1 would land right
+    // back in Cooking Mode on the fresh load, undoing the exit entirely.
     if (new URLSearchParams(location.search).get("cook") === "1") {
       var u = new URL(location.href);
       u.searchParams.delete("cook");
       history.replaceState(null, "", u);
     }
+    document.dispatchEvent(new Event("mc:cookingchange"));
     var o = $("#cook");
     if (o) o.parentNode.removeChild(o);
     wake.set(state.tab === "recipe");
