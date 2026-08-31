@@ -122,6 +122,28 @@
     var snapshot = list();
     subs.forEach(function (fn) { try { fn(snapshot); } catch (e) {} });
     renderRail();
+    updateBadge(snapshot);
+  }
+
+  // App Badging (runtime-invisibles audit, delight opportunity 2): the
+  // honest answer to alertExpired()'s own documented limit above — a
+  // suspended page (iOS, screen locked) can't fire a Notification, but the
+  // OS-level badge on the home-screen icon persists through suspension, so
+  // "a timer is done" is visible without ever unlocking. Badge count is the
+  // number of timers currently ringing (fired, not yet dismissed); it clears
+  // itself back to nothing once every ringing timer is cancelled or
+  // restarted, so no separate visibilitychange handling is needed. Guarded
+  // to fire the OS call only when that count actually changes — emit() runs
+  // every 250ms tick while any timer is live, and setAppBadge() has no
+  // business being called that often.
+  var lastBadgeCount = -1;
+  function updateBadge(snapshot) {
+    if (!("setAppBadge" in navigator)) return;
+    var n = (snapshot || list()).filter(function (t) { return t.ringing; }).length;
+    if (n === lastBadgeCount) return;
+    lastBadgeCount = n;
+    if (n > 0) navigator.setAppBadge(n).catch(function () {});
+    else if ("clearAppBadge" in navigator) navigator.clearAppBadge().catch(function () {});
   }
 
   /* ── mutations ──────────────────────────────────────────────────────── */

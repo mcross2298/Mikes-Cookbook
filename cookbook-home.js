@@ -4180,6 +4180,14 @@
 
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
+    // Read (and strip) any Web Share Target params FIRST, before anything
+    // else in init() runs — setTab() below unconditionally replaces the URL
+    // with just location.pathname on its way to "home" (see its own
+    // history.replaceState call), which would silently wipe these before a
+    // later read ever saw them. Only the actual form-open is deferred to
+    // the end of init(), once MCRecipeForm.configure() has wired its hooks.
+    var sharedPrefill = readSharedRecipeParams();
+
     syncOwnerFromUrl();
 
     // How the shell does the things the shared card can't know about
@@ -4278,6 +4286,44 @@
       var p = loadPlan();
       if (shouldPromptDay7(p)) openSaveWeekPrompt();
     }, 0);
+
+    // Web Share Target (runtime-invisibles audit, delight opportunity 1):
+    // manifest.json registers this page as a share target, so a recipe link
+    // a cook sees in Instagram/Messages/Safari can be shared straight into
+    // the app instead of retyped by hand. MCRecipeForm already exists for
+    // hand-typed recipes, so sharing just opens it prefilled rather than
+    // needing a second, parallel entry path. Deliberately opened a tick
+    // after the rest of init() so the shell has already painted — an
+    // overlay appearing over a blank screen would look broken. (sharedPrefill
+    // itself was read — and the URL cleaned — at the very top of init(),
+    // before setTab() could wipe the query string first.)
+    if (sharedPrefill) {
+      setTimeout(function () { MCRecipeForm.open(sharedPrefill); }, 0);
+    }
+  }
+
+  // Parses manifest.json's share_target params (see its own entry) and
+  // strips them from the URL immediately, so a later reload or Back doesn't
+  // re-trigger the share flow. Returns { title, description } or null.
+  // Called at the very top of init() — see the comment there for why timing
+  // matters here specifically.
+  function readSharedRecipeParams() {
+    var p = new URLSearchParams(location.search);
+    var title = p.get("shared_title") || "";
+    var text = p.get("shared_text") || "";
+    var url = p.get("shared_url") || "";
+    if (!title && !text && !url) return null;
+
+    var clean = new URL(location.href);
+    ["shared_title", "shared_text", "shared_url"].forEach(function (k) { clean.searchParams.delete(k); });
+    history.replaceState(null, "", clean);
+
+    // A share sheet's "text" is often the source's own caption, not a title
+    // a cook would want to keep verbatim — so title wins when both exist,
+    // and text (plus the URL, so the source isn't lost) becomes the starting
+    // description instead of being discarded.
+    var description = [text, url].filter(Boolean).join("\n\n");
+    return { title: title, description: description };
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

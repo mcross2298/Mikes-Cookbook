@@ -76,6 +76,11 @@ window.MC_FEATURES = [
     keywords: ['sign in', 'sync']
   },
   {
+    id: 'share-target',
+    name: 'Share a recipe link in from another app',
+    keywords: ['share it straight to', 'phone\'s own share button']
+  },
+  {
     id: 'offline-install',
     name: 'Install & offline',
     keywords: ['install & cook offline', 'offline']
