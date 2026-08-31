@@ -45,6 +45,8 @@ jobs:
         run: node tools/validate-recipes.js
       - name: Docs match the code (counts, sizes, structural claims — audit C-11)
         run: node tools/check-docs.js
+      - name: Quick Tour feature coverage (features.js vs quick-tour.html — C-I4)
+        run: node tools/check-tour-coverage.js --check
       - name: Cross-app bridge regression tests (mc-bridge.js read layer + mc-sync.js merge logic)
         run: |
           node tools/test-mc-bridge.js
