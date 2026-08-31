@@ -16,6 +16,7 @@ const CACHE_URLS = [
   './cookbook.css',
   './cookbook.js',
   './diagnostics.html',
+  './features.js',
   './icon.svg',
   './manifest.json',
   './mc-account.js',

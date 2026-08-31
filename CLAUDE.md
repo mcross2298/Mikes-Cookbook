@@ -36,6 +36,16 @@ walkthrough never drifts out of date with what's actually shipped.
   enough to skip the artifact/roadmap step still needs its Quick Tour entry
   if it's user-facing.
 
+**Partially mechanized (C-I4, VOC/VOA Kaizen audit).** `features.js`'s
+`MC_FEATURES` array names every real top-level screen/capability, and
+`tools/check-tour-coverage.js --check` (a blocking CI gate) fails if any
+entry isn't mentioned anywhere in `quick-tour.html`'s real text. **Adding a
+genuinely new top-level capability means adding it to `features.js` too, in
+the same change** — the gate catches "shipped a screen, forgot the tour,"
+it does not replace judgment about *what* to say or catch a stale
+`quick-tour-overview.html` (that page, and the tour's own prose, stay
+hand-authored and reviewed like any other copy).
+
 ## Recipe photo hand-off rule
 
 **Permanent rule.** Any time a user hands off a photo for a recipe (a new
@@ -162,11 +172,12 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `manifest.json` / `icon.svg` | PWA manifest + app icon. |
 | `diagnostics.html` | **Device Check** — the real-device half of the audit's verification, which CI can't do. Standalone and unlinked from nav (same precedent as the Quick Tour). Loads the same script set `index.html` does, then self-tests: install/display mode, service-worker registration + control, precache completeness and app-shell-from-cache (offline readiness), every `MC*` shared module, localStorage writability + storage quota + the `:photos` cap, Supabase config/sign-in/last-push-pull, wake lock / BarcodeDetector / camera, safe-area insets — and the **real** `window.__mcBoot` boot number that closes audit C-06. "Copy report" yields a plain-text summary. Open it on each device and mode to fill the PWA matrix. |
 | `quick-tour.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. |
+| `features.js` | **The feature registry (C-I4, VOC/VOA Kaizen audit)** — `window.MC_FEATURES`, one entry per real top-level screen/capability, each with `keywords` for coverage-checking. Not a content source for either Quick Tour page (both stay hand-authored — see the file's own header for why); exists so `tools/check-tour-coverage.js` can catch a screen shipping with zero tour mention. Adding a real capability means adding it here too. |
 | `recipes-index.js` / `recipes-detail-NN.js` | **Generated — never hand-edit.** Output of `tools/build-data.js`; see `mc-data.js` above. Regenerate with `node tools/build-data.js` after any `recipes-data.js` change; CI fails on a stale copy (`--check`) and on an orphaned shard left behind by a smaller `SHARDS`. `--report` prints the size table. |
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. Skips `recipes-data.js` — see its row above. |
 | `tools/smoke-test.js` | **Blocking CI gate as of 2026-08-02** (previously local-only). Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation — and, as of the VOC/VOA Kaizen audit wave 7, a simulated full-quota write on `recipe.html` and `collection.html` to prove the storage-full toast actually surfaces there (see `mc-fav.js`'s row and the wave 7 writeup in `ROADMAP.md`). Playwright is installed ad hoc in the `verify` job (see the CI section below), not via a committed `package.json`, so this repo's real dependency footprint is unchanged. Still worth running locally before pushing anything that touches load order, Cooking Mode, the timers, or a write path — CI will catch a regression either way, but locally is faster to iterate on. |
 | `tools/check-a11y.mjs` | **The cookbook's first accessibility gate** (VOC/VOA Kaizen audit wave 8, initiative C-I1) — blocking CI as of the same wave. Drives every shell screen and standalone page in Playwright/Chromium and fails if the count of under-44px touch targets exceeds a recorded ratchet ceiling (`KNOWN_FAILURES`, same shape as `mc-units.js`'s fragmentation ratchet — may only fall, never rise). Touch targets only, not contrast — see the file's own header comment for why a sandbox with blocked webfonts shouldn't be trusted to baseline that yet. Measures a control's *effective* hit area as `max(its own box, its ::before's rendered box)`, so the invisible-floor pattern several controls already use (see `cookbook.css`'s Phase 3 comment) reads as compliant instead of producing false failures. |
-| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (15 blocking gates — syntax, recipe data, doc-drift check, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (16 blocking gates — syntax, recipe data, doc-drift check, Quick Tour feature coverage, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, SW strategy, backup format, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -418,7 +429,7 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Fifteen gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Sixteen gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
@@ -488,6 +499,16 @@ anything reaching production):
       per the wave's own instruction to prove the gate has teeth first.
   14. `tools/build-sw.py --check` — precache list is current.
   15. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  16. `tools/check-tour-coverage.js --check` — the cookbook's first mechanized
+      Documentation currency check (VOC/VOA Kaizen audit, initiative C-I4).
+      `features.js`'s `MC_FEATURES` array names every real screen/capability;
+      the gate fails if any entry has zero mention in `quick-tour.html`'s
+      real text. Deliberately checks the *tour* only, not
+      `quick-tour-overview.html` (the Executive Summary) — both pages stay
+      hand-authored on purpose (see `features.js`'s own header for why
+      forcing either into a generic array-driven renderer risks repeating
+      roadmap `F6`'s reversal in the sibling workout app). Proven to fail on
+      a planted missing-feature entry before landing.
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -499,6 +520,7 @@ Before pushing, run the same gates locally:
 for f in $(git ls-files '*.js'); do node --check "$f" || echo "FAIL $f"; done
 node tools/validate-recipes.js
 node tools/check-docs.js
+node tools/check-tour-coverage.js --check
 node tools/test-mc-bridge.js && node tools/test-mc-sync-merge.js
 node tools/test-mc-timers.js && node tools/test-mc-data.js
 node tools/test-mc-units.js
