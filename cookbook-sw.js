@@ -63,6 +63,35 @@
       });
     }).catch(function () { /* offline / unsupported — silent */ });
 
+    // A deploy landing while a cook is mid-recipe (cookbook.js's Cooking
+    // Mode, body.cooking) would otherwise reload the page out from under
+    // them — wake lock released, voice control stopped, dropped back on the
+    // Overview tab with wet hands. Cooking Mode is the one state on this
+    // page worth protecting; everything else (a scroll position, an open
+    // menu) is fine to lose to an update reload same as before. Deferred
+    // reloads flush on the next visibilitychange, by which point Cooking
+    // Mode's own exitCook() has already cleared the class if the cook left.
+    var reloadPending = false;
+    function shouldDeferReload() {
+      return document.body && document.body.classList.contains("cooking");
+    }
+    function reloadNow() {
+      if (reloading) return;
+      reloading = true;
+      window.location.reload();
+    }
+    // "mc:cookingchange" is dispatched by cookbook.js's enterCook()/
+    // exitCook() the instant body.cooking toggles — needed because leaving
+    // Cooking Mode with the tab still in the foreground the whole time never
+    // fires visibilitychange at all, and a deferred reload should apply the
+    // moment the cook is actually done, not wait for an unrelated tab switch.
+    document.addEventListener("visibilitychange", function () {
+      if (reloadPending && !shouldDeferReload()) reloadNow();
+    });
+    document.addEventListener("mc:cookingchange", function () {
+      if (reloadPending && !shouldDeferReload()) reloadNow();
+    });
+
     navigator.serviceWorker.addEventListener("controllerchange", function () {
       if (!hadController) {
         // First install completed — the app is now fully cached for offline use.
@@ -71,10 +100,11 @@
         setTimeout(function () { dismiss(t); }, 3200);
         return;
       }
-      // An accepted update took control — reload once to pick it up.
+      // An accepted update took control — reload once to pick it up, unless
+      // Cooking Mode is active right now.
       if (reloading) return;
-      reloading = true;
-      window.location.reload();
+      if (shouldDeferReload()) { reloadPending = true; return; }
+      reloadNow();
     });
   });
 })();

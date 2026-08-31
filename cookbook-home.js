@@ -321,8 +321,9 @@
       p.startedAt = null;
       p.day7Dismissed = false;
     }
-    writeStore(PLAN_KEY, JSON.stringify(p));
+    var ok = writeStore(PLAN_KEY, JSON.stringify(p));
     updateAppBadge();   // every plan mutation funnels through here
+    return ok;
   }
   // Home's auto-drafted-week offer (see renderAutoDraftCard): only offered
   // when the plan is empty, and dismissing it snoozes the offer for ~7 days
@@ -410,7 +411,11 @@
       completedAt: null
     }, mealSnapshot(id, serving));
     p.meals.push(meal);
-    savePlan(p);
+    // savePlan()'s writeStore() already raises the storage-full toast on
+    // failure — returning null here (instead of the meal that never actually
+    // got persisted) stops mc-cards.js's plan button from ALSO showing
+    // "Added ✓" right next to that warning.
+    if (!savePlan(p)) return null;
     return meal;
   }
   function updateMeal(uid, patch) {
@@ -4205,6 +4210,11 @@
     });
     // A full quota shouldn't silently swallow a heart (audit C-12).
     MCFav.onWriteFail = warnStorageFull;
+    // Nor a hand-typed recipe (C1 — user-recipes.js's persist() had no hook
+    // at all until now; mc-recipe-form.js also checks add()'s `saved` flag
+    // directly and keeps the form open, so this toast is the belt to that
+    // suspenders on any other MCUser.add() caller).
+    MCUser.onWriteFail = warnStorageFull;
 
     // The two modules lifted out of this file by audit C-08. Both take only
     // what they actually need — five readers for the grocery math, four for

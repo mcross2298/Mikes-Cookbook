@@ -72,7 +72,18 @@
     catch (e) { return {}; }
   }
   function write(obj) {
-    try { localStorage.setItem(KEY, JSON.stringify(obj)); } catch (e) {}
+    try {
+      localStorage.setItem(KEY, JSON.stringify(obj));
+      return true;
+    } catch (e) {
+      // A full quota here silently drops a logged meal or an updated goal
+      // with no sign anything went wrong (audit C-12's fix never reached
+      // this store). Same MCFav.onWriteFail-shaped hook, wired by tracker.js.
+      if (typeof window.MCTrackerStore.onWriteFail === "function") {
+        try { window.MCTrackerStore.onWriteFail(e); } catch (e2) {}
+      }
+      return false;
+    }
   }
   function getDay(obj, key) {
     obj.days = obj.days || {};
@@ -114,7 +125,10 @@
     entry.ts = Date.now();
     entry.at = slot;
     day.entries.push(entry);
-    write(obj);
+    // Non-enumerable-in-spirit but plain: callers that only read the usual
+    // fields (name/qty/per/…) are unaffected; tracker-recipe.js's success
+    // toast checks this so it never announces "Added ✓" on a failed write.
+    entry._saved = write(obj);
     return entry;
   }
   function updateQty(dayKey, id, qty) {
@@ -137,6 +151,7 @@
     addDays: addDays, mondayOf: mondayOf, hourLabel: hourLabel, timeLabel: timeLabel, prettyDay: prettyDay,
     totalsOf: totalsOf, entriesFor: entriesFor,
     getGoals: getGoals, getProfile: getProfile, saveGoals: saveGoals, latestWeightLb: latestWeightLb,
-    addEntry: addEntry, updateQty: updateQty, removeEntry: removeEntry
+    addEntry: addEntry, updateQty: updateQty, removeEntry: removeEntry,
+    onWriteFail: null
   };
 })();

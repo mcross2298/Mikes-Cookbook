@@ -89,7 +89,14 @@
       completed: false, completedAt: null
     };
     p.meals.push(meal);
-    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+    try {
+      localStorage.setItem(PLAN_KEY, JSON.stringify(p));
+    } catch (e) {
+      // mc-cards.js's shared plan button treats a falsy return as "the write
+      // failed, don't show Added ✓" — matches cookbook.js's addToPlan.
+      warnStorageFull();
+      return null;
+    }
     return meal;
   }
   function removeFromPlan(uid) {
@@ -97,7 +104,7 @@
     try { p = JSON.parse(localStorage.getItem(PLAN_KEY) || "null"); } catch (e) { p = null; }
     if (!p || !Array.isArray(p.meals)) return;
     p.meals = p.meals.filter(function (m) { return m.uid !== uid; });
-    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) { warnStorageFull(); }
   }
 
   // Same toast look as cookbook.js's/cookbook-home.js's, with an optional

@@ -260,7 +260,7 @@
       }).filter(function (x) { return x && x.detail.trim(); });
       if (!steps.length) { errBox.textContent = "Add at least one step (with instructions)."; return; }
 
-      window.MCUser.add({
+      var result = window.MCUser.add({
         title: title,
         icon: iconInput.value,
         dish_category: catSel.value,
@@ -273,6 +273,15 @@
         ingredients: ings,
         steps: steps
       });
+
+      if (!result.saved) {
+        // Storage is full: the recipe is visible for the rest of this
+        // session (MCUser.add still merges it into window.RECIPES) but
+        // won't survive a refresh. Say so and leave the form open rather
+        // than closing on what looks like a successful save.
+        errBox.textContent = "Storage is full — this recipe won't be saved after you close the app. Free up space (Backup & Restore → remove some cook-log photos) and try again.";
+        return;
+      }
 
       closeRecipeForm();
       setTab("recipes");   // land on the Recipes screen → My Recipes card updated

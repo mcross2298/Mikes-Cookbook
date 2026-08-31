@@ -29,10 +29,19 @@ let checks = 0, failures = 0;
 function assert(cond, msg) { checks++; if (!cond) { failures++; console.error('  ✗ ' + msg); } }
 const flush = () => new Promise(r => setImmediate(r));
 
+// Same-origin base for every test URL below — the fetch handler's origin
+// guard (A1) needs `new URL(req.url).origin` to resolve against something,
+// exactly like the real SW's `self.location.origin` does on a deployed page.
+const ORIGIN = 'https://mikescookbook.example';
+
 function loadFetchHandler(fetchImpl, store) {
     const listeners = {};
     const sandbox = {
-        self: { addEventListener: (t, fn) => { listeners[t] = fn; }, registration: {}, clients: {}, skipWaiting() {} },
+        self: {
+            addEventListener: (t, fn) => { listeners[t] = fn; },
+            registration: {}, clients: {}, skipWaiting() {},
+            location: { origin: ORIGIN },
+        },
         caches: {
             open: async () => ({ put: async (req, resp) => { store.set(key(req), resp); } }),
             match: async req => store.get(key(req)),
@@ -40,7 +49,7 @@ function loadFetchHandler(fetchImpl, store) {
         },
         fetch: fetchImpl,
         Response: class { constructor(b, i) { this.body = b; this.status = (i && i.status) || 200; } clone() { return this; } },
-        setTimeout, clearTimeout, console,
+        URL, setTimeout, clearTimeout, console,
     };
     vm.createContext(sandbox);
     vm.runInContext(SRC, sandbox, { filename: 'sw.js' });
@@ -49,8 +58,10 @@ function loadFetchHandler(fetchImpl, store) {
 }
 
 // A navigation request + a fake FetchEvent that captures respondWith/waitUntil.
+// `url` is same-origin-relative; resolved against ORIGIN so the SW's own
+// `new URL(req.url).origin` check passes it through like a real navigation.
 function navEvent(url) {
-    const req = { method: 'GET', mode: 'navigate', url, headers: { get: () => 'text/html' } };
+    const req = { method: 'GET', mode: 'navigate', url: ORIGIN + url, headers: { get: () => 'text/html' } };
     const ev = { request: req, respondWith(p) { this._resp = p; }, waitUntil(p) { this._wait = p; } };
     return ev;
 }
@@ -59,13 +70,13 @@ const netResp = tag => ({ status: 200, tag, clone() { return this; } });
 (async () => {
     // 1. cache HIT
     {
-        const store = new Map([['/p', { tag: 'CACHED' }]]);
+        const store = new Map([[ORIGIN + '/p', { tag: 'CACHED' }]]);
         const fn = loadFetchHandler(async () => netResp('NET'), store);
         const ev = navEvent('/p'); fn(ev);
         const r = await ev._resp;
         assert(r && r.tag === 'CACHED', '1: cache hit serves cached page instantly');
         if (ev._wait) await ev._wait; await flush();
-        assert(store.get('/p').tag === 'NET', '1: cache refreshed to network copy behind');
+        assert(store.get(ORIGIN + '/p').tag === 'NET', '1: cache refreshed to network copy behind');
     }
     // 2. cache MISS, network OK
     {
@@ -75,7 +86,7 @@ const netResp = tag => ({ status: 200, tag, clone() { return this; } });
         const r = await ev._resp;
         assert(r && r.tag === 'NET', '2: cache miss serves network');
         if (ev._wait) await ev._wait; await flush();
-        assert(store.get('/q') && store.get('/q').tag === 'NET', '2: network page cached');
+        assert(store.get(ORIGIN + '/q') && store.get(ORIGIN + '/q').tag === 'NET', '2: network page cached');
     }
     // 3. cache MISS, network FAIL -> app shell
     {
@@ -87,7 +98,7 @@ const netResp = tag => ({ status: 200, tag, clone() { return this; } });
     }
     // 4. cache HIT, network FAIL
     {
-        const store = new Map([['/s', { tag: 'CACHED' }]]);
+        const store = new Map([[ORIGIN + '/s', { tag: 'CACHED' }]]);
         const fn = loadFetchHandler(async () => { throw new Error('offline'); }, store);
         const ev = navEvent('/s'); fn(ev);
         const r = await ev._resp;
@@ -95,6 +106,33 @@ const netResp = tag => ({ status: 200, tag, clone() { return this; } });
         let threw = false;
         try { if (ev._wait) await ev._wait; } catch (e) { threw = true; }
         assert(!threw, '4: failed revalidation does not reject');
+    }
+
+    // 5. cross-origin GET is never handled by this SW at all (A1) — no
+    // respondWith call, so the network owns it directly. Modeled on the real
+    // failure: a stable per-user Supabase SELECT URL that must never be
+    // served from a stale cache entry.
+    {
+        const store = new Map();
+        const fn = loadFetchHandler(async () => netResp('REMOTE'), store);
+        const req = { method: 'GET', mode: 'cors', url: 'https://dhlxmoyjfxohbeiexwnr.supabase.co/rest/v1/user_sync', headers: { get: () => 'application/json' } };
+        const ev = { request: req, respondWith(p) { this._resp = p; }, waitUntil(p) { this._wait = p; } };
+        fn(ev);
+        assert(ev._resp === undefined, '5: cross-origin GET is passed through, not intercepted');
+        assert(store.size === 0, '5: cross-origin response is never written into this cache');
+    }
+    // 6. a non-200 same-origin response is never cached (A2) — a 404/500
+    // must not poison the URL for every later request.
+    {
+        const store = new Map();
+        const badResp = { status: 404, tag: 'NOTFOUND', clone() { return this; } };
+        const fn = loadFetchHandler(async () => badResp, store);
+        const req = { method: 'GET', mode: 'no-cors', url: ORIGIN + '/missing.js', headers: { get: () => '' } };
+        const ev = { request: req, respondWith(p) { this._resp = p; }, waitUntil(p) { this._wait = p; } };
+        fn(ev);
+        const r = await ev._resp;
+        assert(r && r.tag === 'NOTFOUND', '6: the 404 itself is still returned to the page');
+        assert(!store.has(ORIGIN + '/missing.js'), '6: the 404 is not written into the cache');
     }
 
     if (failures) { console.error(`\ntest-sw-strategy: ${failures} FAILED of ${checks}`); process.exit(1); }

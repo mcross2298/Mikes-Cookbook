@@ -39,7 +39,17 @@
       mergeStringSet: function () { return mergeStringSet.apply(null, arguments); },
       mergeHistoryBySavedAt: function () { return mergeHistoryBySavedAt.apply(null, arguments); },
       mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); },
-      mergeReplaceByTs: function () { return mergeReplaceByTs.apply(null, arguments); }
+      mergeReplaceByTs: function () { return mergeReplaceByTs.apply(null, arguments); },
+      // C2 regression coverage (tools/test-mc-sync-merge.js): pull/push and
+      // the snapshot/blocked bookkeeping close over `client`/`user`, which
+      // only exist once the MC_SB.configured guard below passes — so unlike
+      // the merge fns above, these are only usable from a sandbox that
+      // supplies a working fake MC_SB + Supabase client, not the
+      // `MC_SB: null` short-circuit the pure merge-function tests use.
+      pull: function () { return pull(); },
+      push: function () { return push(); },
+      _snapshot: function () { return snapshot; },
+      _blocked: function () { return blocked; }
     };
   }
   if (window.__mcSync) return;
@@ -98,6 +108,10 @@
 
   var client = null, user = null;
   var snapshot = {};            // store_key -> JSON string last in sync with server
+  // store_key -> true when a pulled merge failed to write locally (a full
+  // quota). push() must never upload the un-merged local value over what
+  // the server already has for that key — see writeVal()/pullKey() below.
+  var blocked = {};
   var pulledChange = false;
   var status = { lastPush: 0, lastPull: 0, signedIn: false };
 
@@ -112,7 +126,10 @@
 
   function readRaw(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function parse(s) { try { return JSON.parse(s); } catch (e) { return null; } }
-  function writeVal(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function writeVal(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { return false; }
+  }
 
   function deviceId() {
     try {
@@ -250,9 +267,23 @@
           var local = parse(readRaw(key));
           var remote = remoteByKey[key];
           var before = readRaw(key);
-          if (remote != null) writeVal(key, mergeStore(strategy, local, remote));
+          if (remote != null) {
+            if (writeVal(key, mergeStore(strategy, local, remote))) {
+              snapshot[key] = JSON.stringify(remote);
+              blocked[key] = false;
+            } else {
+              // The merge never reached disk (full quota). Leaving snapshot
+              // alone — instead of advancing it to the remote value, as if
+              // the write had landed — and marking the key blocked stops
+              // push() below from later uploading the STALE, un-merged
+              // local value over what the server already has: that upload
+              // is what used to silently clobber a good remote merge.
+              blocked[key] = true;
+            }
+          } else {
+            snapshot[key] = null;
+          }
           if (readRaw(key) !== before) pulledChange = true;
-          snapshot[key] = remote != null ? JSON.stringify(remote) : null;
         }
         Object.keys(STORES).forEach(function (key) { pullKey(key, STORES[key]); });
         Object.keys(CONSUME).forEach(function (key) { pullKey(key, CONSUME[key]); });
@@ -263,6 +294,12 @@
   function push() {
     var ops = [];
     Object.keys(STORES).forEach(function (key) {
+      // A blocked key's last pulled merge never made it to disk — the local
+      // value on this device is stale relative to what the server already
+      // has, so pushing it now would silently overwrite the good remote
+      // data with an older one. Stays blocked until a future pull() writes
+      // successfully and clears it.
+      if (blocked[key]) return;
       var cur = readRaw(key);
       if (cur == null) return;
       if (cur === snapshot[key]) return;
