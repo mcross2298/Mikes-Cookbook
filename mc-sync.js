@@ -325,11 +325,26 @@
     } catch (e) {}
   }
 
+  // Web Locks (runtime-invisibles audit, delight opportunity 3): with two
+  // tabs open on the same device, each ran its own pull() on load and its
+  // own setInterval(flush) — interleaved merges, and two upserts racing for
+  // the same store_key. `ifAvailable: true` means a tab that loses the race
+  // just skips that one cycle rather than queuing behind the other tab (the
+  // periodic timer covers it 30s later regardless, and the tab that's
+  // actually running the cycle already covers the same data). Falls straight
+  // through to running unlocked wherever the Locks API doesn't exist.
+  function withSyncLock(fn) {
+    if (typeof navigator === 'undefined' || !(navigator.locks && navigator.locks.request)) return fn();
+    return navigator.locks.request('mc-cookbook-sync', { ifAvailable: true }, function (lock) {
+      return lock ? fn() : null;
+    });
+  }
+
   function start() {
-    pull()
-      .then(function () { maybeReload(); return push(); })
-      .catch(function () {});
-    var flush = function () { push().catch(function () {}); };
+    withSyncLock(function () {
+      return pull().then(function () { maybeReload(); return push(); });
+    }).catch(function () {});
+    var flush = function () { withSyncLock(push).catch(function () {}); };
     window.addEventListener('pagehide', flush);
     document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
     setInterval(flush, PUSH_MS);

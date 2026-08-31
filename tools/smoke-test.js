@@ -62,6 +62,26 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   const hits = await page.locator('#screen-recipes .rc').count();
   ok('shell: ingredient search returns hits (' + hits + ')', hits > 0);
 
+  // ── Web Share Target (manifest.json share_target → handleSharedRecipe) ──
+  // manifest.json registers index.html as a share target with these three
+  // GET params; a share from another app should open the Add Recipe form
+  // prefilled rather than the cook retyping a link they just shared in.
+  errors.length = 0;
+  await page.goto(B + '/index.html?shared_title=' + encodeURIComponent('Grandma\'s Chili') +
+    '&shared_text=' + encodeURIComponent('so good') +
+    '&shared_url=' + encodeURIComponent('https://example.com/chili'),
+    { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  ok('share target: no JS errors', errors.length === 0 || (console.log(errors), false));
+  ok('share target: Add Recipe form opened', await page.locator('.recipe-form').count() === 1);
+  const sharedTitleVal = await page.locator('.recipe-form .rf-body input').first().inputValue().catch(() => '');
+  ok('share target: title prefilled from shared_title', sharedTitleVal === "Grandma's Chili");
+  const sharedDescVal = await page.locator('.recipe-form .rf-body textarea').first().inputValue().catch(() => '');
+  ok('share target: description carries the shared text and URL',
+    sharedDescVal.indexOf('so good') >= 0 && sharedDescVal.indexOf('https://example.com/chili') >= 0);
+  ok('share target: the shared_* params are stripped from the URL after opening',
+    !/shared_title=/.test(page.url()));
+
   // ── recipe page ────────────────────────────────────────────────────
   errors.length = 0;
   // Pick a recipe whose FIRST step names a duration, so the timer-chip tests
@@ -399,10 +419,12 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   // would make this indistinguishable from a real cache hit no matter what
   // the network does. Blocking the shard URL here forces a genuine network
   // miss on a cold cache, the exact "captive portal / dead network" case
-  // the audit named. Automatic recovery the instant connectivity returns
-  // (no manual reload) is a documented, separate follow-up — not yet
-  // built — so this scenario pins the recovery path that exists today: a
-  // reload once the network is back.
+  // the audit named. Also pins mc-net.js's automatic recovery (finding C3):
+  // once the network is genuinely back, the shard reloads and the pane
+  // repaints on its own — no manual reload — and the browser's own `online`
+  // event (not the route unblock, which Chromium never ties to that event)
+  // is what mc-net.js listens for, so this dispatches it directly rather
+  // than trying to fake real connectivity loss via routing.
   {
     const freshCtx = await browser.newContext();
     const freshPage = await freshCtx.newPage();
@@ -422,12 +444,17 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
     ok('offline shard: the honest "couldn\'t load" message renders instead of an empty pane',
       /couldn.t load/i.test(groceryText));
 
+    // Network's back: unblock the shard, then fire the real event mc-net.js
+    // listens for — no navigation happens here at all.
     await freshPage.unroute(shardPattern);
-    await freshPage.reload({ waitUntil: 'networkidle' });
-    await freshPage.waitForTimeout(500);
-    const groceryTextAfter = await freshPage.locator('#pane-grocery').innerText().catch(() => '');
-    ok('offline shard: reloading once the network recovers loads the real ingredients',
-      groceryTextAfter.length > 50 && !/couldn.t load/i.test(groceryTextAfter));
+    let navigatedOnRecover = false;
+    freshPage.once('framenavigated', () => { navigatedOnRecover = true; });
+    await freshPage.evaluate(() => window.dispatchEvent(new Event('online')));
+    await freshPage.waitForTimeout(600);
+    const groceryTextAuto = await freshPage.locator('#pane-grocery').innerText().catch(() => '');
+    ok('offline shard: recovers automatically on the online event, no reload',
+      !navigatedOnRecover && groceryTextAuto.length > 50 && !/couldn.t load/i.test(groceryTextAuto));
+
     ok('offline shard: no unexpected JS errors', freshErrors.length === 0 || (console.log(freshErrors), false));
 
     await freshCtx.close();

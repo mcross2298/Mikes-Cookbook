@@ -141,7 +141,12 @@
     document.body.classList.remove("picking");
   }
 
-  function openRecipeForm() {
+  // `prefill` — { title, description } — is optional; only the Web Share
+  // Target flow (cookbook-home.js's handleSharedRecipe()) passes one today,
+  // for a recipe link shared in from another app. Everything else about the
+  // form (categories, ingredients, steps) still needs the cook's own input —
+  // sharing only saves retyping the parts a share sheet actually hands over.
+  function openRecipeForm(prefill) {
     closePicker();
     closeRecipeForm();
 
@@ -164,7 +169,7 @@
     var body = el("div", "rf-body");
 
     // ── Basics ──
-    var titleInput = rfText("e.g. Grandma's Pot Roast");
+    var titleInput = rfText("e.g. Grandma's Pot Roast", prefill && prefill.title);
     body.appendChild(rfField("Title", titleInput));
 
     var iconInput = rfText("🍽️", "🍽️");
@@ -178,7 +183,7 @@
     });
     body.appendChild(rfField("Category", catSel));
 
-    var descInput = rfArea("A short description (optional)");
+    var descInput = rfArea("A short description (optional)", prefill && prefill.description);
     body.appendChild(rfField("Description", descInput));
 
     var tagsInput = rfText("Spicy, One-Dish, High-Protein");

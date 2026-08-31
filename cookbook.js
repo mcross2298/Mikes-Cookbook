@@ -1671,26 +1671,44 @@
       if (!okDetail) {
         // The shard genuinely failed (cold cache + dead network). Say so in
         // the two panes that need it rather than rendering empty lists that
-        // look like a recipe with no ingredients.
+        // look like a recipe with no ingredients. mc-net.js retries this
+        // automatically the instant the network comes back (see the
+        // mc:datareloaded listener below) — no manual reload needed once
+        // connectivity actually returns, so the copy says that honestly
+        // instead of just telling the cook to go reload.
         $("#pane-grocery").innerHTML =
           '<div class="card"><p class="card-label">Ingredients</p>' +
-          "<p class=\"desc\">Couldn't load this recipe's ingredients. Check your connection and reload.</p></div>";
+          "<p class=\"desc\">Couldn't load this recipe's ingredients. Check your connection — this reloads on its own once you're back online.</p></div>";
         $("#pane-recipe").innerHTML =
           '<div class="card"><p class="card-label">Method</p>' +
-          "<p class=\"desc\">Couldn't load this recipe's steps. Check your connection and reload.</p></div>";
+          "<p class=\"desc\">Couldn't load this recipe's steps. Check your connection — this reloads on its own once you're back online.</p></div>";
         return;
       }
-      // Re-run the two panes that were already painted, because each reads one
-      // detail field above the fold: the header's serving note checks whether
-      // this exact tier is authored (`ingredients_by_serving`), and the About
-      // card in renderMacros() prints `description`. Every renderer clears its
-      // container first, so re-running is a replace, not an append.
-      renderHeader(r);
-      renderMacros(r);
-      renderGrocery(r);
-      renderRecipe(r);
-      afterDetail(r);
+      renderDetailReady(r);
     });
+
+    // mc-net.js fires this once MCData.ensureAll() succeeds after a spell
+    // offline — the retry it's already running for the shell's own "Use it
+    // up"/ingredient search. hasDetail() re-checks THIS recipe specifically:
+    // ensureAll() succeeding means every shard loaded, so if this one is
+    // among them the error copy above is now stale.
+    document.addEventListener("mc:datareloaded", function () {
+      if (MCData.hasDetail(r.recipe_id)) renderDetailReady(r);
+    });
+  }
+
+  // Re-run the two panes that were already painted, because each reads one
+  // detail field above the fold: the header's serving note checks whether
+  // this exact tier is authored (`ingredients_by_serving`), and the About
+  // card in renderMacros() prints `description`. Every renderer clears its
+  // container first, so re-running is a replace, not an append. Shared by
+  // the initial ensureDetail().then() and the mc:datareloaded retry above.
+  function renderDetailReady(r) {
+    renderHeader(r);
+    renderMacros(r);
+    renderGrocery(r);
+    renderRecipe(r);
+    afterDetail(r);
   }
 
   // Everything that can only run once the recipe's steps exist.
@@ -1704,7 +1722,11 @@
     // Guarded on !userChangedTab: on a slow shard load the cook may have
     // already tapped Grocery (or swiped) before this resolves — jumping them
     // into Cooking Mode anyway would steal that tap out from under them.
-    if (!userChangedTab &&
+    // Guarded on !cook.active too: renderDetailReady() (and so this
+    // function) can run a second time via the mc:datareloaded retry above —
+    // re-entering Cooking Mode while it's already open would reset
+    // cook.index back to the first undone step, discarding real progress.
+    if (!userChangedTab && !cook.active &&
         new URLSearchParams(location.search).get("cook") === "1" &&
         (r.instructions || []).length) {
       setTab("recipe");

@@ -92,6 +92,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
 <script>window.__mcBoot={t0:performance.now()};</script>
 <script src="recipes-index.js"></script>
 <script src="mc-data.js"></script>
+<script src="mc-net.js"></script>
 <script>if(window.__mcBoot)window.__mcBoot.data=performance.now()-window.__mcBoot.t0;</script>
 <script src="user-recipes.js"></script>
 <script src="mc-bridge.js"></script>
@@ -250,6 +251,34 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
         tally(row(g, shell ? "pass" : "fail",
           shell ? "App shell serves from cache" : "App shell not in cache",
           shell ? "Airplane-mode reload will work." : "Offline reload would fail."));
+
+        // Cache Storage hygiene (runtime-invisibles audit, A1/A2's real-device
+        // companion): sw.js's fetch handler now refuses to cache a
+        // cross-origin request (a synced store could otherwise replay its
+        // first-ever payload forever) or a non-200 response (which would
+        // poison that URL permanently). Both are guarded going forward, but
+        // this checks the CURRENT cache for either pattern directly on the
+        // device — a lingering entry from before the fix, or a future
+        // regression, rather than trusting the fix by reading the source.
+        var badEntries = [];
+        for (var bi = 0; bi < keys.length; bi++) {
+          var breq = keys[bi];
+          var borigin;
+          try { borigin = new URL(breq.url).origin; } catch (e) { borigin = null; }
+          if (borigin && borigin !== location.origin) {
+            badEntries.push(breq.url + " — cross-origin");
+            continue;
+          }
+          var bresp = await cache.match(breq);
+          if (bresp && bresp.status !== 200) badEntries.push(breq.url + " — status " + bresp.status);
+        }
+        tally(row(g, badEntries.length ? "fail" : "pass",
+          badEntries.length
+            ? "Cache Storage hygiene: " + badEntries.length + " bad " + (badEntries.length === 1 ? "entry" : "entries")
+            : "Cache Storage hygiene: clean",
+          badEntries.length
+            ? badEntries.slice(0, 5).join("; ") + (badEntries.length > 5 ? " …" : "")
+            : "No cross-origin or non-200 entries in the current cache."));
       }
     }
 
