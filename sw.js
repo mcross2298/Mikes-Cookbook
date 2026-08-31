@@ -53,6 +53,7 @@ const CACHE_URLS = [
   './recipes-detail-14.js',
   './recipes-detail-15.js',
   './recipes-index.js',
+  './supabase-vendor.js',
   './tracker-barcode.js',
   './tracker-calc.js',
   './tracker-foodapi.js',

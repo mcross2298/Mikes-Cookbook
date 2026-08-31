@@ -77,6 +77,16 @@
         '<div class="acct-info">✓ Your tracker, meal plan, macro history and My Recipes sync across your devices — and your tracker reconciles with the workout app if you use both.</div>' +
         '<button class="acct-btn acct-secondary" id="acctSignout">Sign out</button>';
       body.querySelector('#acctSignout').addEventListener('click', doSignOut);
+    } else if (MC_SB.sdkLoadFailed) {
+      // C-I3 (VOC/VOA Kaizen audit): the sign-in SDK now loads from a local
+      // vendored file rather than a CDN, so this branch should be rare in
+      // practice -- but if the app shell was never installed while online,
+      // say so instead of the sign-in form failing with a misleading
+      // "Supabase not configured" error.
+      body.innerHTML =
+        '<div class="acct-title">Sign in</div>' +
+        '<div class="acct-sub">Sign-in needs an internet connection, and this device is currently offline. Everything else — your tracker, meal plan and My Recipes — keeps working normally offline; come back here once you’re back online.</div>' +
+        '<div class="acct-note">Accounts are provided by the app owner — ask for an invite to get one.</div>';
     } else {
       body.innerHTML =
         '<div class="acct-title">Sign in</div>' +
@@ -194,7 +204,11 @@
       if (window.MC_SYNC && MC_SYNC.kick) MC_SYNC.kick();
     }).catch(function (e) {
       var m = (e && e.message) ? e.message : 'Sign-in failed.';
-      if (/invalid login/i.test(m)) m = 'Wrong email or password.';
+      // C-I3: covers the race where the sheet opened (and the form still
+      // rendered) before MC_SB.ready settled -- by the time this rejects,
+      // the SDK-load outcome is known.
+      if (MC_SB.sdkLoadFailed) m = 'Sign-in needs an internet connection — you’re currently offline. Try again once you’re back online.';
+      else if (/invalid login/i.test(m)) m = 'Wrong email or password.';
       else if (/email not confirmed/i.test(m)) m = 'Please confirm your email (check your inbox) before signing in.';
       err.textContent = m;
       btn.disabled = false; btn.textContent = 'Sign in';
