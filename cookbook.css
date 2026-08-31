@@ -107,13 +107,20 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   padding-bottom: env(safe-area-inset-bottom);
+  /* A downward drag at the top of any page must never trigger the OS's
+     pull-to-refresh — on Android standalone that reloads the page out from
+     under a cook mid-recipe (Cooking Mode's wake lock, voice control, and
+     step position are all in-memory and don't survive it). Nothing here
+     relies on pull-to-refresh, so this is a pure loss prevented for free. */
+  overscroll-behavior-y: none;
 }
 
 /* App shell — comfortable max width for iPad stand, centered. */
 .app {
   max-width: 760px;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: 100vh;      /* fallback for browsers without dvh */
+  min-height: 100dvh;     /* the actual visible viewport, not iOS's "large" one with the URL bar expanded */
   position: relative;
 }
 
@@ -351,6 +358,24 @@ body {
   border-radius: var(--r-md);
   padding: 18px;
   margin-bottom: 14px;
+}
+
+/* Grocery/Recipe pane placeholder while the detail shard is still loading
+   (cookbook.js's groceryRecipeSkeleton()) — a fixed shape close to the real
+   content's so the swap doesn't itself cause a layout jump. */
+.skel-bar {
+  height: 14px;
+  border-radius: 4px;
+  background: var(--line);
+  margin-bottom: 12px;
+  animation: skelPulse 1.4s ease-in-out infinite;
+}
+.skel-bar:last-child { margin-bottom: 0; }
+.skel-bar-label { width: 40%; height: 11px; }
+.skel-bar-short { width: 65%; }
+@keyframes skelPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .skel-bar { animation: none; opacity: 0.7; }
 }
 .card-label {
   font-size: 11px;
@@ -828,7 +853,11 @@ body {
 .app[data-tabbar] { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom)); }
 
 /* Screens swap like 4WTO: only .active is shown. */
-.screen { display: none; min-height: calc(100vh - var(--tab-h)); }
+.screen {
+  display: none;
+  min-height: calc(100vh - var(--tab-h));   /* fallback for browsers without dvh */
+  min-height: calc(100dvh - var(--tab-h));
+}
 .screen.active { display: block; }
 
 /* ── Shell top bar ─────────────────────────────────────────────────── */
@@ -1666,6 +1695,7 @@ body.cooking .home-fab { display: none; } /* hide the Home anchor while cooking 
 
 .cook-body {
   flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; cursor: pointer;
+  overscroll-behavior: contain; /* a drag past the top/bottom stays inside Cooking Mode */
   display: flex; flex-direction: column; justify-content: center;
   padding: 28px 26px;
 }
@@ -2268,6 +2298,7 @@ body.picking { overflow: hidden; }
 .picker-search { padding: 12px 18px 6px; }
 .picker-results {
   flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding-bottom: calc(24px + env(safe-area-inset-bottom));
 }
 .picker-results .col-grid { padding-top: 6px; }
@@ -2299,6 +2330,7 @@ body.picking { overflow: hidden; }
 .rf-save-top { color: var(--accent); }
 .rf-body {
   flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; /* a drag past the top mustn't reach through to a pull-to-refresh */
   padding: 16px 18px calc(40px + env(safe-area-inset-bottom));
 }
 .rf-field { margin-bottom: 14px; }

@@ -43,6 +43,73 @@ function loadMerge() {
   return sandbox.module.exports;
 }
 
+const flush = () => new Promise((r) => setImmediate(r));
+
+// C2 regression: a failed local write during pull() must never advance that
+// key's snapshot, and push() must never upload the stale local value over
+// what the server already has for a blocked key. Unlike loadMerge() above,
+// this needs the module past its `MC_SB.configured` guard — pull/push/
+// snapshot/blocked only exist once that guard passes — so it supplies a
+// working fake MC_SB + Supabase client instead of loadMerge()'s
+// `MC_SB: null` short-circuit, and drives the module's own real init chain
+// (MC_SB.ready -> currentUser -> start() -> pull().then(push)) rather than
+// calling pull()/push() itself, so this exercises the actual startup path.
+async function loadSyncCycle(remoteRows, throwOnKeys, initialStore) {
+  const store = Object.assign({}, initialStore); // fake localStorage backing
+  const pushedOps = [];
+  const fakeClient = {
+    from: function () {
+      return {
+        select: function () {
+          return { eq: function () { return Promise.resolve({ data: remoteRows, error: null }); } };
+        },
+        upsert: function (row) {
+          pushedOps.push(row);
+          return Promise.resolve({ error: null });
+        }
+      };
+    }
+  };
+  // mc-sync.js reads both `window.MC_SB` and the bare `MC_SB` (true in a
+  // real page, since `window` IS the global object there — assigning
+  // window.MC_SB also creates the bare binding). This sandbox's `window` is
+  // just a plain object, not the actual global, so both need to point at
+  // the same object explicitly or the bare reference throws.
+  const mcSB = {
+    configured: true,
+    ready: Promise.resolve(fakeClient),
+    currentUser: function () { return Promise.resolve({ id: 'u1' }); }
+  };
+  const sandbox = {
+    module: { exports: {} },
+    MC_SB: mcSB,
+    window: { __mcSync: false, MC_SB: mcSB, addEventListener: function () {} },
+    document: { addEventListener: function () {} },
+    localStorage: {
+      getItem: function (k) { return Object.prototype.hasOwnProperty.call(store, k) ? store[k] : null; },
+      setItem: function (k, v) {
+        if (throwOnKeys.indexOf(k) >= 0) throw new Error('QuotaExceededError');
+        store[k] = v;
+      },
+      removeItem: function (k) { delete store[k]; }
+    },
+    sessionStorage: { getItem: function () { return null; }, setItem: function () {} },
+    setInterval: function () { return 0; },
+    setTimeout: setTimeout, clearTimeout: clearTimeout,
+    console: console,
+    location: {}
+  };
+  sandbox.window.MC_SB.client = fakeClient;
+  vm.createContext(sandbox);
+  vm.runInContext(SRC, sandbox);
+  // Let the module's own MC_SB.ready -> currentUser -> start() ->
+  // pull().then(push) chain fully settle — every link is an already-
+  // resolved Promise, so a handful of ticks is enough (mirrors the `flush`
+  // pattern tools/test-sw-strategy.js uses for the same reason).
+  for (let i = 0; i < 20; i++) await flush();
+  return { M: sandbox.module.exports, store: store, pushedOps: pushedOps };
+}
+
 const M = loadMerge();
 ok('module.exports captured all 7 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
   M.mergePlan && M.mergeStringSet && M.mergeHistoryBySavedAt && M.mergeCookedByRecipe &&
@@ -193,5 +260,35 @@ ok('module.exports captured all 7 merge fns', !!(M && M.mergeMacros && M.mergeAr
     M.mergeReplaceByTs(null, undefined), {});
 }
 
-if (fail) { console.error(`\ntest-mc-sync-merge: ${pass} passed, ${fail} FAILED`); process.exit(1); }
-console.log(`test-mc-sync-merge: all ${pass} assertions passed`);
+// ---- C2: a failed local write during pull() must not clobber good remote
+// data on the next push() -----------------------------------------------
+(async () => {
+  // Two owned stores come back from the server. Favorites' local write will
+  // succeed; pantry's is rigged to throw QuotaExceededError, simulating a
+  // full quota mid-pull.
+  // Local has a recipe id ("z") the server doesn't have yet, so the union
+  // merge genuinely differs from the raw remote value — otherwise cur would
+  // equal snapshot post-merge and push() would (correctly) no-op, which
+  // would make "push() uploaded favorites" pass for the wrong reason.
+  const remoteRows = [
+    { store_key: 'mc-cookbook:favorites', data: ['a', 'b'] },
+    { store_key: 'mc-cookbook:pantry', data: ['salt', 'pepper'] }
+  ];
+  const { store, pushedOps } = await loadSyncCycle(
+    remoteRows, ['mc-cookbook:pantry'],
+    { 'mc-cookbook:favorites': '["a","z"]', 'mc-cookbook:pantry': '["salt"]' }
+  );
+
+  ok('C2: the un-blocked key (favorites) did get its merge written locally',
+    store['mc-cookbook:favorites'] != null && store['mc-cookbook:favorites'] !== '["a","z"]');
+  ok('C2: the blocked key (pantry) keeps its exact pre-pull value — the failed write never partially applied',
+    store['mc-cookbook:pantry'] === '["salt"]');
+  ok('C2: push() uploaded the successfully-merged favorites store',
+    pushedOps.some((op) => op.store_key === 'mc-cookbook:favorites'));
+  ok('C2 (the actual bug): push() never uploads the blocked key — the un-merged local value ' +
+     'must not overwrite the remote merge that failed to apply on this device',
+    !pushedOps.some((op) => op.store_key === 'mc-cookbook:pantry'));
+
+  if (fail) { console.error(`\ntest-mc-sync-merge: ${pass} passed, ${fail} FAILED`); process.exit(1); }
+  console.log(`test-mc-sync-merge: all ${pass} assertions passed`);
+})();

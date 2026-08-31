@@ -353,42 +353,84 @@
     });
   }
 
+  // ids of the timers currently rendered, in order — a cheap way to tell
+  // "still the same pills, just tick further" from "a timer started, was
+  // cancelled, or expired" without diffing full timer objects.
+  var railIds = null;
+
+  function pillPct(t) {
+    return t.seconds > 0 ? Math.max(0, Math.min(1, t.remainingMs / (t.seconds * 1000))) : 0;
+  }
+  function pillAriaLabel(t) {
+    return (t.ringing ? "Timer finished: " : "Timer: ") + t.label +
+      (t.recipeTitle ? ", " + t.recipeTitle : "") +
+      (t.ringing ? "" : ", " + fmtClock(t.remainingMs) + " remaining");
+  }
+
+  // The 250ms ticker calls this on every running timer — updating text and a
+  // CSS custom property in place, never touching the DOM tree or forcing a
+  // layout read. The full rebuild below (renderRail) only runs when the set
+  // of rendered ids actually changes (add / cancel / a reorder), which is
+  // also the only time the rail's height can change.
+  function updateRailPills(timers) {
+    timers.forEach(function (t) {
+      var pill = railEl.querySelector('[data-timer-id="' + t.id + '"]');
+      if (!pill) return;
+      pill.classList.toggle("ringing", !!t.ringing);
+      pill.classList.toggle("paused", !!t.paused);
+      pill.classList.toggle("soon", !t.ringing && !t.paused && t.remainingMs <= 60000);
+      pill.style.setProperty("--mc-pct", (pillPct(t) * 100).toFixed(1) + "%");
+      var timeEl = pill.querySelector(".mc-pill-time");
+      if (timeEl) timeEl.textContent = t.ringing ? "Time!" : fmtClock(t.remainingMs);
+      var labelEl = pill.querySelector(".mc-pill-label");
+      // textContent, not innerHTML — no re-escaping needed and none of the
+      // markup in the full render below is reconstructed here.
+      if (labelEl) labelEl.textContent = t.paused ? "Paused · " + t.label : t.label;
+      pill.setAttribute("aria-label", pillAriaLabel(t));
+    });
+  }
+
   function renderRail() {
     if (!railEl) return;
     var timers = list();
+    var ids = timers.map(function (t) { return t.id; }).join(",");
     railEl.classList.toggle("empty", timers.length === 0);
     if (!timers.length) {
       railEl.innerHTML = "";
+      railIds = "";
       document.documentElement.style.setProperty("--mc-rail-h", "0px");
       return;
     }
+    if (ids === railIds) { updateRailPills(timers); return; }
+    railIds = ids;
 
     railEl.innerHTML = "";
     timers.forEach(function (t) {
       var pill = document.createElement("button");
       pill.type = "button";
+      pill.dataset.timerId = t.id;
       pill.className = "mc-pill" + (t.ringing ? " ringing" : "") + (t.paused ? " paused" : "") +
         (!t.ringing && !t.paused && t.remainingMs <= 60000 ? " soon" : "");
       // The ring drains as a conic sweep driven by one custom property, so the
       // repaint is a variable write rather than a DOM rebuild.
-      var pct = t.seconds > 0 ? Math.max(0, Math.min(1, t.remainingMs / (t.seconds * 1000))) : 0;
-      pill.style.setProperty("--mc-pct", (pct * 100).toFixed(1) + "%");
+      pill.style.setProperty("--mc-pct", (pillPct(t) * 100).toFixed(1) + "%");
       pill.innerHTML =
         '<span class="mc-pill-ring" aria-hidden="true"></span>' +
         '<span class="mc-pill-body">' +
           '<span class="mc-pill-time">' + (t.ringing ? "Time!" : fmtClock(t.remainingMs)) + "</span>" +
           '<span class="mc-pill-label">' + esc(t.paused ? "Paused · " + t.label : t.label) + "</span>" +
         "</span>";
-      pill.setAttribute("aria-label",
-        (t.ringing ? "Timer finished: " : "Timer: ") + t.label +
-        (t.recipeTitle ? ", " + t.recipeTitle : "") +
-        (t.ringing ? "" : ", " + fmtClock(t.remainingMs) + " remaining"));
+      pill.setAttribute("aria-label", pillAriaLabel(t));
 
       // Tap: a ringing timer is dismissed (that's the only thing you want);
-      // a running one jumps to the step that started it.
+      // a running one jumps to the step that started it. Re-reads live state
+      // via get(t.id) rather than closing over this render's `t` — this
+      // listener is attached once at full-rebuild time but stays live for
+      // every tick after, including the tick where the timer starts ringing.
       pill.addEventListener("click", function () {
-        if (t.ringing) { cancel(t.id); return; }
-        if (hooks.onJump) hooks.onJump(t);
+        var cur = get(t.id) || t;
+        if (cur.ringing) { cancel(cur.id); return; }
+        if (hooks.onJump) hooks.onJump(cur);
       });
 
       var x = document.createElement("span");

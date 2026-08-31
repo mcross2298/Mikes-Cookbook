@@ -440,6 +440,10 @@
     planBtn.addEventListener("click", function (e) {
       e.preventDefault(); e.stopPropagation();
       var meal = H.addToPlan(r, { serving: opts.serving });
+      // A host returns a falsy meal when the write itself failed (a full
+      // quota) — it has already raised its own storage-full toast, so don't
+      // ALSO claim success here with a contradicting "Added ✓".
+      if (!meal) return;
       planBtn.classList.add("added");
       planBtn.textContent = "✓";
       pop(planBtn);

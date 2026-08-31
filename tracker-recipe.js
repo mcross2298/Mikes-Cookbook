@@ -142,9 +142,12 @@
 
     ov.querySelector("#ckrAdd").onclick = function () {
       if (!window.MCTrackerStore) { alert("Tracker unavailable."); return; }
-      MCTrackerStore.addEntry({ name: recipe.title, source: "recipe", unit: "serving", qty: qty, per: per }, Date.now());
+      var entry = MCTrackerStore.addEntry({ name: recipe.title, source: "recipe", unit: "serving", qty: qty, per: per }, Date.now());
       close();
-      toast("Added to tracker ✓", "Open tracker", "index.html#tracker");
+      // A failed write already raised the onWriteFail toast above — don't
+      // also claim success here (that was the actual bug: "Added ✓" firing
+      // unconditionally regardless of whether the write landed).
+      if (entry._saved) toast("Added to tracker ✓", "Open tracker", "index.html#tracker");
     };
 
     if (WORKOUT_URL) {
@@ -156,6 +159,16 @@
         location.href = u;
       };
     }
+  }
+
+  // A full quota shouldn't silently swallow a logged meal (audit C-12's
+  // fix never reached this store). Wired unconditionally, before the early
+  // returns below, since tracker-store.js is loaded on this page regardless
+  // of whether this particular recipe has a Log button.
+  if (window.MCTrackerStore) {
+    MCTrackerStore.onWriteFail = function () {
+      toast("Storage is full — that entry didn't save.");
+    };
   }
 
   function init() {

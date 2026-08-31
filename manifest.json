@@ -1,4 +1,5 @@
 {
+  "id": "./",
   "name": "Mike's Cookbook",
   "short_name": "Cookbook",
   "description": "Heirloom hand-me-downs & performance plates — Primal, Carnivore, Heritage.",
@@ -15,6 +16,18 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    },
+    {
+      "src": "images/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "prefer_related_applications": false

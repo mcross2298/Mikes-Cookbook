@@ -229,7 +229,17 @@
       day: null, slot: null,
       completed: false, completedAt: null
     });
-    try { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); } catch (e) {}
+    try {
+      localStorage.setItem(PLAN_KEY, JSON.stringify(p));
+      return true;
+    } catch (e) {
+      // A full quota used to fail here with no sign anything went wrong: the
+      // button still flipped to "Added" and the toast still said so, while
+      // the plan itself never changed (audit C-12's fix never reached this
+      // write path). The caller checks this return value now.
+      warnStorageFull();
+      return false;
+    }
   }
 
   /* ── Persistence ──────────────────────────────────────────────────── */
@@ -708,7 +718,7 @@
     planBtn.setAttribute("aria-label", "Add to This Week");
     var planBtnTimer = null;
     planBtn.addEventListener("click", function () {
-      addToPlan(r, state.serving);
+      if (!addToPlan(r, state.serving)) return;   // warnStorageFull() already told the cook why
       planBtn.classList.add("added");
       planBtn.textContent = "Added";
       pop(planBtn);
@@ -937,6 +947,19 @@
   // real aisle from category + a keyword check without touching the enum.
   // Prep details (e.g. "cooked and chopped") deliberately live on the Recipe
   // tab, not here.
+  // Placeholder shown in the Grocery/Recipe panes until the detail shard
+  // arrives (init() sets this before MCData.ensureDetail() resolves).
+  // Content-agnostic on purpose — one shape covers both panes, since neither
+  // pane's real content exists yet to mimic.
+  function groceryRecipeSkeleton() {
+    return '<div class="card skel-card" aria-hidden="true">' +
+      '<div class="skel-bar skel-bar-label"></div>' +
+      '<div class="skel-bar"></div>' +
+      '<div class="skel-bar"></div>' +
+      '<div class="skel-bar skel-bar-short"></div>' +
+      "</div>";
+  }
+
   function renderGrocery(r) {
     var pane = $("#pane-grocery");
     pane.innerHTML = "";
@@ -1365,6 +1388,20 @@
     cook.index = start;
     cook._lastAnnounced = -1;
     document.body.classList.add("cooking");
+    // Lets cookbook-sw.js defer an update reload while cooking, and apply it
+    // the instant this toggles back off (see that file's own comment).
+    document.dispatchEvent(new Event("mc:cookingchange"));
+    // Mirror Cooking Mode into the URL (?cook=1) — it's already the way IN
+    // (afterDetail() reads this same param), so entering it any other way
+    // (the button, not a deep link) left the URL not reflecting reality. A
+    // deploy landing mid-cook reloads this exact URL (cookbook-sw.js), so
+    // the SW-reload guard below can tell "was cooking" apart from "was
+    // reading" without any extra state.
+    if (new URLSearchParams(location.search).get("cook") !== "1") {
+      var u = new URL(location.href);
+      u.searchParams.set("cook", "1");
+      history.replaceState(null, "", u);
+    }
     wake.set(true);
     renderCook();
   }
@@ -1372,6 +1409,12 @@
     cook.active = false;
     stopCookVoice(); // no reason to keep the mic open once Cooking Mode is closed
     document.body.classList.remove("cooking");
+    document.dispatchEvent(new Event("mc:cookingchange"));
+    if (new URLSearchParams(location.search).get("cook") === "1") {
+      var u = new URL(location.href);
+      u.searchParams.delete("cook");
+      history.replaceState(null, "", u);
+    }
     var o = $("#cook");
     if (o) o.parentNode.removeChild(o);
     wake.set(state.tab === "recipe");
@@ -1504,9 +1547,15 @@
     });
     wake.set(name === "recipe"); // hold the screen awake only while cooking
   }
+  // Set only by an actual tap/swipe (never by setTab() itself, which also
+  // runs programmatically from init() and afterDetail()'s own deep-link
+  // jump) — afterDetail() checks this so a cook who navigated away from
+  // Overview while the detail shard was still loading doesn't get yanked
+  // back into Cooking Mode the moment it lands.
+  var userChangedTab = false;
   function wireTabs() {
     TABS.forEach(function (t) {
-      $("#tab-" + t).addEventListener("click", function () { setTab(t); });
+      $("#tab-" + t).addEventListener("click", function () { userChangedTab = true; setTab(t); });
     });
     // Horizontal swipe across the panes (spec §1.2: swipeable sub-tabs).
     var panes = $("#panes"), x0 = null, y0 = null;
@@ -1519,8 +1568,8 @@
       var dy = e.changedTouches[0].clientY - y0;
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6) {
         var i = TABS.indexOf(state.tab);
-        if (dx < 0 && i < TABS.length - 1) setTab(TABS[i + 1]);
-        if (dx > 0 && i > 0) setTab(TABS[i - 1]);
+        if (dx < 0 && i < TABS.length - 1) { userChangedTab = true; setTab(TABS[i + 1]); }
+        if (dx > 0 && i > 0) { userChangedTab = true; setTab(TABS[i - 1]); }
       }
       x0 = y0 = null;
     }, { passive: true });
@@ -1570,6 +1619,14 @@
     renderMacros(r);
     wireTabs();
     setTab("overview");
+    // The Grocery and Recipe panes have nothing in them until the detail
+    // shard lands (below) — on a slow connection that's an empty pane with
+    // no explanation if the cook swipes/taps over before it arrives. A
+    // skeleton is replaced outright the moment renderGrocery()/renderRecipe()
+    // run (both clear their container first), so this never lingers or
+    // fights the real content for layout.
+    $("#pane-grocery").innerHTML = groceryRecipeSkeleton();
+    $("#pane-recipe").innerHTML = groceryRecipeSkeleton();
 
     // A full quota shouldn't silently swallow a heart or a timer (audit
     // VOC/VOA wave 7 — see warnStorageFull() above).
@@ -1630,7 +1687,12 @@
     // reachable only from a button inside the third sub-tab, so every "cook
     // this tonight" tap from the planner landed in a reading view four taps
     // short of the thing the cook actually wanted.
-    if (new URLSearchParams(location.search).get("cook") === "1" &&
+    //
+    // Guarded on !userChangedTab: on a slow shard load the cook may have
+    // already tapped Grocery (or swiped) before this resolves — jumping them
+    // into Cooking Mode anyway would steal that tap out from under them.
+    if (!userChangedTab &&
+        new URLSearchParams(location.search).get("cook") === "1" &&
         (r.instructions || []).length) {
       setTab("recipe");
       enterCook(r);

@@ -42,7 +42,21 @@
     } catch (e) { return []; }
   }
   function persist(arr) {
-    try { localStorage.setItem(KEY, JSON.stringify(arr)); } catch (e) {}
+    try {
+      localStorage.setItem(KEY, JSON.stringify(arr));
+      return true;
+    } catch (e) {
+      // A cook just typed a whole recipe by hand — unlike a favorite or a
+      // plan slot, there is no built-in copy to fall back to, so a swallowed
+      // quota failure here means the recipe is gone the moment the tab
+      // closes. Mirrors MCFav.onWriteFail (audit C-12); add()'s caller
+      // (mc-recipe-form.js) checks the returned `saved` flag and keeps the
+      // form open with an inline error instead of announcing success.
+      if (typeof window.MCUser.onWriteFail === "function") {
+        try { window.MCUser.onWriteFail(e); } catch (e2) {}
+      }
+      return false;
+    }
   }
 
   /* ── Quantity scaling (mirrors cookbook.js scaleQuantity) ─────────────
@@ -153,9 +167,12 @@
     var rec = build(raw);
     var arr = load();
     arr.push(rec);
-    persist(arr);
+    var saved = persist(arr);
+    // Still merge into the live in-memory pool even on a failed persist —
+    // a full quota shouldn't erase what the cook just typed for the rest of
+    // THIS session, only the promise that it'll be there after a refresh.
     if (window.RECIPES && window.RECIPES.indexOf(rec) < 0) window.RECIPES.push(rec);
-    return rec;
+    return { recipe: rec, saved: saved };
   }
   function remove(id) {
     var arr = load().filter(function (r) { return r.recipe_id !== id; });
@@ -198,6 +215,7 @@
   window.MCUser = {
     KEY: KEY, SOURCE: SOURCE, COLLECTION_ID: COLLECTION_ID, ACCENT: ACCENT,
     load: load, add: add, remove: remove, count: count,
-    build: build, slugify: slugify
+    build: build, slugify: slugify,
+    onWriteFail: null
   };
 })();

@@ -68,6 +68,16 @@
     }, 5000);
   }
 
+  // One toast per session for a full quota (audit C-12's pattern) — logging
+  // food is the tracker's most frequent write, so this would otherwise fire
+  // on every entry once storage is full.
+  var storageWarned = false;
+  function warnStorageFull() {
+    if (storageWarned) return;
+    storageWarned = true;
+    toast("Storage is full — that entry didn't save. Remove some cook-log photos to free space.");
+  }
+
   var selKey = S.todayKey();
   var addSlotMs = null;
 
@@ -81,7 +91,12 @@
   // ====================================================================== //
   //  MOUNT / RENDER                                                         //
   // ====================================================================== //
-  function mount(container) { host = container; injectStyles(); render(); }
+  function mount(container) {
+    host = container;
+    S.onWriteFail = warnStorageFull;
+    injectStyles();
+    render();
+  }
 
   function render() {
     if (!host) return;
