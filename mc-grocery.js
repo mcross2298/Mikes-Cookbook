@@ -25,6 +25,15 @@
    required, because unlike the recipe card there is no sensible no-op default
    for "what's in the plan".
 
+   **Pantry quantities (roadmap: "Real Pantry Inventory," first UI slice).**
+   Each row also carries `need: {qty, unit} | null` — a single (qty, unit)
+   pair reusable, unmodified, as `MCPantry.compare()`'s `needQty`/`needUnit`
+   arguments — but only when exactly one bucket contributed a real number to
+   that row. A row this file itself fragments across multiple unit families
+   is left `need: null`; the caller (`cookbook-home.js`) falls back to the
+   original binary pantry behavior for those, same honesty posture as
+   everywhere else in this module.
+
    Exposed as window.MCGrocery.
    ========================================================================== */
 (function () {
@@ -277,9 +286,32 @@
           var qty = parts.join(" · ");
           var pu = parts.length ? purchaseUnitFor(it.item) : null;
           if (pu) qty = "1 " + pu;
+
+          // Pantry-quantity comparison (roadmap: "Real Pantry Inventory") needs
+          // a single (qty, unit) pair that re-resolves through the exact same
+          // MCUnits.resolveUnit() bucketing that produced it, rather than a
+          // caller re-parsing the formatted `qty` string above. Only possible
+          // when exactly one bucket carried a real number — a row fragmented
+          // across multiple unit families is left uncomparable here, same
+          // "leave it fragmented rather than guess" honesty mc-units.js itself
+          // applies. "tsp"/"oz" are each that family's base unit at f:1
+          // (mc-units.js's own UNIT_DEFS), so resolveUnit(mergeName, "tsp", x)
+          // reproduces base === x exactly — no precision lost, no density
+          // re-derivation (a literal unit hit is checked before density).
+          var need = null;
+          if (it.bucketOrder.length === 1) {
+            var onlyBk = it.buckets[it.bucketOrder[0]];
+            if (onlyBk.kind === "conv" && onlyBk.hasNum && onlyBk.base > 0) {
+              need = { qty: onlyBk.base, unit: onlyBk.cls === "vol" ? "tsp" : "oz" };
+            } else if (onlyBk.kind === "raw" && onlyBk.hasNum && onlyBk.sum > 0) {
+              need = { qty: onlyBk.sum, unit: onlyBk.unit };
+            }
+          }
+
           return {
             key: it.key, item: it.item, qty: qty, mealUids: it.mealUids,
-            derived: it.derived.length ? it.derived : null
+            derived: it.derived.length ? it.derived : null,
+            need: need
           };
         })
       };
@@ -335,6 +367,7 @@
     // exposed for tests / future callers, not currently used outside
     parseQty: parseQty,
     prettyQty: prettyQty,
+    prettyMeasure: prettyMeasure,
     purchaseUnitFor: purchaseUnitFor
   };
 })();

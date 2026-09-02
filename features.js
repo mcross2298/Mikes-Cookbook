@@ -89,5 +89,10 @@ window.MC_FEATURES = [
     id: 'offline-install',
     name: 'Install & offline',
     keywords: ['install & cook offline', 'offline']
+  },
+  {
+    id: 'pantry-quantities',
+    name: 'Pantry quantities — record how much you have',
+    keywords: ['how much you have', 'more to buy']
   }
 ];

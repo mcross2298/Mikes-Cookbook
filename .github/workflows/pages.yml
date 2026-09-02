@@ -61,6 +61,18 @@ jobs:
         run: node tools/test-mc-units.js
       - name: Search ranking + performance regression tests (mc-search.js — CI initiative 4)
         run: node tools/test-mc-search.js
+      - name: Recipe capture pipeline test (mc-import.js — roadmap Phase C)
+        # PRs #146/#149 shipped mc-import.js and mc-pantry.js with real
+        # tools/test-*.js files but never actually added them as a step
+        # here — both ran clean locally in every PR body, but neither was
+        # ever a REAL blocking CI gate. Closed as part of the pantry-
+        # quantity UI slice, which needed a third new test file
+        # (tools/test-mc-grocery.js) in the same area anyway.
+        run: node tools/test-mc-import.js
+      - name: Pantry-quantity engine tests (mc-pantry.js + mc-grocery.js's `need` field — roadmap "Real Pantry Inventory")
+        run: |
+          node tools/test-mc-pantry.js
+          node tools/test-mc-grocery.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

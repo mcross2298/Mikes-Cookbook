@@ -2521,6 +2521,62 @@ body.picking { overflow: hidden; }
 .grocery-staple:active { transform: scale(0.9); }
 .grocery-staple.on { background: rgba(var(--accent-rgb),0.12); border-color: rgba(var(--accent-rgb),0.45); color: var(--accent); }
 
+/* Per-row pantry-quantity entry (roadmap: "Real Pantry Inventory") — sits
+   next to the staple pin, only on a pantry row. 46px center-to-center from
+   .grocery-staple (34px + the row's 12px gap), enough for both to keep a
+   full independent 44px touch floor without overlapping (see the touch-
+   floor pass below). */
+.grocery-setqty {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  width: 34px; height: 34px; border-radius: 9px;
+  display: grid; place-items: center; font-size: 15px; line-height: 1;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-dim);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+}
+.grocery-setqty:hover { border-color: rgba(var(--accent-rgb),0.5); }
+.grocery-setqty:active { transform: scale(0.9); }
+.grocery-setqty.has-qty { background: rgba(var(--accent-rgb),0.12); border-color: rgba(var(--accent-rgb),0.45); color: var(--accent); }
+
+/* A staple whose recorded amount falls short of what's planned this week —
+   comes back on the buy list (see cookbook-home.js's pantryShortfall())
+   instead of the binary toggle's usual full suppression. A quiet sub-line
+   under the item name, not a badge; the row otherwise behaves exactly like
+   any other buy-list row. */
+.grocery-shortfall {
+  display: block;
+  font-size: 12px; font-weight: 600;
+  color: var(--accent);
+  margin-top: 2px;
+}
+.grocery-row.done .grocery-shortfall { color: var(--ink-dim); }
+
+/* Pantry-quantity entry overlay (openPantryQtyEditor) — reuses the .picker
+   shell every other overlay in this screen already uses. Every interactive
+   element here gets an explicit 44px floor (tools/check-a11y.mjs's ratchet
+   ceiling is recorded at its exact current count — 84 — so a NEW overlay
+   can't add even one under-floor control without failing that gate). */
+.pantry-qty-body { padding: 16px; }
+.pantry-qty-row { display: flex; gap: 8px; margin: 0 0 10px; }
+.pantry-qty-input, .pantry-qty-unit-input {
+  padding: 9px 12px; min-height: 44px; box-sizing: border-box;
+  border-radius: var(--r-sm);
+  background: var(--surface); border: 1px solid var(--line-light);
+  color: var(--ink); font-family: var(--sans); font-size: 14px;
+  -webkit-appearance: none;
+}
+.pantry-qty-input { flex: 0 0 34%; }
+.pantry-qty-unit-input { flex: 1; }
+.pantry-qty-input::placeholder, .pantry-qty-unit-input::placeholder { color: var(--ink-dim); }
+.pantry-qty-hint { font-size: 12px; color: var(--ink-dim); margin: 0 0 14px; }
+.pantry-qty-actions { display: flex; gap: 8px; }
+.pantry-qty-save, .pantry-qty-clear {
+  appearance: none; padding: 10px 18px; min-height: 44px; box-sizing: border-box;
+  border-radius: var(--r-sm); cursor: pointer;
+  font-family: var(--sans); font-size: 13px; font-weight: 800;
+}
+.pantry-qty-save { background: var(--accent); border: none; color: #fff; }
+.pantry-qty-clear { background: var(--surface); border: 1px solid var(--line); color: var(--ink-dim); }
+
 /* "Check your pantry" collapsible footer (cream card to match the list). */
 .pantry-foot {
   background: var(--surface); border: 1px solid var(--line);
@@ -2594,7 +2650,7 @@ button, a, input, select, textarea, [role="button"], .check-row {
    on standalone icon buttons — never on adjacent pairs (e.g. the 2/4 serving
    toggle), where overlapping floors would steal each other's edge taps. */
 .serving-step, .cook-font-btn, .cook-exit, .cook-voice-btn, .cook-counter-btn,
-.plan-remove, .rf-row-remove, .cook-entry-del, .grocery-staple {
+.plan-remove, .rf-row-remove, .cook-entry-del, .grocery-staple, .grocery-setqty {
   position: relative;
 }
 /* The card heart is already position:absolute; the header pill (.r-fav) is
@@ -2605,7 +2661,8 @@ button, a, input, select, textarea, [role="button"], .check-row {
    here too. */
 .serving-step::before, .cook-font-btn::before, .cook-exit::before,
 .cook-voice-btn::before, .cook-counter-btn::before, .plan-remove::before,
-.rf-row-remove::before, .cook-entry-del::before, .grocery-staple::before {
+.rf-row-remove::before, .cook-entry-del::before, .grocery-staple::before,
+.grocery-setqty::before {
   content: ""; position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   width: 100%; height: 100%; min-width: 44px; min-height: 44px;
