@@ -716,14 +716,30 @@
   // that one screen) — this puts it to work a second way: how many of a
   // recipe's ingredients are already staples, so "cook what you have" can be
   // an actual browse filter on the Recipes screen, not just a shopping aid.
+  // Quantity-aware as of the roadmap §2.2 follow-up: a staple with a
+  // recorded amount that's genuinely short of THIS recipe's need counts as
+  // still-needed, not "have" — same MCPantry.compare() tri-state honesty
+  // used everywhere else this store is read. An unquantified staple, or one
+  // MCPantry can't compare, falls straight back to the original binary
+  // "marked as pantry -> have" behavior — never guessed at.
   function pantryMatchInfo(r) {
-    var pantry = loadPantry();
+    var pantry = loadPantry(), qtyMap = loadPantryQty();
     var tier = (r.scaling_options && r.scaling_options[0]) || r.native_serving || 2;
     var by = r.ingredients_by_serving || {};
     var list = by["serving_" + tier] || by["serving_" + (r.native_serving || 2)] || by[Object.keys(by)[0]] || [];
     if (!list.length) return null;
     var have = 0;
-    list.forEach(function (ing) { if (pantry.has(pantryKey(ing.item))) have++; });
+    list.forEach(function (ing) {
+      var k = pantryKey(ing.item);
+      if (!pantry.has(k)) return;
+      var entry = qtyMap[k];
+      if (entry && entry.qty != null && window.MCPantry) {
+        var needQty = MCGrocery.parseQty(ing.quantity);
+        var cmp = MCPantry.compare(groceryMergeName(ing.item), needQty, ing.unit, entry.qty, entry.unit);
+        if (cmp.status === "short") return; // recorded amount isn't enough here — still needed
+      }
+      have++;
+    });
     return { total: list.length, have: have, need: list.length - have };
   }
 
@@ -3651,9 +3667,36 @@
   }
 
   /* ── Recipe picker overlay (full-screen; add to week / to a slot) ──── */
+  // Macro-target on-ramp for the recipe picker (roadmap §2.4 stretch — the
+  // proposal's own stated v1 scope was recipe.html-only; this is the
+  // deferred follow-up). Rough per-slot split of the tracker's real daily
+  // goals ("All" scope's 3 named slots — same divisor loadMacroGoals()'s
+  // other consumer, msgBudgetFor(), would land on for an even split; a
+  // fuller remaining-budget-across-today's-actual-slots computation is
+  // exactly the kind of grid/state coupling this file's own header warns
+  // against threading into a small, separable seam like pickCard). Returns
+  // null whenever there's nothing honest to suggest — no goals, no macro
+  // data on this recipe, or a degenerate/nonsensical scale — so a caller
+  // never has to special-case "goals exist but this recipe can't use them".
+  function pickerMacroSuggestion(r) {
+    var goals = loadMacroGoals();
+    if (!goals || !window.MCScale) return null;
+    var perSlot = { calories: goals.kcal / 3, protein_g: goals.p ? goals.p / 3 : null };
+    var solved = MCScale.solveScaleForTarget(r, defaultServingFor(r.recipe_id), perSlot);
+    if (!solved || solved.scale == null || !isFinite(solved.scale)) return null;
+    if (solved.scale < 0.25 || solved.scale > 8) return null; // not a sane real-world portion
+    return solved;
+  }
   function pickCard(r, ctx) {
-    var card = el("button", "rc rc-pick");
-    card.type = "button";
+    // A <div>, not a <button>, as of the macro-fit chip below: that chip is
+    // a real, separately-tappable control, and a <button> cannot legally
+    // contain another <button> (browsers hoist the inner one out of the
+    // DOM, breaking its click target). role="button" + tabindex + a
+    // keydown handler keep it keyboard-operable exactly like the button it
+    // replaces.
+    var card = el("div", "rc rc-pick");
+    card.setAttribute("role", "button");
+    card.tabIndex = 0;
     var accent = clampAccent(r.accent || "#C87A53");
     card.style.setProperty("--rc-accent", accent);
     card.style.setProperty("--rc-accent-rgb", rgbFromHex(accent));
@@ -3675,11 +3718,34 @@
       card.appendChild(el("span", "rc-cooked-badge",
         days <= 0 ? "Cooked today" : "Cooked " + days + "d ago"));
     }
-    card.addEventListener("click", function () {
+    function addAtDefault() {
       addMeal(r.recipe_id, { day: ctx.day || null, slot: ctx.slot || null });
       closePicker();
       refresh();
+    }
+    card.addEventListener("click", addAtDefault);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); addAtDefault(); }
     });
+    // Opt-in only — the card body above still adds at the recipe's normal
+    // default serving with no behavior change. This chip is a SEPARATE tap
+    // target so a cook who doesn't use the macro tracker (no goals set)
+    // never sees it, and one who does never has the default add silently
+    // switch to a scaled amount underneath them.
+    var suggestion = pickerMacroSuggestion(r);
+    if (suggestion) {
+      var scaleChip = el("button", "rc-macro-fit",
+        "🎯 fit your goal · " + (Math.round(suggestion.scale * 10) / 10) + "×");
+      scaleChip.type = "button";
+      scaleChip.setAttribute("aria-label", "Add " + r.title + " scaled to fit your macro goal");
+      scaleChip.addEventListener("click", function (e) {
+        e.stopPropagation();
+        addMeal(r.recipe_id, { day: ctx.day || null, slot: ctx.slot || null, serving: suggestion.scale });
+        closePicker();
+        refresh();
+      });
+      card.appendChild(scaleChip);
+    }
     return card;
   }
   function closePicker() {
@@ -4602,7 +4668,8 @@
       recipeById: recipeById,
       planMeals: planMeals,
       loadPantry: loadPantry,
-      pantryKey: pantryKey
+      pantryKey: pantryKey,
+      loadPantryQty: loadPantryQty
     });
     MCRecipeForm.configure({
       categoryOrder: function () { return CATEGORY_ORDER; },

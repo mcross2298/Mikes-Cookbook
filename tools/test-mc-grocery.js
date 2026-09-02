@@ -129,5 +129,55 @@ function findRow(item) {
   eq('4b. prettyMeasure formats a base-unit vol amount', G.prettyMeasure(6, 'vol'), '2 tbsp');
 }
 
+/* ── 5. groceryItemCount() is quantity-aware (roadmap §2.2 follow-up) ────── */
+{
+  const pantryKey = function (s) { return (s || '').trim().toLowerCase(); };
+
+  // No pantry hooks at all -> the documented default ("no recorded
+  // quantities") reproduces the original binary behavior: nothing is
+  // marked a staple, so every row (Olive Oil, Taco Seasoning, Butter)
+  // still needs buying.
+  G.configure({ loadPantry: function () { return new Set(); }, loadPantryQty: function () { return {}; }, pantryKey: pantryKey });
+  eq('5a. no pantry data at all -> every row counts', G.groceryItemCount(), 3);
+
+  // Olive oil marked a staple with NO recorded quantity -> falls back to
+  // the original "any staple flag suppresses the row" behavior.
+  G.configure({
+    loadPantry: function () { return new Set([pantryKey('Olive Oil')]); },
+    loadPantryQty: function () { return {}; }
+  });
+  eq('5b. staple with no recorded quantity is still suppressed (binary fallback)', G.groceryItemCount(), 2);
+
+  // Olive oil marked a staple WITH a recorded amount that's short of the
+  // week's actual need (need is 6 tsp / 2 tbsp; only 1 tsp on hand) ->
+  // quantity-aware: still counts, doesn't silently disappear.
+  G.configure({
+    loadPantry: function () { return new Set([pantryKey('Olive Oil')]); },
+    loadPantryQty: function () { return { 'olive oil': { qty: 1, unit: 'tsp' } }; }
+  });
+  eq('5c. staple recorded SHORT of the need still counts', G.groceryItemCount(), 3);
+
+  // Same staple, but the recorded amount actually covers the week's need
+  // (1 cup on hand vs. a 2 tbsp need) -> suppressed, same as the binary case.
+  G.configure({
+    loadPantry: function () { return new Set([pantryKey('Olive Oil')]); },
+    loadPantryQty: function () { return { 'olive oil': { qty: 1, unit: 'cup' } }; }
+  });
+  eq('5d. staple recorded ENOUGH for the need is suppressed', G.groceryItemCount(), 2);
+
+  // Butter is the multi-bucket row (need: null) — even with a real
+  // recorded quantity, there's nothing to compare against, so it falls
+  // back to the binary staple check rather than guessing.
+  G.configure({
+    loadPantry: function () { return new Set([pantryKey('Butter')]); },
+    loadPantryQty: function () { return { butter: { qty: 1, unit: 'oz' } }; }
+  });
+  eq('5e. a need:null row (fragmented across unit families) falls back to binary', G.groceryItemCount(), 2);
+
+  // Reset to the defaults so this file's own module-load-order doesn't leak
+  // pantry state into any test appended after this block in the future.
+  G.configure({ loadPantry: function () { return new Set(); }, loadPantryQty: function () { return {}; } });
+}
+
 console.log(`test-mc-grocery: ${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);
