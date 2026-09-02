@@ -50,12 +50,19 @@
    behavior, never inventing a number. A 📏 button on any pantry-footer row
    opens `openPantryQtyEditor()` to record or change the amount.
 
-   **`recipe.html`'s Grocery tab is deliberately still untouched** — that
-   page doesn't read the pantry at all today (see `cookbook.js`'s own
-   `renderGrocery()` comment) and quantities aren't shown there by design
-   ("a pure shopping list," Phase 3 §3.1), so wiring pantry comparison in
-   would mean designing a new display mode, not reusing this one. Left for
-   a future slice if it's wanted.
+   **`recipe.html`'s Grocery tab reads the pantry now too** (tri-state
+   substitution slice) — but only inside its existing "Don't have it on
+   hand?" substitution card, not as per-row badges on the shopping list
+   itself: that list stays a pure list, unchanged ("a pure shopping list,"
+   Phase 3 §3.1). `cookbook.js`'s `renderGrocery()` calls `compare()` for
+   any ingredient with a known `mc-search.js` substitution and a recorded
+   pantry quantity — `"enough"` drops the note entirely (reduces noise),
+   `"short"` names both amounts, and `"unquantified"`/`"unknown"` (including
+   no pantry entry at all) fall back to the original generic note, same
+   honesty posture as everywhere else this module is used.
+   `pantryMatchInfo()`, `pantryCandidates()` and `groceryItemCount()` stay
+   binary-only — extending each to be quantity-aware is real, separate
+   design work, not a mechanical follow-up.
 
    Exposed as window.MCPantry.
    ========================================================================== */

@@ -305,6 +305,60 @@ body {
   color: var(--on-dark-dim);
 }
 
+/* ── BI-DIRECTIONAL SCALING (roadmap §2.4: Servings vs. Hit a macro target) */
+.scale-mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.scale-mode-tab {
+  flex: 1;
+  min-height: 44px;
+  appearance: none;
+  border: 1px solid var(--line-dark);
+  background: transparent;
+  color: var(--on-dark-dim);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.scale-mode-tab.active {
+  background: rgba(var(--accent-rgb), 0.18);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.scale-target-panel { margin-top: 2px; }
+.scale-target-fields {
+  display: flex;
+  gap: 8px;
+}
+.scale-target-fields .scale-target-input { flex: 1; min-width: 0; }
+.scale-target-input {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 10px 11px;
+  border: 1px solid var(--line-dark);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--on-dark);
+  font-family: var(--sans);
+  font-size: 14px;
+}
+.scale-target-input::placeholder { color: var(--on-dark-dim); }
+.scale-result {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--on-dark);
+}
+.scale-result-approx { color: var(--on-dark-dim); }
+
 /* ── STICKY SUB-TAB BAR ───────────────────────────────────────────── */
 .subtabs {
   position: sticky;
@@ -1093,6 +1147,15 @@ body {
   display: inline-block; margin-top: 14px; font-size: 12.5px; font-weight: 800;
   color: var(--accent); text-decoration: none;
 }
+/* Multi-Dish Cook Timeline Synchronizer entry point (roadmap §2.3). */
+.today-timeline-btn {
+  display: block; width: 100%; box-sizing: border-box; min-height: 44px;
+  margin-top: 12px; appearance: none; cursor: pointer; font-family: var(--sans);
+  background: rgba(var(--accent-rgb), 0.14); color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.4); border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 800;
+}
+.today-timeline-btn:active { transform: scale(0.98); }
 
 /* ── Weekly consistency recap (Home, Sun/Mon only) ────────────────── */
 .recap-card { margin: 0 20px 18px; padding: 16px 18px 14px; display: flex; flex-direction: column; }
@@ -2576,6 +2639,44 @@ body.picking { overflow: hidden; }
 }
 .pantry-qty-save { background: var(--accent); border: none; color: #fff; }
 .pantry-qty-clear { background: var(--surface); border: 1px solid var(--line); color: var(--ink-dim); }
+
+/* Multi-Dish Cook Timeline Synchronizer overlay (mc-timeline.js's own
+   self-contained UI) — reuses the .picker shell every other overlay in this
+   app already uses. Every interactive element here has an explicit 44px
+   floor, same discipline as the pantry-quantity overlay above. */
+.timeline-body { padding: 12px 18px calc(24px + env(safe-area-inset-bottom)); }
+.timeline-target-row {
+  display: flex; align-items: center; gap: 10px; margin: 4px 0 16px;
+}
+.timeline-target-label { font-size: 13px; font-weight: 800; color: var(--ink); }
+.timeline-target-input {
+  min-height: 44px; box-sizing: border-box; padding: 8px 12px;
+  border-radius: var(--r-sm); background: var(--surface); border: 1px solid var(--line-light);
+  color: var(--ink); font-family: var(--sans); font-size: 15px; -webkit-appearance: none;
+}
+.timeline-list { display: flex; flex-direction: column; gap: 10px; }
+.timeline-row {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md);
+}
+.timeline-row.due { border-color: rgba(var(--accent-rgb), 0.5); background: rgba(var(--accent-rgb), 0.08); }
+.timeline-row-head { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.timeline-row-icon { font-size: 18px; margin-right: 6px; }
+.timeline-row-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.timeline-row-when {
+  flex: 0 0 auto; font-size: 12px; color: var(--ink-dim); text-align: right; max-width: 40%;
+}
+.timeline-row-start {
+  flex: 0 0 auto; min-height: 44px; box-sizing: border-box; display: inline-flex;
+  align-items: center; padding: 0 14px; border-radius: var(--r-sm);
+  font-family: var(--sans); font-size: 12.5px; font-weight: 800; text-decoration: none;
+  background: var(--accent); color: #fff;
+}
+.timeline-row-start.disabled {
+  background: transparent; border: 1px solid var(--line); color: var(--ink-dim); cursor: default;
+}
+.timeline-manual { margin-top: 16px; }
+.timeline-manual-row { font-size: 13px; color: var(--ink-dim); margin: 4px 0; }
 
 /* "Check your pantry" collapsible footer (cream card to match the list). */
 .pantry-foot {
