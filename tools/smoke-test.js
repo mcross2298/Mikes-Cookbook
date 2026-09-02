@@ -82,6 +82,75 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   ok('share target: the shared_* params are stripped from the URL after opening',
     !/shared_title=/.test(page.url()));
 
+  // ── Recipe capture: "Paste a link" (#146 mc-import.js + #147 the edge
+  // function + the chooser/dialog wiring that connects them) ─────────────
+  // Real network calls to Supabase are blocked by this environment's own
+  // egress policy (the same limitation #147's PR description documents), so
+  // only the network boundary — MC_SB.currentUser()/MC_SB.callFunction() —
+  // is stubbed here. Everything else runs for real: the chooser, the
+  // dialog, mc-import.js's actual parser against a real JSON-LD fixture,
+  // and MCRecipeForm's prefill handling.
+  errors.length = 0;
+  // goto() alone can land on a URL identical to the one the share-target
+  // scenario just replaceState'd to, which Chromium treats as a same-
+  // document navigation (no reload) — the exact hazard the ingredient-
+  // search section above already works around; force a real reload the
+  // same way so the previous scenario's .recipe-form doesn't linger.
+  await page.goto(B + '/index.html#home', { waitUntil: 'networkidle' });
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+
+  await page.locator('.home-mod', { hasText: 'Add Recipe' }).click();
+  await page.waitForTimeout(200);
+  ok('import: chooser opens with both entry points',
+    await page.locator('.rf-chooser .home-mod', { hasText: 'Type it in' }).count() === 1 &&
+    await page.locator('.rf-chooser .home-mod', { hasText: 'Paste a link' }).count() === 1);
+
+  await page.locator('.rf-chooser .home-mod', { hasText: 'Paste a link' }).click();
+  await page.waitForTimeout(200);
+  ok('import: paste-a-link dialog opens', await page.locator('.import-dialog').count() === 1);
+
+  // Offline is caught client-side before any network attempt.
+  await page.evaluate(() => { window.MCNet.isOffline = () => true; });
+  await page.locator('.import-dialog input[type="url"]').fill('https://example.com/recipe');
+  await page.locator('.import-dialog .rf-save').click();
+  await page.waitForTimeout(150);
+  ok('import: offline is blocked before any network attempt',
+    /offline/i.test(await page.locator('.import-dialog .rf-error').innerText()));
+  await page.evaluate(() => { window.MCNet.isOffline = () => false; });
+
+  // A signed-out cook gets a clear, actionable prompt, not a raw failure.
+  await page.evaluate(() => { window.MC_SB.currentUser = () => Promise.resolve(null); });
+  await page.locator('.import-dialog .rf-save').click();
+  await page.waitForTimeout(150);
+  ok('import: signed-out shows a sign-in prompt, not a raw error',
+    /sign in/i.test(await page.locator('.import-dialog .rf-error').innerText()));
+
+  // The real success path: stub only currentUser()/callFunction(), run the
+  // real parser on real (fixture) JSON-LD, land on the real Add Recipe form.
+  const fixtureHtml = '<html><head><script type="application/ld+json">' +
+    JSON.stringify({ '@context': 'https://schema.org', '@type': 'Recipe',
+      name: 'Smoke-Test Skillet Hash', recipeYield: ['4'],
+      recipeIngredient: ['2 cups diced potato', '1 lb ground beef'],
+      recipeInstructions: [{ '@type': 'HowToStep', text: 'Brown the beef.' }] }) +
+    '</' + 'script></head><body></body></html>';
+  await page.evaluate((html) => {
+    window.MC_SB.currentUser = () => Promise.resolve({ id: 'smoke-test-user' });
+    window.MC_SB.callFunction = () => Promise.resolve({ ok: true, html: html, finalUrl: 'https://example.com/hash' });
+  }, fixtureHtml);
+  await page.locator('.import-dialog .rf-save').click();
+  await page.waitForTimeout(300);
+  ok('import: a successful fetch closes the dialog and opens Add Recipe prefilled',
+    await page.locator('.import-dialog').count() === 0 && await page.locator('.recipe-form').count() === 1);
+  const importedTitle = await page.locator('.recipe-form .rf-body input').first().inputValue().catch(() => '');
+  ok('import: title comes from the real mc-import.js parse of the fixture', importedTitle === 'Smoke-Test Skillet Hash');
+  const importedIngItem = await page.locator('.recipe-form .rf-ing-item').first().inputValue().catch(() => '');
+  ok('import: first ingredient parsed into the item field correctly', importedIngItem === 'diced potato');
+  const viaNote = await page.locator('.recipe-form .rf-via-hint').innerText().catch(() => '');
+  ok('import: "Imported from" attribution note shown', /example\.com/.test(viaNote));
+  ok('import: no JS errors across the whole capture flow', errors.length === 0 || (console.log(errors), false));
+  await page.locator('.recipe-form .rf-cancel').click();
+
   // ── recipe page ────────────────────────────────────────────────────
   errors.length = 0;
   // Pick a recipe whose FIRST step names a duration, so the timer-chip tests

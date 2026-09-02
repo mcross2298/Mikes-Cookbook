@@ -2119,8 +2119,8 @@
       icon: "📝", title: "Add Recipe", accent: "#7D8C77",
       sub: userCount
         ? "Your library · " + userCount + (userCount === 1 ? " recipe" : " recipes")
-        : "Create your own or add to your library",
-      onTap: function () { openRecipeForm(); }
+        : "Create your own, or paste a link to import one",
+      onTap: function () { openAddRecipeChooser(); }
     }));
 
     // — Help section —
@@ -4090,6 +4090,178 @@
      Lives in mc-recipe-form.js (audit C-08) — 232 lines that needed only six
      things from this file, so it was a real seam. Configured in init(). */
   function openRecipeForm() { MCRecipeForm.open(); }
+
+  /* ══ RECIPE CAPTURE — "Paste a link" ═══════════════════════════════════
+     FLAGSHIP_COOKBOOK_ROADMAP.md's "Recipe Capture & Import Pipeline,"
+     third slice: wires the two pieces built separately in #146 (mc-import.js,
+     the parser) and #147 (fetch-recipe-source, the edge function that gets a
+     URL's HTML past CORS) into an actual entry point. Home's "Add Recipe"
+     module now opens a small chooser instead of going straight to the form.
+
+     Photo/OCR capture (the roadmap's third path) is NOT built here — this
+     slice is URL-paste only, same "ship the narrowest version" discipline
+     the roadmap's own risk register asks for. The chooser only offers the
+     two paths that exist. */
+
+  function openAddRecipeChooser() {
+    closePicker();
+    closeImportDialog();
+
+    var ov = el("div", "picker rf-chooser");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "Add a Recipe"));
+    var cancel = el("button", "picker-close", "Cancel");
+    cancel.type = "button";
+    cancel.addEventListener("click", function () { closePicker(); });
+    top.appendChild(cancel);
+    ov.appendChild(top);
+
+    var body = el("div", "rf-body");
+    body.appendChild(homeModule({
+      icon: "⌨️", title: "Type it in", accent: "#7D8C77",
+      sub: "Build a recipe field by field",
+      onTap: function () { openRecipeForm(); }
+    }));
+    body.appendChild(homeModule({
+      icon: "🔗", title: "Paste a link", accent: "#B08D57",
+      sub: "Import from a recipe website — review before saving",
+      onTap: function () { openImportFromUrl(); }
+    }));
+    ov.appendChild(body);
+
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+  }
+
+  function closeImportDialog() {
+    var ov = document.querySelector(".import-dialog");
+    if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    document.body.classList.remove("picking");
+  }
+
+  // Cook-friendly text for fetch-recipe-source's error codes (see that
+  // file's own header for what each one means) and for mc-import.js coming
+  // back empty. Falls back to a generic message for anything unlisted
+  // rather than surfacing a raw error code.
+  function importErrorMessage(reason) {
+    var MAP = {
+      not_a_url: "That doesn't look like a valid link.",
+      unsupported_protocol: "Only http:// and https:// links are supported.",
+      non_standard_port: "That link uses an unusual port and can't be imported.",
+      credentials_in_url: "Remove the username/password from that link and try again.",
+      blocked_host: "That link points somewhere this app won't fetch from.",
+      timeout: "That page took too long to respond. Try again in a moment.",
+      fetch_failed: "Couldn't reach that page. Check the link and try again.",
+      not_html: "That link isn't a web page this app can read.",
+      too_many_redirects: "That link redirected too many times.",
+      redirect_without_location: "That link's redirect looked malformed.",
+      bad_redirect: "That link's redirect looked malformed.",
+      empty_body: "That page came back empty.",
+      missing_url: "Enter a link first.",
+      invalid_json: "Something went wrong on our end — try again."
+    };
+    if (MAP[reason]) return MAP[reason];
+    if (/^http_\d+$/.test(reason || "")) return "That page returned an error (" + reason.slice(5) + ").";
+    return "Couldn't import that link right now. Try again, or type the recipe in by hand.";
+  }
+
+  function openImportFromUrl() {
+    closePicker();
+    closeImportDialog();
+
+    var ov = el("div", "picker import-dialog");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "Paste a link"));
+    var cancel = el("button", "picker-close", "Cancel");
+    cancel.type = "button";
+    cancel.addEventListener("click", function () { closeImportDialog(); });
+    top.appendChild(cancel);
+    ov.appendChild(top);
+
+    var body = el("div", "rf-body");
+    body.appendChild(el("p", "rf-hint",
+      "Paste a link to a recipe page. We'll fetch it and pull out the title, ingredients and steps for you to review — nothing saves until you tap Save on the next screen."));
+
+    var urlInput = rfDialogInput();
+    var urlField = el("div", "rf-field");
+    urlField.appendChild(el("label", "rf-label", "Recipe link"));
+    urlField.appendChild(urlInput);
+    body.appendChild(urlField);
+
+    var statusBox = el("div", "rf-error", "");
+    body.appendChild(statusBox);
+
+    var go = el("button", "cook-start rf-save", "Import");
+    go.type = "button";
+    body.appendChild(go);
+
+    ov.appendChild(body);
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+    urlInput.focus();
+
+    function setBusy(isBusy, label) {
+      go.disabled = isBusy;
+      urlInput.disabled = isBusy;
+      statusBox.innerHTML = "";
+      if (isBusy && label) statusBox.textContent = label;
+    }
+    function showError(msg) {
+      setBusy(false);
+      statusBox.textContent = msg;
+    }
+    function showSignInNeeded() {
+      setBusy(false);
+      statusBox.textContent = "";
+      statusBox.appendChild(el("span", null, "Sign in first to import from a link. "));
+      var signInBtn = el("button", "picker-close", "Open sign-in");
+      signInBtn.type = "button";
+      signInBtn.addEventListener("click", function () {
+        closeImportDialog();
+        var acctBtn = document.querySelector(".home-account-btn");
+        if (acctBtn) acctBtn.click();
+      });
+      statusBox.appendChild(signInBtn);
+    }
+
+    function submit() {
+      var raw = urlInput.value.trim();
+      if (!/^https?:\/\//i.test(raw)) { showError("Enter a link starting with http:// or https://"); return; }
+      if (window.MCNet && MCNet.isOffline()) { showError("You're offline — importing a recipe needs a connection."); return; }
+      if (!window.MC_SB || !MC_SB.configured) { showError("Recipe import isn't available right now."); return; }
+
+      setBusy(true, "Checking sign-in…");
+      MC_SB.currentUser().then(function (user) {
+        if (!user) { showSignInNeeded(); return null; }
+        setBusy(true, "Fetching the page…");
+        return MC_SB.callFunction("fetch-recipe-source", { url: raw });
+      }).then(function (result) {
+        if (!result) return; // sign-in prompt already shown
+        if (!result.ok) { showError(importErrorMessage(result.error)); return; }
+        var parsed = window.MCImport && MCImport.parseFromHTML(result.html, result.finalUrl || raw);
+        if (!parsed || !parsed.ok) {
+          showError("Couldn't find a recipe on that page. Try a different link, or type it in by hand.");
+          return;
+        }
+        closeImportDialog();
+        MCRecipeForm.open(parsed.recipe);
+      }).catch(function () {
+        showError("Couldn't reach that link right now. Check it and try again.");
+      });
+    }
+    go.addEventListener("click", submit);
+    urlInput.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
+  }
+
+  function rfDialogInput() {
+    var i = el("input", "search-box rf-input");
+    i.type = "url";
+    i.placeholder = "https://example.com/recipe";
+    i.setAttribute("inputmode", "url");
+    i.setAttribute("autocapitalize", "off");
+    i.setAttribute("autocorrect", "off");
+    return i;
+  }
 
   /* ── Shared top bar (brand / titles, no back) ─────────────────────── */
   function topBar(eyebrow, title, sub) {

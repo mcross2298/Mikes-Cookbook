@@ -90,15 +90,18 @@
     return f;
   }
 
-  function rfIngredientRow() {
+  // `prefill` — { quantity, unit, item, category } — optional; populates a
+  // row from a parsed import (mc-import.js) instead of starting it blank.
+  function rfIngredientRow(prefill) {
     var row = el("div", "rf-ing");
-    var qty  = rfText("Qty");  qty.classList.add("rf-ing-qty");
-    var unit = rfText("Unit"); unit.classList.add("rf-ing-unit");
-    var item = rfText("Ingredient"); item.classList.add("rf-ing-item");
+    var qty  = rfText("Qty", prefill && prefill.quantity);  qty.classList.add("rf-ing-qty");
+    var unit = rfText("Unit", prefill && prefill.unit); unit.classList.add("rf-ing-unit");
+    var item = rfText("Ingredient", prefill && prefill.item); item.classList.add("rf-ing-item");
     var cat  = el("select", "plan-select rf-ing-cat");
     GROC_CATS.forEach(function (c) {
       var o = el("option", null, esc(c)); o.value = c; cat.appendChild(o);
     });
+    if (prefill && prefill.category) cat.value = prefill.category;
     var rm = el("button", "rf-row-remove", "✕");
     rm.type = "button"; rm.setAttribute("aria-label", "Remove ingredient");
     rm.addEventListener("click", function () { if (row.parentNode) row.parentNode.removeChild(row); });
@@ -110,7 +113,9 @@
     return row;
   }
 
-  function rfStepRow(stepWrap) {
+  // `prefill` — { title, detail } — optional; populates a row from a parsed
+  // import (mc-import.js) instead of starting it blank.
+  function rfStepRow(stepWrap, prefill) {
     var row = el("div", "rf-step");
     var head = el("div", "rf-step-head");
     head.appendChild(el("span", "rf-step-num", ""));
@@ -121,8 +126,8 @@
     });
     head.appendChild(rm);
     row.appendChild(head);
-    var title  = rfText("Step title (optional)");
-    var detail = rfArea("What to do… (durations like “simmer 20 minutes” become tap-to-start timers)");
+    var title  = rfText("Step title (optional)", prefill && prefill.title);
+    var detail = rfArea("What to do… (durations like “simmer 20 minutes” become tap-to-start timers)", prefill && prefill.detail);
     row.appendChild(title); row.appendChild(detail);
     row._read = function () { return { title: title.value, detail: detail.value }; };
     return row;
@@ -141,11 +146,15 @@
     document.body.classList.remove("picking");
   }
 
-  // `prefill` — { title, description } — is optional; only the Web Share
-  // Target flow (cookbook-home.js's handleSharedRecipe()) passes one today,
-  // for a recipe link shared in from another app. Everything else about the
-  // form (categories, ingredients, steps) still needs the cook's own input —
-  // sharing only saves retyping the parts a share sheet actually hands over.
+  // `prefill` is optional. The Web Share Target flow (cookbook-home.js's
+  // handleSharedRecipe()) passes just { title, description }. The URL-import
+  // flow (cookbook-home.js's runUrlImport(), via mc-import.js's parsed
+  // shape) can pass the fuller { title, description, prep_time_mins,
+  // cook_time_mins, base_serving, ingredients, steps, macros, via } — every
+  // field is optional and missing ones just leave that part of the form
+  // blank for the cook to fill in themselves, same as today. `category`,
+  // `icon` and `accent` are never prefilled from either source — a parser
+  // can't reliably guess them, and they're one tap each to set.
   function openRecipeForm(prefill) {
     closePicker();
     closeRecipeForm();
@@ -172,6 +181,11 @@
     var titleInput = rfText("e.g. Grandma's Pot Roast", prefill && prefill.title);
     body.appendChild(rfField("Title", titleInput));
 
+    if (prefill && prefill.via) {
+      body.appendChild(el("p", "rf-hint rf-via-hint",
+        "Imported from " + esc(prefill.via) + " — everything below is a best-effort read of that page. Check it over before saving."));
+    }
+
     var iconInput = rfText("🍽️", "🍽️");
     iconInput.classList.add("rf-icon-input");
     body.appendChild(rfField("Icon", iconInput, "An emoji for the card. Tap to change it."));
@@ -185,6 +199,22 @@
 
     var descInput = rfArea("A short description (optional)", prefill && prefill.description);
     body.appendChild(rfField("Description", descInput));
+
+    // Nutrition parsed from an imported page's schema.org data, shown
+    // read-only — this form has no macros field to save it into yet (a
+    // documented gap: see mc-import.js's own header), so surfacing it as
+    // "detected, not saved" is more honest than silently dropping it.
+    if (prefill && prefill.macros) {
+      var mm = prefill.macros, mParts = [];
+      if (mm.calories != null) mParts.push(mm.calories + " kcal");
+      if (mm.protein_g != null) mParts.push(mm.protein_g + "g protein");
+      if (mm.fat_g != null) mParts.push(mm.fat_g + "g fat");
+      if (mm.carbs_g != null) mParts.push(mm.carbs_g + "g carbs");
+      if (mParts.length) {
+        body.appendChild(el("p", "rf-hint rf-macros-hint",
+          "Detected nutrition (per serving): " + mParts.join(" · ") + " — not saved yet; this form doesn't have a macros field."));
+      }
+    }
 
     var tagsInput = rfText("Spicy, One-Dish, High-Protein");
     body.appendChild(rfField("Tags", tagsInput, "Comma-separated (optional)."));
@@ -209,8 +239,11 @@
     // Times + serving size
     var times = el("div", "rf-times");
     var prepInput = rfNumber("0");
+    if (prefill && prefill.prep_time_mins != null) prepInput.value = prefill.prep_time_mins;
     var cookInput = rfNumber("0");
-    var servInput = rfNumber("2"); servInput.value = "2";
+    if (prefill && prefill.cook_time_mins != null) cookInput.value = prefill.cook_time_mins;
+    var servInput = rfNumber("2");
+    servInput.value = (prefill && prefill.base_serving) ? prefill.base_serving : "2";
     times.appendChild(rfField("Prep (min)", prepInput));
     times.appendChild(rfField("Cook (min)", cookInput));
     times.appendChild(rfField("Makes (servings)", servInput));
@@ -221,8 +254,12 @@
     body.appendChild(el("p", "rf-hint rf-section-hint",
       "Amounts are for the serving count above; the app scales them automatically."));
     var ingWrap = el("div", "rf-ing-wrap");
-    ingWrap.appendChild(rfIngredientRow());
-    ingWrap.appendChild(rfIngredientRow());
+    if (prefill && prefill.ingredients && prefill.ingredients.length) {
+      prefill.ingredients.forEach(function (ing) { ingWrap.appendChild(rfIngredientRow(ing)); });
+    } else {
+      ingWrap.appendChild(rfIngredientRow());
+      ingWrap.appendChild(rfIngredientRow());
+    }
     body.appendChild(ingWrap);
     var addIng = el("button", "rf-add", "＋ Add ingredient");
     addIng.type = "button";
@@ -233,8 +270,12 @@
     body.appendChild(el("div", "tier-label rf-section", "Method"));
     var stepWrap = el("div", "rf-step-wrap");
     body.appendChild(stepWrap);
-    function addStepRow() { stepWrap.appendChild(rfStepRow(stepWrap)); rfRenumber(stepWrap); }
-    addStepRow();
+    function addStepRow(stepPrefill) { stepWrap.appendChild(rfStepRow(stepWrap, stepPrefill)); rfRenumber(stepWrap); }
+    if (prefill && prefill.steps && prefill.steps.length) {
+      prefill.steps.forEach(function (s) { addStepRow(s); });
+    } else {
+      addStepRow();
+    }
     var addStep = el("button", "rf-add", "＋ Add step");
     addStep.type = "button";
     addStep.addEventListener("click", addStepRow);
