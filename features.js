@@ -94,5 +94,15 @@ window.MC_FEATURES = [
     id: 'pantry-quantities',
     name: 'Pantry quantities — record how much you have',
     keywords: ['how much you have', 'more to buy']
+  },
+  {
+    id: 'macro-target-scaling',
+    name: 'Hit a macro target (bi-directional scaling)',
+    keywords: ['hit a macro target', 'macro target']
+  },
+  {
+    id: 'cook-timeline',
+    name: 'Time It Together — multi-dish cook timeline',
+    keywords: ['time it together']
   }
 ];

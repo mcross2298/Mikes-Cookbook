@@ -1943,6 +1943,28 @@
         card.appendChild(link);
       }
     }
+
+    // Multi-Dish Cook Timeline Synchronizer (roadmap §2.3) — offered right
+    // where a cook already sees today's whole plan at once. `totalMins` is
+    // just prep + cook time, so a dish missing either just doesn't get an
+    // auto-scheduled slot (mc-timeline.js's own "manual, start whenever"
+    // fallback) rather than blocking the feature for the other dishes.
+    if (window.MCTimeline) {
+      var timelineDishes = todays.map(function (m) {
+        var tr = recipeById(m.id);
+        if (!tr) return null;
+        return {
+          recipeId: tr.recipe_id, title: tr.title, icon: tr.icon,
+          totalMins: (parseInt(tr.prep_time_mins, 10) || 0) + (parseInt(tr.cook_time_mins, 10) || 0)
+        };
+      }).filter(Boolean);
+      if (timelineDishes.filter(function (d) { return d.totalMins > 0; }).length >= 2) {
+        var timeBtn = el("button", "today-timeline-btn", "⏱ Time it together");
+        timeBtn.type = "button";
+        timeBtn.addEventListener("click", function () { MCTimeline.open(timelineDishes); });
+        card.appendChild(timeBtn);
+      }
+    }
     return card;
   }
 
@@ -4610,6 +4632,7 @@
     // countdown started while cooking stays visible when the cook steps back
     // out to the planner or the grocery list mid-recipe.
     MCTimers.onWriteFail = warnStorageFull;
+    if (window.MCTimeline) MCTimeline.onWriteFail = warnStorageFull;
     MCTimers.configure({
       onJump: function (t) {
         if (t.recipeId) location.href = "recipe.html?id=" + encodeURIComponent(t.recipeId) + "&cook=1";

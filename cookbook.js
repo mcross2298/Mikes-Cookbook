@@ -585,7 +585,17 @@
   }
 
   /* ── App state ────────────────────────────────────────────────────── */
-  var state = { recipe: null, serving: 2, tab: "overview" };
+  // macroMode/macroTarget/macroSolved — bi-directional scaling (roadmap
+  // §2.4). Independent of `serving`/check-off state on purpose: switching
+  // into macro-target mode doesn't touch or reset the grocery/step
+  // checklists, which stay keyed by the nominal `serving` count exactly as
+  // before — only the ingredient AMOUNTS shown (via effectiveServing()
+  // below) change while a target is active. macroTarget holds the raw
+  // input strings so a half-typed field isn't lost on re-render.
+  var state = {
+    recipe: null, serving: 2, tab: "overview",
+    macroMode: false, macroTarget: {}, macroSolved: null
+  };
 
   function pickRecipe() {
     var id = new URLSearchParams(location.search).get("id");
@@ -623,6 +633,24 @@
   function macrosFor(r, serving) {
     var mp = r.macro_profiles || {};
     return mp["serving_" + serving] || mp["serving_" + nativeServing(r)] || {};
+  }
+  function hasMacroData(r) {
+    var m = macrosFor(r, nativeServing(r));
+    return ["calories", "protein_g", "fat_g", "carbs_g"].some(function (k) { return m[k] != null; });
+  }
+  // Bi-directional scaling (roadmap §2.4). When a macro target is active and
+  // solved, ingredient quantities/weight estimates use the solved equivalent
+  // serving count instead of the stepper's nominal `serving` — reusing
+  // ingredientsFor()'s existing fractional-serving scaling path unchanged
+  // (it already falls back to scaling the native tier for any count with no
+  // authored tier, integer or not). Falls back to state.serving whenever
+  // there's no active/solved target, so this is a pure no-op for every
+  // recipe and cook that never touches the macro-target toggle.
+  function effectiveServing(r) {
+    if (state.macroMode && state.macroSolved && state.macroSolved.scale != null) {
+      return state.macroSolved.scale;
+    }
+    return state.serving;
   }
 
   /* ── Estimated serving weight (grams) ─────────────────────────────────
@@ -786,34 +814,124 @@
       }
     }
 
-    var ladder = el("div", "servings serving-stepper");
+    // Bi-directional scaling (roadmap §2.4) — only offered when this recipe
+    // actually has macro data to solve against; a macro-free recipe (every
+    // user-authored one, by default) just never shows the toggle, and the
+    // servings stepper below behaves exactly as it always has.
+    if (hasMacroData(r)) h.appendChild(renderScaleModeToggle(r));
 
-    var minus = el("button", "serving-step", "−");
-    minus.type = "button";
-    minus.setAttribute("aria-label", "Fewer servings");
-    minus.disabled = state.serving <= SERVING_MIN;
-    minus.addEventListener("click", function () { changeServing(state.serving - 1); });
+    if (!state.macroMode) {
+      var ladder = el("div", "servings serving-stepper");
 
-    var count = el("div", "serving-count",
-      '<span class="serving-num">' + state.serving + "</span>" +
-      '<span class="serving-word">Serving' + (state.serving === 1 ? "" : "s") + "</span>");
+      var minus = el("button", "serving-step", "−");
+      minus.type = "button";
+      minus.setAttribute("aria-label", "Fewer servings");
+      minus.disabled = state.serving <= SERVING_MIN;
+      minus.addEventListener("click", function () { changeServing(state.serving - 1); });
 
-    var plus = el("button", "serving-step", "+");
-    plus.type = "button";
-    plus.setAttribute("aria-label", "More servings");
-    plus.disabled = state.serving >= SERVING_MAX;
-    plus.addEventListener("click", function () { changeServing(state.serving + 1); });
+      var count = el("div", "serving-count",
+        '<span class="serving-num">' + state.serving + "</span>" +
+        '<span class="serving-word">Serving' + (state.serving === 1 ? "" : "s") + "</span>");
 
-    ladder.appendChild(minus);
-    ladder.appendChild(count);
-    ladder.appendChild(plus);
-    h.appendChild(ladder);
+      var plus = el("button", "serving-step", "+");
+      plus.type = "button";
+      plus.setAttribute("aria-label", "More servings");
+      plus.disabled = state.serving >= SERVING_MAX;
+      plus.addEventListener("click", function () { changeServing(state.serving + 1); });
 
-    // Transparency: say whether the amounts are exact or scaled.
-    var authored = (r.ingredients_by_serving || {})["serving_" + state.serving];
-    h.appendChild(el("p", "serving-note",
-      authored ? "Exact amounts from the recipe"
-               : "Scaled live from " + nativeServing(r) + " servings"));
+      ladder.appendChild(minus);
+      ladder.appendChild(count);
+      ladder.appendChild(plus);
+      h.appendChild(ladder);
+
+      // Transparency: say whether the amounts are exact or scaled.
+      var authored = (r.ingredients_by_serving || {})["serving_" + state.serving];
+      h.appendChild(el("p", "serving-note",
+        authored ? "Exact amounts from the recipe"
+                 : "Scaled live from " + nativeServing(r) + " servings"));
+    } else {
+      h.appendChild(renderScaleTargetPanel(r));
+    }
+  }
+
+  /* ── Bi-directional macro/ingredient scaling (roadmap §2.4) ─────────── */
+  // Re-solves against the current state.macroTarget and re-renders every
+  // pane that reads effectiveServing() — mirrors changeServing()'s own
+  // "touch every dependent pane" pattern above.
+  function macroTargetChanged(r) {
+    var t = state.macroTarget;
+    var hasAny = t && (t.protein_g || t.calories || t.carbs_g);
+    state.macroSolved = hasAny ? MCScale.solveScaleForTarget(r, nativeServing(r), t) : null;
+    renderHeader(r);
+    renderMacros(r);
+    renderGrocery(r);
+    renderRecipe(r);
+  }
+  function renderScaleModeToggle(r) {
+    var tabs = el("div", "scale-mode-tabs");
+    var srvTab = el("button", "scale-mode-tab" + (!state.macroMode ? " active" : ""), "Servings");
+    srvTab.type = "button";
+    srvTab.addEventListener("click", function () {
+      if (!state.macroMode) return;
+      state.macroMode = false;
+      renderHeader(r); renderMacros(r); renderGrocery(r); renderRecipe(r);
+    });
+    var macTab = el("button", "scale-mode-tab" + (state.macroMode ? " active" : ""), "Hit a macro target");
+    macTab.type = "button";
+    macTab.addEventListener("click", function () {
+      if (state.macroMode) return;
+      state.macroMode = true;
+      renderHeader(r); renderMacros(r); renderGrocery(r); renderRecipe(r);
+    });
+    tabs.appendChild(srvTab);
+    tabs.appendChild(macTab);
+    return tabs;
+  }
+  // Up to three optional target fields; leaving all blank falls straight
+  // back to servings-mode behavior (macroTargetChanged() only solves when
+  // at least one is filled in) — no separate "cancel" control needed.
+  function renderScaleTargetPanel(r) {
+    var wrap = el("div", "scale-target-panel");
+    var fields = el("div", "scale-target-fields");
+    function targetInput(key, ph) {
+      var i = el("input", "search-box scale-target-input");
+      i.type = "number"; i.min = "0"; i.setAttribute("inputmode", "decimal");
+      i.placeholder = ph;
+      if (state.macroTarget && state.macroTarget[key] != null) i.value = state.macroTarget[key];
+      i.addEventListener("input", function () {
+        state.macroTarget = state.macroTarget || {};
+        state.macroTarget[key] = i.value;
+        macroTargetChanged(r);
+      });
+      return i;
+    }
+    fields.appendChild(targetInput("protein_g", "Protein (g)"));
+    fields.appendChild(targetInput("calories", "Calories"));
+    fields.appendChild(targetInput("carbs_g", "Carbs (g)"));
+    wrap.appendChild(fields);
+
+    var solved = state.macroSolved;
+    if (solved && solved.scale != null) {
+      var m = solved.achieved, parts = [];
+      if (m.protein_g != null) parts.push(m.protein_g + "g protein");
+      if (m.calories != null) parts.push(m.calories + " kcal");
+      if (m.carbs_g != null) parts.push(m.carbs_g + "g carbs");
+      var servings = Math.round(solved.scale * 10) / 10;
+      var portionText = "≈ " + servings + " serving" + (Math.abs(servings - 1) < 0.05 ? "" : "s") + " of this recipe at this scale";
+      var msg = "≈ " + parts.join(" · ") + " — " + portionText;
+      if (!solved.exact) {
+        msg += ". Closest achievable by scaling — hitting every target exactly isn't possible for this recipe by scaling alone.";
+      }
+      wrap.appendChild(el("p", "scale-result" + (solved.exact ? "" : " scale-result-approx"), esc(msg)));
+    } else if (solved && solved.scale == null) {
+      wrap.appendChild(el("p", "scale-result scale-result-approx",
+        "This recipe doesn't have " + esc(solved.driver.replace("_g", "").replace("_", " ")) +
+        " data to scale against — try a different target, or switch back to Servings."));
+    } else {
+      wrap.appendChild(el("p", "rf-hint",
+        "Enter a target and the ingredient list scales to match — leave everything blank to go back to picking a serving count."));
+    }
+    return wrap;
   }
 
   /* ── Tab 1: Overview & Macros ─────────────────────────────────────── */
@@ -851,7 +969,7 @@
     grid.appendChild(macroCell("", m.fat_g, "g", "Fat"));
     grid.appendChild(macroCell("", m.carbs_g, "g", "Carbs"));
     card.appendChild(grid);
-    var weightG = estimateServingWeightG(r, state.serving);
+    var weightG = estimateServingWeightG(r, effectiveServing(r));
     if (weightG != null) {
       card.appendChild(el("p", "macro-weight",
         "≈ " + weightG + " g per serving <span class=\"macro-weight-note\">(estimated from ingredients — for weighing food)</span>"));
@@ -968,11 +1086,33 @@
       "</div>";
   }
 
+  /* ── Pantry read (roadmap: "Real Pantry Inventory", tri-state substitution
+     slice) — recipe.html previously had no pantry read at all (see
+     mc-pantry.js's own header). This reads the same two localStorage stores
+     cookbook-home.js owns (mc-cookbook:pantry, mc-cookbook:pantryqty)
+     read-only, so the substitution card below can tell "have enough" from
+     "have some, not enough" from "don't have it" — never writes either
+     store from this page. */
+  function pantryKeyLocal(item) { return (item || "").trim().toLowerCase(); }
+  function loadPantryLocal() {
+    try { return new Set(JSON.parse(localStorage.getItem("mc-cookbook:pantry") || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function loadPantryQtyLocal() {
+    try {
+      var o = JSON.parse(localStorage.getItem("mc-cookbook:pantryqty") || "{}");
+      return o && typeof o === "object" ? o : {};
+    } catch (e) { return {}; }
+  }
+
   function renderGrocery(r) {
     var pane = $("#pane-grocery");
     pane.innerHTML = "";
 
-    var list = ingredientsFor(r, state.serving);
+    // Checklist state stays keyed by the nominal `serving` count even in
+    // macro-target mode (see the `state` comment above) — only the amounts
+    // shown scale with the solved target.
+    var list = ingredientsFor(r, effectiveServing(r));
     var done = loadSet(r.recipe_id, state.serving, "grocery");
 
     // Group by aisle, preserving AISLE_ORDER then any extras.
@@ -1000,25 +1140,49 @@
     });
     pane.appendChild(card);
 
-    // Missing-ingredient substitution (CI initiative 4) — informational, not
-    // interactive: it doesn't know whether THIS cook actually has sour cream
-    // on hand (recipe.html has no pantry read), so it surfaces "here's an
-    // option" for every ingredient this recipe uses that has a known swap,
-    // rather than claiming anything is missing. One note per applicable
-    // ingredient, deduplicated so two "sour cream" lines in one recipe don't
-    // repeat the same tip twice.
+    // Missing-ingredient substitution (CI initiative 4; pantry-aware as of
+    // the "Real Pantry Inventory" roadmap's tri-state slice). Still
+    // informational, not interactive, and still doesn't touch the shopping
+    // list above (Phase 3 §3.1 — the Grocery tab stays a pure list, no
+    // per-row pantry badges) — only this card now checks the cook's own
+    // recorded pantry state before deciding what to say:
+    //   • pantry qty ≥ this recipe's need → skip the note (reduces noise for
+    //     the common case: the cook already has enough, no swap needed).
+    //   • pantry qty recorded but short → name both amounts specifically.
+    //   • no qty recorded, or not in the pantry at all → today's original
+    //     generic note, unchanged (mc-pantry.js's own "unquantified"/
+    //     "unknown" honesty posture: never guess, fall back).
+    // One note per applicable ingredient, deduplicated so two "sour cream"
+    // lines in one recipe don't repeat the same tip twice.
     var seenSub = {}, subs = [];
+    var pantrySet = loadPantryLocal(), pantryQty = loadPantryQtyLocal();
     list.forEach(function (ing) {
       var s = MCSearch.substitutionFor(ing.item);
-      if (s && !seenSub[s.match]) { seenSub[s.match] = 1; subs.push(s); }
+      if (!s || seenSub[s.match]) return;
+      seenSub[s.match] = 1;
+
+      var entry = pantrySet.has(pantryKeyLocal(ing.item)) ? pantryQty[pantryKeyLocal(ing.item)] : null;
+      var shortfallText = null;
+      if (entry && entry.qty != null) {
+        var mergeName = MCGrocery.groceryMergeName(ing.item);
+        var needQty = MCGrocery.parseQty(ing.quantity);
+        var cmp = MCPantry.compare(mergeName, needQty, ing.unit, entry.qty, entry.unit);
+        if (cmp.status === "enough") return; // have enough — no note at all
+        if (cmp.status === "short") {
+          var have = entry.qty + (entry.unit ? " " + entry.unit : "");
+          var need = [ing.quantity, ing.unit].filter(Boolean).join(" ") || "some";
+          shortfallText = "You have " + esc(have) + ", this recipe needs " + esc(need) +
+            " of <b>" + esc(s.match) + "</b> — try " + esc(s.swap) + ".";
+        }
+      }
+      subs.push(shortfallText || ("No <b>" + esc(s.match) + "</b>? Try " + esc(s.swap) + "."));
     });
     if (subs.length) {
       var subCard = el("div", "card sub-card");
       subCard.appendChild(el("p", "card-label", "Don't have it on hand?"));
       var subList = el("div", "sub-list");
-      subs.forEach(function (s) {
-        subList.appendChild(el("p", "sub-row",
-          "No <b>" + esc(s.match) + "</b>? Try " + esc(s.swap) + "."));
+      subs.forEach(function (text) {
+        subList.appendChild(el("p", "sub-row", text));
       });
       subCard.appendChild(subList);
       pane.appendChild(subCard);
@@ -1070,7 +1234,7 @@
     var pane = $("#pane-recipe");
     pane.innerHTML = "";
 
-    var list = ingredientsFor(r, state.serving);
+    var list = ingredientsFor(r, effectiveServing(r));
     var miseDone = loadSet(r.recipe_id, state.serving, "mise");
     var stepDone = loadSet(r.recipe_id, state.serving, "steps");
     var steps = r.instructions || [];
@@ -1263,7 +1427,7 @@
   function speakIngredients() {
     if (!("speechSynthesis" in window)) return;
     var r = cook.recipe;
-    var list = ingredientsFor(r, state.serving) || [];
+    var list = ingredientsFor(r, effectiveServing(r)) || [];
     if (!list.length) { window.speechSynthesis.speak(new SpeechSynthesisUtterance("No ingredients listed for this recipe.")); return; }
     var text = "You'll need: " + list.map(function (ing) {
       var qty = ing.quantity ? ing.quantity + " " : "";

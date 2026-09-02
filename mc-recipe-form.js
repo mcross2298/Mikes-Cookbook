@@ -3,10 +3,13 @@
    --------------------------------------------------------------------------
    Audit C-08, second extraction. A full-screen overlay (reusing the picker
    overlay shell) holding a "Medium" recipe form: title, icon, category,
-   structured ingredients (item / qty / unit / Meat·Dairy·Produce·Pantry) and
-   numbered steps — no macros. On save the recipe is persisted via MCUser and
-   merged into the live data layer, so it appears immediately in the "My
-   Recipes" collection, search, Browse and the planner.
+   structured ingredients (item / qty / unit / Meat·Dairy·Produce·Pantry),
+   numbered steps, and an optional per-serving Nutrition section (roadmap:
+   "Recipe Capture & Import Pipeline" — this form used to only *show* a
+   parsed import's detected macros, with nowhere to actually save them; now
+   it does). On save the recipe is persisted via MCUser and merged into the
+   live data layer, so it appears immediately in the "My Recipes" collection,
+   search, Browse and the planner.
 
    Lifted out because it is genuinely separable: 232 lines that reference only
    six things defined elsewhere (`CATEGORY_ORDER`, `closePicker`, `el`, `esc`,
@@ -200,21 +203,28 @@
     var descInput = rfArea("A short description (optional)", prefill && prefill.description);
     body.appendChild(rfField("Description", descInput));
 
-    // Nutrition parsed from an imported page's schema.org data, shown
-    // read-only — this form has no macros field to save it into yet (a
-    // documented gap: see mc-import.js's own header), so surfacing it as
-    // "detected, not saved" is more honest than silently dropping it.
-    if (prefill && prefill.macros) {
-      var mm = prefill.macros, mParts = [];
-      if (mm.calories != null) mParts.push(mm.calories + " kcal");
-      if (mm.protein_g != null) mParts.push(mm.protein_g + "g protein");
-      if (mm.fat_g != null) mParts.push(mm.fat_g + "g fat");
-      if (mm.carbs_g != null) mParts.push(mm.carbs_g + "g carbs");
-      if (mParts.length) {
-        body.appendChild(el("p", "rf-hint rf-macros-hint",
-          "Detected nutrition (per serving): " + mParts.join(" · ") + " — not saved yet; this form doesn't have a macros field."));
-      }
-    }
+    // Nutrition — optional, per single serving (never scaled with the
+    // serving count, same invariant recipes-data.js's built-ins follow).
+    // Prefilled from an imported page's schema.org data when present; a
+    // hand-typed recipe starts blank. All four fields optional — leaving
+    // every one blank keeps this recipe macro-free, exactly like before
+    // this section existed.
+    var mm = (prefill && prefill.macros) || {};
+    var macCal   = rfNumber("kcal");    if (mm.calories   != null) macCal.value   = mm.calories;
+    var macProt  = rfNumber("g");       if (mm.protein_g  != null) macProt.value  = mm.protein_g;
+    var macFat   = rfNumber("g");       if (mm.fat_g      != null) macFat.value   = mm.fat_g;
+    var macCarbs = rfNumber("g");       if (mm.carbs_g    != null) macCarbs.value = mm.carbs_g;
+    body.appendChild(el("div", "tier-label rf-section", "Nutrition (optional)"));
+    body.appendChild(el("p", "rf-hint rf-section-hint",
+      (prefill && prefill.macros)
+        ? "Detected from the imported page, per serving — check it over."
+        : "Per serving. Leave blank to skip — this recipe just won't show a macro card."));
+    var macRow = el("div", "rf-times");
+    macRow.appendChild(rfField("Calories", macCal));
+    macRow.appendChild(rfField("Protein (g)", macProt));
+    macRow.appendChild(rfField("Fat (g)", macFat));
+    macRow.appendChild(rfField("Carbs (g)", macCarbs));
+    body.appendChild(macRow);
 
     var tagsInput = rfText("Spicy, One-Dish, High-Protein");
     body.appendChild(rfField("Tags", tagsInput, "Comma-separated (optional)."));
@@ -317,7 +327,11 @@
         cook_time_mins: cookInput.value,
         base_serving: servInput.value,
         ingredients: ings,
-        steps: steps
+        steps: steps,
+        macros: {
+          calories: macCal.value, protein_g: macProt.value,
+          fat_g: macFat.value, carbs_g: macCarbs.value
+        }
       });
 
       if (!result.saved) {

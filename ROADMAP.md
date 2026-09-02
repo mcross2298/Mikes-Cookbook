@@ -748,6 +748,97 @@ standalone pages, one of which is Cooking Mode. Wave 8 is this repo's first ergo
 at all, on the exact axis (kitchen-use touch targets) the whole VOC/VOA Kaizen exercise found this
 app weakest on.
 
+## Pillar F — Flagship roadmap: the four proposals in `FLAGSHIP_COOKBOOK_ROADMAP.md`
+
+**Status: three of four shipped (partial on two), one not started.** `FLAGSHIP_COOKBOOK_ROADMAP.md`
+(2026-09-02) proposed four features after a competitive audit found this app's biggest real gaps
+versus Paprika/Pestle/Crouton. This pillar tracks what actually landed, per that doc's own §2.1–§2.4
+numbering, so a reader doesn't have to diff the roadmap doc against the codebase to find out.
+
+### §2.1 Recipe Capture & Import Pipeline — partial ✅
+
+**Shipped** (PRs #146–148, before this pillar): the JSON-LD/heuristic parser (`mc-import.js`), the
+`fetch-recipe-source` Supabase edge function (SSRF-hardened, JWT-gated), and the full "Paste a link"
+flow wired into Home's Add Recipe chooser. **Shipped in this pass:** the form's Nutrition section
+(`mc-recipe-form.js`) went from read-only ("detected, not saved — this form doesn't have a macros
+field") to a real, editable, optional per-serving Calories/Protein/Fat/Carbs section that
+`user-recipes.js`'s `build()` now actually persists onto `macro_profiles` — closing a real gap: an
+imported recipe with structured JSON-LD nutrition data used to show its macros and then silently
+drop them on save.
+
+**Not done, deliberately:** the "Photograph a page" / OCR capture path. The roadmap's own
+architecture called for vendoring a client-side OCR library (Tesseract.js, WASM-based) — a multi-
+megabyte binary asset (the WASM runtime plus at least one language's trained-data file) that isn't
+practical to fetch, vet, and commit inside this pass. Building the surrounding chooser UI without a
+working OCR engine behind it would mean shipping a button that doesn't do anything, which is worse
+than not shipping it — this app's own honesty ethic (informational, not silent) cuts against that.
+Left for a follow-up with the library actually in hand.
+
+### §2.2 Real Pantry Inventory + Dynamic Substitution — partial ✅
+
+**Shipped** (PR #149–150, before this pass): `mc-pantry.js`'s quantity comparison engine and
+`mc-cookbook:pantryqty` wired into the This Week planner's grocery list. **Shipped in this pass:**
+the tri-state substitution slice on `recipe.html`'s Grocery tab that `mc-pantry.js`'s own header
+used to say was left for later — "have enough" now drops the "Don't have it on hand?" note entirely
+(reduces noise), "have some, short" names both amounts before suggesting the swap, and "unquantified"
+/ "not in the pantry at all" fall back to the original generic note. Deliberately scoped to the
+substitution card only, not the shopping list itself, which stays a pure list per Phase 3 §3.1.
+
+**Not done:** `pantryMatchInfo()`, `pantryCandidates()` and `groceryItemCount()` (the "cook what you
+have" filter, the "you keep buying this" nudge, Home's grocery-count badge) are still binary-only —
+extending each to be quantity-aware is real, separate design work the original PR already flagged as
+out of scope, not a mechanical follow-up this pass added to.
+
+### §2.3 Multi-Dish Cook Timeline Synchronizer — shipped ✅
+
+New in this pass, end to end: `mc-timeline.js`'s pure `computeTimeline(dishes, targetTime)` (a real
+critical-path solver — the longest dish anchors the target and starts soonest; a dish with no usable
+`prep_time_mins + cook_time_mins` is routed to "manual, start whenever" rather than dropped or
+guessed at) plus a self-contained overlay UI, entered from Home's "Today" card via a new "⏱ Time it
+together" button once 2+ of today's planned meals have real timing. Each dish's "Start" button links
+straight into `recipe.html?...&cook=1`. Session data (`mc-cookbook:timeline`) is device-local and not
+synced, same reasoning as `mc-timers.js`. Pinned by `tools/test-mc-timeline.js`.
+
+**Scope note versus the original proposal:** durations come from `prep_time_mins + cook_time_mins`
+(already-structured, CI-validated fields present on every recipe), not from re-parsing `cookbook.js`'s
+step-embedded-duration regex (`parseDurations()`/`DUR_RE`) as the roadmap doc sketched — that parser
+is tied to Cooking Mode's per-step timer chips, a different, DOM-adjacent job, and duplicating or
+cross-wiring it for this feature wasn't worth the coupling for a first slice. The entry point is
+Home's Today card (today's plan only), not a picker inside the planner's own ~1,350-line contiguous
+block — that block references 66 names defined elsewhere in `cookbook-home.js` (see that file's own
+header), and threading a new feature through it carried real risk for no benefit the Today card
+doesn't already provide for a v1.
+
+### §2.4 Bi-Directional Macro/Ingredient Scaling — shipped ✅
+
+New in this pass: `mc-scale.js`'s pure `solveScaleForTarget(recipe, servingBase, target)` (protein-
+first priority when multiple targets are given, honest `exact: false` + real achieved numbers when a
+target combination can't all be hit by one linear scale factor — never silently presented as a match)
+wired into `recipe.html`'s serving stepper as a **Servings / Hit a macro target** toggle, shown only
+when the recipe has real macro data. The solved scale reuses `cookbook.js`'s existing
+`ingredientsFor(r, serving)` unmodified — it already scales any count, fractional included, with no
+authored tier — so this didn't need a second ingredient-scaling code path. Check-off state stays keyed
+by the nominal serving count regardless of which mode is active. Pinned by `tools/test-mc-scale.js`.
+
+**Not done (the roadmap's own stated stretch, not required for v1):** the planner recipe-picker's
+tracker-goal on-ramp (pre-suggesting a macro-target scale when adding a meal to a slot with real
+tracker goals set) — `recipe.html`-only was explicitly the shippable v1 scope in the original proposal.
+
+### What's still open
+
+- **OCR/photo recipe capture** (§2.1) — needs a vendored client-side OCR library in hand first.
+- **Quantity-aware "cook what you have" / grocery-badge / repeat-buy nudge** (§2.2) — real, separate
+  design work.
+- **Planner recipe-picker macro on-ramp** (§2.4) — a stated stretch, not v1 scope.
+- **Owner-only, two-device verification** of the pantry-quantity sync path (see below) — CI can't do
+  this; needs a human with two physical devices, same as the existing C-02 favorites/pantry check.
+
+**Effort:** §2.1/§2.2 completions Small each (closing a documented gap in an existing file, not new
+architecture). §2.3/§2.4 Medium each (new pure module + new UI surface + new test file). **Impact:**
+High — closes this app's two most-cited competitive gaps (recipe import, pantry depth) further, and
+ships two genuinely differentiated capabilities (§2.3, §2.4) the roadmap's own competitive research
+found no evidence either named competitor has.
+
 ## Owner-only verification — how to actually close it
 
 Two items have sat open since phase 1 because CI can't do them. Most of both is now
