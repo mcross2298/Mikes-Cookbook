@@ -676,9 +676,11 @@
      guarantee the roadmap asked for with strictly less risk: a staple with
      no entry here behaves in every existing code path exactly as it always
      has, because none of that code path's inputs changed at all. Only a
-     future caller that specifically wants a quantity (MCPantry.compare(),
-     not built yet) needs to know this store exists.
-     Not yet wired to any UI — see mc-pantry.js's own header for why. */
+     future caller that specifically wants a quantity (MCPantry.compare())
+     needs to know this store exists.
+     Wired into the This Week planner's grocery list as of the pantry-
+     quantity UI slice — see renderGroceryPane()'s pantryShortfall() and
+     the 📏 button in groceryRow() below, plus mc-pantry.js's own header. */
   var PANTRY_QTY_KEY = "mc-cookbook:pantryqty";
   function loadPantryQty() {
     try {
@@ -3162,16 +3164,122 @@
     document.body.classList.add("picking");
   }
 
+  // A "short" amount (mc-pantry.js's `compare()` result) is shaped one of two
+  // ways depending on which family it resolved into — see that file's own
+  // header. Format either into the same "N unit" text a cook reads elsewhere
+  // in the grocery list.
+  function formatShort(short) {
+    if (!short) return "";
+    if (short.cls) return MCGrocery.prettyMeasure(short.base, short.cls);
+    return MCGrocery.prettyQty(short.qty) + (short.unit ? " " + short.unit : "");
+  }
+  // How much more of `row.item` is still needed, given what's recorded in
+  // the pantry — or null when there's nothing to say (no comparable need,
+  // no recorded amount, or the pantry amount already covers it). Never
+  // treats a missing pantry amount as zero: only a real "short" result from
+  // MCPantry.compare() produces a shortfall.
+  function pantryShortfall(row) {
+    if (!row.need) return null;
+    var entry = loadPantryQty()[pantryKey(row.item)];
+    if (!entry || entry.qty == null) return null;
+    var cmp = MCPantry.compare(groceryMergeName(row.item),
+      row.need.qty, row.need.unit, entry.qty, entry.unit);
+    if (cmp.status !== "short") return null;
+    return "Have " + entry.qty + (entry.unit ? " " + entry.unit : "") +
+      " · need " + formatShort(cmp.short) + " more";
+  }
+
+  function closePantryQtyEditor() {
+    var ov = $(".pantry-qty-overlay");
+    if (ov) ov.remove();
+    document.body.classList.remove("picking");
+  }
+  // A minimal, optional amount + unit entry for one pantry staple. Blank or
+  // zero clears the recorded amount back to "unquantified" rather than
+  // treating it as zero — same rule MCPantry.compare() itself enforces.
+  function openPantryQtyEditor(item, onSaved) {
+    closePantryQtyEditor();
+    var entry = loadPantryQty()[pantryKey(item)];
+
+    var ov = el("div", "picker pantry-qty-overlay");
+    var top = el("div", "picker-top");
+    top.appendChild(el("div", "picker-title", "How much " + item + "?"));
+    var close = el("button", "picker-close", "✕");
+    close.type = "button";
+    close.addEventListener("click", closePantryQtyEditor);
+    top.appendChild(close);
+    ov.appendChild(top);
+
+    var body = el("div", "picker-results pantry-qty-body");
+    var row = el("div", "pantry-qty-row");
+    var qtyInp = document.createElement("input");
+    qtyInp.type = "number"; qtyInp.step = "any"; qtyInp.min = "0";
+    qtyInp.inputMode = "decimal";
+    qtyInp.className = "pantry-qty-input";
+    qtyInp.placeholder = "Amount";
+    qtyInp.setAttribute("aria-label", "Amount of " + item + " you have");
+    if (entry) qtyInp.value = entry.qty;
+    var unitInp = document.createElement("input");
+    unitInp.type = "text";
+    unitInp.className = "pantry-qty-unit-input";
+    unitInp.placeholder = "Unit (tsp, oz, packet…)";
+    unitInp.setAttribute("aria-label", "Unit for the amount of " + item + " you have");
+    if (entry && entry.unit) unitInp.value = entry.unit;
+    row.appendChild(qtyInp);
+    row.appendChild(unitInp);
+    body.appendChild(row);
+    body.appendChild(el("p", "pantry-qty-hint",
+      "Optional — leave blank to just mark it a staple, no amount."));
+
+    var actions = el("div", "pantry-qty-actions");
+    var saveBtn = el("button", "pantry-qty-save", "Save");
+    saveBtn.type = "button";
+    saveBtn.addEventListener("click", function () {
+      var q = parseFloat(qtyInp.value);
+      if (!qtyInp.value.trim() || isNaN(q) || q <= 0) setPantryQty(item, null, null);
+      else setPantryQty(item, q, unitInp.value.trim());
+      closePantryQtyEditor();
+      if (onSaved) onSaved();
+    });
+    actions.appendChild(saveBtn);
+    if (entry) {
+      var clearBtn = el("button", "pantry-qty-clear", "Clear amount");
+      clearBtn.type = "button";
+      clearBtn.addEventListener("click", function () {
+        setPantryQty(item, null, null);
+        closePantryQtyEditor();
+        if (onSaved) onSaved();
+      });
+      actions.appendChild(clearBtn);
+    }
+    body.appendChild(actions);
+    ov.appendChild(body);
+
+    ov.addEventListener("click", function (e) { if (e.target === ov) closePantryQtyEditor(); });
+    document.body.appendChild(ov);
+    document.body.classList.add("picking");
+    qtyInp.focus();
+  }
+
   function groceryRow(row, checked, opts) {
     opts = opts || {};
     var isDone = checked.has(row.key);
     var el2 = el("div", "check-row grocery-row" + (isDone ? " done" : "") +
       (opts.pantry ? " is-staple" : ""));
+    // A pantry-footer row shows what's actually recorded on hand instead of
+    // the recipe's needed amount (which isn't the point there); everywhere
+    // else the needed amount shows, same as before this slice.
+    var haveEntry = opts.pantry ? loadPantryQty()[pantryKey(row.item)] : null;
+    var qtyText = haveEntry
+      ? "Have " + esc(String(haveEntry.qty)) + (haveEntry.unit ? " " + esc(haveEntry.unit) : "")
+      : (row.qty ? esc(row.qty) : "");
     el2.innerHTML =
       '<span class="check-box">' + CHECK_SVG + "</span>" +
-      '<span class="grocery-qty">' + (row.qty ? esc(row.qty) : "") +
+      '<span class="grocery-qty">' + qtyText +
         (row.derived ? '<span class="grocery-derived" aria-hidden="true"></span>' : "") + "</span>" +
-      '<span class="check-text">' + esc(row.item) + "</span>";
+      '<span class="check-text">' + esc(row.item) +
+        (opts.shortfall ? '<span class="grocery-shortfall">' + esc(opts.shortfall) + "</span>" : "") +
+      "</span>";
     el2.addEventListener("click", function () {
       var set = loadGroc();
       var nowDone = !set.has(row.key);
@@ -3225,6 +3333,21 @@
       refresh();
     });
     el2.appendChild(pin);
+    // Quantity entry (roadmap: "Real Pantry Inventory") — only on a pantry
+    // row, staple or short: this is exactly where "how much do you actually
+    // have" is worth asking. Stops propagation, same as the pin.
+    if (opts.pantry) {
+      var qtyBtn = el("button", "grocery-setqty" + (haveEntry ? " has-qty" : ""), "📏");
+      qtyBtn.type = "button";
+      qtyBtn.setAttribute("aria-label", haveEntry
+        ? "Change how much " + row.item + " you have — currently " + haveEntry.qty + (haveEntry.unit ? " " + haveEntry.unit : "")
+        : "Record how much " + row.item + " you have");
+      qtyBtn.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        openPantryQtyEditor(row.item, refresh);
+      });
+      el2.appendChild(qtyBtn);
+    }
     return el2;
   }
 
@@ -3412,7 +3535,17 @@
       cats.forEach(function (c) {
         var buy = [];
         c.rows.forEach(function (row) {
-          if (pantry.has(pantryKey(row.item))) { staples.push(row); return; }
+          if (pantry.has(pantryKey(row.item))) {
+            // Pantry-quantity comparison (roadmap: "Real Pantry Inventory"):
+            // a staple with an insufficient recorded amount comes back on the
+            // buy list showing what's still needed, instead of being fully
+            // suppressed the way the binary toggle always did. No comparable
+            // need, no recorded amount, or the amount already covers it —
+            // all fall straight through to the original behavior.
+            var shortLabel = pantryShortfall(row);
+            if (shortLabel) { row._opts = { pantry: true, shortfall: shortLabel }; buy.push(row); return; }
+            staples.push(row); return;
+          }
           if (groceryRowAllDone(row)) { madeRows.push(row); return; }
           buy.push(row);
         });
@@ -3435,7 +3568,7 @@
         sec.appendChild(el("div", "grocery-cat-head",
           '<span class="dot"></span>' + esc(c.aisle) +
           '<span class="grocery-cat-count">' + c.rows.length + "</span>"));
-        c.rows.forEach(function (row) { sec.appendChild(groceryRow(row, checked)); });
+        c.rows.forEach(function (row) { sec.appendChild(groceryRow(row, checked, row._opts)); });
         card.appendChild(sec);
       });
       body.appendChild(card);
@@ -3449,7 +3582,8 @@
 
       body.appendChild(el("p", "macro-foot",
         "Quantities combine identical items across your planned meals. " +
-        "Tap 🧂 to set aside a staple you always have."));
+        "Tap 🧂 to set aside a staple you always have, or 📏 to say how much — " +
+        "short on a staple and it comes right back on the list."));
     }
 
     // C2: Custom items always shown so users can add extras at any time

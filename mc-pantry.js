@@ -38,17 +38,24 @@
                         "leave it fragmented rather than guess" posture,
                         applied to comparison instead of summing.
 
-   NOT wired to any UI or storage yet — cookbook-home.js's pantry pin is
-   still the same binary toggle it's always been, and this module isn't
-   called from anywhere. That's the next slice: a quantity-entry affordance
-   on the pin, and the recipe.html Grocery tab reading `compare()`'s result
-   to render "have enough" / "short by N" / today's existing "don't have
-   it" substitution note, per the roadmap's own UI spec. Building the
-   comparison math first and testing it against realistic bucket shapes —
-   including the multi-bucket-per-row case buildGrocery() already produces
-   for a genuinely fragmented ingredient — means the UI slice lands on
-   verified ground instead of guessing at edge cases while also building
-   the display.
+   **Wired as of the "This Week" planner's grocery list** (the first UI
+   slice): `cookbook-home.js`'s `renderGroceryPane()` calls `compare()` for
+   any pantry-flagged row that `mc-grocery.js`'s `buildGrocery()` could
+   reduce to a single comparable `need` (see that file's own header) against
+   a recorded `mc-cookbook:pantryqty` entry. `"enough"` keeps a staple off
+   the buy list exactly as the binary toggle always did; `"short"` puts it
+   back on the list with how much more is needed; `"unquantified"` /
+   `"unknown"` — including the multi-bucket-per-row case buildGrocery()
+   itself declines to reduce — fall back to that same original binary
+   behavior, never inventing a number. A 📏 button on any pantry-footer row
+   opens `openPantryQtyEditor()` to record or change the amount.
+
+   **`recipe.html`'s Grocery tab is deliberately still untouched** — that
+   page doesn't read the pantry at all today (see `cookbook.js`'s own
+   `renderGrocery()` comment) and quantities aren't shown there by design
+   ("a pure shopping list," Phase 3 §3.1), so wiring pantry comparison in
+   would mean designing a new display mode, not reusing this one. Left for
+   a future slice if it's wanted.
 
    Exposed as window.MCPantry.
    ========================================================================== */
