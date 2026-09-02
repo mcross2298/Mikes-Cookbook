@@ -662,10 +662,52 @@
     writeStore(PANTRY_KEY, JSON.stringify(Array.from(set)));
   }
   function pantryKey(item) { return (item || "").trim().toLowerCase(); }
+
+  /* ── Pantry quantities (roadmap: "Real Pantry Inventory") ───────────────
+     mc-cookbook:pantryqty → { [pantryKey]: { qty, unit, ts } }, a SEPARATE,
+     sparse store from mc-cookbook:pantry above rather than a change to that
+     store's own shape. Deliberate: the roadmap's original sketch described
+     migrating :pantry's array elements from bare strings to
+     {name,qty,unit,...} objects, but that would touch every existing
+     consumer of loadPantry()'s Set<string> return (pantryMatchInfo,
+     pantryCandidates, the low-shopping filter, the grocery-row suppression
+     check) for a feature most of them don't need to know about. A companion
+     map achieves the same "quantity is strictly additive, never required"
+     guarantee the roadmap asked for with strictly less risk: a staple with
+     no entry here behaves in every existing code path exactly as it always
+     has, because none of that code path's inputs changed at all. Only a
+     future caller that specifically wants a quantity (MCPantry.compare(),
+     not built yet) needs to know this store exists.
+     Not yet wired to any UI — see mc-pantry.js's own header for why. */
+  var PANTRY_QTY_KEY = "mc-cookbook:pantryqty";
+  function loadPantryQty() {
+    try {
+      var o = JSON.parse(localStorage.getItem(PANTRY_QTY_KEY) || "{}");
+      return o && typeof o === "object" ? o : {};
+    } catch (e) { return {}; }
+  }
+  function savePantryQty(map) {
+    writeStore(PANTRY_QTY_KEY, JSON.stringify(map));
+  }
+  // qty/unit may be null (clears a previously-recorded amount back to
+  // "unquantified" without removing the staple itself from the pantry Set).
+  function setPantryQty(item, qty, unit) {
+    var map = loadPantryQty(), k = pantryKey(item);
+    if (qty == null) delete map[k];
+    else map[k] = { qty: qty, unit: unit || null, ts: Date.now() };
+    savePantryQty(map);
+  }
+
   function togglePantry(item) {
     var set = loadPantry(), k = pantryKey(item);
-    if (set.has(k)) set.delete(k); else set.add(k);
+    var removing = set.has(k);
+    if (removing) set.delete(k); else set.add(k);
     savePantry(set);
+    // A quantity for a staple that's no longer in the pantry at all is
+    // orphaned data, not a fact worth keeping around for if it's re-added
+    // later — re-adding is exactly when a stale amount would be most
+    // misleading (the cook restocked; the old number is wrong on its face).
+    if (removing) setPantryQty(item, null, null);
     return set.has(k);
   }
   // Pantry data previously only suppressed grocery-list rows (write-only past

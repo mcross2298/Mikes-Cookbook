@@ -111,9 +111,9 @@ async function loadSyncCycle(remoteRows, throwOnKeys, initialStore) {
 }
 
 const M = loadMerge();
-ok('module.exports captured all 7 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
+ok('module.exports captured all 8 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
   M.mergePlan && M.mergeStringSet && M.mergeHistoryBySavedAt && M.mergeCookedByRecipe &&
-  M.mergeReplaceByTs));
+  M.mergeReplaceByTs && M.mergeMapByTs));
 
 // ---- whitelist membership (audit C-02) ------------------------------------
 // The merge functions were never the problem for favorites and pantry — the
@@ -128,7 +128,7 @@ ok('module.exports captured all 7 merge fns', !!(M && M.mergeMacros && M.mergeAr
     'mc-cookbook:mealplan:history', 'mc-cookbook:mealplan:custom',
     'mc-cookbook:mealplan:macrohistory', 'mc-cookbook:userrecipes',
     'mc-cookbook:cooked', 'mc-cookbook:favorites', 'mc-cookbook:pantry',
-    'mc-cookbook:timecheck'
+    'mc-cookbook:timecheck', 'mc-cookbook:pantryqty'
   ].forEach((key) => ok('STORES whitelist includes ' + key, stores.includes("'" + key + "'")));
   // Never push a store this app only consumes — one writer per store.
   ok('STORES excludes the workout app\'s mc_activity', !stores.includes("'mc_activity'"));
@@ -258,6 +258,35 @@ ok('module.exports captured all 7 merge fns', !!(M && M.mergeMacros && M.mergeAr
 {
   eq('replaceByTs: missing local/remote degrade to {}, never throw',
     M.mergeReplaceByTs(null, undefined), {});
+}
+
+// ---- mergeMapByTs: mc-cookbook:pantryqty — per-KEY last-write-wins on a
+//      flat map, unlike replaceByTs's whole-object rule above. The real
+//      scenario this exists for: two devices each set a DIFFERENT staple's
+//      quantity while offline — a whole-object strategy would have
+//      whichever device happened to sync last silently discard the other's
+//      edit to an entirely unrelated ingredient. --------------------------
+{
+  const local = { salt: { qty: 1, unit: 'box', ts: 100 }, eggs: { qty: 6, unit: '', ts: 300 } };
+  const remote = { salt: { qty: 2, unit: 'box', ts: 200 }, garlic: { qty: 1, unit: 'clove', ts: 150 } };
+  const out = M.mergeMapByTs(local, remote);
+  eq('mapByTs: a key touched only locally survives untouched', out.eggs, local.eggs);
+  eq('mapByTs: a key touched only remotely is adopted', out.garlic, remote.garlic);
+  eq('mapByTs: a key on both sides resolves by the newer ts (remote here)', out.salt, remote.salt);
+}
+{
+  // The mirror case: local has the newer ts for the conflicting key.
+  const local = { flour: { qty: 5, unit: 'cup', ts: 500 } };
+  const remote = { flour: { qty: 2, unit: 'cup', ts: 100 } };
+  eq('mapByTs: a key on both sides resolves by the newer ts (local here)',
+    M.mergeMapByTs(local, remote).flour, local.flour);
+}
+{
+  eq('mapByTs: missing local/remote degrade to {}, never throw',
+    M.mergeMapByTs(null, undefined), {});
+  eq('mapByTs: empty remote keeps every local entry',
+    M.mergeMapByTs({ salt: { qty: 1, unit: null, ts: 1 } }, {}),
+    { salt: { qty: 1, unit: null, ts: 1 } });
 }
 
 // ---- C2: a failed local write during pull() must not clobber good remote
