@@ -40,6 +40,7 @@
       mergeHistoryBySavedAt: function () { return mergeHistoryBySavedAt.apply(null, arguments); },
       mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); },
       mergeReplaceByTs: function () { return mergeReplaceByTs.apply(null, arguments); },
+      mergeMapByTs: function () { return mergeMapByTs.apply(null, arguments); },
       // C2 regression coverage (tools/test-mc-sync-merge.js): pull/push and
       // the snapshot/blocked bookkeeping close over `client`/`user`, which
       // only exist once the MC_SB.configured guard below passes — so unlike
@@ -81,7 +82,14 @@
     // it's one cook re-answering the quiz. Whole-object replace-by-ts (the
     // same rule mergeMacros already uses for its scalar profile/goals half)
     // is the only strategy that makes sense for this shape.
-    'mc-cookbook:timecheck':            'replaceByTs'
+    'mc-cookbook:timecheck':            'replaceByTs',
+    // { [pantryKey]: {qty, unit, ts} } — a flat map, not a single scalar
+    // object like :timecheck, so whole-object replaceByTs is the wrong
+    // shape here: two devices updating DIFFERENT staples' quantities at
+    // the same time would have one device's edit silently discard the
+    // other's. Per-key replace-by-ts (mapByTs, below) resolves each
+    // ingredient's amount independently instead.
+    'mc-cookbook:pantryqty':            'mapByTs'
   };
   // Deliberately NOT synced, so the omissions read as decisions:
   //   :photos          user-attached recipe images as data URLs — image data
@@ -236,9 +244,33 @@
     return (remote.ts || 0) >= (local.ts || 0) ? remote : local;
   }
 
+  // Per-key last-write-wins on a flat map of {qty, unit, ts} entries — the
+  // same rule mergeReplaceByTs applies to a whole object, applied instead
+  // to each key independently so two devices editing different staples at
+  // once don't clobber each other. A key present on only one side survives
+  // as-is (nothing to compare it against). Known, accepted limitation
+  // shared with :pantry's own 'stringSet' strategy above: a DELETION (a
+  // cook clearing a quantity back to unquantified) doesn't propagate as a
+  // removal, only additions/updates merge — same tradeoff already made for
+  // that store, not a new one introduced here.
+  function mergeMapByTs(local, remote) {
+    local = local || {}; remote = remote || {};
+    var out = {}, keys = {}, k;
+    for (k in local) keys[k] = 1;
+    for (k in remote) keys[k] = 1;
+    for (k in keys) {
+      var l = local[k], r = remote[k];
+      if (l == null) { out[k] = r; continue; }
+      if (r == null) { out[k] = l; continue; }
+      out[k] = (r.ts || 0) >= (l.ts || 0) ? r : l;
+    }
+    return out;
+  }
+
   function mergeStore(strategy, local, remote) {
     if (strategy === 'macros') return mergeMacros(local, remote);
     if (strategy === 'replaceByTs') return mergeReplaceByTs(local, remote);
+    if (strategy === 'mapByTs') return mergeMapByTs(local, remote);
     if (strategy === 'plan') return mergePlan(local, remote);
     if (strategy === 'stringSet') return mergeStringSet(local, remote);
     if (strategy === 'historyBySavedAt') return mergeHistoryBySavedAt(local, remote);
