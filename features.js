@@ -81,6 +81,11 @@ window.MC_FEATURES = [
     keywords: ['share it straight to', 'phone\'s own share button']
   },
   {
+    id: 'recipe-import',
+    name: 'Import a recipe by pasting a link',
+    keywords: ['paste a link', 'import it automatically']
+  },
+  {
     id: 'offline-install',
     name: 'Install & offline',
     keywords: ['install & cook offline', 'offline']

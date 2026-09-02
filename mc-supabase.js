@@ -81,6 +81,28 @@
 
   function signOut() { return ready.then(function (c) { return c ? c.auth.signOut() : null; }); }
 
+  // callFunction(name, body) — invoke a Supabase Edge Function and resolve
+  // with its parsed JSON body in every case where one exists, success or
+  // failure alike (e.g. fetch-recipe-source's own {ok:false, error:"..."}
+  // shape), rather than only resolving on 2xx. supabase-js's own
+  // functions.invoke() only populates `data` on success; a non-2xx response
+  // surfaces as a FunctionsHttpError whose real Response body lives on
+  // `error.context`, so read that instead of just throwing a generic
+  // "Edge Function returned a non-2xx status code" past the caller. Only
+  // rejects for something that truly isn't a structured response at all —
+  // no network, no client, or a body that isn't valid JSON either way.
+  function callFunction(name, body) {
+    return ready.then(function (c) {
+      if (!c) throw new Error('not_configured');
+      return c.functions.invoke(name, { body: body }).then(function (r) {
+        if (!r.error) return r.data;
+        var ctx = r.error && r.error.context;
+        if (ctx && typeof ctx.json === 'function') return ctx.json();
+        throw r.error;
+      });
+    });
+  }
+
   window.MC_SB = {
     ready: ready,
     get client() { return client; },
@@ -88,6 +110,7 @@
     get sdkLoadFailed() { return sdkLoadFailed; },
     currentUser: currentUser,
     signInPassword: signInPassword,
-    signOut: signOut
+    signOut: signOut,
+    callFunction: callFunction
   };
 })();
