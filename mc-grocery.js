@@ -42,11 +42,15 @@
 
   /* ── host data hooks ─────────────────────────────────────────────────── */
   var H = {
-    recipes:    function () { return window.RECIPES || []; },
-    recipeById: function () { return null; },
-    planMeals:  function () { return []; },
-    loadPantry: function () { return new Set(); },
-    pantryKey:  function (s) { return (s || "").trim().toLowerCase(); }
+    recipes:      function () { return window.RECIPES || []; },
+    recipeById:   function () { return null; },
+    planMeals:    function () { return []; },
+    loadPantry:   function () { return new Set(); },
+    pantryKey:    function (s) { return (s || "").trim().toLowerCase(); },
+    // Optional (roadmap §2.2 follow-up) — quantity-aware groceryItemCount().
+    // Defaults to "no recorded quantities", which reproduces the original
+    // binary-only behavior exactly: every staple suppresses its row.
+    loadPantryQty: function () { return {}; }
   };
   function configure(hooks) {
     Object.keys(hooks || {}).forEach(function (k) {
@@ -59,6 +63,7 @@
   function planMeals()        { return H.planMeals(); }
   function loadPantry()       { return H.loadPantry(); }
   function pantryKey(item)    { return H.pantryKey(item); }
+  function loadPantryQty()    { return H.loadPantryQty(); }
 
   /* ── Quantity math (parse → sum → pretty) for the merged grocery list ─ */
   // Parses integers, decimals, and simple/mixed fractions ("1", "0.75",
@@ -327,11 +332,27 @@
       return !!(m && m.completed);
     });
   }
+  // Count only what you'd still actually need to buy. Quantity-aware as of
+  // the roadmap §2.2 follow-up: a staple whose recorded amount is genuinely
+  // short of the merged week's `need` still counts (MCPantry.compare()'s
+  // "short" result, the exact same comparison the This Week grocery pane
+  // already uses per-row) — an unquantified staple, or a row this file
+  // itself couldn't reduce to one comparable `need` (see buildGrocery()'s
+  // own header), falls straight back to the original "any staple flag
+  // suppresses the row" behavior, same honesty posture as everywhere else.
   function groceryItemCount() {
-    var pantry = loadPantry();   // count only what you'd still actually need to buy
+    var pantry = loadPantry(), qtyMap = loadPantryQty();
     return buildGrocery().reduce(function (n, c) {
       return n + c.rows.filter(function (row) {
-        return !pantry.has(pantryKey(row.item)) && !groceryRowAllDone(row);
+        if (groceryRowAllDone(row)) return false;
+        var k = pantryKey(row.item);
+        if (!pantry.has(k)) return true;
+        var entry = qtyMap[k];
+        if (row.need && entry && entry.qty != null && window.MCPantry) {
+          var cmp = MCPantry.compare(groceryMergeName(row.item), row.need.qty, row.need.unit, entry.qty, entry.unit);
+          return cmp.status === "short";
+        }
+        return false;
       }).length;
     }, 0);
   }

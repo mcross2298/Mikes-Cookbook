@@ -2378,12 +2378,26 @@ body.picking { overflow: hidden; }
 .iu-name { font-size: 14.5px; font-weight: 700; color: var(--on-dark); }
 .grocery-row .check-text { cursor: pointer; text-decoration: underline dotted rgba(255,255,255,0.28); text-underline-offset: 3px; }
 
-/* The picker card is a <button> wearing the .rc recipe-card look. */
+/* The picker card is a <div role="button"> wearing the .rc recipe-card
+   look (a real <button> can't legally nest the .rc-macro-fit chip below —
+   see pickCard()'s own comment). */
 .rc-pick {
   appearance: none; -webkit-appearance: none; width: 100%; padding: 0;
   text-align: left; cursor: pointer; font-family: inherit;
 }
+.rc-pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rc-pick .rc-macro { color: var(--accent); font-weight: 700; }
+/* Macro-target on-ramp chip (roadmap §2.4 stretch) — a full-width row below
+   the card body, not a corner badge, so it clears the 44px touch-target
+   floor on its own rather than needing the invisible-::before pattern. */
+.rc-macro-fit {
+  display: block; width: 100%; min-height: 44px; box-sizing: border-box;
+  appearance: none; -webkit-appearance: none; cursor: pointer; font-family: inherit;
+  padding: 8px 12px; border: 0; border-top: 1px solid var(--line);
+  background: rgba(var(--accent-rgb), 0.10); color: var(--accent);
+  font-size: 12px; font-weight: 800; text-align: left;
+}
+.rc-macro-fit:active { background: rgba(var(--accent-rgb), 0.18); }
 
 /* ═══════════════════════════════════════════════════════════════════
    ADD-RECIPE FORM — full-screen overlay (reuses .picker shell)

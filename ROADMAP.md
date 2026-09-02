@@ -750,7 +750,8 @@ app weakest on.
 
 ## Pillar F — Flagship roadmap: the four proposals in `FLAGSHIP_COOKBOOK_ROADMAP.md`
 
-**Status: three of four shipped (partial on two), one not started.** `FLAGSHIP_COOKBOOK_ROADMAP.md`
+**Status: three of four shipped (partial on two), one not started; a second follow-up pass closed
+both of the §2.2/§2.4 loose ends this pillar originally left open.** `FLAGSHIP_COOKBOOK_ROADMAP.md`
 (2026-09-02) proposed four features after a competitive audit found this app's biggest real gaps
 versus Paprika/Pestle/Crouton. This pillar tracks what actually landed, per that doc's own §2.1–§2.4
 numbering, so a reader doesn't have to diff the roadmap doc against the codebase to find out.
@@ -784,10 +785,19 @@ used to say was left for later — "have enough" now drops the "Don't have it on
 / "not in the pantry at all" fall back to the original generic note. Deliberately scoped to the
 substitution card only, not the shopping list itself, which stays a pure list per Phase 3 §3.1.
 
-**Not done:** `pantryMatchInfo()`, `pantryCandidates()` and `groceryItemCount()` (the "cook what you
-have" filter, the "you keep buying this" nudge, Home's grocery-count badge) are still binary-only —
-extending each to be quantity-aware is real, separate design work the original PR already flagged as
-out of scope, not a mechanical follow-up this pass added to.
+**Follow-up pass — quantity-aware now:** `pantryMatchInfo()` (the Recipes-screen "cook what you have"
+filter + the low-shopping recipe-card badge) and `groceryItemCount()` (Home's grocery-count badge)
+both now call `MCPantry.compare()` when a staple has a recorded quantity — a staple flagged but
+genuinely **short** of what a recipe/the week's plan needs no longer silently counts as "have," the
+same tri-state honesty already shipped for the Grocery tab's substitution card. An unquantified
+staple, or a row `mc-grocery.js` itself can't reduce to one comparable `need` (its own documented
+multi-bucket-fragment case), falls straight back to the original binary "any staple flag suppresses
+it" behavior — never guessed at. Covered by new assertions in `tools/test-mc-grocery.js`.
+
+**Investigated and left alone, correctly:** `pantryCandidates()` (the "you keep buying this — mark it
+a staple?" nudge) only ever considers items **not already** in the pantry Set at all — quantity is
+out of scope for it by construction, not a gap. Forcing a "quantity-aware" change onto it would have
+been busywork for its own sake.
 
 ### §2.3 Multi-Dish Cook Timeline Synchronizer — shipped ✅
 
@@ -820,24 +830,70 @@ when the recipe has real macro data. The solved scale reuses `cookbook.js`'s exi
 authored tier — so this didn't need a second ingredient-scaling code path. Check-off state stays keyed
 by the nominal serving count regardless of which mode is active. Pinned by `tools/test-mc-scale.js`.
 
-**Not done (the roadmap's own stated stretch, not required for v1):** the planner recipe-picker's
-tracker-goal on-ramp (pre-suggesting a macro-target scale when adding a meal to a slot with real
-tracker goals set) — `recipe.html`-only was explicitly the shippable v1 scope in the original proposal.
+**Follow-up pass — shipped:** the planner recipe-picker's tracker-goal on-ramp. `pickCard()` (the
+result card inside `openPicker()`, the "Add to This Week" overlay) now shows an opt-in **"🎯 fit your
+goal · N×"** chip whenever the tracker has real daily goals set (`loadMacroGoals()`) and the recipe
+has usable macro data — `pickerMacroSuggestion()` runs the same `MCScale.solveScaleForTarget()` §2.4
+ships, targeted at a flat one-third split of the day's kcal/protein goals across the "All" scope's
+three named slots (the same divisor `msgBudgetFor()` lands on for an even split — a fuller
+remaining-budget-across-today's-actual-slots computation would mean threading grid/state into
+`pickCard`, exactly the kind of coupling this file's own header warns is real risk for a small,
+separable seam). Deliberately a **separate tap target**, not a change to the card's existing
+click behavior: tapping the card body still adds at the recipe's normal default serving with zero
+behavior change for a cook who's never touched the macro tracker (no goals set → the chip never
+renders at all); the chip is the only path to the scaled add. Suggestions outside a sane real-world
+portion range (0.25×–8×) are suppressed rather than shown as a nonsense scale. Required converting
+`pickCard`'s root element from a `<button>` to a `<div role="button">` — a `<button>` can't legally
+contain the chip's own `<button>` — with a `keydown` handler keeping it keyboard-operable.
 
 ### What's still open
 
 - **OCR/photo recipe capture** (§2.1) — needs a vendored client-side OCR library in hand first.
-- **Quantity-aware "cook what you have" / grocery-badge / repeat-buy nudge** (§2.2) — real, separate
-  design work.
-- **Planner recipe-picker macro on-ramp** (§2.4) — a stated stretch, not v1 scope.
-- **Owner-only, two-device verification** of the pantry-quantity sync path (see below) — CI can't do
-  this; needs a human with two physical devices, same as the existing C-02 favorites/pantry check.
+  Investigated in the follow-up pass (see below) — feasible, but a real product tradeoff, not
+  purely an engineering one.
+- **Owner-only, two-device verification** of the pantry-quantity sync path (see the dedicated
+  checklist below) — CI structurally cannot do this; needs a human with two physical devices, same
+  as the existing C-02 favorites/pantry check.
 
 **Effort:** §2.1/§2.2 completions Small each (closing a documented gap in an existing file, not new
-architecture). §2.3/§2.4 Medium each (new pure module + new UI surface + new test file). **Impact:**
-High — closes this app's two most-cited competitive gaps (recipe import, pantry depth) further, and
-ships two genuinely differentiated capabilities (§2.3, §2.4) the roadmap's own competitive research
-found no evidence either named competitor has.
+architecture). §2.3/§2.4 Medium each (new pure module + new UI surface + new test file); §2.2's/§2.4's
+follow-up items Small each. **Impact:** High — closes this app's two most-cited competitive gaps
+(recipe import, pantry depth) further, and ships two genuinely differentiated capabilities (§2.3,
+§2.4) the roadmap's own competitive research found no evidence either named competitor has.
+
+### OCR/photo capture — investigated, not shipped (a product call, not a technical one)
+
+The original assessment ("not practical to fetch, vet, and commit inside this pass") undersold it —
+retested directly: `registry.npmjs.org` **is** reachable from this environment, and the actual
+package sizes are known now, not estimated:
+
+| Asset | Source | Size |
+|---|---|---|
+| `tesseract.js` main bundle (`dist/tesseract.min.js` + `dist/worker.min.js`) | `tesseract.js@5` | ~190 KB |
+| ONE core WASM variant (`tesseract-core-simd-lstm.js` + `.wasm`; LSTM-only, SIMD — modern mobile browsers) | `tesseract.js-core@5` | ~2.99 MB |
+| ONE trained-data file (`eng.traineddata.gz`, the `best_int` LSTM-only variant matching the core above — NOT the 10.9 MB legacy+LSTM combined file) | `@tesseract.js-data/eng@1` | ~2.95 MB |
+| **Total new vendored weight** | | **~6.1 MB** |
+
+That's a real number to weigh, not a blocker in itself — but it roughly **triples** this app's total
+precached footprint (the whole rest of the site, `recipes-index.js` + 16 detail shards + every JS/CSS
+file combined, is a few MB). Three further reasons this stayed a "bring it to the user" call rather
+than a unilateral ship, on top of the size:
+1. **Accuracy is genuinely unverified.** This session has no way to source or photograph a real
+   handwritten heirloom recipe card — the app's own founding use case for this feature, and the
+   hardest OCR target there is. Shipping it as "reliable" without that test would be exactly the
+   kind of unverified claim this app's own honesty ethic argues against.
+2. **No real-device timing check.** `FLAGSHIP_COOKBOOK_ROADMAP.md`'s own Phase D explicitly calls
+   for measuring OCR-in-a-worker cost on a mid-range Android device under CPU throttling — this
+   session can run a synthetic Playwright smoke test, not a real phone.
+3. **A one-way UX door once shipped.** Once "Photograph a page" is a real, working entry point,
+   removing it later (if accuracy turns out to be poor in practice) is a worse experience than never
+   having offered it — the safer sequencing is: vendor it, test it against real samples, THEN wire
+   the UI, not the reverse.
+
+Not built for this reason, not a network/size limitation as previously stated. If wanted, the actual
+next step is small and concrete: fetch the three packages above (all confirmed reachable), wire a
+`mc-ocr.js` worker wrapper + heuristic segmenter per §2.1's own spec, and test against a handful of
+real photographed cards before wiring the chooser UI — a separate, focused pass.
 
 ## Owner-only verification — how to actually close it
 
@@ -865,6 +921,31 @@ To close it:
 4. **The union test** (this is the one that exercises `stringSet`): with A closed, heart a
    *different* recipe on B, then reopen A. The server row must hold the **union**, not one side
    overwriting the other.
+
+### Pantry-quantity sync (Pillar F — `mc-cookbook:pantryqty`'s `mapByTs` strategy)
+
+Same category of gap as C-02 above, for a store C-02 predates: `mc-cookbook:pantryqty` syncs via
+`mc-sync.js`'s `mapByTs` strategy (per-key last-write-wins, not whole-object) — `tools/test-mc-sync-merge.js`
+covers the merge function in isolation with synthetic fixtures, but nothing has exercised it against
+the real Supabase round trip on two physical devices, the one thing CI structurally cannot do.
+
+To close it:
+1. **Device A** — open the cookbook, sign in, record a quantity for one pantry staple (e.g. "2 cups"
+   flour via the 📏 button on any pantry-footer row in the This Week grocery list), then background
+   the app so `mc-sync.js` flushes.
+2. **Device B** — sign in, confirm that staple's recorded amount arrives.
+3. **The per-key test** (this is the one `mapByTs` exists for, distinct from C-02's whole-Set union):
+   with A closed, record a DIFFERENT staple's quantity on B, then reopen A. Both staples' amounts
+   must be present afterward — neither device's edit should clobber the other's, since they touched
+   different keys in the same map.
+4. **The same-key conflict case:** on A, change staple X's quantity; without syncing A yet, also
+   change staple X's quantity to something different on B; sync both. The device with the later
+   `ts` should win for that one key — confirm the surviving value matches whichever edit happened
+   last, not whichever device happened to sync first.
+5. **The clear-back-to-unquantified case** (a known, documented limitation, not a bug to chase):
+   clearing a staple's amount on one device does NOT propagate as a removal to the other — the same
+   limitation `stringSet` already has. Confirm this is what actually happens (the other device keeps
+   showing the old amount) so this doesn't get "discovered" as a surprise later.
 
 ### PWA device matrix
 
