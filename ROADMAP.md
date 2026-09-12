@@ -12,6 +12,76 @@
 
 ---
 
+## 0a. End-to-end engine audit (2026-09-12) — shipped
+
+A full-stack pass over the five core engines (serving/macro scaling, grocery +
+unit conversion, Cooking Mode + timers, Plan-my-Week + cross-app bridge,
+tracker + offline sync). Four confirmed defects fixed, three suspected ones
+reconciled as false positives. Baseline for the pass: all 21 `verify` gates
+green before any change, so nothing below is pre-existing breakage.
+
+**Fixed**
+
+- **F-01 (high) — a real ingredient amount rendered as `"0"`.** `prettyNumber()`
+  returned `String(whole)` for any scaled quantity under its 0.06 fraction
+  floor, and `whole` is 0 when scaling a batch-yield recipe *down*. Measured on
+  the real corpus: **25 ingredient lines across 12 recipes** at some serving
+  count in 1–12 — "1/2 tsp Vanilla bean paste" at 1 serving of the 24-serving
+  cheesecake became "0 tsp", shown in the mise-en-place list and **read aloud**
+  by Cooking Mode. Duplicated verbatim in `user-recipes.js`, so both copies
+  were fixed. New blocking gate `tools/test-scaling-format.js`, proven to fail
+  on the pre-fix tree. → `cookbook.js`, `user-recipes.js`
+- **F-02 (medium) — the timer ticker never stopped.** `ensureTicking()` treated
+  "not paused" as "running", but a fired-and-alerted timer stays in the store
+  until dismissed, so the 250 ms interval ran forever after any expiry —
+  contradicting `mc-timers.js`'s own documented property 3. Replaced with
+  `needsTick()`, which keeps the one case that genuinely still needs a tick (a
+  timer that expired while the app was closed is ringing but un-alerted, and
+  its alert has yet to fire). → `mc-timers.js`, `tools/test-mc-timers.js`
+- **F-03 (medium) — the meal plan never converged across devices.**
+  `mc-cookbook:mealplan` was merged by `mergeArrayByField`'s "first uid wins",
+  but a meal's `completed`/`serving`/`id` are edited in place, so local always
+  beat remote and two signed-in devices disagreed permanently. Meals now carry
+  an `mts` mutation stamp and `mergeMealsByUid()` prefers the newer one;
+  unstamped legacy meals keep the old behavior exactly. → `mc-sync.js`,
+  `cookbook-home.js`, `cookbook.js`, `tools/test-mc-sync-merge.js`
+- **F-04 (low) — macro-target mode had no bound.** The Servings half of the
+  same control clamps to 1–12; the macro-target half would happily solve a
+  900 g protein target to ~22 servings and scale every amount to match. The
+  math is correct, so it isn't clamped — it now says plainly that the result is
+  outside the range the recipe's amounts were written for. → `cookbook.js`
+- **F-05 (low) — doc drift.** `CLAUDE.md` said both "20 blocking gates" and
+  "Twenty-one" (actual: 21, now 22); `cookbook-home.js` was described as
+  ~186 KB / ~4.2k lines against an actual 216 KB / 4,770 — still inside
+  `check-docs.js`'s ±20% tolerance, but only just, which is how a size claim
+  goes stale without the gate noticing.
+
+**Reconciled as false positives** (checked, no defect — recorded so the next
+audit doesn't re-open them)
+
+- *Week generation looked deterministic* — both scorers carry a deliberate
+  `Math.random()` jitter (±10 balanced, ±2 macro, scaled not to swamp real
+  signal), so "Plan my week" does vary between taps.
+- *The cross-app training-day bias looked like a key mismatch* — `mc-bridge.js`
+  and `cookbook-home.js` independently define `DAYS` as `Mon…Sun` and use the
+  identical `(getDay()+6)%7` mapping. The bias lands.
+- *`macro_profiles` looked like it could go stale per tier* — verified constant
+  across every authored tier for all 318 recipes, and every recipe with macros
+  has a `serving_<native>` key, so `macrosFor()` never falls through to `{}`.
+
+**Logged, deliberately not fixed**
+
+- `prettyNumber` duplication (17 lines, two files): extracting it needs a
+  script-order change on all three page types, since `user-recipes.js` loads
+  before `mc-units.js` and `collection.html` omits `mc-units.js` entirely.
+  Guarded by a drift assertion instead. Revisit if a third copy appears.
+- `mergeArrayByField`'s local-first rule for the *other* stores that use it:
+  documented v1 tradeoff, and those stores have no in-place edit path.
+- Time mode still applies no training-day protein bias: a documented product
+  asymmetry, not a refactor gap.
+
+---
+
 ## 0. Architecture Reality Check (refreshed)
 
 Ground truth as of this evaluation — read the code, not the last roadmap:

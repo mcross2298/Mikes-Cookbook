@@ -77,6 +77,13 @@ jobs:
         run: |
           node tools/test-mc-scale.js
           node tools/test-mc-timeline.js
+      - name: Serving-scaling quantity formatter over the real corpus (test-scaling-format.js)
+        # Pins the audit fix for prettyNumber() rendering a nonzero scaled
+        # amount as "0" (25 lines / 12 recipes at some serving count in 1-12 —
+        # shown in the mise-en-place list and read aloud by Cooking Mode).
+        # Also asserts cookbook.js's and user-recipes.js's duplicated copies
+        # still agree, so a one-sided fix fails review.
+        run: node tools/test-scaling-format.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

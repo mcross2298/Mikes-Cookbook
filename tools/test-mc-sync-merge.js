@@ -111,9 +111,9 @@ async function loadSyncCycle(remoteRows, throwOnKeys, initialStore) {
 }
 
 const M = loadMerge();
-ok('module.exports captured all 8 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
-  M.mergePlan && M.mergeStringSet && M.mergeHistoryBySavedAt && M.mergeCookedByRecipe &&
-  M.mergeReplaceByTs && M.mergeMapByTs));
+ok('module.exports captured all 9 merge fns', !!(M && M.mergeMacros && M.mergeArrayByField &&
+  M.mergePlan && M.mergeMealsByUid && M.mergeStringSet && M.mergeHistoryBySavedAt &&
+  M.mergeCookedByRecipe && M.mergeReplaceByTs && M.mergeMapByTs));
 
 // ---- whitelist membership (audit C-02) ------------------------------------
 // The merge functions were never the problem for favorites and pantry — the
@@ -171,6 +171,60 @@ ok('module.exports captured all 8 merge fns', !!(M && M.mergeMacros && M.mergeAr
   const remote = { meals: [{ uid: 'm1', day: 'Mon' }, { uid: 'm2', day: 'Tue' }] };
   const out = M.mergePlan(local, remote);
   eq('plan: meals unioned by uid', out.meals.map(m => m.uid), ['m1', 'm2']);
+}
+
+// ---- mergePlan: a meal's in-place EDITS have to converge too --------------
+// The audit finding this pins: mealplan was merged with mergeArrayByField's
+// "first occurrence of a uid wins" rule, which is right for an append-only
+// store but wrong here — completed/completedAt, serving and (via swapMeal) id
+// are all edited in place after a meal is created. Local always beat remote,
+// so the two devices never agreed: marking Tuesday's dinner cooked on the
+// phone left the laptop showing it uncooked forever, each device preferring
+// its own copy on every pull. cookbook-home.js stamps `mts` on create and on
+// every edit now, and the newer stamp wins — the same per-entry tiebreak
+// mergeMacros() already applies to logged food entries.
+{
+  const meal = (extra) => Object.assign(
+    { uid: 'm1', id: 'steak', serving: 2, day: 'Tue', slot: 'Dinner', completed: false, completedAt: null },
+    extra);
+
+  // The real scenario: phone completed it at mts 2000, laptop's copy is older.
+  const phone = { meals: [meal({ completed: true, completedAt: '2026-09-12T18:00:00Z', mts: 2000 })] };
+  const laptop = { meals: [meal({ mts: 1000 })] };
+  const onLaptop = M.mergePlan(laptop, phone);
+  const onPhone = M.mergePlan(phone, laptop);
+  ok('plan: the newer edit reaches the other device',
+    onLaptop.meals[0].completed === true);
+  ok('plan: and the device that made it keeps it',
+    onPhone.meals[0].completed === true);
+  ok('plan: both devices converge on the same meal (order-independent)',
+    JSON.stringify(onLaptop) === JSON.stringify(onPhone));
+
+  // Backward compatibility: two pre-`mts` meals must behave EXACTLY as before
+  // (local-first), so upgrading can't reshuffle a plan already on disk.
+  const a = { meals: [meal({ serving: 4 })] };
+  const b = { meals: [meal({ serving: 2 })] };
+  eq('plan: two unstamped copies keep the old local-first rule (A)', M.mergePlan(a, b).meals[0].serving, 4);
+  eq('plan: two unstamped copies keep the old local-first rule (B)', M.mergePlan(b, a).meals[0].serving, 2);
+
+  // A stamped edit beats an unstamped one either way round — only one side
+  // has any information about when it last changed.
+  const stamped = { meals: [meal({ serving: 8, mts: 5000 })] };
+  const unstamped = { meals: [meal({ serving: 2 })] };
+  eq('plan: a stamped edit beats an unstamped copy (remote)', M.mergePlan(unstamped, stamped).meals[0].serving, 8);
+  eq('plan: a stamped edit beats an unstamped copy (local)', M.mergePlan(stamped, unstamped).meals[0].serving, 8);
+
+  // Equal stamps are a genuine tie — keep local, don't thrash.
+  const t1 = { meals: [meal({ serving: 3, mts: 7000 })] };
+  const t2 = { meals: [meal({ serving: 9, mts: 7000 })] };
+  eq('plan: an exact stamp tie keeps the local copy', M.mergePlan(t1, t2).meals[0].serving, 3);
+
+  // The union behavior the old rule already had must survive.
+  eq('plan: distinct uids still union',
+    M.mergePlan({ meals: [meal({ uid: 'x', mts: 1 })] }, { meals: [meal({ uid: 'y', mts: 2 })] }).meals.length, 2);
+  eq('plan: uid-less entries are passed through, never collapsed',
+    M.mergePlan({ meals: [{ id: 'a' }, { id: 'b' }] }, { meals: [] }).meals.length, 2);
+  eq('plan: a missing/!array meals field degrades to empty', M.mergePlan({}, {}).meals, []);
 }
 
 // ---- mergeStringSet: union + dedupe ---------------------------------------

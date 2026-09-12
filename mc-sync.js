@@ -36,6 +36,7 @@
       mergeMacros: function () { return mergeMacros.apply(null, arguments); },
       mergeArrayByField: function () { return mergeArrayByField.apply(null, arguments); },
       mergePlan: function () { return mergePlan.apply(null, arguments); },
+      mergeMealsByUid: function () { return mergeMealsByUid.apply(null, arguments); },
       mergeStringSet: function () { return mergeStringSet.apply(null, arguments); },
       mergeHistoryBySavedAt: function () { return mergeHistoryBySavedAt.apply(null, arguments); },
       mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); },
@@ -190,9 +191,39 @@
   }
 
   // mealplan: { meals: [ {uid,...} ] } — merge the meals array by uid.
+  // mealplan meals are NOT append-only — `completed`/`completedAt`, `serving`
+  // and (via swapMeal) `id` are all edited in place after creation. Under
+  // mergeArrayByField's "first occurrence of a uid wins" rule that made the
+  // store non-convergent: local always beat remote, so marking Tuesday's
+  // dinner cooked on the phone never reached the laptop, and each device kept
+  // its own version of the same meal indefinitely. cookbook-home.js now
+  // stamps `mts` (mutation timestamp) on every meal it creates or edits, and
+  // the newer stamp wins here — the same per-entry tiebreak mergeMacros()
+  // already uses for logged food entries.
+  //
+  // Backward compatible on purpose: a meal written before `mts` existed has
+  // none, and two entries that both lack one fall back to local-first,
+  // byte-for-byte the old behavior. A stamped entry beats an unstamped one,
+  // since only one side has any information about when it last changed.
+  function mergeMealsByUid(local, remote) {
+    local = Array.isArray(local) ? local : [];
+    remote = Array.isArray(remote) ? remote : [];
+    var at = {}, out = [];
+    local.concat(remote).forEach(function (e) {
+      var uid = e && e.uid;
+      if (uid == null) { out.push(e); return; }
+      if (at[uid] == null) { at[uid] = out.length; out.push(e); return; }
+      var kept = out[at[uid]];
+      var km = kept && kept.mts, em = e && e.mts;
+      if (em == null) return;                       // no claim to be newer
+      if (km == null || em > km) out[at[uid]] = e;  // newer edit wins
+    });
+    return out;
+  }
+
   function mergePlan(local, remote) {
     local = local || {}; remote = remote || {};
-    return { meals: mergeArrayByField(local.meals, remote.meals, 'uid') };
+    return { meals: mergeMealsByUid(local.meals, remote.meals) };
   }
 
   // grocery: [ "checked merge-key", ... ] — plain string array, union+dedupe.
