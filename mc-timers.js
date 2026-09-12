@@ -242,8 +242,22 @@
   /* ── the tick: detect expiry, alert exactly once, repaint ───────────── */
   var tickId = null;
 
+  // "Still has work for the ticker to do" — NOT simply "not paused". A timer
+  // that has fired AND already alerted needs nothing further: its remaining
+  // time is pinned at 0 and its pill reads "Time!" until the cook dismisses
+  // it. Treating it as live kept the 250ms interval running forever (a
+  // localStorage read + JSON.parse + a rail pill write, 4x/second, until
+  // dismissal), which contradicted this file's own documented property 3,
+  // "one ticker for all timers, stopped entirely when none are running".
+  // A ringing-but-NOT-yet-alerted timer still counts as live — that's the
+  // case where a fresh page load restores a timer that expired while the
+  // app was closed, and it needs exactly one tick to fire its alert.
+  function needsTick(t) {
+    return !isPaused(t) && (!isRinging(t) || !t.alerted);
+  }
+
   function ensureTicking() {
-    var live = load().some(function (t) { return !isPaused(t); });
+    var live = load().some(needsTick);
     if (live && tickId == null && typeof window.setInterval === "function") {
       tickId = window.setInterval(tick, TICK_MS);
     } else if (!live && tickId != null) {

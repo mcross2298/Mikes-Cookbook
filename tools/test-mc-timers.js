@@ -216,6 +216,76 @@ function load(store, startAt) {
   eq('10c. store untouched', T.count(), 0);
 }
 
+/* ── 11. The ticker stops once there is nothing left to tick ─────────────
+   This file's own header property 3 is "one ticker for all timers, stopped
+   entirely when none are running". ensureTicking() used to read that as
+   "some timer is not paused" — but a timer that has fired AND alerted is
+   finished, not running, and it stays in the store until the cook dismisses
+   it. So the 250ms interval ran forever after any timer expired: a
+   localStorage read + JSON.parse + a rail pill write, 4x/second, until
+   dismissal. The counter-property that makes this subtle is 11c: a timer
+   that expired while the app was closed is ringing but NOT yet alerted on
+   the next load, and it needs the ticker to fire that pending alert. */
+{
+  // A load() that reports the interval bookkeeping the shared one discards.
+  function loadTicking(store, startAt) {
+    const clock = { t: startAt || 1700000000000 };
+    const noop = () => {};
+    let liveId = null, started = 0, cleared = 0;
+    const sandbox = {
+      window: {
+        addEventListener: noop,
+        setInterval: () => { started++; liveId = started; return liveId; },
+        clearInterval: () => { cleared++; liveId = null; }
+      },
+      document: { hidden: false, addEventListener: noop, body: null, querySelector: () => null },
+      navigator: {},
+      localStorage: {
+        getItem: (k) => (k in store ? store[k] : null),
+        setItem: (k, v) => { store[k] = String(v); },
+        removeItem: (k) => { delete store[k]; }
+      },
+      Date: { now: () => clock.t }
+    };
+    sandbox.window.window = sandbox.window;
+    vm.createContext(sandbox);
+    vm.runInContext(SRC, sandbox);
+    return {
+      T: sandbox.window.MCTimers,
+      advance: (ms) => { clock.t += ms; },
+      ticking: () => liveId !== null
+    };
+  }
+
+  const store = {};
+  const a = loadTicking(store);
+  a.T.start({ seconds: 60, label: '1 min' });
+  ok('11a. ticking while a timer counts down', a.ticking() === true);
+  a.advance(61 * 1000);
+  eq('11b. the expiry fires exactly one alert', a.T.tick(), 1);
+  ok('11c. and the ticker stops — the timer is finished, not running', a.ticking() === false);
+  ok('11d. the finished timer is still in the store, still ringing',
+    a.T.count() === 1 && a.T.list()[0].ringing === true);
+
+  // A timer that expired while the app was suspended: ringing, not yet
+  // alerted. The ticker MUST arm for it or the alert never fires.
+  const b = loadTicking({ 'mc-cookbook:timers': JSON.stringify({ v: 1, timers: [{
+    id: 'z', recipeId: null, recipeTitle: null, stepNumber: null, label: '10 min',
+    seconds: 600, endsAt: 1700000000000, pausedLeft: null, alerted: false
+  }] }) }, 1700000000000 + 20 * MIN);
+  ok('11e. a restored, expired, un-alerted timer arms the ticker', b.ticking() === true);
+  eq('11f. and one tick fires its pending alert', b.T.tick(), 1);
+  ok('11g. after which the ticker stops again', b.ticking() === false);
+
+  // Paused timers were already correct — pin it so the new predicate keeps it.
+  const c = loadTicking({});
+  const t = c.T.start({ seconds: 60 });
+  c.T.pause(t.id);
+  ok('11h. a paused timer does not keep the ticker alive', c.ticking() === false);
+  c.T.resume(t.id);
+  ok('11i. resuming arms it again', c.ticking() === true);
+}
+
 console.log(fail
   ? 'test-mc-timers: ' + fail + ' FAILED, ' + pass + ' passed'
   : 'test-mc-timers: all ' + pass + ' assertions passed');

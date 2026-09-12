@@ -64,6 +64,15 @@
      The cook authors amounts for one serving count; we generate the 2- and
      4-serving tiers the rest of the app expects by scaling each quantity.
      Non-numeric amounts ("to taste") pass through unchanged. */
+  // NOTE: duplicated verbatim from cookbook.js's prettyNumber/smallAmount —
+  // see the comment there for why this isn't a shared module. Fix both.
+  // v is > 0 but rounds to nothing at 2dp. Three decimals covers every real
+  // case in the corpus; the 0.001 floor keeps the result off exponent
+  // notation (String(1e-7) would break parseQty's leading-number match).
+  function smallAmount(v) {
+    if (v <= 0) return "0";
+    return String(Math.max(0.001, Math.round(v * 1000) / 1000));
+  }
   function prettyNumber(v) {
     var whole = Math.floor(v + 1e-9), frac = v - whole;
     var FRACTIONS = [[1 / 4, "1/4"], [1 / 3, "1/3"], [1 / 2, "1/2"], [2 / 3, "2/3"], [3 / 4, "3/4"]];
@@ -72,7 +81,15 @@
       var d = Math.abs(frac - FRACTIONS[i][0]);
       if (d < bestDiff) { best = FRACTIONS[i][1]; bestDiff = d; }
     }
-    if (frac < 0.06) return String(whole);
+    // A real amount must never render as "0". Scaling a batch-yield recipe
+    // down (a 24-serving cheesecake at 1 serving) drives small quantities
+    // under the 0.06 fraction floor, and the old `String(whole)` turned
+    // "1/2 tsp vanilla" into "0 tsp vanilla" — shown in the mise-en-place
+    // list AND read aloud by Cooking Mode's speakIngredients(). Only fall
+    // through to the whole number when there IS a whole number; otherwise
+    // render a small-but-honest amount. Stays numerically parseable
+    // (mc-grocery.js's parseQty re-reads these strings), so no "a pinch".
+    if (frac < 0.06) return whole > 0 ? String(whole) : smallAmount(v);
     if (frac > 0.94) return String(whole + 1);
     if (best) return (whole > 0 ? whole + " " : "") + best;
     return String(Math.round(v * 100) / 100);

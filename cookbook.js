@@ -187,6 +187,19 @@
     return prettyNumber(val * factor);
   }
 
+  // NOTE: prettyNumber/smallAmount are duplicated verbatim in user-recipes.js
+  // (which generates the 2- and 4-serving tiers for a cook's own recipe). Fix
+  // both or neither. Not extracted to a shared module because user-recipes.js
+  // loads BEFORE mc-units.js on all three page types and collection.html
+  // doesn't load mc-units.js at all — a 17-line formatter doesn't justify
+  // reordering script tags on every page (cf. mc-cards.js, extracted at ~300).
+  // v is > 0 but rounds to nothing at 2dp. Three decimals covers every real
+  // case in the corpus; the 0.001 floor keeps the result off exponent
+  // notation (String(1e-7) would break parseQty's leading-number match).
+  function smallAmount(v) {
+    if (v <= 0) return "0";
+    return String(Math.max(0.001, Math.round(v * 1000) / 1000));
+  }
   function prettyNumber(v) {
     var whole = Math.floor(v + 1e-9);
     var frac = v - whole;
@@ -199,7 +212,15 @@
       var d = Math.abs(frac - FRACTIONS[i][0]);
       if (d < bestDiff) { best = FRACTIONS[i][1]; bestDiff = d; }
     }
-    if (frac < 0.06) return String(whole);
+    // A real amount must never render as "0". Scaling a batch-yield recipe
+    // down (a 24-serving cheesecake at 1 serving) drives small quantities
+    // under the 0.06 fraction floor, and the old `String(whole)` turned
+    // "1/2 tsp vanilla" into "0 tsp vanilla" — shown in the mise-en-place
+    // list AND read aloud by Cooking Mode's speakIngredients(). Only fall
+    // through to the whole number when there IS a whole number; otherwise
+    // render a small-but-honest amount. Stays numerically parseable
+    // (mc-grocery.js's parseQty re-reads these strings), so no "a pinch".
+    if (frac < 0.06) return whole > 0 ? String(whole) : smallAmount(v);
     if (frac > 0.94) return String(whole + 1);
     if (best) return (whole > 0 ? whole + " " : "") + best;
     return String(Math.round(v * 100) / 100);
@@ -227,7 +248,11 @@
       id: r.recipe_id,
       serving: serving || nativeServing(r),
       day: null, slot: null,
-      completed: false, completedAt: null
+      completed: false, completedAt: null,
+      // Matches cookbook-home.js's stampMeal() — mc-sync.js's
+      // mergeMealsByUid() needs this to resolve a cross-device edit to the
+      // same meal. See that function's comment.
+      mts: Date.now()
     });
     try {
       localStorage.setItem(PLAN_KEY, JSON.stringify(p));
@@ -921,6 +946,16 @@
       var msg = "≈ " + parts.join(" · ") + " — " + portionText;
       if (!solved.exact) {
         msg += ". Closest achievable by scaling — hitting every target exactly isn't possible for this recipe by scaling alone.";
+      }
+      // The Servings mode of this same control clamps to SERVING_MIN..MAX,
+      // but a macro target has no such ceiling: asking for 900 g of protein
+      // solves to ~22 servings and scales every ingredient to match. The math
+      // is right and the amounts are real, so don't clamp or hide it — say
+      // plainly that it's outside the range the recipe's own amounts were
+      // written for, rather than presenting a 22x batch as an ordinary result.
+      if (solved.scale > SERVING_MAX || solved.scale < 0.25) {
+        msg += " Note: that's outside the " + SERVING_MIN + "–" + SERVING_MAX +
+          " serving range this recipe's amounts were written for — the numbers scale linearly, but check them before you shop.";
       }
       wrap.appendChild(el("p", "scale-result" + (solved.exact ? "" : " scale-result-approx"), esc(msg)));
     } else if (solved && solved.scale == null) {

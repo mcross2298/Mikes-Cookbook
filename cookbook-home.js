@@ -398,6 +398,11 @@
     var macros = macrosFromTier(perServingMacroTier(r, serving));
     return { title: r.title || null, icon: r.icon || null, macros: macros };
   }
+  // Every in-place edit to a meal bumps this, so mc-sync.js's
+  // mergeMealsByUid() can tell which device's copy is the newer one. Cheap
+  // and additive: a legacy meal with no `mts` still merges exactly as before.
+  function stampMeal(m) { if (m) m.mts = Date.now(); return m; }
+
   function addMeal(id, opts) {
     opts = opts || {};
     var p = loadPlan();
@@ -408,7 +413,13 @@
       day: opts.day || null,
       slot: opts.slot || null,
       completed: false,
-      completedAt: null
+      completedAt: null,
+      // Mutation timestamp — mc-sync.js's mergeMealsByUid() resolves a
+      // cross-device conflict on this meal by keeping the newer stamp. A
+      // meal's mutable fields (completed/serving/id) are otherwise
+      // unmergeable: local always won, so an edit on one device never
+      // reached the other. Stamp on create AND on every in-place edit.
+      mts: Date.now()
     }, mealSnapshot(id, serving));
     p.meals.push(meal);
     // savePlan()'s writeStore() already raises the storage-full toast on
@@ -420,7 +431,7 @@
   }
   function updateMeal(uid, patch) {
     var p = loadPlan();
-    p.meals.forEach(function (m) { if (m.uid === uid) { for (var k in patch) m[k] = patch[k]; } });
+    p.meals.forEach(function (m) { if (m.uid === uid) { for (var k in patch) m[k] = patch[k]; stampMeal(m); } });
     savePlan(p);
   }
   function removeMeal(uid) {
@@ -885,6 +896,7 @@
     if (!m) return false;
     m.completed = !m.completed;
     m.completedAt = m.completed ? new Date().toISOString() : null;
+    stampMeal(m);
     if (!m.completed) {
       unlogMealMacros(uid);
       if (m.cookLogAt) { removeCookEntry(m.id, m.cookLogAt); m.cookLogAt = null; }
@@ -1204,10 +1216,10 @@
     p.meals = p.meals.filter(function (m) { return scopeSlots.indexOf(m.slot) < 0; });
     grid.forEach(function (g) {
       var serving = defaultServingFor(g.id);
-      p.meals.push(Object.assign(
+      p.meals.push(stampMeal(Object.assign(
         { uid: newUid(), id: g.id, serving: serving, day: g.day, slot: g.slot },
         mealSnapshot(g.id, serving)
-      ));
+      )));
     });
     savePlan(p);
     saveGroc(new Set());
@@ -1415,6 +1427,7 @@
     m.id = newRecipeId;
     m.completed = false;
     m.completedAt = null;
+    stampMeal(m);
     savePlan(p);
   }
 
@@ -3087,10 +3100,10 @@
           reuseBtn.addEventListener("click", function () {
             if (window.confirm("Replace this week with “" + week.label + "”?")) {
               savePlan({ meals: week.meals.map(function (m) {
-                return Object.assign(
+                return stampMeal(Object.assign(
                   { uid: newUid(), id: m.id, serving: m.serving, day: m.day || null, slot: m.slot || null },
                   mealSnapshot(m.id, m.serving)
-                );
+                ));
               }) });
               saveGroc(new Set());
               plannerState.historyOpen = false;
