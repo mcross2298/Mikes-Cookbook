@@ -22,7 +22,8 @@
       steps:[
         {tx:"Use <span class='tap'>Next →</span> / <b>← Back</b> below, the dots, or swipe left/right."},
         {tx:"Tap any <span class='tap'>Open it</span> card to jump straight into the real screen and try it live."},
-        {tx:"Hit <b>Skip</b> anytime — relaunch this tour from the <b>Quick Tour</b> card on Home whenever you like."}
+        {tx:"Rather read it all at once? <b>The whole tour — every step on one page</b> is linked at the top, and the <b>Executive Summary</b> beside it exports to PDF."},
+      {tx:"Hit <b>Skip</b> anytime — relaunch this tour from the <b>Quick Tour</b> card on Home whenever you like."}
       ]
     },
     {

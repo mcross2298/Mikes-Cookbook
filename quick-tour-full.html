@@ -38,7 +38,10 @@
   display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;
   font-size:11px;font-weight:800;}
 .qtf-toc .qtf-eyebrow{color:var(--on-dark-dim);font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;}
-.qtf-sec{padding:8px 16px 4px;scroll-margin-top:12px;}
+.qtf-sec{padding:8px 16px 4px;
+  /* The top bar is sticky, so a bare anchor jump parks the section title
+     underneath it. Clear its real height plus the notch. */
+  scroll-margin-top:calc(82px + env(safe-area-inset-top));}
 .qtf-sec + .qtf-sec{border-top:1px solid var(--line-dark);margin-top:22px;padding-top:24px;}
 /* quick-tour.css hides every slide but the active one (display:none / .active
    display:block) — that is the step tour's whole mechanism. Here every slide is
