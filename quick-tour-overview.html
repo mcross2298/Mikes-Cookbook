@@ -27,6 +27,15 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
 .es-back{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;flex-shrink:0;
   background:var(--bg-elev);border:1px solid var(--line-dark);color:var(--accent);font-size:17px;text-decoration:none;}
 .es-top-info{flex:1;min-width:0;}
+/* Downloads this page as a real .pdf (mc-pdf.js). Marked .no-pdf so the button
+   doesn't print itself into the file it just made. */
+.es-export{display:flex;align-items:center;justify-content:center;gap:5px;flex-shrink:0;
+  min-height:44px;padding:0 12px;border-radius:10px;white-space:nowrap;
+  background:var(--bg-elev);border:1px solid var(--line-dark);color:var(--accent);
+  font-family:inherit;font-size:12px;font-weight:700;letter-spacing:0.01em;}
+.es-export:active{opacity:0.65;}
+.es-export[disabled]{opacity:0.5;}
+@media (max-width:380px){.es-export{padding:0 9px;font-size:11px;}}
 .es-top-title{font-family:var(--serif);font-size:18px;font-weight:700;letter-spacing:-0.01em;}
 .es-top-sub{font-size:12px;color:var(--on-dark-dim);margin-top:1px;}
 
@@ -111,6 +120,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
     <div class="es-top-title">Executive Summary</div>
     <div class="es-top-sub">The whole cookbook, end to end — one read</div>
   </div>
+  <button type="button" class="es-export no-pdf" id="esExport">⬇ Export PDF</button>
 </div>
 
 <div class="wrap">
@@ -288,9 +298,58 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
       <div class="es-cta-body"><div class="es-cta-lbl">Hands-on version</div><div class="es-cta-nm">Take the 3-minute guided tour</div></div>
       <div class="es-cta-arrow">→</div>
     </a>
+    <a class="es-cta" href="quick-tour-full.html">
+      <div class="es-cta-ico">🧾</div>
+      <div class="es-cta-body"><div class="es-cta-lbl">Every step, still one read</div><div class="es-cta-nm">The whole tour on one page</div></div>
+      <div class="es-cta-arrow">→</div>
+    </a>
     <a class="es-cta solid" href="index.html"><div class="es-cta-nm">🍳 Go to my Cookbook</div></a>
   </div>
 
 </div>
+
+<script src="mc-pdf.js"></script>
+<script>
+(function () {
+  'use strict';
+  var btn = document.getElementById('esExport');
+  var page = document.querySelector('.wrap');
+  if (!btn || !page || !window.MCPDF) return;
+
+  btn.addEventListener('click', function () {
+    btn.disabled = true;
+    var was = btn.textContent;
+    btn.textContent = 'Building\u2026';
+    /* Let the disabled state paint before the writer blocks the thread. */
+    setTimeout(function () {
+      try {
+        MCPDF.save(page, {
+          title: "Mike's Cookbook",
+          subtitle: 'Executive Summary \u00b7 the whole cookbook, end to end',
+          meta: 'Generated ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+          footer: "Mike's Cookbook \u00b7 Executive Summary",
+          filename: 'mikes-cookbook-executive-summary',
+          styles: {
+            'es-sec-title': 'h2',
+            'es-lede': 'p',
+            'es-card-name': 'h3',
+            'es-card-tag': 'eyebrow',
+            'es-card-tx': 'p',
+            'es-eyebrow': 'eyebrow',
+            'es-cta-lbl': 'eyebrow',
+            'es-cta-nm': 'p',
+            'es-chip': 'bullet',
+            'es-tier': 'h3'
+          },
+          skip: /(^|\s)(es-top|es-jump-row|es-jump|es-swatches|es-swatch|sw|es-sec-num|es-hero-glow)(\s|$)/
+        });
+      } finally {
+        btn.disabled = false;
+        btn.textContent = was;
+      }
+    }, 30);
+  });
+})();
+</script>
 </body>
 </html>

@@ -14,9 +14,16 @@
    second, harder-to-edit copy rather than a single source of truth.
 
    A feature passes if AT LEAST ONE of its declared `keywords` appears
-   (case-insensitive substring) anywhere in quick-tour.html's source ---
-   the tour's own SLIDES text, not just visible strings, so eyebrow/title/
-   narration/steps all count.
+   (case-insensitive substring) anywhere in the tour's source --- the SLIDES
+   text itself, not just visible strings, so eyebrow/title/narration/steps all
+   count.
+
+   "The tour's source" is now two files: quick-tour.html and the
+   quick-tour-data.js the slides moved into when quick-tour-full.html started
+   rendering the same content as one document. The rule this gate encodes is
+   about the tour's PROSE, not about which file happens to hold it, so it
+   reads both and would otherwise have failed on every feature the moment the
+   text moved.
 
    Usage:
      node tools/check-tour-coverage.js          # report only, exit 0
@@ -28,6 +35,9 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const CHECK = process.argv.includes('--check');
+
+/* Both halves of the tour's text: the page and the slide content it loads. */
+const TOUR_SOURCES = ['quick-tour.html', 'quick-tour-data.js'];
 
 function loadFeatures() {
   const src = fs.readFileSync(path.join(ROOT, 'features.js'), 'utf8');
@@ -47,7 +57,10 @@ function loadFeatures() {
 
 function main() {
   const features = loadFeatures();
-  const tourText = fs.readFileSync(path.join(ROOT, 'quick-tour.html'), 'utf8').toLowerCase();
+  const tourText = TOUR_SOURCES
+    .map((f) => fs.readFileSync(path.join(ROOT, f), 'utf8'))
+    .join('\n')
+    .toLowerCase();
 
   const missing = [];
   for (const f of features) {
@@ -59,17 +72,17 @@ function main() {
   }
 
   if (missing.length) {
-    console.error(`\n${missing.length} feature(s) in features.js are not mentioned in quick-tour.html:\n`);
+    console.error(`\n${missing.length} feature(s) in features.js are not mentioned in the Quick Tour (${TOUR_SOURCES.join(' + ')}):\n`);
     for (const f of missing) {
       console.error(`  - ${f.id} (${f.name}) — none of [${f.keywords.join(', ')}] found`);
     }
-    console.error('\nEither quick-tour.html needs a mention of this feature (CLAUDE.md\'s');
+    console.error('\nEither the tour needs a mention of this feature (CLAUDE.md\'s');
     console.error('Documentation currency rule), or the keyword list in features.js is stale.');
     if (CHECK) process.exit(1);
     return;
   }
 
-  console.log(`check-tour-coverage: OK — ${features.length} registered feature(s), all mentioned in quick-tour.html.`);
+  console.log(`check-tour-coverage: OK — ${features.length} registered feature(s), all mentioned in ${TOUR_SOURCES.join(' + ')}.`);
 }
 
 main();
