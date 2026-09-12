@@ -118,6 +118,7 @@ const routes = [
   { name: 'recipe cooking-mode', url: `/recipe.html?id=${sampleId}&cook=1` },
   { name: 'collection',          url: `/collection.html?c=${sampleCollection}` },
   { name: 'quick-tour',          url: '/quick-tour.html' },
+  { name: 'quick-tour-full',     url: '/quick-tour-full.html' },
   { name: 'quick-tour-overview', url: '/quick-tour-overview.html' }
 ];
 

@@ -105,17 +105,24 @@ function contradicted(file, phrase, isActuallyTrue, explanation) {
   }
 }
 
+/* The tour's prose lives in quick-tour-data.js now, not in the page — it moved
+   there when quick-tour-full.html started rendering the same slides as one
+   document. Every claim below that used to name quick-tour.html names this
+   instead; the rule is about the tour's copy, not about which file holds it.
+   (tools/check-tour-coverage.js made the same move for the same reason.) */
+const TOUR_TEXT = 'quick-tour-data.js';
+
 /* ── Recipe / collection counts ───────────────────────────────────────── */
 exact('CLAUDE.md', /`RECIPES` array \((\d+) recipes\)/, RECIPES.length, 'recipe count');
 exact('ROADMAP.md', /- \*\*(\d+) recipes\*\* across/, RECIPES.length, 'recipe count');
 exact('ROADMAP.md', /across \*\*(\d+) dish categories\*\*/, CATEGORIES, 'dish-category count');
-exact('quick-tour.html', /(\d+) recipes · serving scaling/, RECIPES.length, 'recipe count');
+exact(TOUR_TEXT, /(\d+) recipes · serving scaling/, RECIPES.length, 'recipe count');
 exact('quick-tour-overview.html', /📖 (\d+) recipes/, RECIPES.length, 'recipe count');
 // The tour's own collection/dish-type counts. These were "5 live collections ·
 // 9 categories" when the app had 13 and 11 — the same drift C-11 found in the
 // recipe counts, one paragraph over, so they get the same treatment.
-exact('quick-tour.html', /(\d+) live collections · \d+ dish types/, LIVE.length, 'live-collection count');
-exact('quick-tour.html', /\d+ live collections · (\d+) dish types/, CATEGORIES, 'dish-type count');
+exact(TOUR_TEXT, /(\d+) live collections · \d+ dish types/, LIVE.length, 'live-collection count');
+exact(TOUR_TEXT, /\d+ live collections · (\d+) dish types/, CATEGORIES, 'dish-type count');
 exact('README.txt', /RECIPES: (\d+) recipes/, RECIPES.length, 'recipe count');
 exact('README.txt', /COLLECTIONS: (\d+) live/, LIVE.length, 'live-collection count');
 exact('CLAUDE.md', /\*\*Collections\*\* \(`COLLECTIONS`, (\d+) live\)/, LIVE.length, 'live-collection count');
@@ -131,7 +138,7 @@ approx('CLAUDE.md', /all component styles \(~(\d+) KB\)/, kb('cookbook.css'), 'c
 contradicted('CLAUDE.md', 'There is **no bottom tab bar**.',
   /class="tab-bar"/.test(read('index.html')),
   'index.html ships a persistent tab bar (`<nav class="tab-bar">`). Describe what it actually is.');
-contradicted('quick-tour.html', "There's no bottom tab bar",
+contradicted(TOUR_TEXT, "There's no bottom tab bar",
   /class="tab-bar"/.test(read('index.html')),
   'index.html ships a persistent tab bar. Update the tour copy.');
 contradicted('quick-tour-overview.html', 'no bottom tab bar',
