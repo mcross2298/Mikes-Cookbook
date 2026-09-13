@@ -529,6 +529,109 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
     await freshCtx.close();
   }
 
+  /* ── Quick Tour: it renders, it pages, and Export PDF produces a PDF ─────
+     A Quick Tour content review found five shipped copy errors at once, which
+     tools/test-quick-tour.js now gates. This covers the other half — that the
+     three tour pages actually WORK — and in particular the one failure
+     CLAUDE.md documents as having really happened: quick-tour-full.html renders
+     every slide as an empty box if it forgets to undo the step tour's
+     `.qt-slide { display: none }`, with no error anywhere. Nothing guarded it. */
+  {
+    const tourCtx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const tourErrors = [];
+    tourCtx.on('page', (p) => {
+      p.on('pageerror', (e) => tourErrors.push('pageerror: ' + e.message));
+      p.on('console', (m) => {
+        const t = m.text();
+        if (m.type() === 'error' && !/net::|Failed to load resource/.test(t)) tourErrors.push('console: ' + t);
+      });
+    });
+
+    // — the step tour —
+    const tp = await tourCtx.newPage();
+    await tp.goto(B + '/quick-tour.html', { waitUntil: 'networkidle' });
+    const nSlides = await tp.evaluate(() => window.MC_TOUR.SLIDES.length);
+    ok('quick tour: a .qt-slide and a dot per slide (' + nSlides + ')',
+      (await tp.locator('.qt-slide').count()) === nSlides &&
+      (await tp.locator('.qt-dot').count()) === nSlides);
+    ok('quick tour: exactly one slide active at rest',
+      (await tp.locator('.qt-slide.active').count()) === 1);
+
+    // Walk every slide with Next; each one has to render real text.
+    const thin = [];
+    for (let i = 0; i < nSlides; i++) {
+      const txt = (await tp.locator('.qt-slide.active').innerText()).trim();
+      if (txt.length < 80) thin.push('slide ' + (i + 1) + ' rendered ' + txt.length + ' chars');
+      if (i < nSlides - 1) { await tp.locator('.qt-nav-btn.primary').click(); await tp.waitForTimeout(90); }
+    }
+    ok('quick tour: every slide renders real content when paged to',
+      thin.length === 0 || (console.log('     ' + thin.join('\n     ')), false));
+    ok('quick tour: Next reached the last slide',
+      await tp.evaluate((n) => document.querySelectorAll('.qt-slide')[n - 1].classList.contains('active'), nSlides));
+    await tp.locator('.qt-dot').nth(5).click();
+    await tp.waitForTimeout(90);
+    ok('quick tour: a dot jumps straight to its slide',
+      await tp.evaluate(() => document.querySelectorAll('.qt-slide')[5].classList.contains('active')));
+
+    // — the one-page view: the documented collapse trap —
+    const fp = await tourCtx.newPage();
+    await fp.goto(B + '/quick-tour-full.html', { waitUntil: 'networkidle' });
+    const secs = await fp.evaluate(() => {
+      const out = [];
+      // The one-page view builds one <section class="qtf-sec" id="qtf-N"> per
+      // slide (quick-tour-full.html's own renderer). Count assertion first, so
+      // a selector that matches nothing FAILS here instead of making the
+      // "no empty box" check below pass vacuously — which is exactly what a
+      // wrong selector did on the first run of this scenario.
+      document.querySelectorAll('section.qtf-sec').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        out.push({ h: Math.round(r.height), len: (el.innerText || '').trim().length });
+      });
+      return out;
+    });
+    ok('quick tour (one page): rendered every step section (' + secs.length + ')', secs.length >= nSlides);
+    const collapsed = secs.filter((x) => x.h < 40 || x.len < 80);
+    ok('quick tour (one page): NO section is an empty box (the documented trap)',
+      collapsed.length === 0 || (console.log('     collapsed: ' + JSON.stringify(collapsed.slice(0, 4))), false));
+    const dangling = await fp.evaluate(() => {
+      const bad = [];
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        const id = a.getAttribute('href').slice(1);
+        if (id && !document.getElementById(id)) bad.push(id);
+      });
+      return bad;
+    });
+    ok('quick tour (one page): every contents anchor resolves',
+      dangling.length === 0 || (console.log('     dangling: ' + dangling.join(', ')), false));
+
+    // — the Executive Summary's Export PDF, driven for real —
+    const op = await tourCtx.newPage();
+    await op.goto(B + '/quick-tour-overview.html', { waitUntil: 'networkidle' });
+    const pdf = await op.evaluate(async () => {
+      const btn = [...document.querySelectorAll('button,a')].find((b) => /export pdf/i.test(b.textContent || ''));
+      if (!btn) return { err: 'no Export PDF control' };
+      // Catch the blob on its way to the download anchor instead of downloading.
+      let blob = null;
+      const realCreate = URL.createObjectURL;
+      const realClick = HTMLAnchorElement.prototype.click;
+      URL.createObjectURL = (b) => { blob = b; return 'blob:stub'; };
+      HTMLAnchorElement.prototype.click = function () {};
+      try { btn.click(); } catch (e) { return { err: 'click threw: ' + e.message }; }
+      await new Promise((r) => setTimeout(r, 600));
+      URL.createObjectURL = realCreate;
+      HTMLAnchorElement.prototype.click = realClick;
+      if (!blob) return { err: 'no file produced' };
+      return { size: blob.size, head: await blob.slice(0, 5).text() };
+    });
+    ok('quick tour: Export PDF produces a real PDF' + (pdf.size ? ' (' + pdf.size + ' bytes)' : ''),
+      !pdf.err && pdf.size > 1000 && pdf.head === '%PDF-');
+    if (pdf.err) console.log('     ' + pdf.err);
+
+    ok('quick tour: no JS errors across all three pages',
+      tourErrors.length === 0 || (console.log(tourErrors), false));
+    await tourCtx.close();
+  }
+
   await browser.close();
   console.log(fails ? '\n' + fails + ' SMOKE FAILURES' : '\nsmoke: all checks passed');
   process.exit(fails ? 1 : 0);

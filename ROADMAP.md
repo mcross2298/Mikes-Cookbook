@@ -99,6 +99,39 @@ items that needed no device verification:
   `.es-jump` grew vertically, which costs a horizontally scrolling row
   nothing.
 
+**Quick Tour content review (same wave)** — the audit had touched the tour only
+for touch-target sizes; nobody had checked whether what it *says* is true.
+Five shipped copy errors, every one invisible to every gate then in place:
+
+- **Two told a cook to tap a Home card that doesn't exist.** "From Home, tap
+  📖 Recipes … or 🍽️ Categories" — the module is labelled **Browse**, and
+  Categories stopped being a separate module when the audit merged it into
+  Browse. "From Home, tap 📊 Macro Tracker" — the Tracker is the second button
+  in the *bottom bar*, not a module. Both steps also contradicted their own
+  slide's tagline.
+- **One stated a false fact about the corpus:** "Recipes are authored at 2 and
+  4 servings exactly" — true of 162 of 318. This is the same wrong premise that
+  produced F-01.
+- **One used two retired feature names:** "Let Smart Week or Time Check pick
+  meals for you". Both were replaced by the single "Plan my week" door; they
+  survive only in code comments, so a cook will never see either string.
+- **One named a button wrongly:** "Search food database" — the real label is
+  "Search foods & recipes", and it searches the cook's own cookbook first, which
+  the old wording hid.
+
+Fixed, and now gated two ways. `tools/test-quick-tour.js` enforces that **every
+UI label the tour says to tap exists where the tour says to look** — a step
+saying "from Home" is checked against Home's tap targets *derived from the code
+that builds them*, because a source-wide substring check demonstrably misses
+these (proven: restoring the two worst errors sailed straight through it, since
+"Recipes", "Categories" and "Macro Tracker" all occur somewhere in the source).
+All five errors were re-introduced one at a time and confirmed to fail.
+`tools/smoke-test.js` gained a Quick Tour scenario for the other half — all 12
+slides render, the pager and dots work, `quick-tour-full.html` does not collapse
+into empty boxes (removing its `display:block` override now fails the gate, which
+is the exact bug CLAUDE.md documents as having really happened), and Export PDF
+produces a real 22 KB `%PDF-`.
+
 **Logged, deliberately not fixed**
 
 - `prettyNumber` duplication (17 lines, two files): extracting it needs a

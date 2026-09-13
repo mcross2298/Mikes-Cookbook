@@ -177,7 +177,7 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `sw.js` | The service worker itself. `CACHE_URLS` is **auto-generated** — never hand-edit it. |
 | `manifest.json` / `icon.svg` | PWA manifest + app icon. Registers `share_target` (runtime-invisibles audit, delight opportunity 1) — `action: "./index.html"`, `method: "GET"`, params `shared_title`/`shared_text`/`shared_url` — so the OS lists Mike's Cookbook as a share destination once installed; `cookbook-home.js`'s `readSharedRecipeParams()`/`handleSharedRecipe()` receive it. |
 | `diagnostics.html` | **Device Check** — the real-device half of the audit's verification, which CI can't do. Standalone and unlinked from nav (same precedent as the Quick Tour). Loads the same script set `index.html` does, then self-tests: install/display mode, service-worker registration + control, precache completeness and app-shell-from-cache (offline readiness), **Cache Storage hygiene** (runtime-invisibles audit — flags any cached entry whose origin isn't this app's own, or whose stored response status isn't 200; `sw.js`'s fetch handler refuses to cache either going forward, but this catches a lingering pre-fix entry or a future regression directly on the device), every `MC*` shared module, localStorage writability + storage quota + the `:photos` cap, Supabase config/sign-in/last-push-pull, wake lock / BarcodeDetector / camera, safe-area insets — and the **real** `window.__mcBoot` boot number that closes audit C-06. "Copy report" yields a plain-text summary. Open it on each device and mode to fill the PWA matrix. |
-| `quick-tour.html` / `quick-tour-full.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. **`quick-tour.html` is the step tour** (one slide at a time, swipe/dots/Next). **`quick-tour-full.html` is the same slides as one scrollable document** — a contents list plus every step in order, for looking something up rather than being walked through it; both pages link to each other, and the step tour's top links to it beside the Executive Summary link. Neither holds the content: both render `quick-tour-data.js` (below), so they cannot say different things. **`quick-tour-overview.html` is the Executive Summary** and now carries an **Export PDF** button (`mc-pdf.js`, below). Two CI gates follow the tour's prose rather than the page that used to hold it — `tools/check-tour-coverage.js` and the tour claims in `tools/check-docs.js` both read `quick-tour-data.js` now; a claim moved to a file a gate isn't looking at is a gate that silently passes. |
+| `quick-tour.html` / `quick-tour-full.html` / `quick-tour-overview.html` | Standalone, cookbook-styled walkthroughs of the app's features (Smart Week, Time Check, sub-tabs, etc.); not linked from the shell nav, used for onboarding/demo. **`quick-tour.html` is the step tour** (one slide at a time, swipe/dots/Next). **`quick-tour-full.html` is the same slides as one scrollable document** — a contents list plus every step in order, for looking something up rather than being walked through it; both pages link to each other, and the step tour's top links to it beside the Executive Summary link. Neither holds the content: both render `quick-tour-data.js` (below), so they cannot say different things. **`quick-tour-overview.html` is the Executive Summary** and now carries an **Export PDF** button (`mc-pdf.js`, below). Two CI gates follow the tour's prose rather than the page that used to hold it — `tools/check-tour-coverage.js` and the tour claims in `tools/check-docs.js` both read `quick-tour-data.js` now; a claim moved to a file a gate isn't looking at is a gate that silently passes. **A third gate now checks the prose is TRUE, not just present** (`tools/test-quick-tour.js` — see its row), and `tools/smoke-test.js` drives all three pages in a real browser: every slide renders, the pager and dots work, `quick-tour-full.html` does not collapse (the `.qt-slide{display:none}` trap below really happened and nothing guarded it — removing that override now fails the gate), and Export PDF produces a real `%PDF-`. |
 | `quick-tour-data.js` / `quick-tour.css` | **The tour's content and its look, extracted so two pages can share them.** `quick-tour-data.js` holds the `SLIDES` array **and** `slideBodyHTML(s)`, the one function that turns a slide into markup — data and renderer ship together because the renderer is the only reader of a slide's shape, so a field added to one and not the other is the drift worth preventing. Exposed as `window.MC_TOUR`. `quick-tour.css` is the 117 lines of layout that were inline in `quick-tour.html`; the one-page view adds only the shape AROUND a slide (`.qtf-*`). **One thing to know if you touch that page:** `.qt-slide` is `display:none` until `.active` — that is the step tour's whole mechanism — so `quick-tour-full.html` undoes it explicitly. Assuming it was an opacity fade rendered all twelve sections as empty boxes, with no error. |
 | `mc-pdf.js` | **A self-contained PDF writer** (`window.MCPDF`) behind the Executive Summary's Export PDF button — no library, no build step, no npm, and it works offline from the SW cache like any other asset. Writes PDF 1.4 by hand with the two Core-14 fonts every reader already has, so nothing is embedded or fetched. Reads the page off the **live DOM** rather than re-describing it: the Executive Summary is hand-authored prose that changes whenever the app does (the Documentation currency rule above), and a second copy of it inside a generator is exactly the drift that rule exists to prevent. `.no-pdf` opts an element out; a per-call `styles` map says which class means heading vs. body, and `skip` drops chrome (the sticky bar, the jump nav, the colour swatches). Two things to know before changing it: text is written as **WinAnsi bytes**, so anything outside that encoding is folded or dropped (`FOLD` — this app's copy is full of emoji, and a dropped glyph beats a byte a reader rejects); and the xref offsets are counted in **string length**, which is only also the byte length because every character is ≤ 0xFF by then — a UTF-8 `Blob` would silently invalidate all of them. Ported from Cross-Household-'s `js/pdf.js`; not in the shared-module drift list, since the two differ by namespace. |
 | `features.js` | **The feature registry (C-I4, VOC/VOA Kaizen audit)** — `window.MC_FEATURES`, one entry per real top-level screen/capability, each with `keywords` for coverage-checking. Not a content source for either Quick Tour page (both stay hand-authored — see the file's own header for why); exists so `tools/check-tour-coverage.js` can catch a screen shipping with zero tour mention. Adding a real capability means adding it here too. |
@@ -185,9 +185,10 @@ A page declares its role with `data-tabbar` on `<main class="app">`:
 | `tools/build-sw.py` | Regenerates `sw.js`'s precache list and (optionally) bumps the cache version. Skips `recipes-data.js` — see its row above. |
 | `tools/smoke-test.js` | **Blocking CI gate as of 2026-08-02** (previously local-only). Drives the real app in Playwright/Chromium: shell boot, detail hydration, ingredient search, `?cook=1`, the two regressions worth pinning — a timer surviving a step advance and surviving a full page navigation — and, as of the VOC/VOA Kaizen audit wave 7, a simulated full-quota write on `recipe.html` and `collection.html` to prove the storage-full toast actually surfaces there (see `mc-fav.js`'s row and the wave 7 writeup in `ROADMAP.md`). Playwright is installed ad hoc in the `verify` job (see the CI section below), not via a committed `package.json`, so this repo's real dependency footprint is unchanged. Still worth running locally before pushing anything that touches load order, Cooking Mode, the timers, or a write path — CI will catch a regression either way, but locally is faster to iterate on. |
 | `tools/test-scaling-format.js` | **The serving-scaling quantity formatter, measured against the real corpus** (end-to-end audit). Extracts `prettyNumber`/`smallAmount`/`scaleQuantity` from **both** `cookbook.js`'s and `user-recipes.js`'s source text (they're IIFE-private, and duplicated on purpose) and sweeps all 318 recipes × servings 1–12 — ~15k scaled lines — for two properties: a nonzero authored quantity never renders as `"0"`, and whatever it renders as stays parseable by `mc-grocery.js`'s `parseQty()` so a scaled amount can still be summed into a shopping list. The drift assertion between the two copies is the one that keeps the deliberate duplication honest. |
+| `tools/test-quick-tour.js` | **Does the Quick Tour tell the truth?** (tour content review). `check-tour-coverage.js` asks whether every feature is *mentioned*; this asks whether what the tour *says* is true — a review found five shipped copy errors at once, two of them telling cooks to tap Home cards that don't exist. Enforces that **every UI label the tour says to tap exists where the tour says to look**: a step saying "from Home" is checked against the Home tap targets *derived from the code that builds them* (`homeModule()` titles, `index.html`'s tab bar, the top bar's `aria-label`s, the planner hero), because a plain source-wide substring check misses exactly these — "Recipes", "Categories" and "Macro Tracker" all occur *somewhere* in the source. Also pins the serving-ladder claim, the retired `Smart Week`/`Time Check` names, and that every "Try it now" link resolves to real, **live** content. |
 | `tools/test-fetch-recipe-source.js` | **The first CI coverage of any server-side code here** (end-to-end audit, A-04) — the `fetch-recipe-source` edge function's SSRF guards. Reads the deployed function's own `.ts` source text and exercises the real IP-range tables, URL validation, `hostIsSafe`'s fail-closed paths and the manual redirect loop against a fake DNS resolver and a fake `fetch`. Runs under Node because nothing here runs Deno; strips the TypeScript annotations via exact, **counted** replacements, so a source edit that invalidates the strip fails the gate instead of silently testing a stale copy. Deliberately asks the function to export nothing — a committed-vs-deployed drift on a security boundary isn't worth a more convenient test. |
 | `tools/check-a11y.mjs` | **The cookbook's first accessibility gate** (VOC/VOA Kaizen audit wave 8, initiative C-I1) — blocking CI as of the same wave. Drives every shell screen and standalone page in Playwright/Chromium and fails if the count of under-44px touch targets exceeds a recorded ratchet ceiling (`KNOWN_FAILURES`, same shape as `mc-units.js`'s fragmentation ratchet — may only fall, never rise; **lowered 84 → 62 by the end-to-end audit's A-05 pass**, which made both Quick Tour routes completely clean). `TARGET_EXEMPT` is the mechanism for a *reasoned* exception rather than raising that number, and it now carries a second entry — the Quick Tour's 12-step pager dots, where twelve 44px-wide targets would need 528px and this gate measures at 390px, so each dot takes the full 44px height plus a 28px-wide floor that exactly tiles the row's 20px gap (adjacent floors touch without overlapping, and no tap between two dots lands on nothing). Both exemptions carry a numeric predicate rather than a bare class match, so a control that loses its floor entirely still fails. Touch targets only, not contrast — see the file's own header comment for why a sandbox with blocked webfonts shouldn't be trusted to baseline that yet. Measures a control's *effective* hit area as `max(its own box, its ::before's rendered box)`, so the invisible-floor pattern several controls already use (see `cookbook.css`'s Phase 3 comment) reads as compliant instead of producing false failures. |
-| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (23 blocking gates — syntax, recipe data, doc-drift check, Quick Tour feature coverage, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, recipe-capture parser, pantry-quantity engine, serving-scaling quantity formatter, edge-function SSRF guards, SW strategy, backup format, silent-write-path lint, PWA manifest/icon correctness, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
+| `.github/workflows/pages.yml` | CI, two jobs: **`verify`** (24 blocking gates — syntax, recipe data, doc-drift check, Quick Tour feature coverage, Quick Tour content truth, bridge + sync-merge tests, kitchen-timer store, split data layer, generated-data freshness, ingredient units/aisle model, search ranking, recipe-capture parser, pantry-quantity engine, serving-scaling quantity formatter, edge-function SSRF guards, SW strategy, backup format, silent-write-path lint, PWA manifest/icon correctness, UI smoke test, kitchen-ergonomics touch-target ratchet, precache freshness, shared-module drift) runs on **pull requests and `main`**; **`deploy`** (`needs: verify`, `main` only) regenerates the SW and publishes to GitHub Pages. See CI / deploy below. |
 | `ROADMAP.md` | Phased improvement roadmap; kept current with what's actually shipped — re-read it before proposing new work so you don't re-litigate a finished pillar. |
 | `README.txt` | Short human-facing overview. |
 
@@ -451,7 +452,7 @@ that the whole thing ran on `push: main` only, so a pull request got no checks
 at all and the gates first fired on the merge commit, one step too late to stop
 anything reaching production):
 
-- **`verify`** — runs on **pull requests and on `main`**. Twenty-three gates, all
+- **`verify`** — runs on **pull requests and on `main`**. Twenty-four gates, all
   blocking:
   1. `node --check` over every tracked `*.js` (syntax gate — **all JS must pass**).
   2. `tools/validate-recipes.js` — recipe-data shape (Pillar A).
@@ -532,7 +533,33 @@ anything reaching production):
       **duplicated** copies of `prettyNumber`/`smallAmount` still agree, so a
       one-sided fix fails review. Proven to fail against the pre-fix tree
       before landing (5 assertions, all 25 lines named).
-  15. `tools/test-fetch-recipe-source.js` — **the first CI coverage of any
+  15. `tools/test-quick-tour.js` — **does the Quick Tour tell the truth?**
+      Gate 4 above asks the opposite question (is every feature *mentioned*),
+      and a mention is not a fact: a content review of the tour found **five
+      shipped copy errors at once**, every one invisible to every gate then in
+      place. Two of them told a cook to tap a Home card that doesn't exist
+      ("📖 Recipes … or 🍽️ Categories" — the module is **Browse**, and
+      Categories was merged into it; "📊 Macro Tracker" — the Tracker is the
+      second button in the *bottom bar*). One stated that every recipe is
+      authored at 2 and 4 servings, true of 162 of 318. One used two retired
+      feature names ("Smart Week", "Time Check") that now survive only in code
+      comments. One named a button "Search food database" whose real label is
+      "Search foods & recipes" — undersellng it, since that control searches
+      the cook's own cookbook first.
+      The enforceable property is that **every UI label the tour says to tap
+      must exist where the tour says to look.** A plain source-wide substring
+      check is *not* enough and this file proves it rather than assuming it:
+      restoring the two worst errors sailed straight through one, because
+      "Recipes", "Categories" and "Macro Tracker" all occur somewhere in the
+      source. So a step saying "from Home" is checked against the Home tap
+      targets **derived from the code that builds them** — `homeModule()`
+      titles, `index.html`'s tab bar, the top bar's `aria-label`s, and the
+      planner hero — which is what catches those two. Also asserts the
+      serving-ladder claim, the retired names, and that every "Try it now"
+      link resolves to a real, *live* recipe/collection/screen. All five
+      original errors were re-introduced one at a time and confirmed to fail
+      this gate before it landed.
+  16. `tools/test-fetch-recipe-source.js` — **the first CI coverage of any
       server-side code in this repo** (end-to-end audit, anomaly A-04). The
       edge function is the app's only server code and its largest abuse
       surface, and nothing checked it for a year — `CLAUDE.md` said so and the
@@ -555,9 +582,9 @@ anything reaching production):
       `169.254.0.0/16` check (9 assertions fail), and hoisting the host check
       out of the redirect loop so hops stop being re-validated (4 fail,
       including the two asserting the metadata address was never fetched).
-  16. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
-  17. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
-  18. `tools/check-write-paths.js` — no `localStorage.setItem()` call is left
+  17. `tools/test-sw-strategy.js` — service-worker stale-while-revalidate (LS-4).
+  18. `tools/test-mc-export.js` — backup format round trip + legacy files (C-01).
+  19. `tools/check-write-paths.js` — no `localStorage.setItem()` call is left
       inside an empty `catch (e) {}` anywhere in the app's real source (the
       "runtime invisibles" audit, 2026-08-31). Audit C-12 built the right
       mechanism (`writeStore()` / `onWriteFail` hooks) and wired it into two
@@ -571,7 +598,7 @@ anything reaching production):
       food-search cache, the one-time legacy tracker-key migration) and may
       only shrink — a new empty-catch `setItem()` that isn't on it fails
       review instead of silently shipping.
-  19. `tools/test-manifest.js` — PWA manifest + icon correctness, pure file and
+  20. `tools/test-manifest.js` — PWA manifest + icon correctness, pure file and
       byte reads, no browser (same audit). Catches what a real device install
       is otherwise the only way to notice: `apple-touch-icon` pointing at an
       SVG (iOS ignores it and falls back to a screenshot of the page as the
@@ -580,7 +607,7 @@ anything reaching production):
       orphan every existing install), and a page missing its light/dark
       `theme-color` meta pair. Verifies a PNG is a **real** PNG via its 8-byte
       signature and actual `IHDR` dimensions, not just a plausible filename.
-  20. `tools/smoke-test.js` — the one gate that opens a real page in a real
+  21. `tools/smoke-test.js` — the one gate that opens a real page in a real
       browser and clicks something, rather than reasoning about source text or
       running a module in a vm sandbox (shipped 2026-08-02, closing the CI gap
       this file used to describe as standing). Playwright is installed ad hoc
@@ -603,7 +630,7 @@ anything reaching production):
       scenarios can't quietly make it a no-op) shows the honest error and
       recovers on a manual reload — automatic recovery the instant connectivity
       returns is a documented, separate follow-up, not yet built.
-  21. `tools/check-a11y.mjs` — the cookbook's first accessibility gate (VOC/VOA
+  22. `tools/check-a11y.mjs` — the cookbook's first accessibility gate (VOC/VOA
       Kaizen audit wave 8, initiative C-I1), ported from Cross-Household-'s own
       `check-a11y.mjs` but touch-targets-only — the source audit's own "Method &
       limits" section explicitly warns that a sandbox with webfonts blocked at
@@ -626,8 +653,8 @@ anything reaching production):
       `qt-dot` exemption was itself proven to have teeth: stripping the dots'
       floor takes the count to 76, over the ceiling, rather than being hidden
       by the exemption.
-  22. `tools/build-sw.py --check` — precache list is current.
-  23. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
+  23. `tools/build-sw.py --check` — precache list is current.
+  24. Shared-module drift vs the 4-Weeks-to-Open- canonical copies (LS-1).
 - **`deploy`** — `needs: verify`, and gated to `main` by
   `github.event_name != 'pull_request' && github.ref == 'refs/heads/main'`, so
   nothing ever deploys from a PR branch. Regenerates the SW with
@@ -648,6 +675,7 @@ node tools/test-mc-import.js
 node tools/test-mc-pantry.js && node tools/test-mc-grocery.js
 node tools/test-mc-scale.js && node tools/test-mc-timeline.js
 node tools/test-scaling-format.js
+node tools/test-quick-tour.js
 node tools/test-fetch-recipe-source.js
 node tools/test-sw-strategy.js && node tools/test-mc-export.js
 node tools/check-write-paths.js && node tools/test-manifest.js
