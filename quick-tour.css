@@ -11,12 +11,18 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);padding-bottom:9
 /* TOP BAR */
 .qt-top{display:flex;align-items:center;gap:12px;padding:18px 16px 12px;position:sticky;top:0;z-index:20;
   background:linear-gradient(to bottom,var(--bg) 80%,transparent);}
-.qt-back{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;flex-shrink:0;
+/* 44px floor (end-to-end audit, A-05) — was 38x38, same as the Executive
+   Summary's .es-back it mirrors. */
+.qt-back{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;flex-shrink:0;
   background:var(--bg-elev);border:1px solid var(--line-dark);color:var(--accent);font-size:17px;text-decoration:none;}
 .qt-top-info{flex:1;min-width:0;}
 .qt-top-title{font-family:var(--serif);font-size:18px;font-weight:700;letter-spacing:-0.01em;color:var(--on-dark);}
 .qt-top-sub{font-size:12px;color:var(--on-dark-dim);margin-top:1px;}
-.qt-skip{font-size:12px;font-weight:700;color:var(--on-dark-dim);text-decoration:none;letter-spacing:0.04em;padding:8px;}
+/* 44px floor (end-to-end audit, A-05) — was 34x43, one pixel short on height
+   and well short on width. A top-bar text link with no horizontal neighbour
+   inside 44px, so it takes a real box rather than an invisible floor. */
+.qt-skip{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;box-sizing:border-box;
+  font-size:12px;font-weight:700;color:var(--on-dark-dim);text-decoration:none;letter-spacing:0.04em;padding:8px;}
 
 /* PROGRESS */
 .qt-prog-wrap{padding:2px 16px 14px;}
@@ -114,7 +120,21 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);padding-bottom:9
 .qt-nav-btn:disabled{opacity:0.34;cursor:not-allowed;}
 
 /* DOTS */
-.qt-dots{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;padding:4px 0 22px;}
-.qt-dot{width:8px;height:8px;border-radius:50%;background:var(--line-dark);cursor:pointer;transition:all 0.2s;border:none;padding:0;}
+/* Kitchen-ergonomics pass (end-to-end audit, anomaly A-05): twelve 8x8px dots
+   were the smallest tap targets anywhere in the app. The visible dot is
+   unchanged — the hit area comes from cookbook.css's own invisible-::before
+   floor pattern, sized to TILE rather than to 44x44.
+   Why not 44x44: twelve 44px-wide targets need 528px and the gate measures at
+   390px, so they cannot all be 44 wide at phone width — that is arithmetic,
+   not an oversight. Instead the gap goes to 20px so each dot's centre is 28px
+   from its neighbour's, and the floor is exactly 28px wide: adjacent floors
+   touch without overlapping (an overlap would steal the neighbour's edge taps,
+   the same trap cookbook.css's own comment warns about) and there is no dead
+   space between dots at all. Height takes the full 44. Net effective target
+   per dot: 64px^2 -> 1232px^2. tools/check-a11y.mjs carries the matching
+   reasoned exemption for the width. */
+.qt-dots{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:4px 0 22px;}
+.qt-dot{width:8px;height:8px;border-radius:50%;background:var(--line-dark);cursor:pointer;transition:all 0.2s;border:none;padding:0;position:relative;}
+.qt-dot::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:44px;}
 .qt-dot.active{background:var(--accent);width:22px;border-radius:4px;}
 .qt-dot.seen{background:rgba(var(--accent-rgb),0.5);}

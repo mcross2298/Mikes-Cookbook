@@ -84,6 +84,25 @@ jobs:
         # Also asserts cookbook.js's and user-recipes.js's duplicated copies
         # still agree, so a one-sided fix fails review.
         run: node tools/test-scaling-format.js
+      - name: Quick Tour tells the truth (test-quick-tour.js — tour content review)
+        # check-tour-coverage.js asks whether every feature is MENTIONED; this
+        # asks whether what the tour says is TRUE. A tour content review found
+        # five shipped copy errors at once — two of them telling cooks to tap
+        # Home cards that don't exist — none of which any existing gate saw.
+        # The interaction half (all 12 slides render, the pager works, the
+        # one-page view doesn't collapse, Export PDF produces a real PDF) is a
+        # scenario in smoke-test.js, which already drives real pages.
+        run: node tools/test-quick-tour.js
+      - name: Edge-function SSRF guards (test-fetch-recipe-source.js — audit A-04)
+        # First CI coverage of any server-side code in this repo. Reads the
+        # deployed Deno function's own source text (Node can't run TypeScript,
+        # and adding an export would make the committed file differ from the
+        # deployed one) and exercises the real private-range tables, URL
+        # validation and the manual redirect loop against a fake DNS + fetch.
+        # Proven to fail on two planted regressions: dropping the
+        # 169.254.0.0/16 check, and hoisting the host check out of the
+        # redirect loop so hops stop being re-validated.
+        run: node tools/test-fetch-recipe-source.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

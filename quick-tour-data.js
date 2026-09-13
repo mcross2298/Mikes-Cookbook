@@ -31,10 +31,11 @@
       title:"The Home hub",
       tagline:"Home is the hub; every feature is a spoke. One bar at the bottom switches Cookbook ↔ Tracker — everything else opens from Home, and a “‹ Home” arrow always brings you back.",
       scene:{glyph:'🏠',caption:'This Week hero · Browse · Macro Tracker · Favorites',glow:'rgba(200,122,83,0.16)'},
-      narration:"Start at Home. Up top, the This Week card — your meal planner. Below, the modules: Browse, Macro Tracker, Mike's Favorites, your saved Favorites, and Add Recipe. Tap any module to drill in; the “‹ Home” arrow in the corner brings you straight back. You can't get lost.",
+      narration:"Start at Home. Up top, the This Week card — your meal planner. Below, the modules: Browse, Mike's Favorites, your saved Favorites, Add Recipe, and this Quick Tour. Tap any module to drill in; the “‹ Home” arrow in the corner brings you straight back. The Macro Tracker isn't one of those modules — it's the second button in the bar along the bottom, so it's one tap away from wherever you are. You can't get lost.",
       steps:[
         {tx:"<b>Top — This Week:</b> your weekly meal planner and combined grocery list."},
-        {tx:"<b>Modules:</b> Browse · Macro Tracker · Mike's Favorites · Favorites · Add Recipe."},
+        {tx:"<b>Modules:</b> Browse · Mike's Favorites · Favorites · Add Recipe · Quick Tour."},
+        {tx:"<b>📊 Tracker</b> lives in the bottom bar next to Cookbook — not in the module list — so it's reachable from any screen."},
         {tx:"Every spoke has a <span class='tap'>‹ Home</span> arrow — one tap back to the hub."},
         {tx:"<b>🏋️ Workout app:</b> the icon next to search opens 4 Weeks to Open — one sign-in works in both."}
       ],
@@ -47,7 +48,7 @@
       scene:{glyph:'📖',caption:'13 live collections · 11 dish types · search by name, tag or ingredient',glow:'rgba(217,160,91,0.18)'},
       narration:"Tap Browse. A switch at the top picks how you look at the library: By collection shows the flagship sets — Two Meals a Day, Chipotle Copycats, High-Protein Meal Prep, Desserts, Salsas, Sauces, Marinades and more, with Kelli Cross' heirlooms and a Carnivore set on the way. By dish type sorts everything into eleven buckets instead: Breakfast, Salads &amp; Slaws, Soups, Casseroles, Skillets, Grilled, Sandwiches, Desserts, Salsas &amp; Dips, Sauces and Marinades. Tap either kind of card to narrow down. Open a collection and the bigger ones add a sub-tab bar — Chicken, Beef &amp; Steak, Seafood and the like — so you can narrow in before you scroll. The search box now ranks best matches first instead of just filtering — type two words like &ldquo;chicken broccoli&rdquo; and it finds recipes naming both, and a small typo like &ldquo;chiken&rdquo; still finds Chicken recipes. A quiet &ldquo;matched: ingredient&rdquo; label under a card explains why it surfaced when the title alone wouldn&rsquo;t say so. The filter chips work across the whole catalog either way.",
       steps:[
-        {tx:"From Home, tap <span class='tap'>📖 Recipes</span> for collections + your library, or <span class='tap'>🍽️ Categories</span> to browse by dish type."},
+        {tx:"From Home, tap <span class='tap'>📖 Browse</span> — then use the switch at the top: <b>By collection</b> for the flagship sets, <b>By dish type</b> for the eleven buckets. One screen, both axes."},
         {tx:"Open a <b>collection</b> (e.g. Two Meals a Day) to see every recipe in it."},
         {tx:"In a larger collection, tap a <b>sub-tab</b> (e.g. Chicken, Seafood) to narrow the grid further."},
         {tx:"Use the <b>search box</b> to search by name, tag, or ingredient — it ranks the best match first, tolerates a small typo, and a &ldquo;matched: ingredient&rdquo; label on a card says why it showed up."},
@@ -61,7 +62,7 @@
       title:"Scale any recipe to your servings",
       tagline:"Cooking for one or feeding six? The serving stepper rescales every ingredient quantity on the fly — from 1 up to 12.",
       scene:{glyph:'🔢',caption:'Serving stepper − / + → ingredients rescale · macros stay per-serving',glow:'rgba(200,122,83,0.16)'},
-      narration:"Open any recipe and look at the header: a serving stepper. Recipes are authored at 2 and 4 servings exactly; tap minus or plus and any other count — anywhere from 1 to 12 — is scaled live from the recipe's native amounts. Every ingredient quantity updates instantly. Macros are listed per single serving, so those stay constant no matter how many you're cooking for.",
+      narration:"Open any recipe and look at the header: a serving stepper. Most recipes are written out at 2 and 4 servings; a batch dish like a whole cheesecake is written at its own yield instead. Tap minus or plus and any other count — anywhere from 1 to 12 — is scaled live from whichever amounts that recipe actually ships with. Every ingredient quantity updates instantly. Macros are listed per single serving, so those stay constant no matter how many you're cooking for.",
       steps:[
         {tx:"Open a recipe, then find the <b>serving stepper</b> in the header."},
         {tx:"Tap <span class='tap'>−</span> / <span class='tap'>+</span> to set your serving count (1–12)."},
@@ -125,11 +126,11 @@
       title:"The Macro Tracker",
       tagline:"Beyond the recipes, a full day tracker — log what you eat by the hour and watch your calories and macros against your goals.",
       scene:{glyph:'📊',caption:'Daily kcal · P/F/C · food search + barcode scan',glow:'rgba(125,140,119,0.18)'},
-      narration:"Tap Macro Tracker on Home. Set your goals, then log food across the day: search a big food database, or tap the barcode icon and scan a label — the scanner detects the code and pulls the food's nutrition in automatically, no typing. Your daily totals for calories, protein, fat and carbs build up against your targets as you go. You can even log a cookbook recipe straight into your day. Sign in from the 👤 button on Home and your tracker follows you across devices — and reconciles with the same account in the 4 Weeks to Open workout app, if you use both.",
+      narration:"Tap 📊 Tracker in the bar along the bottom — it's there on every screen. Set your goals, then log food across the day: search your own cookbook and a big food database together, or tap the barcode icon and scan a label — the scanner detects the code and pulls the food's nutrition in automatically, no typing. Your daily totals for calories, protein, fat and carbs build up against your targets as you go. You can even log a cookbook recipe straight into your day. Sign in from the 👤 button on Home and your tracker follows you across devices — and reconciles with the same account in the 4 Weeks to Open workout app, if you use both.",
       steps:[
-        {tx:"From Home, tap <span class='tap'>📊 Macro Tracker</span>."},
+        {tx:"Tap <span class='tap'>📊 Tracker</span> in the bottom bar — from Home or anywhere else."},
         {tx:"Set your <b>calorie & macro goals</b>, then start logging by the hour."},
-        {tx:"Tap <span class='tap'>Search food database</span>, or the <span class='tap'>▦ barcode</span> icon to scan a label."},
+        {tx:"Tap <span class='tap'>Search foods &amp; recipes</span> — it looks through your own cookbook first, then Open Food Facts — or the <span class='tap'>▦ barcode</span> icon to scan a label."},
         {tx:"The scanner <b>auto-detects the barcode</b> and fills in the food's nutrition for you."},
         {tx:"Optional: tap the <span class='tap'>👤 account</span> icon on Home to sign in and sync your tracker, meal plan, favorites and pantry across devices."},
         {tx:"Prefer not to sign in? The same 👤 sheet has <b>Export data</b> / <b>Import data</b> — a manual backup file you can save anywhere and restore from. Home's <b>Backup &amp; Restore</b> card does the same thing with the same file."}
@@ -190,7 +191,7 @@
         "Scale any recipe from 1 to 12 servings",
         "Read per-serving macros and a clean grocery list",
         "Plan the week into one combined shopping list",
-        "Let Smart Week or Time Check pick meals for you",
+        "Let Plan my week build it for you — Balanced, Macro or Time",
         "Track intake with food search & barcode scan",
         "Save favorites and add your own recipes"
       ],

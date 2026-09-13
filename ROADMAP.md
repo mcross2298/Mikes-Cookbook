@@ -69,6 +69,69 @@ audit doesn't re-open them)
   across every authored tier for all 318 recipes, and every recipe with macros
   has a `serving_<native>` key, so `macrosFor()` never falls through to `{}`.
 
+**Follow-up wave shipped the same day (A-04, A-05)** — the two anomaly-log
+items that needed no device verification:
+
+- **A-04 — the edge function had zero test coverage.** `fetch-recipe-source`
+  is the app's only server-side code and its largest abuse surface, and
+  nothing checked it. `tools/test-fetch-recipe-source.js` is now a blocking
+  gate: 73 assertions over the real private-range tables (v4 and v6, including
+  the `::ffff:127.0.0.1` mapped form), `validateUrl`'s scheme/port/credential
+  rejections, `hostIsSafe`'s fail-closed paths (unresolvable host; a host
+  answering with one public *and* one private record — the DNS-rebinding
+  shape), the CORS allow-list's lookalike-domain rejections, and
+  `safeFetchHtml`'s manual redirect loop. The assertion that matters: **a
+  public URL that 302s onto `169.254.169.254` is blocked, and the metadata
+  address is never fetched at all.** Runs under Node (nothing here runs Deno)
+  by lifting the guards from the file's own text with counted annotation
+  strips; the function exports nothing, so the committed file still matches
+  the deployed one. Proven to fail on two planted regressions — dropping the
+  `169.254.0.0/16` check, and hoisting the host check out of the redirect loop
+  so hops stop being re-validated.
+- **A-05 — Quick Tour touch targets.** Both Quick Tour routes are completely
+  clean now and the a11y ratchet drops **84 → 62**. The twelve 8×8px pager
+  dots keep their exact appearance and gain a 28×44 invisible floor sized to
+  tile the row's new 20px gap — twelve 44px-wide targets would need 528px
+  against a 390px measurement viewport, so the width carries a reasoned
+  `TARGET_EXEMPT` entry with a numeric predicate instead of raising the
+  ceiling (proven to have teeth: stripping the floor takes the count to 76).
+  `.qt-back`/`.es-back` (38×38) and `.qt-skip` (34×43) took real 44px boxes;
+  `.es-jump` grew vertically, which costs a horizontally scrolling row
+  nothing.
+
+**Quick Tour content review (same wave)** — the audit had touched the tour only
+for touch-target sizes; nobody had checked whether what it *says* is true.
+Five shipped copy errors, every one invisible to every gate then in place:
+
+- **Two told a cook to tap a Home card that doesn't exist.** "From Home, tap
+  📖 Recipes … or 🍽️ Categories" — the module is labelled **Browse**, and
+  Categories stopped being a separate module when the audit merged it into
+  Browse. "From Home, tap 📊 Macro Tracker" — the Tracker is the second button
+  in the *bottom bar*, not a module. Both steps also contradicted their own
+  slide's tagline.
+- **One stated a false fact about the corpus:** "Recipes are authored at 2 and
+  4 servings exactly" — true of 162 of 318. This is the same wrong premise that
+  produced F-01.
+- **One used two retired feature names:** "Let Smart Week or Time Check pick
+  meals for you". Both were replaced by the single "Plan my week" door; they
+  survive only in code comments, so a cook will never see either string.
+- **One named a button wrongly:** "Search food database" — the real label is
+  "Search foods & recipes", and it searches the cook's own cookbook first, which
+  the old wording hid.
+
+Fixed, and now gated two ways. `tools/test-quick-tour.js` enforces that **every
+UI label the tour says to tap exists where the tour says to look** — a step
+saying "from Home" is checked against Home's tap targets *derived from the code
+that builds them*, because a source-wide substring check demonstrably misses
+these (proven: restoring the two worst errors sailed straight through it, since
+"Recipes", "Categories" and "Macro Tracker" all occur somewhere in the source).
+All five errors were re-introduced one at a time and confirmed to fail.
+`tools/smoke-test.js` gained a Quick Tour scenario for the other half — all 12
+slides render, the pager and dots work, `quick-tour-full.html` does not collapse
+into empty boxes (removing its `display:block` override now fails the gate, which
+is the exact bug CLAUDE.md documents as having really happened), and Export PDF
+produces a real 22 KB `%PDF-`.
+
 **Logged, deliberately not fixed**
 
 - `prettyNumber` duplication (17 lines, two files): extracting it needs a
@@ -79,6 +142,15 @@ audit doesn't re-open them)
   documented v1 tradeoff, and those stores have no in-place edit path.
 - Time mode still applies no training-day protein bias: a documented product
   asymmetry, not a refactor gap.
+- `user_sync_put` (the server-side half of F-03's race): written and reviewed,
+  **not applied**. It changes backend behavior for two live apps and nothing
+  calls it yet — the client change routing `mc-sync.js`'s push through it has
+  to land with it, and that is a decision, not a cleanup.
+- Deletion propagation across the union merge strategies (A-02): needs
+  tombstones with an expiry. Real design work, deliberately not squeezed in.
+- `mc-timers.js`'s two `localStorage` parses per tick (A-06): bounded by a cook
+  actually having a timer running, now that F-02 removed the unbounded case.
+  Worth folding into a future pass over that file, not worth its own change.
 
 ---
 
