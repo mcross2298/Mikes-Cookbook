@@ -69,6 +69,20 @@ const TARGET_EXEMPT = [
     match: /\b(fav|plan)-toggle\b/,
     ok: (t) => !/\br-(fav|plan)\b/.test(t.cls) && t.h >= 40 && t.w >= 44,
     why: 'card heart/add-to-plan pair capped to 40px tall by design — a full 44 floor on each would overlap its stacked sibling'
+  },
+  {
+    // The Quick Tour's 12-step pager dots (end-to-end audit, anomaly A-05).
+    // Twelve 44px-wide targets need 528px; this gate measures at 390px, so
+    // they cannot all be 44 wide — that's arithmetic, not a missed fix. They
+    // carry the full 44px HEIGHT and a 28px-wide floor that exactly tiles the
+    // 20px row gap, so adjacent floors touch without overlapping and no tap
+    // between two dots lands on nothing. See quick-tour.css's own comment.
+    // The predicate is deliberately tight: a dot that loses its floor
+    // entirely (back to a real 8x8) or whose row gap shrinks below the floor
+    // width still fails, because only >=44 tall AND >=28 wide passes.
+    match: /\bqt-dot\b/,
+    ok: (t) => t.h >= 44 && t.w >= 28,
+    why: 'a 12-step pager cannot give every dot a 44px width at 390px; height is full and the 28px floors tile the row with no dead space'
   }
 ];
 
@@ -189,7 +203,12 @@ if (jsErrors.length) {
    (e.g. wave 6's Cooking Mode fix, or the exemption above, silently
    regressing) fails the build; a drop is fine without touching this
    number — nothing here enforces the exact count stays in sync. */
-const KNOWN_FAILURES = 84;
+/* Lowered 84 -> 62 by the end-to-end audit's A-05 pass. Both Quick Tour routes
+   are now completely clean: the twelve pager dots, the step tour's back button
+   and Skip link, and the Executive Summary's back button and seven jump links
+   all clear the floor (see quick-tour.css / quick-tour-overview.html). A
+   ratchet only means something if it is actually ratcheted when work lands. */
+const KNOWN_FAILURES = 62;
 
 const unique = [...new Set(failures)];
 console.log(`check-a11y: ${unique.length} touch-target problem(s) across ${routes.length} routes ` +

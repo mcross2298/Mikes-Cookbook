@@ -84,6 +84,16 @@ jobs:
         # Also asserts cookbook.js's and user-recipes.js's duplicated copies
         # still agree, so a one-sided fix fails review.
         run: node tools/test-scaling-format.js
+      - name: Edge-function SSRF guards (test-fetch-recipe-source.js — audit A-04)
+        # First CI coverage of any server-side code in this repo. Reads the
+        # deployed Deno function's own source text (Node can't run TypeScript,
+        # and adding an export would make the committed file differ from the
+        # deployed one) and exercises the real private-range tables, URL
+        # validation and the manual redirect loop against a fake DNS + fetch.
+        # Proven to fail on two planted regressions: dropping the
+        # 169.254.0.0/16 check, and hoisting the host check out of the
+        # redirect loop so hops stop being re-validated.
+        run: node tools/test-fetch-recipe-source.js
       - name: Service-worker strategy test (stale-while-revalidate — audit LS-4)
         run: node tools/test-sw-strategy.js
       - name: Backup format test (mc-export.js round trip + legacy files — audit C-01)

@@ -69,6 +69,36 @@ audit doesn't re-open them)
   across every authored tier for all 318 recipes, and every recipe with macros
   has a `serving_<native>` key, so `macrosFor()` never falls through to `{}`.
 
+**Follow-up wave shipped the same day (A-04, A-05)** — the two anomaly-log
+items that needed no device verification:
+
+- **A-04 — the edge function had zero test coverage.** `fetch-recipe-source`
+  is the app's only server-side code and its largest abuse surface, and
+  nothing checked it. `tools/test-fetch-recipe-source.js` is now a blocking
+  gate: 73 assertions over the real private-range tables (v4 and v6, including
+  the `::ffff:127.0.0.1` mapped form), `validateUrl`'s scheme/port/credential
+  rejections, `hostIsSafe`'s fail-closed paths (unresolvable host; a host
+  answering with one public *and* one private record — the DNS-rebinding
+  shape), the CORS allow-list's lookalike-domain rejections, and
+  `safeFetchHtml`'s manual redirect loop. The assertion that matters: **a
+  public URL that 302s onto `169.254.169.254` is blocked, and the metadata
+  address is never fetched at all.** Runs under Node (nothing here runs Deno)
+  by lifting the guards from the file's own text with counted annotation
+  strips; the function exports nothing, so the committed file still matches
+  the deployed one. Proven to fail on two planted regressions — dropping the
+  `169.254.0.0/16` check, and hoisting the host check out of the redirect loop
+  so hops stop being re-validated.
+- **A-05 — Quick Tour touch targets.** Both Quick Tour routes are completely
+  clean now and the a11y ratchet drops **84 → 62**. The twelve 8×8px pager
+  dots keep their exact appearance and gain a 28×44 invisible floor sized to
+  tile the row's new 20px gap — twelve 44px-wide targets would need 528px
+  against a 390px measurement viewport, so the width carries a reasoned
+  `TARGET_EXEMPT` entry with a numeric predicate instead of raising the
+  ceiling (proven to have teeth: stripping the floor takes the count to 76).
+  `.qt-back`/`.es-back` (38×38) and `.qt-skip` (34×43) took real 44px boxes;
+  `.es-jump` grew vertically, which costs a horizontally scrolling row
+  nothing.
+
 **Logged, deliberately not fixed**
 
 - `prettyNumber` duplication (17 lines, two files): extracting it needs a
@@ -79,6 +109,15 @@ audit doesn't re-open them)
   documented v1 tradeoff, and those stores have no in-place edit path.
 - Time mode still applies no training-day protein bias: a documented product
   asymmetry, not a refactor gap.
+- `user_sync_put` (the server-side half of F-03's race): written and reviewed,
+  **not applied**. It changes backend behavior for two live apps and nothing
+  calls it yet — the client change routing `mc-sync.js`'s push through it has
+  to land with it, and that is a decision, not a cleanup.
+- Deletion propagation across the union merge strategies (A-02): needs
+  tombstones with an expiry. Real design work, deliberately not squeezed in.
+- `mc-timers.js`'s two `localStorage` parses per tick (A-06): bounded by a cook
+  actually having a timer running, now that F-02 removed the unbounded case.
+  Worth folding into a future pass over that file, not worth its own change.
 
 ---
 

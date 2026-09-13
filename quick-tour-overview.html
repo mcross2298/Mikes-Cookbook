@@ -24,7 +24,8 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
 /* TOP BAR */
 .es-top{display:flex;align-items:center;gap:12px;padding:18px 16px 12px;position:sticky;top:0;z-index:20;
   background:linear-gradient(to bottom,var(--bg) 80%,transparent);}
-.es-back{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;flex-shrink:0;
+/* 44px floor (end-to-end audit, A-05) — was 38x38. */
+.es-back{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;flex-shrink:0;
   background:var(--bg-elev);border:1px solid var(--line-dark);color:var(--accent);font-size:17px;text-decoration:none;}
 .es-top-info{flex:1;min-width:0;}
 /* Downloads this page as a real .pdf (mc-pdf.js). Marked .no-pdf so the button
@@ -54,7 +55,10 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);overflow-x:hidde
 /* JUMP CHIPS */
 .es-jump-row{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .es-jump-row::-webkit-scrollbar{display:none;}
-.es-jump{flex-shrink:0;font-size:12px;font-weight:700;color:var(--on-dark);text-decoration:none;
+/* 44px floor (end-to-end audit, A-05) — the row was 34px tall. These are a
+   horizontally scrolling row of anchors, so growing them vertically costs no
+   horizontal space and cannot overlap a sibling. */
+.es-jump{flex-shrink:0;min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;font-size:12px;font-weight:700;color:var(--on-dark);text-decoration:none;
   background:var(--bg-elev);border:1px solid var(--line-dark);border-radius:20px;padding:7px 13px;}
 .es-jump:active{border-color:var(--accent);color:var(--accent);}
 
