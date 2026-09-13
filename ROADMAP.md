@@ -1037,6 +1037,60 @@ next step is small and concrete: fetch the three packages above (all confirmed r
 `mc-ocr.js` worker wrapper + heuristic segmenter per §2.1's own spec, and test against a handful of
 real photographed cards before wiring the chooser UI — a separate, focused pass.
 
+## Executive Summary audit ✅ (2026-09-13) — the surface no gate was watching
+
+The Quick Tour content review (2026-09-13) fixed five shipped copy errors in
+`quick-tour-data.js`. It did not touch `quick-tour-overview.html`, and nothing
+else did either — so this audit asked the obvious follow-up question: is the
+**Executive Summary** telling the truth?
+
+It was not, and the reason is structural. `tools/check-tour-coverage.js`
+deliberately excludes this file (see its own header, and CLAUDE.md's gate 4),
+and `tools/test-quick-tour.js` reads the tour's prose. Both decisions are
+defensible on their own terms, but together they leave the Executive Summary as
+the one user-facing description of the app that **no gate reads at all** — and
+it drifted exactly where you'd predict.
+
+**Two claims were false**, both the same errors the tour had just had corrected:
+
+- *"Modules — Browse, Macro Tracker, Mike's Favorites, Favorites, Add Recipe."*
+  The Macro Tracker is not a Home module. Derived from the code that builds
+  them, `homeModule()`'s real titles are Browse, Mike's Favorites, Favorites,
+  Add Recipe and Quick Tour; the Tracker is the second button in the bottom
+  bar. The summary both named a module that doesn't exist and omitted one that
+  does.
+- *"Recipes are authored at 2 and 4 servings."* Measured against the real
+  corpus: true of **162 of 318**. 55 author only `serving_4`, 49 only
+  `serving_1`, and the tail runs to `serving_24`. This is the same wrong
+  premise that produced the `"0 tsp"` scaling bug.
+
+**Five shipped capabilities were absent entirely** — every one of them in
+`features.js`, mentioned in the tour, and verified present in code:
+recipe import by link (`mc-import.js`), the Web Share Target
+(`manifest.json`'s `share_target`), pantry quantities (`mc-pantry.js`),
+bi-directional macro-target scaling (`mc-scale.js`, Pillar F §2.4) and the
+multi-dish cook timeline (`mc-timeline.js`, §2.3). §2.3 and §2.4 are both
+recorded as **shipped** two sections above in this very file and the app's
+own summary of itself had never mentioned either.
+
+One more was understated rather than wrong: the tracker's food search was
+described as "a large database", hiding that **Search foods & recipes**
+searches the cook's own cookbook first.
+
+All eight are fixed. Verified by re-running the feature-coverage logic against
+the Executive Summary (14 of 15 features now match by keyword; the last,
+`recipe-detail`, is a phrasing artifact — section 3 covers scaling, macros,
+grocery and method in full under different wording), by a real headless render,
+and by driving the Export PDF button, which still produces a valid
+`application/pdf` (27 KB, up from 22 KB with the added content).
+
+**Not fixed, and worth a decision:** the gap that let this happen is still
+open. `features.js` coverage is not asserted against
+`quick-tour-overview.html`, on purpose. That decision was about not forcing the
+page into an array-driven renderer (roadmap `F6`'s reversal in the sibling
+app), which a *coverage* check would not do — but it is a documented decision,
+so extending the gate is its own change rather than a side effect of an audit.
+
 ## Owner-only verification — how to actually close it
 
 Two items have sat open since phase 1 because CI can't do them. Most of both is now
