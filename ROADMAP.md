@@ -1167,17 +1167,72 @@ moved after `push()` (1), and a reconcile that rewrites an unchanged store (2).
 Not a Quick Tour change: this restores behaviour the tour and Executive Summary
 already describe, which the Documentation currency rule explicitly exempts.
 
+### Critical gap #02 ✅ (shipped 2026-09-14) — ranged amounts scale
+
+**The bug.** `scaleQuantity()` returned any string `parseQtyNumber()` couldn't
+read verbatim. That is correct for `"to taste"` and `"pinch"` — a pinch does not
+quadruple — and a silent arithmetic failure for a range. Cook a 2-serving recipe
+for eight and every line quadrupled except `"2-3 cloves garlic"`, which stayed
+`"2-3"`: no warning, no styling difference, and Cooking Mode's
+`speakIngredients()` read the unscaled figure aloud as though it were right. The
+cook had no way to notice short of doing the arithmetic themselves, which is the
+job the app exists to do.
+
+**Scope, measured rather than assumed.** 18 authored range lines in the base
+tiers (24 across all authored tiers). The earlier audit figure of "29 corpus
+lines" was every *non-blank unparseable* line — that set also contains 3 compound
+amounts (`"1/4 cup + 1 tbsp"`) and 2 pan dimensions, which are not ranges and are
+deliberately left alone. Small today, but it grows with every URL import: range
+notation is common on recipe sites and `mc-import.js` passes ingredient strings
+through unexamined.
+
+**The fix.** Both endpoints scale; the guard is that **both sides must parse as
+real numbers**, which is exactly what keeps `"8-inch"` and `"4-inch"` — pan
+dimensions mis-keyed into `quantity` — out of the range path, alongside
+`"to taste"` and `"pinch"`.
+
+Two decisions worth recording:
+
+1. **The join is `" to "`, not a hyphen.** A scaled range frequently lands on a
+   mixed number, and the corpus sweep found 66 renders shaped like `"1 1/2-3"` —
+   ambiguous on screen, and spoken as nonsense by `speakIngredients()`, which
+   reads the quantity string verbatim through `speechSynthesis`. `"1 1/2 to 3
+   cups"` reads correctly both ways, and is how a recipe writes a range in prose
+   anyway. This was found by sweeping the real corpus *after* the first working
+   version, not predicted.
+2. **The grocery merge was deliberately left alone.** `mc-grocery.js`'s
+   `parseQty()` also returns null for a range, but `buildGrocery()` already routes
+   an unparseable-but-non-empty amount into the row's `texts` — so a range shows
+   on the shopping list as honest text (`"2-3 cloves"`) rather than being dropped.
+   Teaching `parseQty` to collapse a range to one number would replace an honest
+   text with a guess and could move `test-mc-units.js`'s fragmentation ratchet.
+   `buildGrocery()` also reads **only authored tiers**, so `scaleQuantity`'s output
+   never reaches it in the first place.
+
+**Also unified the duplication.** `user-recipes.js` inlined the three parse
+patterns inside its own `scaleQuantity`; it carries the same `parseQtyNumber` now,
+so both copies of `scaleQuantity` are byte-identical and the gate can compare
+their **source text**. That mattered: the pre-existing drift check only compared
+`prettyNumber`'s output, and a one-sided range fix passed it.
+
+**Proven before landing.** `tools/test-scaling-format.js` grew from 18 to 35
+assertions — a second corpus sweep over the 18 range lines (193 renders, each
+asserted to move and to render `"lo to hi"`), the pan-dimension guard, and the
+source-text drift assertions. Confirmed to fail on four planted regressions: the
+pre-fix pass-through (8 fail), a one-sided fix (2), the separator regressed to a
+bare hyphen (6), and the both-sides-numeric guard weakened so `"8-inch"` scales
+(2). Also verified in a real browser: `honey-buffalo-chicken-rice-bowls` shows
+`"2-3 cloves"` at its authored 2-serving tier and `"3 to 3 3/4 cloves"` at 3
+servings (scaled from the 4-serving tier at 0.75×).
+
+Not a Quick Tour change: the tour and Executive Summary already claim every
+ingredient quantity rescales on the fly. That claim was false for ranges and is
+now true.
+
 ### Still open from the re-audit
 
 Ranked as they were in the artifact; none of these is started.
 
-- **#02 Ranged quantities never scale.** `scaleQuantity("2-3", 4)` → `"2-3"`.
-  Cook a recipe for eight and every line quadruples except the one reading "2–3",
-  unflagged, and Cooking Mode reads the unscaled figure aloud. 29 corpus lines
-  today, and every URL import adds more — range notation is common on recipe sites
-  and `mc-import.js` passes ingredient strings through unexamined. Fix is to teach
-  `parseQtyNumber` the range form and scale both endpoints, keeping the existing
-  pass-through for "pinch"/"to taste", which is correct.
 - **#03 The pantry quantity feature is off for 27.5% of grocery rows, invisibly.**
   235 of 854 merged rows carry `need: null`, so 📏 accepts an amount that can have
   no effect. Compounded by a volume need being incomparable with a weight-recorded

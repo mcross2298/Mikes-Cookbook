@@ -57,8 +57,22 @@ function extract(file, names) {
   return sandbox.__api;
 }
 
+// Raw source text of one function declaration — for asserting the two
+// deliberately-duplicated copies are literally the same characters, not just
+// behaviourally equal on the inputs this file happens to try.
+function srcOf(file, name) {
+  const src = fs.readFileSync(path.join(ROOT, file), 'utf8');
+  const start = src.indexOf('function ' + name + '(');
+  let i = src.indexOf('{', start), depth = 0;
+  for (; i < src.length; i++) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}') { depth--; if (depth === 0) return src.slice(start, i + 1); }
+  }
+  throw new Error(file + ': unbalanced ' + name);
+}
+
 const CB = extract('cookbook.js', ['smallAmount', 'prettyNumber', 'parseQtyNumber', 'scaleQuantity']);
-const UR = extract('user-recipes.js', ['smallAmount', 'prettyNumber', 'scaleQuantity']);
+const UR = extract('user-recipes.js', ['smallAmount', 'prettyNumber', 'parseQtyNumber', 'scaleQuantity']);
 
 /* ── the grocery list's own parser, for property 2 ─────────────────────── */
 // mc-grocery.js reads MCUnits as a bare global, so the sandbox's `window` is
@@ -92,6 +106,50 @@ for (let i = 0; i < 2000; i++) {
   if (CB.prettyNumber(v) !== UR.prettyNumber(v)) drift++;
 }
 ok('cookbook.js and user-recipes.js prettyNumber agree (no drift)', drift === 0);
+
+// prettyNumber agreeing is NOT enough on its own: the range fix lives in
+// scaleQuantity, so a one-sided fix there would have sailed through the
+// check above. Compare the function that actually changed, over both plain
+// and ranged inputs, and compare the two source texts directly — they are
+// meant to be byte-identical now that user-recipes.js carries the same
+// parseQtyNumber instead of inlining the patterns.
+let sqDrift = 0;
+const DRIFT_INPUTS = ['2', '1 1/2', '3/4', '0.75', '2-3', '1-2', '12-15', '1/4-1/2',
+                      '1 1/2-2', '8-inch', 'to taste', 'pinch', ''];
+for (const q of DRIFT_INPUTS) {
+  for (const f of [0.25, 0.5, 1.5, 2, 3, 4, 6, 12]) {
+    if (CB.scaleQuantity(q, f) !== UR.scaleQuantity(q, f)) sqDrift++;
+  }
+}
+ok('cookbook.js and user-recipes.js scaleQuantity agree (no drift)', sqDrift === 0);
+ok('...and their scaleQuantity source text is byte-identical',
+   srcOf('cookbook.js', 'scaleQuantity') === srcOf('user-recipes.js', 'scaleQuantity'));
+ok('...as is parseQtyNumber',
+   srcOf('cookbook.js', 'parseQtyNumber') === srcOf('user-recipes.js', 'parseQtyNumber'));
+
+/* ── Ranged amounts scale BOTH endpoints (re-audit gap #02) ─────────────
+   scaleQuantity used to return any string parseQtyNumber couldn't read
+   verbatim. Correct for "to taste" and "pinch"; a silent arithmetic failure
+   for a range — cook a 2-serving recipe for eight and every line quadrupled
+   except "2-3 cloves garlic", which stayed "2-3", unflagged and read aloud
+   verbatim by Cooking Mode. */
+ok('a range scales both endpoints', CB.scaleQuantity('2-3', 4) === '8 to 12');
+ok('a range scales down too', CB.scaleQuantity('12-15', 0.5) === '6 to 7 1/2');
+ok('a fractional range scales', CB.scaleQuantity('1/4-1/2', 2) === '1/2 to 1');
+ok('a mixed-number range scales', CB.scaleQuantity('1 1/2-2', 2) === '3 to 4');
+ok('a scaled range never renders a bare hyphen against a mixed number',
+   CB.scaleQuantity('1-2', 1.5) === '1 1/2 to 3');
+// The guard that keeps mis-keyed pan dimensions out of the range path: the
+// right-hand side has to parse as a real number. "inch" does not.
+ok('"8-inch" is NOT treated as a range', CB.scaleQuantity('8-inch', 4) === '8-inch');
+ok('"4-inch" is NOT treated as a range', CB.scaleQuantity('4-inch', 4) === '4-inch');
+// Unscalable measures must still pass through untouched — a pinch is a pinch.
+ok('"to taste" still passes through', CB.scaleQuantity('to taste', 4) === 'to taste');
+ok('"pinch" still passes through', CB.scaleQuantity('pinch', 4) === 'pinch');
+ok('a compound amount still passes through (not a range)',
+   CB.scaleQuantity('1/4 cup + 1 tbsp', 4) === '1/4 cup + 1 tbsp');
+ok('a plain number is unaffected by the range branch', CB.scaleQuantity('2', 4) === '8');
+ok('a mixed number is unaffected by the range branch', CB.scaleQuantity('1 1/2', 4) === '6');
 
 /* ── corpus sweep: the real recipes, every serving count ─────────────────── */
 const rsandbox = { window: {} };
@@ -129,6 +187,47 @@ if (zeros.length) console.error(zeros.slice(0, 10).map((z) => '  ' + z).join('\n
 ok('every scaled quantity stays parseable for the grocery merge (' + unparseable.length + ' bad)',
    unparseable.length === 0);
 if (unparseable.length) console.error(unparseable.slice(0, 10).map((z) => '  ' + z).join('\n'));
+
+/* ── Second corpus sweep: the ranges (re-audit gap #02) ─────────────────
+   The sweep above cannot see these — it gates on parseQtyNumber returning a
+   number, which is exactly what a range does not do. So ranges were the one
+   part of the corpus that sweep structurally could not have caught, which is
+   why they stayed frozen at 1x for a year. This sweep is their counterpart:
+   every authored range, at every computed serving count, must actually move. */
+const frozen = [], malformed = [];
+let rangeLines = 0, rangeRenders = 0;
+for (const r of RECIPES) {
+  const by = r.ingredients_by_serving || {};
+  const base = nativeServing(r);
+  const baseList = by['serving_' + base] || by[Object.keys(by)[0]] || [];
+  for (const ing of baseList) {
+    const q = String(ing.quantity == null ? '' : ing.quantity).trim();
+    if (!q || CB.parseQtyNumber(q) != null) continue;      // blank or a plain number
+    const m = q.match(/^(.+?)\s*[-\u2013]\s*(.+)$/);
+    if (!m || CB.parseQtyNumber(m[1]) == null || CB.parseQtyNumber(m[2]) == null) continue;
+    rangeLines++;
+    for (let sv = 1; sv <= 12; sv++) {
+      if (by['serving_' + sv]) continue;                   // authored tier
+      const factor = sv / base;
+      if (factor === 1) continue;
+      const out = CB.scaleQuantity(q, factor);
+      rangeRenders++;
+      if (out === q) frozen.push(r.recipe_id + ' @' + sv + 'sv: "' + q + '" ' + ing.item);
+      // Both endpoints present, and never a hyphen jammed against a mixed
+      // number ("1 1/2-3"), which is ambiguous on screen and spoken as
+      // nonsense by Cooking Mode's speakIngredients().
+      if (!/ to /.test(out) || /\d[-\u2013]/.test(out)) {
+        malformed.push(r.recipe_id + ' @' + sv + 'sv: "' + q + '" -> "' + out + '"');
+      }
+    }
+  }
+}
+ok('the corpus really does contain ranges to test (' + rangeLines + ' lines)', rangeLines >= 15);
+ok('range sweep covered a real number of renders (' + rangeRenders + ')', rangeRenders > 100);
+ok('no authored range stays frozen at 1x when scaled (' + frozen.length + ' frozen)', frozen.length === 0);
+if (frozen.length) console.error(frozen.slice(0, 10).map((z) => '  ' + z).join('\n'));
+ok('every scaled range renders as "lo to hi" (' + malformed.length + ' bad)', malformed.length === 0);
+if (malformed.length) console.error(malformed.slice(0, 10).map((z) => '  ' + z).join('\n'));
 
 console.log('test-scaling-format: ' + pass + ' assertions passed' + (fail ? ', ' + fail + ' FAILED' : ''));
 process.exit(fail ? 1 : 0);
