@@ -401,6 +401,7 @@
     // A full quota shouldn't silently swallow a heart or a timer (audit
     // VOC/VOA wave 7 — see warnStorageFull() above).
     MCFav.onWriteFail = warnStorageFull;
+    if (window.MCSetLog) MCSetLog.onWriteFail = warnStorageFull;
     MCTimers.onWriteFail = warnStorageFull;
     // Collection pages filter on ingredients too (the search box matches
     // ingredient names, and the low-shopping count reads the whole list), so

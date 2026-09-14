@@ -460,7 +460,14 @@
     catch (e) { return new Set(); }
   }
   function saveGroc(set) {
-    writeStore(GROC_KEY, JSON.stringify(Array.from(set)));
+    // Same as savePantry above: un-checking a row is a real edit, and the
+    // union merge can't carry it on its own. This is the case the re-audit
+    // measured directly — check items off at the store on your phone, open
+    // the laptop later, and they were back in the cart.
+    var before = window.MCSetLog ? loadGroc() : null;
+    if (writeStore(GROC_KEY, JSON.stringify(Array.from(set))) && window.MCSetLog) {
+      window.MCSetLog.record("gro", before, set);
+    }
   }
 
   /* ── Cook log (shared with the recipe detail page's "I Cooked This") ───
@@ -670,7 +677,13 @@
     catch (e) { return new Set(); }
   }
   function savePantry(set) {
-    writeStore(PANTRY_KEY, JSON.stringify(Array.from(set)));
+    // Previous value first — mc-setlog.js diffs it so a REMOVED staple
+    // propagates across devices instead of being resurrected by the next
+    // pull's union merge (re-audit gap #01; see mc-setlog.js's header).
+    var before = window.MCSetLog ? loadPantry() : null;
+    if (writeStore(PANTRY_KEY, JSON.stringify(Array.from(set))) && window.MCSetLog) {
+      window.MCSetLog.record("pan", before, set);
+    }
   }
   function pantryKey(item) { return (item || "").trim().toLowerCase(); }
 
@@ -4667,6 +4680,7 @@
     });
     // A full quota shouldn't silently swallow a heart (audit C-12).
     MCFav.onWriteFail = warnStorageFull;
+    if (window.MCSetLog) MCSetLog.onWriteFail = warnStorageFull;
     // Nor a hand-typed recipe (C1 — user-recipes.js's persist() had no hook
     // at all until now; mc-recipe-form.js also checks add()'s `saved` flag
     // directly and keeps the form open, so this toast is the belt to that

@@ -1843,6 +1843,7 @@
     // A full quota shouldn't silently swallow a heart or a timer (audit
     // VOC/VOA wave 7 — see warnStorageFull() above).
     MCFav.onWriteFail = warnStorageFull;
+    if (window.MCSetLog) MCSetLog.onWriteFail = warnStorageFull;
     MCTimers.onWriteFail = warnStorageFull;
 
     // The rail mounts immediately, not behind the detail load: a timer running

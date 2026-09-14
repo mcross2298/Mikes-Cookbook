@@ -16,6 +16,11 @@
 
    Synced across devices by mc-sync.js (`stringSet` union) when signed in —
    see audit C-02, which found this store had never been in the whitelist.
+   Union alone cannot express a REMOVAL, so save() below also stamps
+   mc-setlog.js with which ids changed; mc-sync.js reconciles the merged
+   union against that log after each pull. Without it, un-favouriting a
+   recipe on one device was undone by the next pull from another — see
+   mc-setlog.js's header for the measured case.
 
    Write failures: localStorage can throw QuotaExceededError, and swallowing
    it is correct (a full disk shouldn't throw a cook out of a recipe). But
@@ -40,8 +45,15 @@
   }
 
   function save(set) {
+    // Read the previous value BEFORE writing: mc-setlog.js records which ids
+    // actually changed so a removal can propagate across devices (re-audit
+    // gap #01 — `stringSet` union alone resurrects an un-favourited recipe).
+    // Only stamped on a successful write, so a full quota doesn't leave the
+    // log claiming an edit that never reached disk.
+    var before = window.MCSetLog ? load() : null;
     try {
       localStorage.setItem(KEY, JSON.stringify(Array.from(set)));
+      if (window.MCSetLog) window.MCSetLog.record("fav", before, set);
       return true;
     } catch (e) {
       if (typeof window.MCFav.onWriteFail === "function") {
