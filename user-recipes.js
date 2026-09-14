@@ -94,15 +94,48 @@
     if (best) return (whole > 0 ? whole + " " : "") + best;
     return String(Math.round(v * 100) / 100);
   }
+  // Byte-identical to cookbook.js's copy. This file used to inline the same
+  // three patterns directly inside scaleQuantity; pulling them out lets both
+  // files carry the SAME scaleQuantity body, which is what lets
+  // tools/test-scaling-format.js compare them for drift rather than just
+  // compare prettyNumber and hope.
+  function parseQtyNumber(qty) {
+    if (qty == null) return null;
+    var s = String(qty).trim();
+    var m = s.match(/^(\d+)\s+(\d+)\/(\d+)$/); // mixed: "1 1/2"
+    if (m) return parseInt(m[1], 10) + parseInt(m[2], 10) / parseInt(m[3], 10);
+    if ((m = s.match(/^(\d+)\/(\d+)$/))) return parseInt(m[1], 10) / parseInt(m[2], 10); // simple fraction
+    if (/^-?\d*\.?\d+$/.test(s)) return parseFloat(s); // integer / decimal
+    return null; // not numeric
+  }
   function scaleQuantity(qty, factor) {
     if (qty == null) return qty;
     var s = String(qty).trim();
-    var m = s.match(/^(\d+)\s+(\d+)\/(\d+)$/);            // mixed "1 1/2"
-    var val;
-    if (m) val = parseInt(m[1], 10) + parseInt(m[2], 10) / parseInt(m[3], 10);
-    else if ((m = s.match(/^(\d+)\/(\d+)$/))) val = parseInt(m[1], 10) / parseInt(m[2], 10);
-    else if (/^-?\d*\.?\d+$/.test(s)) val = parseFloat(s);
-    else return s;                                         // non-numeric → leave
+  // A RANGED amount ("2-3 cloves", "1/4-1/2 tsp") has to scale BOTH endpoints
+  // or it is the one line on the page that silently stays at 1x while every
+  // other quantity moves. Cook a 2-serving recipe for eight and "2-3 cloves
+  // garlic" stayed "2-3" — unflagged, and read aloud verbatim by Cooking
+  // Mode's speakIngredients(). 29 authored lines in the corpus are ranges,
+  // and every URL import adds more (range notation is common on recipe
+  // sites and mc-import.js passes ingredient strings through unexamined).
+  // Both sides must parse as real numbers, which is what keeps "8-inch" and
+  // "4-inch" — pan dimensions mis-keyed into `quantity` — out of this path:
+  // "inch" is not a number, so they fall through and are left alone, exactly
+  // like "to taste" and "pinch", which must never scale either.
+    var r = s.match(/^(.+?)\s*[-\u2013]\s*(.+)$/);
+    if (r) {
+      var lo = parseQtyNumber(r[1]), hi = parseQtyNumber(r[2]);
+      if (lo != null && hi != null) {
+        // " to ", not a hyphen. Cooking Mode's speakIngredients() reads this
+        // string VERBATIM through speechSynthesis, and a scaled range often
+        // lands on a mixed number — "1 1/2-3 cups" is ambiguous on screen and
+        // is spoken as nonsense, while "1 1/2 to 3 cups" reads correctly both
+        // ways. It is also how a recipe writes a range in prose anyway.
+        return prettyNumber(lo * factor) + " to " + prettyNumber(hi * factor);
+      }
+    }
+    var val = parseQtyNumber(s);
+    if (val == null) return s; // not numeric — leave alone
     return prettyNumber(val * factor);
   }
   function scaleList(list, factor) {
