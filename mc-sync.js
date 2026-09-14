@@ -42,6 +42,7 @@
       mergeCookedByRecipe: function () { return mergeCookedByRecipe.apply(null, arguments); },
       mergeReplaceByTs: function () { return mergeReplaceByTs.apply(null, arguments); },
       mergeMapByTs: function () { return mergeMapByTs.apply(null, arguments); },
+      reconcileSetStores: function () { return reconcileSetStores.apply(null, arguments); },
       // C2 regression coverage (tools/test-mc-sync-merge.js): pull/push and
       // the snapshot/blocked bookkeeping close over `client`/`user`, which
       // only exist once the MC_SB.configured guard below passes — so unlike
@@ -90,7 +91,19 @@
     // the same time would have one device's edit silently discard the
     // other's. Per-key replace-by-ts (mapByTs, below) resolves each
     // ingredient's amount independently instead.
-    'mc-cookbook:pantryqty':            'mapByTs'
+    'mc-cookbook:pantryqty':            'mapByTs',
+    // { "<kind>:<id>": {on,ts} } — per-item add/remove states for the three
+    // set stores above (favorites, pantry, grocery check-offs), written by
+    // mc-setlog.js. Re-audit critical gap #01: 'stringSet' is a pure union,
+    // so it carries additions and silently discards REMOVALS — un-checking a
+    // grocery row, un-favouriting a recipe and removing a pantry staple all
+    // came back on the next pull from a second device. This log makes each
+    // item an ordinary last-write-wins register, which is exactly what
+    // 'mapByTs' already resolves (per key, newest ts wins) — no new merge
+    // function, and reconcileSetStores() below subtracts the result from the
+    // three unions after every pull. The arrays themselves are unchanged on
+    // disk, so every existing reader of them is untouched.
+    'mc-cookbook:setlog':               'mapByTs'
   };
   // Deliberately NOT synced, so the omissions read as decisions:
   //   :photos          user-attached recipe images as data URLs — image data
@@ -226,7 +239,13 @@
     return { meals: mergeMealsByUid(local.meals, remote.meals) };
   }
 
-  // grocery: [ "checked merge-key", ... ] — plain string array, union+dedupe.
+  // grocery / favorites / pantry: [ "id", ... ] — plain string array,
+  // union+dedupe. Union is correct for ADDITIONS and cannot express a
+  // REMOVAL, which is why all three of these stores are reconciled against
+  // mc-setlog.js right after the pull (see reconcileSetStores below). Keep
+  // this function a pure union — the removal half deliberately lives outside
+  // it, so the array stores keep their on-disk shape and every existing
+  // reader of them stays untouched.
   function mergeStringSet(local, remote) {
     local = Array.isArray(local) ? local : [];
     remote = Array.isArray(remote) ? remote : [];
@@ -279,11 +298,15 @@
   // same rule mergeReplaceByTs applies to a whole object, applied instead
   // to each key independently so two devices editing different staples at
   // once don't clobber each other. A key present on only one side survives
-  // as-is (nothing to compare it against). Known, accepted limitation
-  // shared with :pantry's own 'stringSet' strategy above: a DELETION (a
-  // cook clearing a quantity back to unquantified) doesn't propagate as a
-  // removal, only additions/updates merge — same tradeoff already made for
-  // that store, not a new one introduced here.
+  // as-is (nothing to compare it against). Known, accepted limitation on
+  // :pantryqty specifically: a DELETION (a cook clearing a quantity back to
+  // unquantified) doesn't propagate as a removal, only additions/updates
+  // merge. (This comment used to point at :pantry's 'stringSet' strategy as
+  // sharing the limitation. It no longer does — the three set stores route
+  // their removals through :setlog, which is itself a mapByTs map whose
+  // entries encode on/off as a VALUE rather than by presence, so nothing
+  // there ever needs deleting. Fixing :pantryqty the same way is real work,
+  // not a follow-on: it would need an equivalent "cleared" state.)
   function mergeMapByTs(local, remote) {
     local = local || {}; remote = remote || {};
     var out = {}, keys = {}, k;
@@ -350,8 +373,47 @@
         }
         Object.keys(STORES).forEach(function (key) { pullKey(key, STORES[key]); });
         Object.keys(CONSUME).forEach(function (key) { pullKey(key, CONSUME[key]); });
+        // Runs AFTER every store has landed, because it reads two of them at
+        // once: the freshly merged :setlog and the freshly merged union it
+        // applies to. Doing it inside pullKey would depend on key order.
+        // It also has to run before push() — the whole point is that the
+        // reconciled array is what this device uploads next, so the removal
+        // travels outward instead of only being applied locally.
+        if (reconcileSetStores()) pulledChange = true;
         status.lastPull = Date.now();
       });
+  }
+
+  // Subtract mc-setlog.js's removals from the three union-merged set stores.
+  // Returns true if anything actually changed, so pull() can arm its one-shot
+  // reload for a page already rendered from the pre-reconcile value.
+  //
+  // A store whose array this leaves byte-identical is not rewritten at all —
+  // an untouched store must not look dirty to push(), and the overwhelmingly
+  // common case is that there is nothing to remove.
+  function reconcileSetStores() {
+    var SL = typeof window !== 'undefined' && window.MCSetLog;
+    if (!SL) return false;                       // mc-setlog.js not on this page
+    var log = parse(readRaw(SL.KEY));
+    if (!log || typeof log !== 'object') return false;
+    var changed = false;
+    Object.keys(SL.KINDS).forEach(function (kind) {
+      var storeKey = SL.KINDS[kind];
+      var arr = parse(readRaw(storeKey));
+      if (!Array.isArray(arr)) return;
+      var kept = SL.applyRemovals(log, kind, arr);
+      if (kept.length === arr.length) return;    // nothing removed for this kind
+      if (writeVal(storeKey, kept)) {
+        changed = true;
+      } else {
+        // Same reasoning as pullKey's quota path: the reconciled value never
+        // reached disk, so the array still on this device is the un-reconciled
+        // union. Pushing it would re-upload the removed ids and undo the very
+        // removal this is here to propagate.
+        blocked[storeKey] = true;
+      }
+    });
+    return changed;
   }
 
   function push() {

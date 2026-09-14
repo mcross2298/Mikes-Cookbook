@@ -51,6 +51,17 @@ jobs:
         run: |
           node tools/test-mc-bridge.js
           node tools/test-mc-sync-merge.js
+      # Re-audit critical gap #01. `stringSet` is a pure union, so it carried
+      # additions across devices and silently discarded REMOVALS — un-checking
+      # a grocery row, un-favouriting a recipe and removing a pantry staple all
+      # came back on the next pull. This gate pins the per-item add/remove log
+      # that fixes it, END TO END through mc-sync.js's real reconcileSetStores()
+      # rather than only its pure helpers. Proven to fail on four planted
+      # regressions before landing: a bare-tombstone log with no `on:1` record
+      # (breaks remove-then-re-add), applyRemovals() made inert, reconciliation
+      # moved after push(), and a reconcile that rewrites an unchanged store.
+      - name: Set-store removal propagation (mc-setlog.js + reconcileSetStores)
+        run: node tools/test-mc-setlog.js
       - name: Kitchen timer store test (mc-timers.js — CI initiative 1)
         run: node tools/test-mc-timers.js
       - name: Split data layer test (build-data.js output + mc-data.js hydration — CI initiative 5)

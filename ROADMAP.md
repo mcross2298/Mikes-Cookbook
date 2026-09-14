@@ -1091,6 +1091,109 @@ page into an array-driven renderer (roadmap `F6`'s reversal in the sibling
 app), which a *coverage* check would not do — but it is a documented decision,
 so extending the gate is its own change rather than a side effect of an audit.
 
+## Cookbook PWA re-audit (2026-09-13/14) — engines, parsers and sync integrity
+
+Re-ran the updated Executive Summary against the shipped tree, then exercised the
+scaling, ingredient-parsing, grocery-merge, macro and sync engines directly rather
+than reading them. All 23 runnable CI gates passed (gate 24, shared-module drift,
+needs the sibling repo and was marked not-run rather than assumed). Seven of the
+nine bullets commit `06082e3` changed verify cleanly; two are now numerically
+honest but keep an explanation the data doesn't support. Full findings live in the
+re-audit artifact; what follows is what's been acted on and what hasn't.
+
+### Critical gap #01 ✅ (shipped 2026-09-14) — removals now propagate across devices
+
+**The bug.** `mc-cookbook:favorites`, `mc-cookbook:pantry` and
+`mc-cookbook:mealplan:grocery` are all `Array.from(Set)` id lists synced with
+`mc-sync.js`'s `stringSet` strategy — a pure **union**. Union carries additions and
+cannot express a removal, so every deletion on any of the three was undone by the
+next pull from a second device. Measured against the real merge function, not
+theorised:
+
+```
+phone un-checks milk:  local ["eggs"]  remote ["milk","eggs"]
+mergeStringSet      →  ["eggs","milk"]          ← milk is back in the cart
+un-favourite r9:       local ["r1"]    remote ["r1","r9"]
+mergeStringSet      →  ["r1","r9"]              ← r9 resurrects
+```
+
+This was ranked first of the five critical gaps because it is the only one that
+**destroys a deliberate user action** rather than misreporting a number, and because
+it is unrecoverable by design: the id is gone from the local store before sync ever
+runs, so no retry, reconnect or re-sync can tell "never had it" from "deleted it."
+Meanwhile the Executive Summary promised favourites and pantry "follow you across
+devices."
+
+**The fix** — `mc-setlog.js`, a per-item last-write-wins register in a **separate,
+sparse companion store** (`mc-cookbook:setlog` → `{ "<kind>:<id>": {on,ts} }`),
+reconciled against the three unions by `mc-sync.js`'s `reconcileSetStores()` at the
+end of every `pull()`, before `push()`.
+
+Four decisions worth recording, because each had a plausible-looking alternative:
+
+1. **A companion store, not a new shape for the three arrays.** Changing
+   `:favorites` to an object would touch `MCFav.load()`, `loadPantry()`,
+   `loadGroc()`, `pantryMatchInfo()`, `pantryCandidates()`, the low-shopping
+   filter, the grocery-row suppression, `mc-grocery.js`'s `configure()` hooks and
+   `mc-export.js` — and would leave a not-yet-updated device reading its own
+   favourites as empty. Same call `:pantryqty` made against `:pantry`, for the same
+   measured reason. An id with no entry behaves exactly as it always has.
+2. **`on:1` is load-bearing, not bookkeeping.** A bare tombstone map cannot express
+   remove-then-re-add: the stale tombstone strips the item again the instant it
+   comes back. Recording both states makes each entry an ordinary LWW register.
+   `tools/test-mc-setlog.js` test 5 is precisely this case, and the simpler design
+   fails it.
+3. **No new merge function.** `{on,ts}` per key is exactly what the shipped
+   `mapByTs` strategy already resolves. Reused unchanged.
+4. **Written by diffing at each store's `save()`, not at every toggle.** All three
+   saves take a whole `Set`, so a caller-side hook would have to be threaded
+   through every toggle, every bulk clear and anything added later. Diffing the set
+   being written against the one on disk catches all of them, including callers
+   that don't know the file exists. Only changed ids get an entry, so the log stays
+   a record of edits rather than a mirror of the three stores.
+
+**Two limits, both deliberate and documented in the file header.** `prune()` drops
+entries past 90 days, so a device offline longer than that can still resurrect an
+id — the old behaviour, now *bounded* instead of permanent and unconditional. And
+two devices editing the same id in the same millisecond resolve by `mapByTs`'s
+`>=` tiebreak and can disagree; inherited from that strategy, not introduced here.
+
+**Proven before landing.** `tools/test-mc-setlog.js` (46 assertions, new blocking
+gate) exercises the real `reconcileSetStores()` against a fake `localStorage`, not
+just the pure helpers, and was confirmed to fail on four planted regressions: the
+bare-tombstone design (3 fail), an inert `applyRemovals()` (5), reconciliation
+moved after `push()` (1), and a reconcile that rewrites an unchanged store (2).
+
+Not a Quick Tour change: this restores behaviour the tour and Executive Summary
+already describe, which the Documentation currency rule explicitly exempts.
+
+### Still open from the re-audit
+
+Ranked as they were in the artifact; none of these is started.
+
+- **#02 Ranged quantities never scale.** `scaleQuantity("2-3", 4)` → `"2-3"`.
+  Cook a recipe for eight and every line quadruples except the one reading "2–3",
+  unflagged, and Cooking Mode reads the unscaled figure aloud. 29 corpus lines
+  today, and every URL import adds more — range notation is common on recipe sites
+  and `mc-import.js` passes ingredient strings through unexamined. Fix is to teach
+  `parseQtyNumber` the range form and scale both endpoints, keeping the existing
+  pass-through for "pinch"/"to taste", which is correct.
+- **#03 The pantry quantity feature is off for 27.5% of grocery rows, invisibly.**
+  235 of 854 merged rows carry `need: null`, so 📏 accepts an amount that can have
+  no effect. Compounded by a volume need being incomparable with a weight-recorded
+  pantry (`"unknown"`), so a cook with a kitchen scale gets nothing.
+- **#04 Everything persists in `localStorage`, including base64 photos.** No
+  IndexedDB anywhere; `MAX_RECIPE_PHOTOS = 24` is the ceiling of the wrong
+  primitive, not a tuning choice.
+- **#05 Two nutrition models sum into one daily total.** The tracker reads fibre
+  from Open Food Facts; recipes have no fibre field, so a recipe logged to the day
+  adds zero and the day's fibre figure measures how much of it came from barcodes.
+  Net carbs cannot be derived at all downstream of this.
+- **Executive Summary is still read by no CI gate** (carried over from the
+  2026-09-13 audit above, unchanged). Both false claims that audit found would have
+  failed `tools/test-quick-tour.js`'s existing machinery had it been pointed at the
+  page.
+
 ## Owner-only verification — how to actually close it
 
 Two items have sat open since phase 1 because CI can't do them. Most of both is now
@@ -1139,9 +1242,13 @@ To close it:
    `ts` should win for that one key — confirm the surviving value matches whichever edit happened
    last, not whichever device happened to sync first.
 5. **The clear-back-to-unquantified case** (a known, documented limitation, not a bug to chase):
-   clearing a staple's amount on one device does NOT propagate as a removal to the other — the same
-   limitation `stringSet` already has. Confirm this is what actually happens (the other device keeps
-   showing the old amount) so this doesn't get "discovered" as a surprise later.
+   clearing a staple's amount on one device does NOT propagate as a removal to the other. This used
+   to read "the same limitation `stringSet` already has" — that is no longer true. Re-audit critical
+   gap #01 gave the three set-shaped stores real removal propagation via `mc-setlog.js`, so
+   `:pantryqty` is now the *only* store carrying this limitation. Fixing it the same way is real
+   work rather than a follow-on: it needs an equivalent "cleared" state, since the entry's absence
+   is what currently means unquantified. Confirm the old amount still shows on the other device so
+   this doesn't get "discovered" as a surprise later.
 
 ### PWA device matrix
 
