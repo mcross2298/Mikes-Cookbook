@@ -312,13 +312,27 @@
   }
 
   /* ── Cook log (shared store: dated cook history + optional photo) ──────
-     mc-cookbook:cooked → { [recipe_id]: [ { at: ISO, photo: dataURL|null } ] }.
+     mc-cookbook:cooked → { [recipe_id]: [ { at: ISO, photo: true|null } ] }.
      Entries are stored chronologically (most recent appended last). A legacy
      bare-string entry is tolerated and read as { at, photo: null }. The whole
      mc-cookbook: namespace is already picked up by Home's backup export/import,
-     so cook history (and photos) round-trip through a backup for free. */
+     so cook history round-trips through a backup for free — the PHOTO bytes
+     themselves do not (see mc-photos.js's header on why that's deliberate).
+
+     Re-audit critical gap #04: `photo` used to hold the actual base64 JPEG
+     string, capped at MAX_PHOTOS (12) total across the whole app because
+     that string sat inside this same localStorage value — a ceiling the
+     wrong storage primitive imposed, not a product decision, and it meant
+     the 13th cook-log photo silently pushed out the 1st. `photo` is now
+     just `true` (a marker that a photo exists for this entry) or `null`;
+     the real bytes live in mc-photos.js's IndexedDB-backed library, keyed
+     by this SAME `at` timestamp — which is also, not coincidentally, this
+     entry's only real identity (mc-sync.js's mergeCookedByRecipe already
+     unions cook-log entries by `at` for exactly that reason). No more cap:
+     IndexedDB's origin quota is an order of magnitude past localStorage's,
+     and a full quota there still fails safely — see mc-photos.js's
+     onWriteFail wiring in init() below. */
   var COOKED_KEY   = "mc-cookbook:cooked";
-  var MAX_PHOTOS   = 12;       // keep only the N most-recent photos (storage budget)
   var PHOTO_EDGE   = 1024;     // longest-edge px after downscale
   var PHOTO_QUALITY = 0.7;     // JPEG quality
 
@@ -355,6 +369,11 @@
     map[id] = map[id].map(normalizeEntry).filter(function (e) { return e.at !== at; });
     if (!map[id].length) delete map[id];
     if (!saveCooked(map)) warnStorageFull();
+    // The entry's own photo bytes live in mc-photos.js's library, keyed by
+    // this exact `at` — removing the entry without this leaves an orphaned
+    // blob nothing will ever reference again. Harmless to call when there
+    // was no photo; a delete on a missing id is already a no-op there.
+    if (window.MCPhotos) MCPhotos.removeCookPhoto(id, at);
   }
 
   // Relative + absolute date strings for the log.
@@ -376,35 +395,12 @@
   }
 
   /* ── Photos on a cooked entry (downscaled, capped, quota-aware) ─────── */
-  function allPhotoEntries(map) {
-    var arr = [];
-    Object.keys(map).forEach(function (id) {
-      if (!Array.isArray(map[id])) return;
-      map[id].forEach(function (e) { if (e && typeof e === "object" && e.photo) arr.push(e); });
-    });
-    return arr;
-  }
-  function photoCount() { return allPhotoEntries(loadCooked()).length; }
-
-  // Keep only the MAX_PHOTOS newest photos; null out the rest in place.
-  function enforcePhotoCap(map) {
-    var withPhotos = allPhotoEntries(map);
-    if (withPhotos.length <= MAX_PHOTOS) return;
-    withPhotos.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
-    for (var i = 0; i < withPhotos.length - MAX_PHOTOS; i++) withPhotos[i].photo = null;
-  }
-  // Last-ditch save under quota pressure: drop oldest photos until it fits.
-  function shrinkAndSave(map) {
-    var withPhotos = allPhotoEntries(map);
-    withPhotos.sort(function (a, b) { return Date.parse(a.at) - Date.parse(b.at); });
-    for (var i = 0; i < withPhotos.length; i++) {
-      withPhotos[i].photo = null;
-      if (saveCooked(map)) return true;
-    }
-    return saveCooked(map);
-  }
-
-  // Decode → cover-fit downscale to PHOTO_EDGE → JPEG data URL. done(url, err).
+  // Decode → cover-fit downscale to PHOTO_EDGE → JPEG Blob. done(blob, err).
+  // Re-audit critical gap #04: this used to hand back canvas.toDataURL()'s
+  // base64 string — the very thing that made every photo in this app an
+  // oversized string living in localStorage. canvas.toBlob() produces the
+  // same JPEG bytes without ever round-tripping through base64 at all, so a
+  // new photo never touches a data: URI anywhere in this pipeline now.
   function downscaleImage(file, done) {
     var reader = new FileReader();
     reader.onerror = function () { done(null, "read"); };
@@ -419,7 +415,9 @@
         var canvas = el("canvas"); canvas.width = cw; canvas.height = ch;
         try {
           canvas.getContext("2d").drawImage(img, 0, 0, cw, ch);
-          done(canvas.toDataURL("image/jpeg", PHOTO_QUALITY), null);
+          canvas.toBlob(function (blob) {
+            if (blob) done(blob, null); else done(null, "encode");
+          }, "image/jpeg", PHOTO_QUALITY);
         } catch (e) { done(null, "encode"); }
       };
       img.src = reader.result;
@@ -438,34 +436,34 @@
       var file = input.files && input.files[0];
       if (input.parentNode) input.parentNode.removeChild(input);
       if (!file) return;
-      downscaleImage(file, function (dataUrl, err) {
-        if (err || !dataUrl) { window.alert("Couldn’t process that image — try another."); return; }
-        attachPhoto(r, at, dataUrl);
+      downscaleImage(file, function (blob, err) {
+        if (err || !blob) { window.alert("Couldn’t process that image — try another."); return; }
+        attachPhoto(r, at, blob);
       });
     });
     input.click();
   }
 
-  function attachPhoto(r, at, dataUrl) {
-    var map = loadCooked();
-    if (!Array.isArray(map[r.recipe_id])) return;
-    var found = false;
-    map[r.recipe_id] = map[r.recipe_id].map(function (e) {
-      var entry = normalizeEntry(e);
-      if (entry.at === at) { entry.photo = dataUrl; found = true; }
-      return entry;
+  function attachPhoto(r, at, blob) {
+    if (!window.MCPhotos) { window.alert("Photos aren’t available in this browser."); return; }
+    MCPhotos.addCookPhoto(r.recipe_id, at, blob).then(function (ok) {
+      if (!ok) { warnStorageFull(); return; }
+      var map = loadCooked();
+      if (!Array.isArray(map[r.recipe_id])) return;
+      var found = false;
+      map[r.recipe_id] = map[r.recipe_id].map(function (e) {
+        var entry = normalizeEntry(e);
+        if (entry.at === at) { entry.photo = true; found = true; }
+        return entry;
+      });
+      if (!found) return;
+      if (!saveCooked(map)) { warnStorageFull(); return; }
+      renderMacros(r);
+      // This may be the most recent cook-log entry with a photo — the exact
+      // thing the hero falls back to when there's no explicit cover — so it
+      // can change what the hero shows even though the hero has no button here.
+      renderHero(r);
     });
-    if (!found) return;
-    enforcePhotoCap(map);
-    if (!saveCooked(map) && !shrinkAndSave(map)) {
-      window.alert("Storage is full — couldn’t save the photo. Remove some older photos and try again.");
-      return;
-    }
-    renderMacros(r);
-    // This may be the most recent cook-log entry with a photo — the exact
-    // thing the hero falls back to when there's no explicit cover — so it
-    // can change what the hero shows even though the hero has no button here.
-    renderHero(r);
   }
 
   // Tap a thumbnail to view it full-screen; tap anywhere to dismiss.
@@ -478,68 +476,33 @@
   }
 
   /* ── Recipe header photo (one cover photo per recipe, any recipe) ────
-     mc-cookbook:photos → { [recipe_id]: dataURL }. Separate from the
-     cook-log photos above (those are per dated cook entry); this is a
-     single cover image shown in the sticky header. Same downscale
-     pipeline, same mc-cookbook: namespace so it rides along in backups.
+     A single cover image shown in the sticky header, separate from the
+     cook-log photos above (those are per dated cook entry). Same downscale
+     pipeline; the bytes live in mc-photos.js's photo library now, not
+     mc-cookbook:photos — see that file's header for the full reasoning.
 
-     Audit C-12: each photo was already size-bounded by downscaleImage
-     (PHOTO_EDGE / PHOTO_QUALITY) and a failed write already alerts — but
-     unlike the cook log, which caps at MAX_PHOTOS, there was no ceiling on
-     HOW MANY recipes could hold a cover photo. With 318 recipes that's an
-     unbounded slice of a 5–10 MB origin quota shared with everything else
-     in the mc-cookbook: namespace. MAX_RECIPE_PHOTOS applies the cook log's
-     own pattern here: keep the N most recent, drop the oldest.
-
-     "Oldest" is insertion order. These keys are recipe_id slugs (never
-     numeric), so JS preserves insertion order for them, re-saving the map
-     keeps that order, and overwriting an existing key keeps its original
-     position — so the first key really is the least-recently-added. */
-  var RECIPE_PHOTOS_KEY  = "mc-cookbook:photos";
-  var MAX_RECIPE_PHOTOS  = 24;
-
-  function loadRecipePhotos() {
-    try {
-      var o = JSON.parse(localStorage.getItem(RECIPE_PHOTOS_KEY) || "{}");
-      return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
-    } catch (e) { return {}; }
-  }
-  // Drop oldest-first until the map is within budget. Returns how many went.
-  function enforceRecipePhotoCap(map, keepId) {
-    var keys = Object.keys(map), dropped = 0;
-    for (var i = 0; i < keys.length && Object.keys(map).length > MAX_RECIPE_PHOTOS; i++) {
-      if (keys[i] === keepId) continue;       // never evict the one just added
-      delete map[keys[i]];
-      dropped++;
-    }
-    return dropped;
-  }
-  function saveRecipePhotos(map) {
-    try { localStorage.setItem(RECIPE_PHOTOS_KEY, JSON.stringify(map)); return true; }
-    catch (e) { return false; }      // QuotaExceededError → caller alerts
-  }
-  function loadRecipePhoto(id) { return loadRecipePhotos()[id] || null; }
-
-  function attachRecipePhoto(r, dataUrl) {
-    var map = loadRecipePhotos();
-    map[r.recipe_id] = dataUrl;
-    var dropped = enforceRecipePhotoCap(map, r.recipe_id);
-    if (!saveRecipePhotos(map)) {
-      window.alert("Storage is full — couldn’t save the photo. Remove another photo and try again.");
-      return;
-    }
-    if (dropped) {
-      toast("Keeping your " + MAX_RECIPE_PHOTOS + " most recent recipe photos to save space.");
-    }
-    renderHeader(r);
-    renderHero(r);
+     Audit C-12 capped this at MAX_RECIPE_PHOTOS (24), evicting the oldest
+     cover once 318 recipes' worth of covers threatened to eat the shared
+     localStorage budget. Re-audit critical gap #04 retires that cap
+     outright rather than raising it: the ceiling existed only because the
+     bytes sat in the wrong store, and IndexedDB's origin quota has no
+     comparable pressure at this scale. A cook can give every recipe in the
+     book a cover photo now; nothing evicts the oldest one to make room. */
+  function attachRecipePhoto(r, blob) {
+    if (!window.MCPhotos) { window.alert("Photos aren’t available in this browser."); return; }
+    MCPhotos.setCover(r.recipe_id, blob).then(function (ok) {
+      if (!ok) { window.alert("Storage is full — couldn’t save the photo. Remove another photo and try again."); return; }
+      renderHeader(r);
+      renderHero(r);
+    });
   }
   function removeRecipePhoto(r) {
-    var map = loadRecipePhotos();
-    delete map[r.recipe_id];
-    if (!saveRecipePhotos(map)) warnStorageFull();
-    renderHeader(r);
-    renderHero(r);
+    if (!window.MCPhotos) return;
+    MCPhotos.removeCover(r.recipe_id).then(function (ok) {
+      if (!ok) warnStorageFull();
+      renderHeader(r);
+      renderHero(r);
+    });
   }
 
   function pickRecipePhoto(r) {
@@ -553,9 +516,9 @@
       var file = input.files && input.files[0];
       if (input.parentNode) input.parentNode.removeChild(input);
       if (!file) return;
-      downscaleImage(file, function (dataUrl, err) {
-        if (err || !dataUrl) { window.alert("Couldn’t process that image — try another."); return; }
-        attachRecipePhoto(r, dataUrl);
+      downscaleImage(file, function (blob, err) {
+        if (err || !blob) { window.alert("Couldn’t process that image — try another."); return; }
+        attachRecipePhoto(r, blob);
       });
     });
     input.click();
@@ -576,6 +539,25 @@
     return wrap;
   }
 
+  // Re-audit gap #04's own smoke test caught what the header-rebuild
+  // tradeoff above accepted as "a minor, self-correcting cosmetic gap":
+  // mc-photos.js's IndexedDB cache can still be cold at renderHeader()'s
+  // FIRST call, so renderPhotoWidget(r) can decide "no photo yet" and show
+  // the eyebrow "add a photo" button for a recipe that already has a cover
+  // — and since nothing repainted just that widget, it stayed wrong
+  // indefinitely, not just for "a beat." This swaps ONLY the widget in
+  // place once photos warm, same narrow-scope reasoning as renderHero()
+  // itself: no full header rebuild, nothing else in the eyebrow touched.
+  function refreshPhotoWidget(r) {
+    var eyebrow = $(".r-eyebrow");
+    if (!eyebrow) return;
+    var existing = eyebrow.querySelector(".r-photo");
+    var widget = renderPhotoWidget(r);
+    if (existing && widget) eyebrow.replaceChild(widget, existing);
+    else if (existing) eyebrow.removeChild(existing);
+    else if (widget) eyebrow.appendChild(widget);
+  }
+
   /* ── Hero photo (CI initiative 3) ─────────────────────────────────────
      Renders BEFORE the sticky #header, in its own non-sticky #hero block, so
      it scrolls away naturally and the existing sticky title/tags bar takes
@@ -590,9 +572,8 @@
      Controls depend on where the photo came from: an authored photo
      (`r.photo`, data-file content) is display-only here; a cook-log photo
      gets a "set as cover" affordance (promotes it to an explicit, stable
-     cover rather than depending on that cook-log entry surviving the
-     MAX_PHOTOS eviction); only an explicit cover gets the full replace +
-     remove pair recipe.html has always offered. */
+     cover independent of any one cook-log entry); only an explicit cover
+     gets the full replace + remove pair recipe.html has always offered. */
   function renderHero(r) {
     var host = $("#hero");
     if (!host) return;
@@ -1068,11 +1049,9 @@
         hist.appendChild(cookEntryRow(r, e));
       });
       card.appendChild(hist);
-
-      if (photoCount() >= MAX_PHOTOS) {
-        card.appendChild(el("p", "cook-log-note",
-          "Keeping your " + MAX_PHOTOS + " most recent photos to save space."));
-      }
+      // The "keeping your N most recent" note that used to sit here
+      // described MAX_PHOTOS eviction, retired by re-audit critical gap
+      // #04 — a cook's cook-log photos no longer disappear to make room.
     }
     return card;
   }
@@ -1868,6 +1847,7 @@
     // VOC/VOA wave 7 — see warnStorageFull() above).
     MCFav.onWriteFail = warnStorageFull;
     if (window.MCSetLog) MCSetLog.onWriteFail = warnStorageFull;
+    if (window.MCPhotos) MCPhotos.onWriteFail = warnStorageFull;
     MCTimers.onWriteFail = warnStorageFull;
 
     // The rail mounts immediately, not behind the detail load: a timer running
@@ -1918,6 +1898,20 @@
     // among them the error copy above is now stale.
     document.addEventListener("mc:datareloaded", function () {
       if (MCData.hasDetail(r.recipe_id)) renderDetailReady(r);
+    });
+
+    // mc-photos.js fires this once its IndexedDB-backed cache is warm — see
+    // that file's header for why photoFor() has to stay synchronous, and
+    // why that means a cover/cook-log photo can be a beat late to first
+    // paint rather than blocking it. renderHero() + refreshPhotoWidget() are
+    // the only two render paths this needs: both read nothing but
+    // photoFor(), touch nothing else in the DOM, and touch no state a cook
+    // could have already changed. Deliberately NOT renderHeader() — that
+    // rebuilds the WHOLE header (serving stepper included) just to refresh
+    // two small pieces that already have their own narrow updaters.
+    document.addEventListener("mc:photosready", function () {
+      renderHero(r);
+      refreshPhotoWidget(r);
     });
   }
 

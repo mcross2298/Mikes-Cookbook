@@ -539,42 +539,166 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
 
 
   // ── Initiative 3: photo resolution chain + hero + light theme + Counter Mode ─
-  errors.length = 0;
-  await page.goto(B + '/index.html', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(300);
-  const photoRecipe = await page.evaluate((dataUrl) => {
+  // ── + re-audit critical gap #04: base64-in-localStorage -> IndexedDB ─────
+  // mc-photos.js's one-time migration is gated on a flag that gets set the
+  // FIRST TIME its boot() ever runs on a device — including a run that finds
+  // nothing to migrate. The main `page` above has already loaded index.html
+  // several times before this point, which already set that flag on an
+  // empty photo library. Seeding a legacy photo into the SAME page/context
+  // now would test nothing: boot() would see the flag already set and
+  // correctly skip migration, same as it would on a real device that
+  // finished migrating years ago. To actually exercise "a device that has
+  // never booted this module before, with pre-existing legacy photos" — the
+  // real-world upgrade case this module exists for — this needs a genuinely
+  // fresh browser context (same technique the offline-shard scenario below
+  // uses to avoid contamination from earlier scenarios' warmed SW cache),
+  // with the legacy photo seeded via addInitScript so it's on disk BEFORE
+  // mc-photos.js's own <script> tag ever executes.
+  const DATA_URL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+  const photoRecipe = await page.evaluate(() => {
     var r = window.RECIPES[0];
-    var map = {}; map[r.recipe_id] = dataUrl;
-    localStorage.setItem('mc-cookbook:photos', JSON.stringify(map));
     return { id: r.recipe_id, title: r.title };
-  }, 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
-
-  await page.goto(B + '/index.html#recipes', { waitUntil: 'networkidle' });
-  await page.reload({ waitUntil: 'networkidle' });
-  await page.waitForTimeout(500);
-  await page.locator('#screen-recipes .search-box').fill(photoRecipe.title);
-  await page.waitForTimeout(300);
-  ok('cards: no JS errors', errors.length === 0 || (console.log(errors), false));
-  ok('cards: planted cover photo renders in the card band',
-    await page.locator('.rc-band.has-photo').count() > 0);
-  await page.locator('#screen-recipes .search-box').fill('chicken');
-  await page.waitForTimeout(300);
-  ok('cards: recipes without a photo still show the emoji band unchanged',
-    await page.locator('.rc-band:not(.has-photo) .rc-icon').count() > 0);
-
-  errors.length = 0;
-  await page.goto(B + '/recipe.html?id=' + photoRecipe.id, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(300);
-  ok('hero: no JS errors', errors.length === 0 || (console.log(errors), false));
-  ok('hero: renders the cover photo', await page.locator('#hero .r-hero-img').count() === 1);
-  ok('hero: eyebrow "add photo" hidden once the hero owns display',
-    await page.locator('.r-eyebrow .r-photo').count() === 0);
-
+  });
   const noPhotoId = await page.evaluate(() => window.RECIPES[5].recipe_id);
-  await page.goto(B + '/recipe.html?id=' + noPhotoId, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(300);
+
+  const photoCtx = await browser.newContext();
+  const photoPage = await photoCtx.newPage();
+  let errs2 = [];
+  photoPage.on('pageerror', (e) => errs2.push('pageerror: ' + e.message));
+  photoPage.on('console', (m) => {
+    const t = m.text();
+    if (m.type() === 'error' && !/net::|Failed to load resource/.test(t)) errs2.push('console: ' + t);
+  });
+  // addInitScript re-runs before EVERY navigation on this page, not just the
+  // first — so it must be idempotent itself, or every later goto() in this
+  // scenario would re-plant the legacy string right after mc-photos.js just
+  // finished stripping it. Gating on its own migration flag (rather than,
+  // say, a one-shot counter) is exactly the real-world condition that
+  // decides whether a device still needs seeding: once migrated, never
+  // reseed.
+  await photoPage.addInitScript(([id, dataUrl]) => {
+    try {
+      if (localStorage.getItem('mc-cookbook:photosMigratedV1') === '1') return;
+      var map = {}; map[id] = dataUrl;
+      localStorage.setItem('mc-cookbook:photos', JSON.stringify(map));
+    } catch (e) {}
+  }, [photoRecipe.id, DATA_URL]);
+
+  errs2.length = 0;
+  await photoPage.goto(B + '/index.html#recipes', { waitUntil: 'networkidle' });
+  await photoPage.waitForTimeout(500);
+  await photoPage.locator('#screen-recipes .search-box').fill(photoRecipe.title);
+  await photoPage.waitForTimeout(300);
+  ok('cards: no JS errors', errs2.length === 0 || (console.log(errs2), false));
+  ok('cards: planted cover photo renders in the card band',
+    await photoPage.locator('.rc-band.has-photo').count() > 0);
+  await photoPage.locator('#screen-recipes .search-box').fill('chicken');
+  await photoPage.waitForTimeout(300);
+  ok('cards: recipes without a photo still show the emoji band unchanged',
+    await photoPage.locator('.rc-band:not(.has-photo) .rc-icon').count() > 0);
+
+  // The seeded photo above was a raw legacy base64 string, and the goto()
+  // just above was mc-photos.js's FIRST-EVER boot on this fresh context, so
+  // its one-time migration should have run as a side effect. The card
+  // rendering above proves A url resolved — it can't tell WHICH source it
+  // came from, since photoFor() deliberately keeps a still-present legacy
+  // string usable during the migration window. Check the underlying stores
+  // directly instead.
+  errs2.length = 0;
+  const migrationState = await photoPage.evaluate(async (id) => {
+    var raw = localStorage.getItem('mc-cookbook:photos');
+    var stillLegacy = raw ? JSON.parse(raw)[id] : null;
+    var idbCount = await new Promise(function (resolve) {
+      var req;
+      try { req = indexedDB.open('mc-cookbook-photos'); } catch (e) { resolve(-1); return; }
+      req.onerror = function () { resolve(-1); };
+      req.onsuccess = function () {
+        var db = req.result;
+        var c = db.transaction('photos', 'readonly').objectStore('photos').count();
+        c.onsuccess = function () { db.close(); resolve(c.result); };
+        c.onerror = function () { db.close(); resolve(-1); };
+      };
+    });
+    return {
+      stillLegacy: !!stillLegacy,
+      migratedFlag: localStorage.getItem('mc-cookbook:photosMigratedV1'),
+      idbCount: idbCount
+    };
+  }, photoRecipe.id);
+  ok('migration: legacy base64 string stripped from mc-cookbook:photos after migrating',
+    !migrationState.stillLegacy);
+  ok('migration: mc-cookbook:photosMigratedV1 flag set', migrationState.migratedFlag === '1');
+  ok('migration: the migrated cover photo landed in IndexedDB', migrationState.idbCount >= 1);
+  ok('migration: no JS errors', errs2.length === 0 || (console.log(errs2), false));
+
+  errs2.length = 0;
+  await photoPage.goto(B + '/recipe.html?id=' + photoRecipe.id, { waitUntil: 'networkidle' });
+  await photoPage.waitForTimeout(300);
+  ok('hero: no JS errors', errs2.length === 0 || (console.log(errs2), false));
+  ok('hero: renders the cover photo', await photoPage.locator('#hero .r-hero-img').count() === 1);
+  ok('hero: eyebrow "add photo" hidden once the hero owns display',
+    await photoPage.locator('.r-eyebrow .r-photo').count() === 0);
+
+  await photoPage.goto(B + '/recipe.html?id=' + noPhotoId, { waitUntil: 'networkidle' });
+  await photoPage.waitForTimeout(300);
   ok('hero: renders nothing for a recipe with no photo',
-    await page.evaluate(() => document.getElementById('hero').offsetHeight) === 0);
+    await photoPage.evaluate(() => document.getElementById('hero').offsetHeight) === 0);
+
+  // A NEW cover write (as opposed to the migrated one above) goes straight
+  // to IndexedDB and never touches mc-cookbook:photos at all — and a
+  // cook-log photo attach/remove round-trips through the same store,
+  // cleaning up its objectURL on removal rather than leaving an orphaned
+  // blob cached forever.
+  errs2.length = 0;
+  const writeResult = await photoPage.evaluate(async (id) => {
+    var px = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+    var bytes = Uint8Array.from(atob(px), function (c) { return c.charCodeAt(0); });
+    var blob = new Blob([bytes], { type: 'image/png' });
+    var setOk = await window.MCPhotos.setCover(id, blob);
+    var rawAfter = localStorage.getItem('mc-cookbook:photos');
+    var coverUrl = window.MCPhotos.urlFor('cover', id);
+    var at = Date.now();
+    var addOk = await window.MCPhotos.addCookPhoto(id, at, blob);
+    var cookUrlBefore = window.MCPhotos.urlFor('cook', id, at);
+    var removeOk = await window.MCPhotos.removeCookPhoto(id, at);
+    var cookUrlAfter = window.MCPhotos.urlFor('cook', id, at);
+    return {
+      setOk: setOk,
+      rawTouched: !!(rawAfter && JSON.parse(rawAfter)[id]),
+      coverUrlPresent: !!coverUrl,
+      addOk: addOk,
+      cookUrlBefore: !!cookUrlBefore,
+      removeOk: removeOk,
+      cookUrlAfter: !!cookUrlAfter
+    };
+  }, noPhotoId);
+  ok('write: setCover() succeeds', writeResult.setOk);
+  ok('write: a new cover never touches mc-cookbook:photos (straight to IndexedDB)',
+    !writeResult.rawTouched);
+  ok('write: urlFor() resolves the new cover synchronously from the warm cache',
+    writeResult.coverUrlPresent);
+  ok('write: addCookPhoto() succeeds', writeResult.addOk);
+  ok('write: cook-log photo resolves before removal', writeResult.cookUrlBefore);
+  ok('write: removeCookPhoto() succeeds', writeResult.removeOk);
+  ok('write: cook-log photo url gone after removal (orphaned blob cleaned up)',
+    !writeResult.cookUrlAfter);
+  ok('write: no JS errors', errs2.length === 0 || (console.log(errs2), false));
+
+  // Backup export no longer contains base64 image data — the whole point of
+  // moving bytes out of localStorage (mc-export.js's own comment documents
+  // this as a deliberate decision, not an oversight: re-inflating IndexedDB
+  // blobs back into the backup file would undo it). mc-export.js only loads
+  // on index.html/diagnostics.html, not recipe.html, so this needs its own
+  // navigation back.
+  await photoPage.goto(B + '/index.html', { waitUntil: 'networkidle' });
+  await photoPage.waitForTimeout(300);
+  const exportCheck = await photoPage.evaluate(() => {
+    var payload = window.MCExport.buildPayload(localStorage);
+    return { hasDataUri: JSON.stringify(payload).indexOf('data:image') >= 0 };
+  });
+  ok('export: backup JSON contains no base64 image data', !exportCheck.hasDataUri);
+
+  await photoCtx.close();
 
   // Light theme
   {

@@ -298,17 +298,34 @@
   // stay on this one chain rather than reading r.photo or a store directly,
   // or a second, drifting definition creeps back in (see CLAUDE.md's
   // mc-cards.js entry).
+  //
+  // Re-audit critical gap #04: the cover/cook-log URL itself now comes from
+  // mc-photos.js's IndexedDB-backed photo library, not a base64 string
+  // sitting in these two localStorage maps — but this function's own
+  // SIGNATURE and PRECEDENCE never changed, which is what let every caller
+  // (cards, the hero, the eyebrow widget) stay untouched. Two fallback
+  // reads keep photos visible during the one-time migration window rather
+  // than going dark while mc-photos.js's async warm-up (or the migration
+  // itself) is still in flight: a raw string still sitting in either map
+  // means migration hasn't moved THIS photo yet, so it's used directly;
+  // once migration strips it, MCPhotos.urlFor()'s warm in-memory cache
+  // takes over. Both states resolve to the exact same photo, just from a
+  // different place, for however long the transition takes on this device.
   function photoFor(r) {
     if (r.photo) return { url: r.photo, source: "authored" };
-    var covers = loadJSONMap(RECIPE_COVER_KEY);
-    if (covers[r.recipe_id]) return { url: covers[r.recipe_id], source: "cover" };
+    var coverRaw = loadJSONMap(RECIPE_COVER_KEY)[r.recipe_id];
+    var coverUrl = (typeof coverRaw === "string" && coverRaw.length > 32) ? coverRaw
+      : (window.MCPhotos ? MCPhotos.urlFor("cover", r.recipe_id) : null);
+    if (coverUrl) return { url: coverUrl, source: "cover" };
     var entries = loadJSONMap(COOKED_KEY)[r.recipe_id];
     if (Array.isArray(entries)) {
       for (var i = entries.length - 1; i >= 0; i--) {
         var e = entries[i];
-        if (e && typeof e === "object" && e.photo) {
-          return { url: e.photo, source: "cooklog", at: e.at };
-        }
+        if (!e || typeof e !== "object" || !e.photo) continue;
+        var raw = e.photo;
+        var url = (typeof raw === "string" && raw.length > 32) ? raw
+          : (window.MCPhotos ? MCPhotos.urlFor("cook", r.recipe_id, e.at) : null);
+        if (url) return { url: url, source: "cooklog", at: e.at };
       }
     }
     return null;

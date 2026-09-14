@@ -95,6 +95,16 @@ jobs:
         # Also asserts cookbook.js's and user-recipes.js's duplicated copies
         # still agree, so a one-sided fix fails review.
         run: node tools/test-scaling-format.js
+      - name: Photo library id/legacy-value helpers (mc-photos.js — re-audit critical gap #04)
+        # Recipe cover and cook-log photos moved from base64-in-localStorage
+        # (capped at 24/12 items purely because localStorage is the wrong
+        # primitive for binary blobs — and, a real gap this closed, cook-log
+        # photo bytes were being pushed to Supabase on every sync despite
+        # mc-sync.js's own comment claiming they were device-local) into a
+        # new IndexedDB-backed mc-photos.js. This pins the pure id-scheme and
+        # legacy-value-detection helpers; the IndexedDB half can't run under
+        # Node and is proven by tools/smoke-test.js instead.
+        run: node tools/test-mc-photos.js
       - name: Quick Tour tells the truth (test-quick-tour.js — tour content review)
         # check-tour-coverage.js asks whether every feature is MENTIONED; this
         # asks whether what the tour says is TRUE. A tour content review found
