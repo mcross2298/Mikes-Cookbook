@@ -72,6 +72,15 @@ const ALLOWED_SILENT = [
   // source data at OLD_KEY is left untouched either way — nothing is lost,
   // only deferred.
   { file: 'tracker-store.js', arg: 'KEY' },
+  // mc-photos.js's one-time legacy-photo migration flag (re-audit critical
+  // gap #04). Same shape as tracker-store.js's KEY above: a failed write
+  // here just means runMigration() re-runs on the next load, and that
+  // re-run is a fast no-op once nothing legacy is left in mc-cookbook:photos
+  // / mc-cookbook:cooked (migrateCovers()/migrateCooked() both filter on
+  // isLegacyPhotoValue, so an already-migrated store has nothing left to
+  // find) — self-healing, never data loss, only a redundant scan deferred
+  // to the next boot.
+  { file: 'mc-photos.js', arg: 'MIGRATED_FLAG' },
   // A search-results cache keyed by query text — pure performance, not
   // data. A failed write just means the next identical search re-fetches
   // instead of hitting the cache.

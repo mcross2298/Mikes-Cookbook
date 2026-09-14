@@ -1303,16 +1303,138 @@ control's edge case, not a new capability or an altered gesture; falls under
 the Documentation currency rule's own "bug fixes that restore documented
 behavior, CSS/copy tweaks" exemption.
 
+### Critical gap #04 ✅ (shipped 2026-09-14) — photos moved off localStorage, into IndexedDB
+
+**The bug.** Every recipe cover photo (`mc-cookbook:photos`) and every
+cook-log photo (`mc-cookbook:cooked[id][].photo`) has always been a base64
+JPEG **string** living in `localStorage` — the one storage primitive in this
+app that is synchronous, string-only, and shares a single ~5–10 MB origin
+budget with sixteen other stores. `MAX_RECIPE_PHOTOS` (24) and `MAX_PHOTOS`
+(12) were never product decisions about how many photos a cook should keep;
+they were that budget worked backward into a count. A cook who photographs
+their cooking has always eventually lost their oldest photo, silently, to a
+limit that exists only because the bytes were in the wrong place.
+
+**Scope, corrected from the original audit.** The audit's own framing named
+only `mc-cookbook:photos` (recipe covers, capped at 24). Investigating it
+surfaced a second, worse instance of the identical root cause: `mc-sync.js`'s
+`STORES` whitelist includes `mc-cookbook:cooked` for the planned-vs-cooked
+adherence stat, and `push()` sends whatever
+`JSON.parse(localStorage.getItem(key))` returns, unmodified — including each
+entry's full base64 `.photo`. That file's own header comment claimed
+cook-log photos "sit alongside [`:photos`] and are already device-local by
+design"; untrue of the code as shipped. Every cook-log photo's full body was
+pushed to Supabase's `user_sync` table on every sync cycle, for every
+signed-in cook who ever attached one — a real, previously undocumented data
+exfiltration surface, not a quota nuisance. Fixing only the audit's named
+store would have left this leak in place. Both stores share one root cause
+(everything persists in the wrong primitive) and one fix (move the bytes to
+IndexedDB) that closes the quota ceiling and the sync leak in the same
+change, with **no change to `mc-sync.js` itself** — the leak closes because
+the bytes are simply no longer in the JSON `push()` reads.
+
+**The fix.** New `mc-photos.js`: IndexedDB database `mc-cookbook-photos`, one
+object store `photos` (keyPath `id`), records keyed `cover:<recipeId>` /
+`cook:<recipeId>:<at>`, `bytes` stored as an `ArrayBuffer` rather than a
+`Blob` (sidesteps a documented old-WebKit/pre-iOS 14 bug storing Blobs
+directly via structured clone — cheap insurance on exactly the platform this
+PWA targets most). No item cap on either kind of photo — the ceiling existed
+only because localStorage's shared quota demanded one.
+
+`mc-cards.js`'s `photoFor()` is called synchronously, deep inside every
+card-render loop across three page controllers, so it could not become
+async without making every render path that builds N cards async too — the
+same architectural cost `mc-data.js`'s own index/shard split explicitly
+chose to avoid for the recipe corpus. `mc-photos.js` instead opens IndexedDB
+and warms an in-memory `Map<id, objectURL>` once, as early as possible;
+`urlFor()` reads that warm map synchronously (`null` while still warming or
+genuinely absent — exactly the "no photo" case the existing fallback chain
+already handles). A `ready` Promise and an `mc:photosready` DOM event exist
+for the same reason `mc-data.js`'s `ensureAll()`/`fireDetailReady()` pattern
+does: first paint shows whatever's already warm, then each of the three
+controllers re-runs its own existing, narrowly-scoped repaint entry point
+once the cache warms — `cookbook.js`'s `renderHero()` (+ the new
+`refreshPhotoWidget()`, see below), `cookbook-home.js`'s new
+`wirePhotoSync()` (re-renders whichever shell screen is active — broader
+than `wireFavSync()`'s two-screen list, since a photo can appear on a card
+on every screen, not just the two that care about favorite status),
+`collection.js`'s existing `detailRepaint` slot. No new repaint mechanism
+invented anywhere.
+
+**Migration never lets a photo go dark mid-transition.** `runMigration()` is
+one-time, flag-gated (`mc-cookbook:photosMigratedV1`): moves whatever legacy
+base64 is still in either store into real IndexedDB records, then strips the
+base64 back out (a cook-log entry's `.photo` becomes the boolean `true` — a
+marker, not the photo — so every existing truthy check on `e.photo` keeps
+working unchanged). `photoFor()` checks for a still-present raw legacy
+string FIRST and uses it directly if found, falling through to the warm
+IndexedDB cache only once that string is actually gone — so an existing
+cook's photos render exactly as before at every point in the transition,
+never blocked on IndexedDB warming up. Also called **unconditionally** (not
+flag-gated) by `mc-export.js`'s restore path: an old backup file reintroduces
+raw base64 even on a device whose own migration flag is already set, since
+that flag only tracks this device's localStorage, not whatever a restore
+just wrote over it — `runMigration()` is idempotent, so calling it
+unconditionally is simpler than detecting whether a given restore needs it.
+
+**The backup decision, made deliberately.** `mc-export.js`'s JSON export
+already only ever captured raw localStorage strings; it now naturally
+captures an empty cover map and boolean-only cook-log markers, since that's
+what those keys hold on disk once migrated. Re-inflating every IndexedDB
+blob back into the backup file — the "complete" alternative — was declined:
+it would mean base64-encoding every photo back into a JSON document, undoing
+the entire point of the move for exactly the file a cook is most likely to
+keep several copies of. A restored OLD backup still gets every photo it was
+made with (via the unconditional `runMigration()` call above); a NEW photo
+taken after that backup was made is never in it, same as it never was for
+any other reason either.
+
+**One real regression, caught by the test that verifies this, not review.**
+`renderPhotoWidget()` (the small eyebrow "add a photo" button) decides
+visibility by calling `photoFor(r)` at `renderHeader()`'s first, synchronous
+call — which can run before `mc-photos.js`'s IndexedDB cache has warmed.
+`renderHero()` alone (the only thing the first draft's `mc:photosready`
+listener called, deliberately narrow to avoid a full header rebuild
+resetting state a cook may have already changed) correctly updates the hero
+image once warm, but nothing repainted the eyebrow — so a recipe that
+already had a cover could show a stale "add a photo" button indefinitely,
+not just for a beat. `tools/smoke-test.js`'s extended photo scenario (below)
+caught this directly; `refreshPhotoWidget()` is the fix, same narrow-scope
+reasoning as `renderHero()` itself: it swaps only the eyebrow widget in
+place, touching nothing else in the header.
+
+**Proven before landing.** `tools/test-mc-photos.js` (new) pins the pure id
+scheme and `isLegacyPhotoValue()`'s length-floor detection via the same
+`module.exports`-before-the-window-guard convention `mc-sync.js`/
+`mc-setlog.js` established; confirmed to fail on a planted floor-value
+regression (2 of 22 assertions) before landing. `tools/smoke-test.js`'s
+existing photo-resolution-chain scenario was extended to run in a fresh,
+isolated browser context (needed because the shared `page` used by every
+earlier scenario would already have this device's migration flag set from
+its own prior visits — seeding the legacy photo via `addInitScript` guarded
+on that same flag, so re-seeding stops the moment a real migration has run,
+was itself a real timing bug caught and fixed while writing this scenario)
+and now verifies: the legacy base64 string is actually stripped from
+localStorage and the record actually lands in IndexedDB; a brand-new cover
+write (`MCPhotos.setCover()`) never touches `mc-cookbook:photos` at all; a
+cook-log photo attach/remove round-trips and cleans up its objectURL on
+removal; and a backup export contains no base64 image data. All pass against
+the real app, twice consecutively (101 assertions, 0 failures each run).
+
+Not a Quick Tour change: adding/viewing a recipe or cook-log photo behaves
+identically from a cook's point of view — same buttons, same taps, same
+result on screen. This is a storage-architecture change a cook cannot
+observe, not a new capability, gesture, or interaction pattern; falls under
+the Documentation currency rule's own "data-model additions that don't
+change behavior a user notices" exemption.
+
 ### Still open from the re-audit
 
-Ranked as they were in the artifact; neither is started. (#03 shipped
-2026-09-14 — see its own entry above; its "compounded by" clause about a
-volume-vs-weight `MCPantry.compare()` mismatch was investigated and
-deliberately declined, not fixed — see that entry for why.)
+Ranked as they were in the artifact; neither is started. (#03 and #04
+shipped 2026-09-14 — see their own entries above; #03's "compounded by"
+clause about a volume-vs-weight `MCPantry.compare()` mismatch was
+investigated and deliberately declined, not fixed — see that entry for why.)
 
-- **#04 Everything persists in `localStorage`, including base64 photos.** No
-  IndexedDB anywhere; `MAX_RECIPE_PHOTOS = 24` is the ceiling of the wrong
-  primitive, not a tuning choice.
 - **#05 Two nutrition models sum into one daily total.** The tracker reads fibre
   from Open Food Facts; recipes have no fibre field, so a recipe logged to the day
   adds zero and the day's fibre figure measures how much of it came from barcodes.

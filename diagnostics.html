@@ -96,6 +96,7 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
 <script>if(window.__mcBoot)window.__mcBoot.data=performance.now()-window.__mcBoot.t0;</script>
 <script src="user-recipes.js"></script>
 <script src="mc-bridge.js"></script>
+<script src="mc-photos.js"></script>
 <script src="mc-fav.js"></script>
 <script src="mc-cards.js"></script>
 <script src="mc-grocery.js"></script>
@@ -312,10 +313,58 @@ body{background:var(--bg);min-height:100vh;color:var(--on-dark);
       tally(row(g, "info", "Storage estimate unsupported", "iOS Safari often withholds this."));
     }
     try {
-      var photos = JSON.parse(localStorage.getItem("mc-cookbook:photos") || "{}");
-      var n = Object.keys(photos).length;
-      tally(row(g, n <= 24 ? "pass" : "warn", "Recipe cover photos: " + n + " of 24 cap (C-12)",
-        n > 24 ? "Above the cap — eviction should trim on next add." : ""));
+      // Re-audit gap #04: photo bytes live in IndexedDB (mc-photos.js) now,
+      // not localStorage — there's no 24/12-item cap to report any more,
+      // since that ceiling was only ever localStorage's own quota worked
+      // backward into a count. This checks the real store directly (same
+      // "read the device's own state" approach as the Cache Storage probe
+      // above) rather than going through MCPhotos, so it still tells the
+      // truth even if that module failed to load.
+      var migrated = localStorage.getItem("mc-cookbook:photosMigratedV1") === "1";
+      var legacyCovers = 0, legacyCooked = 0;
+      try {
+        var coverMap = JSON.parse(localStorage.getItem("mc-cookbook:photos") || "{}");
+        legacyCovers = Object.keys(coverMap).filter(function (k) {
+          return typeof coverMap[k] === "string" && coverMap[k].length > 32;
+        }).length;
+      } catch (e) {}
+      try {
+        var cookedMap = JSON.parse(localStorage.getItem("mc-cookbook:cooked") || "{}");
+        Object.keys(cookedMap).forEach(function (id) {
+          var list = cookedMap[id];
+          if (!Array.isArray(list)) return;
+          list.forEach(function (entry) {
+            if (entry && typeof entry.photo === "string" && entry.photo.length > 32) legacyCooked++;
+          });
+        });
+      } catch (e) {}
+      var legacyTotal = legacyCovers + legacyCooked;
+      tally(row(g, legacyTotal === 0 ? "pass" : "warn",
+        migrated ? "Legacy photo migration ran" : "Legacy photo migration hasn't run yet",
+        legacyTotal ? (legacyTotal + " photo(s) still as base64 in localStorage — should move to IndexedDB on next load.")
+          : "No leftover base64 photo data in localStorage."));
+
+      if ("indexedDB" in window) {
+        var idbCount = await new Promise(function (resolve) {
+          var req;
+          try { req = indexedDB.open("mc-cookbook-photos"); }
+          catch (e) { resolve(null); return; }
+          req.onerror = function () { resolve(null); };
+          req.onsuccess = function () {
+            var db = req.result;
+            if (!db.objectStoreNames.contains("photos")) { db.close(); resolve(0); return; }
+            var countReq = db.transaction("photos", "readonly").objectStore("photos").count();
+            countReq.onsuccess = function () { db.close(); resolve(countReq.result); };
+            countReq.onerror = function () { db.close(); resolve(null); };
+          };
+        });
+        tally(row(g, idbCount === null ? "fail" : "pass",
+          idbCount === null ? "IndexedDB photo library unreadable" : "Photo library: " + idbCount + " photo(s) in IndexedDB",
+          idbCount === null ? "mc-cookbook-photos database failed to open." : "No item cap — bounded only by device storage."));
+      } else {
+        tally(row(g, "fail", "IndexedDB unavailable",
+          "Photos can't be saved on this browser — mc-photos.js falls back to no-op."));
+      }
     } catch (e) { tally(row(g, "info", "Recipe photos unreadable", String(e))); }
 
     /* ── Sync (audit C-02) ───────────────────────────────────────────── */

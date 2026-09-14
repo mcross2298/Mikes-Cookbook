@@ -504,6 +504,11 @@
     });
     if (!map[id].length) delete map[id];
     saveCookedMap(map);
+    // Mirrors cookbook.js's own removeCooked(): the entry's photo, if any,
+    // lives in mc-photos.js's library keyed by this same `at`, not in this
+    // store — removing the entry here without this orphans that blob
+    // forever (re-audit critical gap #04). A no-op when there was no photo.
+    if (window.MCPhotos) MCPhotos.removeCookPhoto(id, at);
   }
   function lastCookedAt(id) {
     var list = loadCookedMap()[id];
@@ -4678,6 +4683,26 @@
     });
   }
 
+  // Photo-store readiness (mc-photos.js's IndexedDB warm-up + one-time legacy
+  // migration). Deliberately NOT routed through onDetailReady/fireDetailReady
+  // above — those are scoped to mc-data.js's shard arrival (a different async
+  // dependency with its own gating on MCData.allReady()) and firing them early
+  // would repaint panes that are still waiting on shards for an unrelated
+  // reason. A card's photo can appear on every screen that renders one, not
+  // just the two favorites cares about, so this re-renders whichever of those
+  // screens is currently active rather than mirroring wireFavSync's narrower
+  // two-screen list.
+  function wirePhotoSync() {
+    document.addEventListener("mc:photosready", function () {
+      var screen = activeScreen();
+      if (screen === "home") renderHome();
+      else if (screen === "recipes") renderRecipes();
+      else if (screen === "favorites") renderFavorites();
+      else if (screen === "mikes") renderMikes();
+      else if (screen === "planner") renderPlanner();
+    });
+  }
+
   /* ── Boot ─────────────────────────────────────────────────────────── */
   function init() {
     // Read (and strip) any Web Share Target params FIRST, before anything
@@ -4719,6 +4744,7 @@
     // A full quota shouldn't silently swallow a heart (audit C-12).
     MCFav.onWriteFail = warnStorageFull;
     if (window.MCSetLog) MCSetLog.onWriteFail = warnStorageFull;
+    if (window.MCPhotos) MCPhotos.onWriteFail = warnStorageFull;
     // Nor a hand-typed recipe (C1 — user-recipes.js's persist() had no hook
     // at all until now; mc-recipe-form.js also checks add()'s `saved` flag
     // directly and keeps the form open, so this toast is the belt to that
@@ -4743,6 +4769,7 @@
       setTab: setTab
     });
     wireFavSync();
+    wirePhotoSync();
 
     // Persistent tab bar: Cookbook tab → home; Tracker tab → tracker screen.
     // The Cookbook tab reads "active" for every cookbook screen (Planner,

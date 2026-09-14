@@ -403,10 +403,16 @@
     MCFav.onWriteFail = warnStorageFull;
     if (window.MCSetLog) MCSetLog.onWriteFail = warnStorageFull;
     MCTimers.onWriteFail = warnStorageFull;
+    if (window.MCPhotos) MCPhotos.onWriteFail = warnStorageFull;
     // Collection pages filter on ingredients too (the search box matches
     // ingredient names, and the low-shopping count reads the whole list), so
     // they need the detail shards — just not before the grid can paint.
     MCData.ensureAll().then(function (ok) { if (ok && detailRepaint) detailRepaint(); });
+    // Cards on this page resolve a photo through the same warm-cache chain
+    // mc-cards.js's photoFor() uses (mc-photos.js's IndexedDB warm-up + a
+    // one-time legacy migration off localStorage). Reuse the same repaint
+    // slot the shard arrival above uses — same "just re-run paint()" shape.
+    document.addEventListener("mc:photosready", function () { if (detailRepaint) detailRepaint(); });
     MCTimers.configure({
       onJump: function (t) {
         if (t.recipeId) location.href = "recipe.html?id=" + encodeURIComponent(t.recipeId) + "&cook=1";

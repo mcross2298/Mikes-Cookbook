@@ -195,7 +195,16 @@
         catch (e) { reject(new Error("That file isn't valid JSON.")); return; }
         var res = restorePayload(payload, localStorage);
         if (!res.ok) { reject(new Error(res.message)); return; }
-        resolve(res);
+        // Re-audit gap #04: an OLD backup (made before mc-photos.js shipped)
+        // reintroduces raw base64 into mc-cookbook:photos / :cooked[].photo,
+        // even on a device that already ran its own one-time migration — the
+        // flag that gates mc-photos.js's own boot-time migration only tracks
+        // THIS device's localStorage, not whatever a restored file just wrote
+        // over it. runMigration() is idempotent (a no-op once nothing legacy
+        // is left), so calling it unconditionally here is simpler and safer
+        // than trying to detect whether this particular restore needs it.
+        if (window.MCPhotos) MCPhotos.runMigration().then(function () { resolve(res); });
+        else resolve(res);
       };
       reader.readAsText(file);
     });
