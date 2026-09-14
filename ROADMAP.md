@@ -1229,14 +1229,87 @@ Not a Quick Tour change: the tour and Executive Summary already claim every
 ingredient quantity rescales on the fly. That claim was false for ranges and is
 now true.
 
+### Critical gap #03 ✅ (shipped 2026-09-14) — an inert 📏 now says so
+
+**The bug.** `mc-grocery.js`'s `buildGrocery()` only produces a row's `need`
+when every planned meal using that ingredient reduces to ONE comparable unit
+bucket — the same, correct, "leave it fragmented rather than guess" rule
+`mc-units.js` itself uses. Measured at **235 of 854 merged rows (27.5%)**
+across the real corpus: any staple a cook measures one way in one recipe and
+another way in a second (a cup in one dish, a pound in another) leaves its
+merged row `need: null`. That math was never wrong. What was wrong sat
+entirely in the caller: `cookbook-home.js`'s 📏 control rendered identically
+whether or not a row's `need` existed, so a cook could tap it, type a real
+amount, watch it save as "Have 2 lb" — and `pantryShortfall()` bails on
+`!row.need` before ever reading that entry, so the recorded amount could
+never move the item on or off the buy list. Recording an amount looked like
+it did something. It didn't.
+
+**Scope, corrected from the original audit.** The audit's own suggested
+second fix — "route `MCPantry.compare()`'s cross-family case through the
+existing DENSITY table" — turned out not to apply. `mc-units.js`'s DENSITY
+table only ever bridges a COUNT WORD to a weight (`"3 cloves"` → grams), and
+`resolveUnit()` already applies that bridge automatically, before
+`compare()` ever runs. A genuine volume-vs-weight mismatch (2 cups of
+something against a pantry recorded in grams) would need a real
+ingredient-specific cup→gram density table this app has never curated —
+inventing one now would be real, separate, speculative data work, not a
+logic fix, and would contradict this file's own established discipline of
+leaving a genuine unit-family mismatch honestly incomparable rather than
+guessing. **Declined**, same as the audit itself declines to guess anywhere
+else. `MCPantry.compare()` is untouched by this fix.
+
+**The fix.** `pantryQtyDisabledReason(row)` (`cookbook-home.js`, next to
+`pantryShortfall()`) returns a one-line reason whenever `row.need` is null.
+The 📏 control renders dimmed (CSS `.grocery-setqty.disabled`) with that
+reason as its `aria-label` plus "Tap to learn more," and a tap shows the same
+reason as a toast instead of opening the amount editor. Nothing is deleted —
+a stale amount recorded before a row lost its comparable `need` (e.g. a
+newly added meal introduced a second unit family for the same staple) still
+shows as "Have X" in the row's own quantity text; only the record/change
+action is what's disabled, with a reason, never silently.
+
+**One real accessibility mistake, caught by the test that verifies this,**
+not review: the first draft marked the disabled control `aria-disabled="true"`,
+reasoning it would keep the control "tappable to explain itself" for
+keyboard/AT users while still being visually dimmed. It does the opposite —
+`aria-disabled` communicates "currently unavailable," and both Playwright's
+own actionability check and (per the WAI-ARIA spec's intent) many real
+screen readers decline to activate a control in that state, which would have
+made the explanation unreachable for exactly the users who'd need it read
+aloud. Writing `tools/smoke-test.js`'s scenario against a real browser is
+what surfaced this — a plain code read did not. Fixed to a real, fully
+enabled button, dimmed by CSS class alone, matching this file's own existing
+`.grocery-qty.has-derived` precedent (also never `aria-disabled`).
+
+**Proven before landing.** `tools/smoke-test.js` gained a new scenario that
+searches the live corpus at test time — never a hardcoded recipe ID — for two
+real recipes that fragment a shared ingredient across unit families, plans
+exactly those two, then self-verifies against the real
+`MCGrocery.buildGrocery()` output that the seeded plan actually reproduces
+`need: null` before asserting anything about the DOM (so a future corpus
+edit that happens to un-fragment this specific pair skips the scenario
+instead of failing on a stale premise). Confirmed to fail on three planted
+regressions: the disclosure removed entirely (3 assertions fail), and the
+`aria-disabled` mistake reintroduced (1, the same one the real draft caught).
+Also confirmed a same-scenario regression check: an ordinary, non-fragmented
+pantry item's 📏 stays fully functional — unaffected.
+
+Not a Quick Tour change: the tour's own pantry-quantity copy already avoids
+claiming this works for every ingredient ("if that's less than the week's
+recipes need, the item comes back on the list…") — it neither promised nor
+now un-promises universal coverage. This is an honesty fix to an existing
+control's edge case, not a new capability or an altered gesture; falls under
+the Documentation currency rule's own "bug fixes that restore documented
+behavior, CSS/copy tweaks" exemption.
+
 ### Still open from the re-audit
 
-Ranked as they were in the artifact; none of these is started.
+Ranked as they were in the artifact; neither is started. (#03 shipped
+2026-09-14 — see its own entry above; its "compounded by" clause about a
+volume-vs-weight `MCPantry.compare()` mismatch was investigated and
+deliberately declined, not fixed — see that entry for why.)
 
-- **#03 The pantry quantity feature is off for 27.5% of grocery rows, invisibly.**
-  235 of 854 merged rows carry `need: null`, so 📏 accepts an amount that can have
-  no effect. Compounded by a volume need being incomparable with a weight-recorded
-  pantry (`"unknown"`), so a cook with a kitchen scale gets nothing.
 - **#04 Everything persists in `localStorage`, including base64 photos.** No
   IndexedDB anywhere; `MAX_RECIPE_PHOTOS = 24` is the ceiling of the wrong
   primitive, not a tuning choice.

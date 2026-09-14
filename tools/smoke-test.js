@@ -331,6 +331,164 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
     console.log('SKIP provenance-tap test — no density-derived row landed in this plan');
   }
 
+  // ── Re-audit critical gap #03: an inert 📏 says so instead of accepting
+  // an amount that can never move the buy list ─────────────────────────
+  // mc-grocery.js's buildGrocery() only produces a row's `need` when every
+  // planned meal using this ingredient bucketed to the SAME unit family —
+  // measured at 27.5% of merged rows across the real corpus, not a rare
+  // edge case. Before this fix, cookbook-home.js's 📏 control looked
+  // identical whether or not that held: a cook could record an amount for
+  // a `need: null` row and MCPantry.compare() would simply never be called
+  // with it — the item would sit on/off the buy list exactly as the binary
+  // 🧂 toggle alone already decided, with no sign the recorded amount had
+  // done nothing.
+  //
+  // Reproduced with two REAL recipes found by searching the live corpus at
+  // test time (never hardcoded IDs — same "search for a matching recipe"
+  // idiom as the onion scenario above, so this stays correct however
+  // recipes-data.js changes), and self-verified against the real
+  // buildGrocery() output before any DOM assertion runs, rather than
+  // trusting this file's own copy of the bucketing rule to still match
+  // mc-grocery.js's.
+  errors.length = 0;
+  await page.goto(B + '/index.html', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const gap03Plan = await page.evaluate(async () => {
+    await window.MCData.ensureAll();
+    var R = window.RECIPES, U = window.MCUnits, G = window.MCGrocery;
+    function bucketKey(mergeName, unit, num) {
+      var res = U.resolveUnit(mergeName, unit, num);
+      return res.kind === 'conv' ? 'cls:' + res.cls : res.kind === 'count' ? 'u:__count__' : 'u:' + res.unit;
+    }
+    // First merge-name whose first-seen bucket keys come from TWO DIFFERENT
+    // recipes and differ from each other.
+    var seen = {}, fragmented = null;
+    for (var i = 0; i < R.length && !fragmented; i++) {
+      var r = R[i];
+      var by = r.ingredients_by_serving || {};
+      var tier = by['serving_' + (r.native_serving || 2)] || by[Object.keys(by)[0]] || [];
+      for (var j = 0; j < tier.length; j++) {
+        var ing = tier[j], item = (ing.item || '').trim();
+        if (!item) continue;
+        var mergeName = G.groceryMergeName(item);
+        var num = G.parseQty(ing.quantity);
+        if (num == null) continue;
+        var bk = bucketKey(mergeName, ing.unit, num);
+        if (!seen[mergeName]) seen[mergeName] = {};
+        if (!seen[mergeName][bk]) seen[mergeName][bk] = { recipeId: r.recipe_id, serving: r.native_serving || 2 };
+        var keys = Object.keys(seen[mergeName]);
+        if (keys.length >= 2) {
+          var ids = keys.map(function (k) { return seen[mergeName][k].recipeId; });
+          if (ids[0] !== ids[1]) { fragmented = { mergeName: mergeName, item: item, a: seen[mergeName][keys[0]], b: seen[mergeName][keys[1]] }; break; }
+        }
+      }
+    }
+    if (!fragmented) return null;
+    // A second, ORDINARY ingredient (different merge-name, resolves to one
+    // real bucket on its own) as a same-scenario regression check that a
+    // working 📏 still opens the editor exactly as before this fix.
+    var normal = null;
+    for (var k = 0; k < R.length && !normal; k++) {
+      var rk = R[k];
+      if (rk.recipe_id === fragmented.a.recipeId || rk.recipe_id === fragmented.b.recipeId) continue;
+      var byk = rk.ingredients_by_serving || {};
+      var tierk = byk['serving_' + (rk.native_serving || 2)] || byk[Object.keys(byk)[0]] || [];
+      for (var m = 0; m < tierk.length; m++) {
+        var ik = tierk[m], itemk = (ik.item || '').trim();
+        if (!itemk) continue;
+        var mergeK = G.groceryMergeName(itemk);
+        if (mergeK === fragmented.mergeName) continue;
+        var numK = G.parseQty(ik.quantity);
+        if (numK == null) continue;
+        var resK = U.resolveUnit(mergeK, ik.unit, numK);
+        if (resK.kind === 'count') continue; // bare count, no density — would also leave need:null
+        normal = { item: itemk, recipeId: rk.recipe_id, serving: rk.native_serving || 2 };
+        break;
+      }
+    }
+    var meals = [
+      { uid: 'gap03a', id: fragmented.a.recipeId, serving: fragmented.a.serving, day: 'Mon', slot: 'Dinner', completed: false, completedAt: null },
+      { uid: 'gap03b', id: fragmented.b.recipeId, serving: fragmented.b.serving, day: 'Tue', slot: 'Dinner', completed: false, completedAt: null }
+    ];
+    if (normal) meals.push({ uid: 'gap03c', id: normal.recipeId, serving: normal.serving, day: 'Wed', slot: 'Dinner', completed: false, completedAt: null });
+    localStorage.setItem('mc-cookbook:mealplan', JSON.stringify({ meals: meals }));
+    function pantryKey(s) { return (s || '').trim().toLowerCase(); }
+    var pantrySet = [pantryKey(fragmented.item)];
+    if (normal) pantrySet.push(pantryKey(normal.item));
+    localStorage.setItem('mc-cookbook:pantry', JSON.stringify(pantrySet));
+    return { fragItem: fragmented.item, normalItem: normal ? normal.item : null };
+  });
+
+  if (gap03Plan) {
+    await page.goto(B + '/index.html#planner', { waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForTimeout(500);
+    // Self-verify against the REAL, freshly-configured buildGrocery() output
+    // before trusting the plan actually reproduces what this test needs —
+    // if the corpus shifts under this pair in a way that changes the
+    // bucketing, skip rather than assert on a premise that's gone stale.
+    const gap03Verify = await page.evaluate((items) => {
+      var cats = window.MCGrocery.buildGrocery();
+      var rows = [];
+      cats.forEach(function (c) { rows = rows.concat(c.rows); });
+      var frag = rows.find(function (row) { return row.item === items.fragItem; });
+      var normal = items.normalItem ? rows.find(function (row) { return row.item === items.normalItem; }) : null;
+      return {
+        fragNeedIsNull: !!frag && frag.need == null,
+        normalNeedIsSet: items.normalItem ? (!!normal && normal.need != null) : null
+      };
+    }, gap03Plan);
+    console.log('     gap #03 test fixture: ' + JSON.stringify({ item: gap03Plan.fragItem, normalItem: gap03Plan.normalItem, verify: gap03Verify }));
+
+    if (gap03Verify.fragNeedIsNull) {
+      const gap03Tab = page.locator('text=Grocery').first();
+      if (await gap03Tab.count()) { await gap03Tab.click(); await page.waitForTimeout(300); }
+      const pantryHead = page.locator('.pantry-foot-head');
+      if (await pantryHead.count()) { await pantryHead.click(); await page.waitForTimeout(300); }
+      ok('gap #03: no JS errors', errors.length === 0 || (console.log(errors), false));
+
+      const fragRow = page.locator('.pantry-foot-list .grocery-row', { hasText: gap03Plan.fragItem }).first();
+      const fragBtn = fragRow.locator('.grocery-setqty');
+      ok('gap #03: the fragmented item is rendered as a pantry row', await fragRow.count() === 1);
+      ok('gap #03: its 📏 control is marked disabled (CSS only — see cookbook-home.js on why not aria-disabled)',
+        await fragBtn.evaluate(el => el.classList.contains('disabled')).catch(() => false));
+      ok('gap #03: it stays a real, enabled button (no aria-disabled, no disabled attribute) so a tap still reaches the explanation',
+        (await fragBtn.getAttribute('aria-disabled')) == null && !(await fragBtn.isDisabled()));
+      const fragLabel = await fragBtn.getAttribute('aria-label');
+      ok('gap #03: the reason names the item', !!fragLabel && fragLabel.indexOf(gap03Plan.fragItem) >= 0);
+      console.log('     disabled aria-label: ' + fragLabel);
+      await fragBtn.click();
+      await page.waitForTimeout(250);
+      ok('gap #03: tapping the disabled control does NOT open the amount editor',
+        await page.locator('.pantry-qty-overlay').count() === 0);
+      const gap03Toast = await page.locator('.mc-toast-msg').first().textContent().catch(() => null);
+      ok('gap #03: it explains why, as a toast, instead of silently doing nothing',
+        !!gap03Toast && gap03Toast.indexOf(gap03Plan.fragItem) >= 0);
+      console.log('     disabled toast: ' + gap03Toast);
+
+      if (gap03Plan.normalItem && gap03Verify.normalNeedIsSet) {
+        const normalRow = page.locator('.pantry-foot-list .grocery-row', { hasText: gap03Plan.normalItem }).first();
+        const normalBtn = normalRow.locator('.grocery-setqty');
+        if (await normalBtn.count()) {
+          ok("gap #03: an ORDINARY item's 📏 is NOT disabled (no regression)",
+            !(await normalBtn.evaluate(el => el.classList.contains('disabled'))));
+          await normalBtn.click();
+          await page.waitForTimeout(250);
+          ok('gap #03: and it still opens the real amount editor',
+            await page.locator('.pantry-qty-overlay').count() === 1);
+        } else {
+          console.log('SKIP gap #03 regression half — comparison item did not land as its own pantry row');
+        }
+      } else {
+        console.log('SKIP gap #03 regression half — no comparable ordinary item found in this plan');
+      }
+    } else {
+      console.log('SKIP gap #03 pantry-disclosure test — the found pair no longer reproduces need:null against the live buildGrocery()');
+    }
+  } else {
+    console.log('SKIP gap #03 pantry-disclosure test — no fragmenting pair found in the current corpus');
+  }
+
 
   // ── Initiative 4: ranked search + typo tolerance + substitution note ────
   errors.length = 0;
