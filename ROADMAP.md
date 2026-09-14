@@ -1428,17 +1428,103 @@ observe, not a new capability, gesture, or interaction pattern; falls under
 the Documentation currency rule's own "data-model additions that don't
 change behavior a user notices" exemption.
 
+### Critical gap #05 ✅ (shipped 2026-09-14) — recipes can carry fiber, and net carbs follows honestly where it can
+
+**The bug, corrected from the original audit's framing.** The audit described
+"two nutrition models summing into one daily total": the tracker reads fibre
+from Open Food Facts, recipes have no fibre field, so a recipe logged to the
+day "adds zero" and "the day's fibre figure measures how much of it came
+from barcodes" — implying a day-level fibre/net-carbs total already existed
+and was silently wrong. Investigating found **no such total exists anywhere
+in the shipped app.** Fibre only ever appeared in `tracker.js`'s single-item
+Nutrition Facts sheet (`openFacts()`), and even there a recipe-sourced entry
+already rendered an honest "—", not "0" — its `nutr` was always the literal
+empty object `{}`, and every existing `!= null` check correctly treated that
+as "unknown," never as zero. The real, closeable gap was structural, not a
+display bug: `recipes-data.js`'s `macro_profiles` schema had no field to
+carry fibre **at all**, so it could never reach a recipe-logged entry even
+in the one case where the number was genuinely available — an imported
+page's own schema.org `nutrition` block commonly publishes `fiberContent`,
+and `mc-import.js` was reading the other four fields off it while dropping
+that one on the floor.
+
+**The fix, across the data model and every read path.**
+- `recipes-data.js`'s `macro_profiles` gains an **optional** `fiber_g` field
+  — required: `calories`/`protein_g`/`fat_g`/`carbs_g`; `fiber_g` only when
+  actually known. **Never backfilled** for the 318 built-in recipes (this
+  app has no curated fiber data for them) — same "leave it honestly absent
+  rather than guess" discipline `mc-units.js`'s DENSITY table and the
+  `photo` field already follow. `tools/validate-recipes.js`'s
+  `macroProfileShapeOk()`/`macroProfilesEqual()` validate it (a real number
+  when present) and require tier-equality only when at least one tier
+  authors it — proven against six hand-verified cases (both-tiers-agree,
+  one-tier-missing-it, neither-has-it, non-numeric-rejected,
+  numeric-accepted, absent-still-valid) before landing.
+- `mc-import.js` now parses `nutrition.fiberContent` into `macros.fiber_g`
+  alongside the other four fields — a free win, since real recipe pages
+  already publish it in the same structured block this file was already
+  reading.
+- `mc-recipe-form.js`'s optional Nutrition section gains a 5th,
+  independently-optional **Fiber (g)** field (own `.rf-macro-row` layout,
+  wrapping to 3+2 rather than squeezing 5 fields onto one line under a
+  narrow phone) — a cook typing in their own recipe can supply it even from
+  a package label, same as the other four. `user-recipes.js`'s
+  `macroProfile()` writes it through.
+- `cookbook.js`'s recipe-page macro card shows a **Fiber** cell and a
+  **Net Carbs** cell (`carbs_g - fiber_g`, clamped at 0 rather than a
+  nonsensical negative number) whenever a recipe actually authors
+  `fiber_g` — invisible for all 318 built-ins today, purely additive the
+  moment a cook or an import supplies real data.
+- `tracker.js`'s `foodFromRecipe()` looks up `fiber_g` and carries it into
+  `nutr.fiber` — the exact shape every other food source (Open Food Facts,
+  a barcode scan) already uses, so a recipe with real fiber data logs to
+  the tracker with genuine parity, not a fabricated zero. `openFacts()`
+  gained a **Net Carbs** row next to Fiber, shown only when that item's
+  fiber is actually known.
+- `tracker-recipe.js` — the recipe page's own "Log to tracker" FAB, a
+  third, separate near-duplicate of the same tier-extraction logic
+  `tracker.js` and `cookbook.js` each already have — gained the identical
+  Fiber/Net Carbs chip pair and now passes `nutr:{fiber}` into its own
+  `addEntry()` call, which used to omit `nutr` entirely regardless of
+  source.
+
+**Deliberately declined: a day-level fiber/net-carbs total.** This is the
+audit's own implied fix, and it was investigated and rejected on purpose.
+Zero of the 318 built-in recipes author `fiber_g` today, so a "today's net
+carbs" figure summed across a day's entries would be silently wrong — or
+would need a much heavier "N items missing data" caveat — for virtually
+every real day of use right now. Building that feature now would manufacture
+the exact silently-wrong trap the audit warned about, not close it. Declined
+for the same reason gap #03 declined routing `MCPantry.compare()`'s
+cross-family mismatch through the DENSITY table: an honest per-item figure
+that's sometimes absent is worth more than a day total that's sometimes
+lying. If the corpus ever accumulates enough curated `fiber_g` data to make
+a day total meaningful, that's real, separate, future work — not a
+mechanical follow-up to this fix.
+
+**Proven before landing.** `tools/test-mc-import.js` gained two cases
+(`fiberContent` present and absent) proving `fiber_g` comes back correctly
+in both directions — confirmed to fail on a planted regression (the
+extraction line stubbed to always return `null`) before landing.
+`tools/smoke-test.js` gained an 18-assertion scenario that hand-types a
+recipe with a real Fiber value (nothing in the corpus has one to test
+against otherwise), then follows that number through the recipe page's
+macro card, the "Log to tracker" sheet, and the tracker's own Nutrition
+Facts sheet for the entry logging creates — confirmed to fail (isolated to
+exactly the four macro-card assertions) against a planted regression
+(the Fiber/Net Carbs cells removed from `renderMacros()`) before landing.
+
+Not a Quick Tour change: adding or viewing a recipe behaves identically to
+a cook whether or not it happens to carry fiber data — an optional field on
+an existing form, not a new screen, gesture, or capability. Falls under the
+Documentation currency rule's own "data-model additions that don't change
+behavior a user notices" exemption, same as gap #04.
+
 ### Still open from the re-audit
 
-Ranked as they were in the artifact; neither is started. (#03 and #04
-shipped 2026-09-14 — see their own entries above; #03's "compounded by"
-clause about a volume-vs-weight `MCPantry.compare()` mismatch was
-investigated and deliberately declined, not fixed — see that entry for why.)
+All five critical gaps from the 2026-09-13 re-audit have now shipped
+(#01–#05; see their own entries above). One item remains:
 
-- **#05 Two nutrition models sum into one daily total.** The tracker reads fibre
-  from Open Food Facts; recipes have no fibre field, so a recipe logged to the day
-  adds zero and the day's fibre figure measures how much of it came from barcodes.
-  Net carbs cannot be derived at all downstream of this.
 - **Executive Summary is still read by no CI gate** (carried over from the
   2026-09-13 audit above, unchanged). Both false claims that audit found would have
   failed `tools/test-quick-tour.js`'s existing machinery had it been pointed at the

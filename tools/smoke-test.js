@@ -151,6 +151,88 @@ const ok = (n, c) => { console.log((c ? 'PASS ' : 'FAIL ') + n); if (!c) fails++
   ok('import: no JS errors across the whole capture flow', errors.length === 0 || (console.log(errors), false));
   await page.locator('.recipe-form .rf-cancel').click();
 
+  // ── Fiber / Net Carbs (re-audit critical gap #05) ──────────────────────
+  // Nothing in the real 318-recipe corpus authors fiber_g (this app has no
+  // curated data for it), so the only way to exercise the whole chain for
+  // real is to hand-type a recipe that supplies it, exactly as a cook would
+  // via the optional Nutrition section's new Fiber field, then follow that
+  // number through every place gap #05 wired it: the recipe page's own
+  // macro card, the "Log to tracker" sheet on that same page, and the
+  // tracker's per-item Nutrition Facts sheet for the entry logging creates.
+  errors.length = 0;
+  await page.waitForTimeout(200);
+  await page.locator('.home-mod', { hasText: 'Add Recipe' }).click();
+  await page.waitForTimeout(200);
+  await page.locator('.rf-chooser .home-mod', { hasText: 'Type it in' }).click();
+  await page.waitForTimeout(200);
+  ok('fiber: hand-type form opened', await page.locator('.recipe-form').count() === 1);
+
+  const fiberTitle = 'Smoke-Test Fiber Bowl ' + Date.now();
+  await page.locator('.recipe-form .rf-body input').first().fill(fiberTitle);
+  await page.selectOption('.recipe-form .rf-select', { index: 1 });
+  await page.locator('.recipe-form .rf-ing-item').first().fill('Black beans');
+  await page.locator('.recipe-form .rf-step textarea').first().fill('Combine everything in a bowl.');
+  const macroInputs = page.locator('.recipe-form .rf-macro-row .rf-input');
+  await macroInputs.nth(0).fill('400');   // Calories
+  await macroInputs.nth(1).fill('20');    // Protein
+  await macroInputs.nth(2).fill('10');    // Fat
+  await macroInputs.nth(3).fill('50');    // Carbs
+  await macroInputs.nth(4).fill('15');    // Fiber
+  await page.locator('.recipe-form .rf-save').click();
+  await page.waitForTimeout(300);
+  ok('fiber: form closed after save', await page.locator('.recipe-form').count() === 0);
+  ok('fiber: no JS errors saving the hand-typed recipe', errors.length === 0 || (console.log(errors), false));
+
+  const fiberRecipeId = await page.evaluate((title) => {
+    var r = (window.RECIPES || []).find(function (x) { return x.title === title; });
+    return r ? r.recipe_id : null;
+  }, fiberTitle);
+  ok('fiber: the new recipe is findable in window.RECIPES', !!fiberRecipeId);
+
+  errors.length = 0;
+  await page.goto(B + '/recipe.html?id=' + fiberRecipeId, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(300);
+  ok('fiber: no JS errors on the new recipe\'s detail page', errors.length === 0 || (console.log(errors), false));
+  // allInnerTexts() reflects .macro-key's own text-transform:uppercase CSS
+  // (unlike textContent, which would give back the raw "Fiber"/"Net Carbs"
+  // the DOM actually holds) — compare against the rendered case.
+  const macroKeys = await page.locator('.macro-grid .macro-key').allInnerTexts();
+  ok('fiber: macro card includes a Fiber cell', macroKeys.includes('FIBER'));
+  ok('fiber: macro card includes a Net Carbs cell', macroKeys.includes('NET CARBS'));
+  const macroNums = await page.locator('.macro-grid .macro-num').allInnerTexts();
+  ok('fiber: macro card shows the authored fiber_g', macroNums[4] === '15');
+  ok('fiber: macro card computes net carbs (50 carbs - 15 fiber)', macroNums[5] === '35');
+
+  errors.length = 0;
+  await page.locator('.ckr-fab').click();
+  await page.waitForTimeout(200);
+  ok('fiber: log-to-tracker sheet opened', await page.locator('.ckr-ov.open').count() === 1);
+  const ckrChipLabels = await page.locator('.ckr-chip-l').allInnerTexts();
+  ok('fiber: log-to-tracker sheet includes FIBER and NET CARBS chips',
+    ckrChipLabels.includes('FIBER') && ckrChipLabels.includes('NET CARBS'));
+  const ckrChipVals = await page.locator('.ckr-chip-v').allInnerTexts();
+  ok('fiber: log-to-tracker fiber chip value', ckrChipVals[4] === '15');
+  ok('fiber: log-to-tracker net carbs chip value', ckrChipVals[5] === '35');
+  await page.locator('#ckrAdd').click();
+  await page.waitForTimeout(300);
+  ok('fiber: no JS errors logging the recipe to the tracker', errors.length === 0 || (console.log(errors), false));
+
+  errors.length = 0;
+  await page.goto(B + '/index.html#tracker', { waitUntil: 'networkidle' });
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  const fcard = page.locator('.ckt-fcard', { hasText: fiberTitle });
+  ok('fiber: the logged entry appears on today\'s tracker timeline', await fcard.count() === 1);
+  await fcard.click();
+  await page.waitForTimeout(200);
+  const factsLabels = await page.locator('.ckt-nrow span').allInnerTexts();
+  ok('fiber: Nutrition Facts sheet includes Fiber and Net Carbs rows',
+    factsLabels.includes('Fiber') && factsLabels.includes('Net Carbs'));
+  const factsVals = await page.locator('.ckt-nrow b').allInnerTexts();
+  ok('fiber: Nutrition Facts sheet fiber value', factsVals[0] === '15 g');
+  ok('fiber: Nutrition Facts sheet net carbs value', factsVals[1] === '35 g');
+  ok('fiber: no JS errors viewing the logged entry\'s Nutrition Facts', errors.length === 0 || (console.log(errors), false));
+
   // ── recipe page ────────────────────────────────────────────────────
   errors.length = 0;
   // Pick a recipe whose FIRST step names a duration, so the timer-chip tests

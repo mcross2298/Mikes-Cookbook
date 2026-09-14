@@ -48,6 +48,17 @@
     if (!hasMacros) return null;
     return { kcal: num(m.calories), p: num(m.protein_g), f: num(m.fat_g), c: num(m.carbs_g) };
   }
+  // Fiber (re-audit critical gap #05), kept separate from perServing()'s own
+  // {kcal,p,f,c} shape — same reasoning as tracker.js's foodFromRecipe():
+  // fiber travels in a tracker entry's `nutr`, not `per`, matching every
+  // other food source (Open Food Facts, a barcode scan). Returns null for
+  // the 318 built-ins (none author it) and for any recipe that doesn't.
+  function fiberPerServing(recipe) {
+    var mp = recipe.macro_profiles || {};
+    var m = mp.serving_2 || mp.serving_4 || mp.serving_1 || null;
+    if (!m) { for (var k in mp) { m = mp[k]; break; } }
+    return (m && m.fiber_g != null) ? num(m.fiber_g) : null;
+  }
 
   function injectStyles() {
     if (document.getElementById("ckr-styles")) return;
@@ -74,8 +85,10 @@
       ".ckr-handle{width:36px;height:4px;background:rgba(0,0,0,0.15);border-radius:2px;margin:0 auto 14px;}" +
       ".ckr-title{font-size:19px;font-weight:900;color:var(--ink);font-family:var(--serif,Georgia,serif);}" +
       ".ckr-sub{font-size:13px;color:var(--ink-dim);margin:4px 0 16px;line-height:1.5;}" +
-      ".ckr-macros{display:flex;gap:8px;margin-bottom:16px;}" +
-      ".ckr-chip{flex:1;text-align:center;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm,8px);padding:9px 4px;}" +
+      // flex-wrap so an optional Fiber/Net Carbs pair (re-audit critical gap
+      // #05) doesn't squeeze all six chips onto one line under a 560px sheet.
+      ".ckr-macros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}" +
+      ".ckr-chip{flex:1 1 25%;min-width:64px;text-align:center;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm,8px);padding:9px 4px;}" +
       ".ckr-chip-v{font-size:16px;font-weight:900;color:var(--ink);}" +
       ".ckr-chip-l{font-size:10px;font-weight:700;color:var(--ink-dim);margin-top:2px;}" +
       ".ckr-qty{display:flex;align-items:center;justify-content:space-between;padding:10px 0 16px;}" +
@@ -102,12 +115,19 @@
     setTimeout(function () { t.remove(); }, 4200);
   }
 
-  function openSheet(recipe, per) {
+  function openSheet(recipe, per, fib) {
     var ov = document.createElement("div");
     ov.className = "ckr-ov";
     var qty = 1;
     var deep = WORKOUT_URL
       ? '<button class="ckr-btn alt" id="ckrSend">Send to Workout app →</button>' : "";
+    // Fiber + Net Carbs chips (re-audit critical gap #05) only when this
+    // recipe actually authors fiber_g — absent for the 318 built-ins today,
+    // same as the macro card on the recipe page itself.
+    var fiberChips = fib != null
+      ? '<div class="ckr-chip"><div class="ckr-chip-v" id="ckrFib">' + fib + '</div><div class="ckr-chip-l">FIBER</div></div>' +
+        '<div class="ckr-chip"><div class="ckr-chip-v" id="ckrNet">' + Math.max(0, per.c - fib) + '</div><div class="ckr-chip-l">NET CARBS</div></div>'
+      : "";
     ov.innerHTML =
       '<div class="ckr-sheet">' +
         '<div class="ckr-handle"></div>' +
@@ -118,6 +138,7 @@
           '<div class="ckr-chip"><div class="ckr-chip-v" id="ckrP">' + per.p + '</div><div class="ckr-chip-l">PROTEIN</div></div>' +
           '<div class="ckr-chip"><div class="ckr-chip-v" id="ckrF">' + per.f + '</div><div class="ckr-chip-l">FAT</div></div>' +
           '<div class="ckr-chip"><div class="ckr-chip-v" id="ckrC">' + per.c + '</div><div class="ckr-chip-l">CARBS</div></div>' +
+          fiberChips +
         "</div>" +
         '<div class="ckr-qty"><div class="ckr-qty-lbl">Servings</div>' +
           '<div class="ckr-qty-ctl"><button class="ckr-qbtn" id="ckrMinus">−</button>' +
@@ -136,13 +157,20 @@
       ov.querySelector("#ckrP").textContent = Math.round(per.p * qty);
       ov.querySelector("#ckrF").textContent = Math.round(per.f * qty);
       ov.querySelector("#ckrC").textContent = Math.round(per.c * qty);
+      if (fib != null) {
+        ov.querySelector("#ckrFib").textContent = Math.round(fib * qty);
+        ov.querySelector("#ckrNet").textContent = Math.round(Math.max(0, per.c - fib) * qty);
+      }
     }
     ov.querySelector("#ckrMinus").onclick = function () { qty = Math.max(0.5, Math.round((qty - 0.5) * 2) / 2); refresh(); };
     ov.querySelector("#ckrPlus").onclick = function () { qty = Math.round((qty + 0.5) * 2) / 2; refresh(); };
 
     ov.querySelector("#ckrAdd").onclick = function () {
       if (!window.MCTrackerStore) { alert("Tracker unavailable."); return; }
-      var entry = MCTrackerStore.addEntry({ name: recipe.title, source: "recipe", unit: "serving", qty: qty, per: per }, Date.now());
+      var entry = MCTrackerStore.addEntry({
+        name: recipe.title, source: "recipe", unit: "serving", qty: qty, per: per,
+        nutr: fib != null ? { fiber: fib } : undefined
+      }, Date.now());
       close();
       // A failed write already raised the onWriteFail toast above — don't
       // also claim success here (that was the actual bug: "Added ✓" firing
@@ -174,13 +202,14 @@
   function init() {
     var recipe = currentRecipe(); if (!recipe) return;
     var per = perServing(recipe); if (!per) return;   // no macros → no button
+    var fib = fiberPerServing(recipe);
     injectStyles();
     var mount = document.querySelector("main.app");
     if (!mount || mount.querySelector(".ckr-fab")) return;
     var btn = document.createElement("button");
     btn.className = "ckr-fab"; btn.type = "button";
     btn.innerHTML = "＋ Log to tracker";
-    btn.onclick = function () { openSheet(recipe, per); };
+    btn.onclick = function () { openSheet(recipe, per, fib); };
     mount.appendChild(btn);
     document.body.classList.add("has-ckr-fab");
   }

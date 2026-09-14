@@ -57,7 +57,7 @@ const JSONLD_HTML = `<!doctype html><html><head><title>Ignore this — real titl
         {"@type":"HowToStep","text":"Add rice and garlic, simmer 20 minutes."}
      ]}
    ],
-   "nutrition":{"@type":"NutritionInformation","calories":"540 kcal","proteinContent":"42 g","fatContent":"18 g","carbohydrateContent":"51 g"}
+   "nutrition":{"@type":"NutritionInformation","calories":"540 kcal","proteinContent":"42 g","fatContent":"18 g","carbohydrateContent":"51 g","fiberContent":"6 g"}
   }
 ]}
 </script>
@@ -85,7 +85,21 @@ const JSONLD_HTML = `<!doctype html><html><head><title>Ignore this — real titl
   ok('1r. macros extracted from nutrition block', r.recipe.macros &&
     r.recipe.macros.calories === 540 && r.recipe.macros.protein_g === 42 &&
     r.recipe.macros.fat_g === 18 && r.recipe.macros.carbs_g === 51);
+  // Re-audit critical gap #05: fiberContent was being read off the page and
+  // dropped on the floor — the one field mc-recipe-form.js's Nutrition
+  // section had nowhere to put until this gap closed it.
+  eq('1t. fiberContent extracted alongside the other four macro fields', r.recipe.macros.fiber_g, 6);
   eq('1s. "via" names the source host for the UI attribution line', r.recipe.via, 'cooking.example.com');
+}
+
+/* ── 1u. fiberContent absent: the other four fields still parse, fiber_g is
+   honestly null rather than 0 or dropped — same page, fiberContent removed. */
+{
+  const html = JSONLD_HTML.replace(',"fiberContent":"6 g"', '');
+  const r = I.parseFromHTML(html, 'https://cooking.example.com/turmeric-chicken');
+  ok('1u. macros still extracted with fiberContent missing', r.recipe.macros &&
+    r.recipe.macros.calories === 540 && r.recipe.macros.carbs_g === 51);
+  eq('1v. fiber_g is null (honestly absent), not 0 or missing the key entirely', r.recipe.macros.fiber_g, null);
 }
 
 /* ── 2. Heuristic path — no JSON-LD at all ───────────────────────────────── */

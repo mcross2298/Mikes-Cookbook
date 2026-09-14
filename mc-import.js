@@ -240,8 +240,14 @@
       var p = leadingNumber(nutrition.proteinContent);
       var f = leadingNumber(nutrition.fatContent);
       var c = leadingNumber(nutrition.carbohydrateContent);
-      if (cal != null || p != null || f != null || c != null) {
-        macros = { calories: cal, protein_g: p, fat_g: f, carbs_g: c };
+      // fiberContent (re-audit critical gap #05) — schema.org's
+      // NutritionInformation carries it alongside the four fields above on
+      // plenty of real recipe pages; it was being read off the page and
+      // dropped on the floor before mc-recipe-form.js's Nutrition section
+      // ever had a field to put it in.
+      var fib = leadingNumber(nutrition.fiberContent);
+      if (cal != null || p != null || f != null || c != null || fib != null) {
+        macros = { calories: cal, protein_g: p, fat_g: f, carbs_g: c, fiber_g: fib };
       }
     }
     return {
