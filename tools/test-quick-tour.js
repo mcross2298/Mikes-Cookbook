@@ -34,6 +34,10 @@
    produces a real PDF) is a scenario in tools/smoke-test.js, which already
    drives real pages in a real browser.
 
+   Scoped to quick-tour.html + quick-tour-data.js only. quick-tour-overview.html
+   (the Executive Summary) is a separate page with its own separate truth gate,
+   tools/test-executive-summary.js — it used to have none at all.
+
    Run: node tools/test-quick-tour.js
    ========================================================================== */
 const fs = require('fs');

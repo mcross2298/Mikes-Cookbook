@@ -114,6 +114,23 @@ jobs:
         # one-page view doesn't collapse, Export PDF produces a real PDF) is a
         # scenario in smoke-test.js, which already drives real pages.
         run: node tools/test-quick-tour.js
+      - name: Executive Summary tells the truth (test-executive-summary.js — re-audit follow-up)
+        # quick-tour-overview.html had ZERO CI coverage until this gate — both
+        # check-tour-coverage.js and test-quick-tour.js explicitly skip it (see
+        # their own headers) because forcing it into features.js's array-driven
+        # coverage contract risks repeating roadmap F6's reversal in the sibling
+        # workout app. This gate doesn't do that: it verifies specific, real
+        # claims on the page (recipe count, serving-scaling bounds, the Home
+        # module list, the bottom tab bar, the dish-type list, every collection
+        # card's Live/Coming-soon + Sub-tabs status, the serving-ladder honesty
+        # claim, retired feature names, the tracker search button's label, and
+        # the footer CTA links) against the app's own source and data — never
+        # against a copy of the page's own prose, and never requiring the page
+        # to be exhaustive. Proven to fail on eight planted regressions before
+        # landing (wrong recipe count, a false collection status, a retired
+        # name resurfacing, a false Home-module claim, a wrong dish-type list,
+        # a wrong serving range, a drifted button label, a broken CTA link).
+        run: node tools/test-executive-summary.js
       - name: Edge-function SSRF guards (test-fetch-recipe-source.js — audit A-04)
         # First CI coverage of any server-side code in this repo. Reads the
         # deployed Deno function's own source text (Node can't run TypeScript,

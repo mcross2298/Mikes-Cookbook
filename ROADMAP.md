@@ -1520,15 +1520,70 @@ an existing form, not a new screen, gesture, or capability. Falls under the
 Documentation currency rule's own "data-model additions that don't change
 behavior a user notices" exemption, same as gap #04.
 
-### Still open from the re-audit
+### Executive Summary CI gap ✅ (closed 2026-09-14) — the page now has real coverage
 
-All five critical gaps from the 2026-09-13 re-audit have now shipped
-(#01–#05; see their own entries above). One item remains:
+**The gap.** All five critical gaps from the 2026-09-13 re-audit shipped
+(#01–#05; see their own entries above), leaving one open item: the Executive
+Summary (`quick-tour-overview.html`) was read by no CI gate at all. Both false
+claims the original Quick Tour audit found — the ones the tour itself later
+got machinery for — would have shipped invisibly on this page too, because
+nothing checked it.
 
-- **Executive Summary is still read by no CI gate** (carried over from the
-  2026-09-13 audit above, unchanged). Both false claims that audit found would have
-  failed `tools/test-quick-tour.js`'s existing machinery had it been pointed at the
-  page.
+**Why it stayed open this long.** `tools/check-tour-coverage.js` and
+`tools/test-quick-tour.js` both deliberately skip `quick-tour-overview.html` —
+see their own headers — because forcing it into `features.js`'s array-driven
+coverage contract risks the exact failure mode roadmap `F6` already reversed
+once in the sibling workout app: an inlining pipeline that made the target
+page longer and harder to keep accurate than editing it directly. That's a
+real, documented trade-off, not an oversight, and it stands unchanged. What
+it left unresolved is a narrower question — not "should this page be
+data-driven" (no) but "should ANYTHING check whether it's telling the
+truth" (yes, and nothing did).
+
+**The fix.** `tools/test-executive-summary.js` is a new, independent gate,
+sibling to `tools/test-quick-tour.js` rather than a rewrite of it — verifies
+specific, real claims on the page against the app's own source and data,
+never against a copy of the page's own prose:
+- the hero's `318 recipes` and `1–12 serving scaling` chips, against
+  `RECIPES.length` and `cookbook.js`'s real `SERVING_MIN`/`SERVING_MAX`;
+- the Home module list ("Browse, Mike's Favorites, your saved Favorites, Add
+  Recipe, and the Quick Tour") — parsed as a sentence, not just checked as
+  five known-good strings, so an item added to the sentence that doesn't
+  resolve to a real module (a stray "Tracker," say) fails outright rather
+  than being silently ignored; and separately, that Tracker is correctly
+  excluded from the app's real Home module set, since the page explicitly
+  claims it isn't one ("it is the second button in the bottom bar") — this
+  is the exact shape of two of the five errors the original tour audit found;
+- the bottom tab bar is really `["Cookbook", "Tracker"]`, in that order;
+- the "Eleven dish types" list, matched exactly (order and content) against
+  `CATEGORY_ORDER` in `cookbook-home.js`;
+- every collection card the page actually shows — matched to its real
+  `COLLECTIONS` entry — has the right Live/Coming-soon status, and (for a
+  Live card) that its `source_match` really resolves to at least one recipe;
+  a card claiming "Sub-tabs" is checked against the real `subsections` array.
+  **Deliberately not exhaustive**: the page's seven cards are a curated
+  highlight reel and never claim to list all 13 live collections, so this
+  gate doesn't require that either — it only requires that whichever cards
+  are shown aren't lying;
+- the serving-ladder honesty claim (not "every recipe is authored at 2 and 4
+  servings exactly") and the underlying corpus sanity check, same false
+  premise `test-quick-tour.js` already pins for the tour;
+- the retired `Smart Week`/`Time Check` names don't resurface;
+- the tracker's real "Search foods & recipes" button label, quoted verbatim;
+- the footer's three CTA links resolve to real files on disk.
+
+**Proven before landing.** Eight planted regressions, each confirmed to fail
+the gate before it was wired in: a wrong recipe count, a collection card's
+status flipped against its real data, a retired name reintroduced, "Tracker"
+added to the Home module sentence, a dish dropped from the "Eleven dish
+types" list, a wrong serving-scaling range, the tracker search label
+drifted, and a broken footer link.
+
+**Wired into `.github/workflows/pages.yml`** as gate 16b, immediately after
+the Quick Tour truth gate — 26 blocking gates on `verify` now, up from 25.
+
+Not a Quick Tour change under the Documentation currency rule: this closes a
+CI-coverage gap, not a user-facing feature — nothing a cook sees changed.
 
 ## Owner-only verification — how to actually close it
 
