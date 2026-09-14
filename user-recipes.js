@@ -164,18 +164,22 @@
   //        prep_time_mins, cook_time_mins, base_serving,
   //        ingredients[ {item,quantity,unit,category,prep} ],
   //        steps[ {title, detail} ], macros? }
-  // `macros` — optional { calories?, protein_g?, fat_g?, carbs_g? }, all
-  // per-single-serving (recipes-data.js's own invariant: macro_profiles is
+  // `macros` — optional { calories?, protein_g?, fat_g?, carbs_g?, fiber_g? },
+  // all per-single-serving (recipes-data.js's own invariant: macro_profiles is
   // constant across every authored tier, never scaled — see CLAUDE.md's data
   // model). When present, the SAME object is copied onto both serving_2 and
   // serving_4 unchanged, not divided or multiplied by serving count. Absent
   // or empty leaves macro_profiles exactly as before (macro-free by design)
   // — this was a real gap: mc-recipe-form.js could show a parsed import's
-  // detected nutrition but had nowhere to actually save it.
+  // detected nutrition but had nowhere to actually save it. `fiber_g` (re-
+  // audit critical gap #05) is optional independently of the other four —
+  // a cook's own recipe can carry it even when nothing else here does, and
+  // recipesFor()'s macro card / the tracker only ever show a Net Carbs
+  // figure when it's actually present, never a guessed one.
   function macroProfile(macros) {
     if (!macros) return null;
     var out = {}, has = false;
-    ["calories", "protein_g", "fat_g", "carbs_g"].forEach(function (k) {
+    ["calories", "protein_g", "fat_g", "carbs_g", "fiber_g"].forEach(function (k) {
       var v = macros[k];
       if (v == null || v === "") return;
       var n = parseFloat(v);

@@ -1008,6 +1008,19 @@
     grid.appendChild(macroCell("", m.protein_g, "g", "Protein"));
     grid.appendChild(macroCell("", m.fat_g, "g", "Fat"));
     grid.appendChild(macroCell("", m.carbs_g, "g", "Carbs"));
+    // Fiber + Net Carbs (re-audit critical gap #05) — only when this recipe
+    // actually authors fiber_g. None of the 318 built-ins do today (this app
+    // has no curated fiber data for them); a cook's own recipe or an
+    // imported page's schema.org nutrition block can supply it, and only
+    // then does either cell appear — never a guessed or zero-by-default
+    // figure. Clamped at 0 rather than showing a nonsensical negative
+    // number if fiber_g ever exceeds carbs_g (an unusual but not impossible
+    // hand-entry mistake).
+    if (m.fiber_g != null) {
+      grid.appendChild(macroCell("", m.fiber_g, "g", "Fiber"));
+      var netCarbs = m.carbs_g != null ? Math.max(0, m.carbs_g - m.fiber_g) : null;
+      grid.appendChild(macroCell("", netCarbs, "g", "Net Carbs"));
+    }
     card.appendChild(grid);
     var weightG = estimateServingWeightG(r, effectiveServing(r));
     if (weightG != null) {

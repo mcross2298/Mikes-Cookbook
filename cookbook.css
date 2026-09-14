@@ -2438,6 +2438,11 @@ body.picking { overflow: hidden; }
 .rf-times { display: flex; gap: 10px; }
 .rf-times .rf-field { flex: 1; margin-bottom: 14px; }
 .rf-num { text-align: center; }
+/* Nutrition's five optional fields (re-audit critical gap #05 added Fiber as
+   the 5th) — .rf-times' un-wrapped flex row is fine at 3 fields but squeezes
+   5 under a comfortable tap width on a narrow phone; this wraps to 3+2. */
+.rf-macro-row { flex-wrap: wrap; }
+.rf-macro-row .rf-field { flex: 1 1 25%; min-width: 68px; }
 
 /* Section dividers inside the form */
 .rf-section { margin: 22px 0 4px; }

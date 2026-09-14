@@ -583,7 +583,20 @@
   function foodFromRecipe(r) {
     var per = recipePerServing(r);
     if (!per) return null;
-    return { name: r.title, brand: "", basis: "serving", servingLabel: "serving", grams: null, per: per, nutr: {}, source: "recipe", code: "" };
+    // Fiber (re-audit critical gap #05) — recipePerServing()'s own return
+    // shape stays {kcal,p,f,c} (several callers below already destructure
+    // exactly that), so this looks the tier up again rather than smuggling
+    // fiber_g through it; nutr is where every other food source (Open Food
+    // Facts, a barcode scan) already carries fiber, so a recipe joins that
+    // same shape instead of inventing a second one.
+    var mp = r.macro_profiles || {};
+    var mTier = mp.serving_2 || mp.serving_4 || mp.serving_1 || null;
+    if (!mTier) { for (var k in mp) { mTier = mp[k]; break; } }
+    var fib = (mTier && mTier.fiber_g != null) ? num(mTier.fiber_g) : null;
+    return {
+      name: r.title, brand: "", basis: "serving", servingLabel: "serving", grams: null, per: per,
+      nutr: fib != null ? { fiber: fib } : {}, source: "recipe", code: ""
+    };
   }
   function searchRecipes(q) {
     var ql = q.toLowerCase();
@@ -867,6 +880,10 @@
         "</div>" +
         '<div class="ckt-nutrients"><div class="ckt-nutrients-h">Nutrients</div>' +
           nutrRow("Fiber", nu.fiber != null ? fmt(nu.fiber * m, 1) : "", "g") +
+          // Net Carbs (re-audit critical gap #05) — only when THIS item's
+          // fiber is actually known, never a guessed or zero-by-default
+          // figure; clamped at 0 rather than a nonsensical negative number.
+          nutrRow("Net Carbs", nu.fiber != null ? fmt(Math.max(0, per.c - nu.fiber) * m, 1) : "", "g") +
           nutrRow("Sugars", nu.sugar != null ? fmt(nu.sugar * m, 1) : "", "g") +
           nutrRow("Cholesterol", nu.chol != null ? fmt(nu.chol * m) : "", "mg") +
           nutrRow("Sodium", nu.sodium != null ? fmt(nu.sodium * m) : "", "mg") +
@@ -900,11 +917,12 @@
       var pcts = s.sh.querySelectorAll(".ckt-ring-pct");
       pcts.forEach(function (e, i) { var pc = pct(vals[i], goalsArr[i]); e.textContent = pc == null ? "" : pc + "%"; });
       var nrows = s.sh.querySelectorAll(".ckt-nrow b");
-      if (nrows.length === 4) {
+      if (nrows.length === 5) {
         nrows[0].textContent = nu.fiber != null ? fmt(nu.fiber * m, 1) + " g" : "—";
-        nrows[1].textContent = nu.sugar != null ? fmt(nu.sugar * m, 1) + " g" : "—";
-        nrows[2].textContent = nu.chol != null ? fmt(nu.chol * m) + " mg" : "—";
-        nrows[3].textContent = nu.sodium != null ? fmt(nu.sodium * m) + " mg" : "—";
+        nrows[1].textContent = nu.fiber != null ? fmt(Math.max(0, per.c - nu.fiber) * m, 1) + " g" : "—";
+        nrows[2].textContent = nu.sugar != null ? fmt(nu.sugar * m, 1) + " g" : "—";
+        nrows[3].textContent = nu.chol != null ? fmt(nu.chol * m) + " mg" : "—";
+        nrows[4].textContent = nu.sodium != null ? fmt(nu.sodium * m) + " mg" : "—";
       }
     }
     function press(k) {

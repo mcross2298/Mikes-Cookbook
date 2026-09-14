@@ -14,6 +14,14 @@
    the book's printed macro set describes one portion, and the serving size
    only changes how much the recipe makes — not the macros. (serving_2 and
    serving_4 are kept as equal copies so the schema/rendering stays intact.)
+   `fiber_g` is an OPTIONAL 5th macro field (re-audit critical gap #05) —
+   required: calories/protein_g/fat_g/carbs_g; fiber_g only when actually
+   known. None of the 318 recipes below have it: this app has no curated
+   fiber data for them, and per the same discipline `mc-units.js`'s DENSITY
+   table and the `photo` field already follow, a missing number is left
+   honestly absent rather than guessed. When present on any serving_N tier
+   it must be present and equal on every other authored tier, same as the
+   four required fields (tools/validate-recipes.js enforces this).
 
    Ingredient categories drive the grouped grocery list:
      Meat · Dairy · Produce · Pantry

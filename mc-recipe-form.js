@@ -214,16 +214,27 @@
     var macProt  = rfNumber("g");       if (mm.protein_g  != null) macProt.value  = mm.protein_g;
     var macFat   = rfNumber("g");       if (mm.fat_g      != null) macFat.value   = mm.fat_g;
     var macCarbs = rfNumber("g");       if (mm.carbs_g    != null) macCarbs.value = mm.carbs_g;
+    // Fiber (re-audit critical gap #05) — optional like the four above, and
+    // for the same reason: a cook typing in their own recipe may know it
+    // from a package label even when nothing else here was imported. Left
+    // out of a recipe entirely, fiber (and the net-carbs figure it enables)
+    // simply never shows, same as any other unfilled macro field.
+    var macFiber = rfNumber("g");       if (mm.fiber_g    != null) macFiber.value = mm.fiber_g;
     body.appendChild(el("div", "tier-label rf-section", "Nutrition (optional)"));
     body.appendChild(el("p", "rf-hint rf-section-hint",
       (prefill && prefill.macros)
         ? "Detected from the imported page, per serving — check it over."
         : "Per serving. Leave blank to skip — this recipe just won't show a macro card."));
-    var macRow = el("div", "rf-times");
+    // Own class (not just .rf-times, shared with the 3-field Prep/Cook/
+    // Servings row below): 5 flex:1 number fields on one un-wrapped row
+    // would squeeze each one under a comfortable tap target on a narrow
+    // phone. .rf-macro-row lets it wrap to a 3+2 layout instead.
+    var macRow = el("div", "rf-times rf-macro-row");
     macRow.appendChild(rfField("Calories", macCal));
     macRow.appendChild(rfField("Protein (g)", macProt));
     macRow.appendChild(rfField("Fat (g)", macFat));
     macRow.appendChild(rfField("Carbs (g)", macCarbs));
+    macRow.appendChild(rfField("Fiber (g)", macFiber));
     body.appendChild(macRow);
 
     var tagsInput = rfText("Spicy, One-Dish, High-Protein");
@@ -330,7 +341,8 @@
         steps: steps,
         macros: {
           calories: macCal.value, protein_g: macProt.value,
-          fat_g: macFat.value, carbs_g: macCarbs.value
+          fat_g: macFat.value, carbs_g: macCarbs.value,
+          fiber_g: macFiber.value
         }
       });
 

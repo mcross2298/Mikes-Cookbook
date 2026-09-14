@@ -58,13 +58,21 @@ function loadData() {
 
 function isNonEmptyString(v) { return typeof v === "string" && v.trim().length > 0; }
 function isFiniteNumber(v) { return typeof v === "number" && isFinite(v); }
+// fiber_g is optional (re-audit critical gap #05) — required only when the
+// recipe actually authors it, but when present it must be a real number,
+// same as the four required fields.
 function macroProfileShapeOk(mp) {
-  return mp && ["calories", "protein_g", "fat_g", "carbs_g"].every(function (k) {
+  if (!mp || !["calories", "protein_g", "fat_g", "carbs_g"].every(function (k) {
     return isFiniteNumber(mp[k]);
-  });
+  })) return false;
+  return mp.fiber_g == null || isFiniteNumber(mp.fiber_g);
 }
 function macroProfilesEqual(a, b) {
-  return ["calories", "protein_g", "fat_g", "carbs_g"].every(function (k) { return a[k] === b[k]; });
+  if (!["calories", "protein_g", "fat_g", "carbs_g"].every(function (k) { return a[k] === b[k]; })) return false;
+  // fiber_g only has to agree across tiers when at least one tier authors
+  // it — two tiers that both omit it are equal on it by definition.
+  if (a.fiber_g == null && b.fiber_g == null) return true;
+  return a.fiber_g === b.fiber_g;
 }
 
 function validateRecipes(recipes, errors) {
