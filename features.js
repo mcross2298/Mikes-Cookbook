@@ -26,6 +26,11 @@
                distinctive words so a coincidental hit elsewhere in the page
                doesn't create a false pass
 
+   quick-tour-overview.html's own accuracy is checked separately, by
+   tools/test-executive-summary.js -- not via this array, for the same
+   "stays hand-authored" reason given above, but with real coverage now
+   where it used to have none.
+
    Adding a real screen or capability? Add it here in the same change, and
    make sure quick-tour.html actually mentions it -- that's the two-sided
    contract the gate checks. ========================================================================== */

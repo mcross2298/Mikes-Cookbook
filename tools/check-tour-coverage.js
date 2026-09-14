@@ -18,6 +18,11 @@
    text itself, not just visible strings, so eyebrow/title/narration/steps all
    count.
 
+   quick-tour-overview.html's own factual accuracy (not coverage -- whether
+   what it says is TRUE) is checked separately by tools/test-executive-summary.js,
+   added once the re-audit noticed this file's deliberate skip meant NO gate
+   read that page at all.
+
    "The tour's source" is now two files: quick-tour.html and the
    quick-tour-data.js the slides moved into when quick-tour-full.html started
    rendering the same content as one document. The rule this gate encodes is
