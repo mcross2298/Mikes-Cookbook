@@ -3252,6 +3252,23 @@
     return "Have " + entry.qty + (entry.unit ? " " + entry.unit : "") +
       " · need " + formatShort(cmp.short) + " more";
   }
+  // Re-audit critical gap #03: `row.need` is null whenever mc-grocery.js's
+  // buildGrocery() couldn't reduce this item to one comparable amount — the
+  // same recipe corpus measures a staple to a cup in one dish and a pound in
+  // another often enough that this is roughly a quarter of all merged rows.
+  // Before this, the 📏 control rendered identically either way: a cook
+  // could record "2 lb" for a row like this, MCPantry.compare() would never
+  // be called with it (pantryShortfall() bails on `!row.need` before ever
+  // reading the entry), and the item would sit on/off the buy list exactly
+  // as the binary 🧂 toggle alone already decided — recording an amount had
+  // silently done nothing. This is the reason string for that state, so the
+  // control can say so instead of quietly accepting input it can't use.
+  function pantryQtyDisabledReason(row) {
+    if (row.need) return null;
+    return "Can't compare an amount for " + row.item + " this week — " +
+      "it's measured more than one way across your planned meals, so an " +
+      "amount recorded here wouldn't affect the shopping list.";
+  }
 
   function closePantryQtyEditor() {
     var ov = $(".pantry-qty-overlay");
@@ -3401,15 +3418,36 @@
     // row, staple or short: this is exactly where "how much do you actually
     // have" is worth asking. Stops propagation, same as the pin.
     if (opts.pantry) {
-      var qtyBtn = el("button", "grocery-setqty" + (haveEntry ? " has-qty" : ""), "📏");
+      var disabledReason = pantryQtyDisabledReason(row);
+      var qtyBtn = el("button", "grocery-setqty" +
+        (haveEntry ? " has-qty" : "") + (disabledReason ? " disabled" : ""), "📏");
       qtyBtn.type = "button";
-      qtyBtn.setAttribute("aria-label", haveEntry
-        ? "Change how much " + row.item + " you have — currently " + haveEntry.qty + (haveEntry.unit ? " " + haveEntry.unit : "")
-        : "Record how much " + row.item + " you have");
-      qtyBtn.addEventListener("click", function (e) {
-        e.preventDefault(); e.stopPropagation();
-        openPantryQtyEditor(row.item, refresh);
-      });
+      if (disabledReason) {
+        // Deliberately NOT the `disabled` attribute, and deliberately NOT
+        // `aria-disabled` either — both make a control unactionable, which
+        // would make the reason unreachable for exactly the people who'd
+        // need it most (a real `disabled` fires no click event at all; a
+        // screen reader or a testing tool honoring aria-disabled — Playwright
+        // among them — won't activate the control either, even though the
+        // element itself is untouched). This stays an ordinary, fully
+        // enabled button — dimmed only by the `.disabled` CSS class — so the
+        // label is read normally and a tap always reaches the handler. Same
+        // "still tappable to explain itself" pattern as the .has-derived
+        // quantity above, which is likewise never aria-disabled.
+        qtyBtn.setAttribute("aria-label", disabledReason + " Tap to learn more.");
+        qtyBtn.addEventListener("click", function (e) {
+          e.preventDefault(); e.stopPropagation();
+          plannerToast(disabledReason);
+        });
+      } else {
+        qtyBtn.setAttribute("aria-label", haveEntry
+          ? "Change how much " + row.item + " you have — currently " + haveEntry.qty + (haveEntry.unit ? " " + haveEntry.unit : "")
+          : "Record how much " + row.item + " you have");
+        qtyBtn.addEventListener("click", function (e) {
+          e.preventDefault(); e.stopPropagation();
+          openPantryQtyEditor(row.item, refresh);
+        });
+      }
       el2.appendChild(qtyBtn);
     }
     return el2;

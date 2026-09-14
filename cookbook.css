@@ -2613,6 +2613,14 @@ body.picking { overflow: hidden; }
 .grocery-setqty:hover { border-color: rgba(var(--accent-rgb),0.5); }
 .grocery-setqty:active { transform: scale(0.9); }
 .grocery-setqty.has-qty { background: rgba(var(--accent-rgb),0.12); border-color: rgba(var(--accent-rgb),0.45); color: var(--accent); }
+/* Re-audit critical gap #03: this row's amount can't be compared (mixed
+   unit families across this week's recipes) — dimmed rather than hidden, so
+   a cook sees the control exists and is tappable for the reason, instead of
+   a 📏 that looks identical to a working one but silently ignores input.
+   `.has-qty` can coexist (a stale amount recorded before the row lost its
+   comparable need) — the dim state wins visually either way. */
+.grocery-setqty.disabled { opacity: 0.45; }
+.grocery-setqty.disabled:active { transform: none; }
 
 /* A staple whose recorded amount falls short of what's planned this week —
    comes back on the buy list (see cookbook-home.js's pantryShortfall())
