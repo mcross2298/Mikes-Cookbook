@@ -468,12 +468,12 @@
         '<button data-v="female" class="' + (p.sex === "female" ? "on" : "") + '">Female</button>' +
       "</div>" +
       '<div class="ckt-grid2">' +
-        '<label class="ckt-field"><span>Age</span><input id="ckAge" type="number" inputmode="numeric" value="' + (p.age || "") + '" placeholder="30"></label>' +
-        '<label class="ckt-field"><span>Weight (lb)</span><input id="ckWt" type="number" inputmode="decimal" value="' + (p.weightLb || "") + '" placeholder="180"></label>' +
+        '<label class="ckt-field"><span>Age</span><input id="ckAge" type="number" min="0" inputmode="numeric" value="' + (p.age || "") + '" placeholder="30"></label>' +
+        '<label class="ckt-field"><span>Weight (lb)</span><input id="ckWt" type="number" min="0" inputmode="decimal" value="' + (p.weightLb || "") + '" placeholder="180"></label>' +
       "</div>" +
       '<div class="ckt-grid2">' +
-        '<label class="ckt-field"><span>Height (ft)</span><input id="ckFt" type="number" inputmode="numeric" value="' + ftStart + '"></label>' +
-        '<label class="ckt-field"><span>Height (in)</span><input id="ckIn" type="number" inputmode="numeric" value="' + inStart + '"></label>' +
+        '<label class="ckt-field"><span>Height (ft)</span><input id="ckFt" type="number" min="0" inputmode="numeric" value="' + ftStart + '"></label>' +
+        '<label class="ckt-field"><span>Height (in)</span><input id="ckIn" type="number" min="0" inputmode="numeric" value="' + inStart + '"></label>' +
       "</div>" +
       '<label class="ckt-field"><span>Activity</span><select id="ckAct">' +
         MCMacroCalc.ACTIVITY.map(function (a) { return '<option value="' + a.id + '"' + (p.activity === a.id ? " selected" : "") + ">" + a.label + " — " + a.sub + "</option>"; }).join("") +
