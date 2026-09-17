@@ -284,12 +284,20 @@
   "note": "{\"todaysMeals\":{\"ok\":true,\"v\":\"[]\"},\"macroTargets\":{\"ok\":true,\"v\":\"null\"},\"recentActivity\":{\"ok\":true,\"v\":\"{\\\"trainedToday\\\":false,\\\"streak\\\":0,\\\"workoutsThisWeek\\\":0,\\\"recentWorkouts\\\":[]}\"},\"today\":"
  },
  {
+  "id": "K-28a",
+  "label": "the fixture workout could actually be seeded",
+  "ok": true,
+  "got": null,
+  "want": null,
+  "note": "a silent seed failure would misreport itself as a bridge defect"
+ },
+ {
   "id": "K-28",
   "label": "a workout logged by MC Training is visible to the cookbook",
   "ok": true,
   "got": true,
   "want": true,
-  "note": "{\"activity\":{\"trainedToday\":false,\"streak\":0,\"workoutsThisWeek\":1,\"recentWorkouts\":[{\"id\":\"w1\",\"name\":\"Push day\",\"date\":\"2026-09-17\",\"prs\":0,\"duration\":\"60 min\"}]},\"workouts\":[{\"id\":\"w1\",\"name\":\"Push "
+  "note": "{\"seedError\":null,\"activity\":{\"trainedToday\":false,\"streak\":0,\"workoutsThisWeek\":1,\"recentWorkouts\":[{\"id\":\"w1\",\"name\":\"Push day\",\"date\":\"2026-09-17\",\"prs\":0,\"duration\":\"60 min\"}]},\"workouts\":[{\"id\":\""
  },
  {
   "id": "K-29",

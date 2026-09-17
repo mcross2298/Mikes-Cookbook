@@ -222,12 +222,24 @@ function chk(id, label, got, want, note) {
     const seeded = await page.evaluate(() => {
       const d = new Date();
       const day = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-      localStorage.setItem('mc_workout_log_v1', JSON.stringify([
-        { id: 'w1', ts: Date.now(), date: day, workoutName: 'Push day', duration: '60 min',
-          sets: [{ name: 'x-bench', setNum: 1, weight: '185', reps: '8', pr: false }], totalSets: 1 }
-      ]));
-      return { activity: window.MCBridge.recentActivity(), workouts: window.MCBridge.recentWorkouts() };
+      /* Guarded, and reported rather than swallowed. tools/check-write-paths.js
+         holds every localStorage write in this repo to that standard, and it is
+         right to hold a test fixture to it too: a seed that fails silently
+         would make the assertion below read as a bridge defect when the real
+         cause was a full device. */
+      let seedError = null;
+      try {
+        localStorage.setItem('mc_workout_log_v1', JSON.stringify([
+          { id: 'w1', ts: Date.now(), date: day, workoutName: 'Push day', duration: '60 min',
+            sets: [{ name: 'x-bench', setNum: 1, weight: '185', reps: '8', pr: false }], totalSets: 1 }
+        ]));
+      } catch (e) { seedError = String(e && e.message || e); }
+      return { seedError,
+               activity: window.MCBridge.recentActivity(),
+               workouts: window.MCBridge.recentWorkouts() };
     });
+    chk('K-28a', 'the fixture workout could actually be seeded', seeded.seedError, null,
+        'a silent seed failure would misreport itself as a bridge defect');
     chk('K-28', 'a workout logged by MC Training is visible to the cookbook',
         Array.isArray(seeded.workouts) ? seeded.workouts.length >= 1 : !!seeded.workouts, true,
         JSON.stringify(seeded).slice(0, 200));
