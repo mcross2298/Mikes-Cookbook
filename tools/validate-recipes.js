@@ -235,6 +235,147 @@ function validateMikesFavorites(list, ids, errors) {
   });
 }
 
+/* ==========================================================================
+   Nutrition and scaling coherence (GO LIVE run, protocol §3).
+   --------------------------------------------------------------------------
+   Two things a kitchen companion cannot get wrong: what the food contains, and
+   what happens when you cook more of it. Neither was checked here before, and
+   a fleet sweep found real instances of both — an authoring slip lives in ONE
+   record, which is exactly what a spot check misses.
+
+   Both checks carry an explicit allowlist of the records that were already
+   wrong when the check was written. That is deliberate, and it is not the same
+   as passing them: a count ratchet would let a DIFFERENT recipe be swapped in
+   for one already counted, whereas a named list says precisely which records
+   are known-bad and fails the moment an unnamed one appears. Fixing the listed
+   ones means supplying the right number, which is an authoring decision, not
+   something a checker may infer — so they are named and left, not guessed at.
+   ========================================================================== */
+
+/* Stated calories vs the recipe's OWN macros under the published Atwater
+   factors: protein 4 kcal/g, carbohydrate 4, fat 9. A published macro rounds
+   to whole grams, so a small disagreement is normal; these eight are 15-24%
+   apart, which no rounding produces. Every one of them OVERSTATES the
+   calories relative to its own macros, and every one sits in a 3/5/6-serving
+   tier — a pattern worth a look when someone comes to correct them. */
+var ATWATER_KNOWN = [
+  "chicken-enchilada-quinoa/serving_6",
+  "crockpot-pizza-chicken-bowls/serving_6",
+  "creamy-cajun-chicken-potatoes/serving_5",
+  "honey-garlic-chicken-rice/serving_6",
+  "buffalo-chicken-tender-salad/serving_3",
+  "bbq-beef-short-ribs-corn-succotash-rotini-salad/serving_3",
+  "shrimp-baked-mac-and-cheese-sauteed-spinach/serving_3",
+  "mixed-grill-skillet-peppers-onions-mashed-potatoes/serving_3"
+];
+
+/* Ingredients that do not scale sanely between the smallest and largest
+   authored tier. Three of these REDUCE when the recipe doubles — shepherd's
+   pie asks for 3 garlic cloves at two servings and 2 at four — so a cook
+   following the larger version under-seasons. The rest jump 6-8x at a 2x
+   scale, which may be deliberate re-authoring from a different source; they
+   are listed rather than judged. */
+var SCALING_KNOWN = [
+  'lemon-herb-pork-tenderloins-broccoli/Extra-virgin olive oil',
+  'shepherds-pie/Garlic cloves',
+  'cheesy-beef-taco-potato-bowls/Paprika',
+  'korean-beef-fried-rice/Rice vinegar',
+  'korean-beef-fried-rice/Soy sauce',
+  'garlic-shrimp-fried-rice/Soy sauce',
+  'honey-buffalo-chicken-rice-bowls/Salt',
+  'honey-buffalo-chicken-rice-bowls/Black pepper',
+  'blackened-chicken-tenders-cane-sauce/Garlic powder',
+  'one-pan-cheesy-taco-rice/Taco seasoning'
+];
+
+/* Conversions written from the definitions rather than read from the app's
+   MCUnits, so this check cannot agree with a bug in the converter it is
+   meant to be independent of. */
+var VOL_TSP = { tsp: 1, teaspoon: 1, teaspoons: 1, tbsp: 3, tablespoon: 3, tablespoons: 3,
+                "fl oz": 6, cup: 48, cups: 48, pint: 96, pt: 96, quart: 192, qt: 192, l: 202.9, ml: 0.2029 };
+var WT_OZ   = { oz: 1, ounce: 1, ounces: 1, lb: 16, lbs: 16, pound: 16, pounds: 16, g: 0.03527, kg: 35.27 };
+
+function vrParseQty(q) {
+  var t = String(q == null ? "" : q).trim();
+  if (!t) return null;
+  var mixed = t.match(/^(\d+)\s+(\d+)\s*\/\s*(\d+)/);
+  if (mixed) return +mixed[1] + (+mixed[2] / +mixed[3]);
+  var frac = t.match(/^(\d+)\s*\/\s*(\d+)/);
+  if (frac) return +frac[1] / +frac[2];
+  var dec = t.match(/^[\d.]+/);
+  return dec ? parseFloat(dec[0]) : null;
+}
+function vrCanon(qty, unit) {
+  var n = vrParseQty(qty);
+  if (n == null) return null;
+  var u = String(unit || "").trim().toLowerCase().replace(/\.$/, "");
+  if (VOL_TSP[u] != null) return { dim: "vol", v: n * VOL_TSP[u] };
+  if (WT_OZ[u]   != null) return { dim: "wt",  v: n * WT_OZ[u] };
+  return { dim: "count:" + u, v: n };
+}
+
+function validateNutritionCoherence(recipes, errors) {
+  var seen = [];
+  recipes.forEach(function (r) {
+    var profiles = r.macro_profiles || {};
+    Object.keys(profiles).forEach(function (tier) {
+      var m = profiles[tier];
+      if (!m) return;
+      var key = r.recipe_id + "/" + tier;
+      var atwater = (+m.protein_g || 0) * 4 + (+m.carbs_g || 0) * 4 + (+m.fat_g || 0) * 9;
+      var stated = +m.calories || 0;
+      var tol = Math.max(60, stated * 0.12);
+      if (Math.abs(atwater - stated) <= tol) return;
+      seen.push(key);
+      if (ATWATER_KNOWN.indexOf(key) === -1) {
+        errors.push(key + ": stated " + stated + " kcal but its own macros are " +
+          Math.round(atwater) + " kcal (" + m.protein_g + "p/" + m.fat_g + "f/" + m.carbs_g + "c) — " +
+          "a macro panel must agree with itself");
+      }
+    });
+  });
+  ATWATER_KNOWN.forEach(function (k) {
+    if (seen.indexOf(k) === -1) {
+      errors.push("ATWATER_KNOWN lists " + k + " but it now reconciles — remove it from the list");
+    }
+  });
+}
+
+function validateScalingCoherence(recipes, errors) {
+  var seen = [];
+  recipes.forEach(function (r) {
+    var opts = (r.scaling_options || []).slice().sort(function (a, b) { return a - b; });
+    if (opts.length < 2) return;
+    var loT = opts[0], hiT = opts[opts.length - 1], ratio = hiT / loT;
+    var byServing = r.ingredients_by_serving || {};
+    var lo = byServing["serving_" + loT] || [], hi = byServing["serving_" + hiT] || [];
+    lo.forEach(function (l) {
+      var h = null;
+      for (var i = 0; i < hi.length; i++) {
+        if (hi[i].item === l.item && hi[i].category === l.category) { h = hi[i]; break; }
+      }
+      if (!h) return;
+      var a = vrCanon(l.quantity, l.unit), b = vrCanon(h.quantity, h.unit);
+      if (!a || !b || a.dim !== b.dim || a.v <= 0) return;   // cross-dimension: not comparable
+      var shrank = b.v < a.v, overshot = b.v > a.v * ratio * 2;
+      if (!shrank && !overshot) return;
+      var key = r.recipe_id + "/" + l.item;
+      seen.push(key);
+      if (SCALING_KNOWN.indexOf(key) === -1) {
+        errors.push(key + ": " + l.quantity + " " + l.unit + " at " + loT + " servings but " +
+          h.quantity + " " + h.unit + " at " + hiT + (shrank
+            ? " — scaling UP must not use LESS of an ingredient"
+            : " — more than twice what a linear scale would ask for"));
+      }
+    });
+  });
+  SCALING_KNOWN.forEach(function (k) {
+    if (seen.indexOf(k) === -1) {
+      errors.push("SCALING_KNOWN lists " + k + " but it now scales sanely — remove it from the list");
+    }
+  });
+}
+
 function main() {
   var data = loadData();
   var errors = [];
@@ -242,6 +383,8 @@ function main() {
   validateCollections(data.collections, recipeInfo.sources, errors);
   validateEveryRecipeReachable(data.recipes, data.collections, errors);
   validateMikesFavorites(data.mikesFavorites, recipeInfo.ids, errors);
+  validateNutritionCoherence(data.recipes, errors);
+  validateScalingCoherence(data.recipes, errors);
 
   if (errors.length) {
     var inCI = !!process.env.GITHUB_ACTIONS;
